@@ -14,6 +14,7 @@ import type {
 import type { GameSecond } from "../../core/units/Units.js";
 import type { ScheduledOperation } from "../../domain/operations/CommittedOperationsSchedule.js";
 import type { RepositoryBundle } from "../repositories/RepositoryBundle.js";
+import type { OperationsPolicy } from "../policies/OperationsPolicy.js";
 import type { DayOperationsPlanner } from "./DayOperationsPlanner.js";
 
 export interface DispatchCenterProjectionInput {
@@ -25,7 +26,8 @@ export interface DispatchCenterProjectionInput {
 export class DispatchCenterProjection {
   constructor(
     private readonly repositories: RepositoryBundle,
-    private readonly planner: DayOperationsPlanner
+    private readonly planner: DayOperationsPlanner,
+    private readonly policy: OperationsPolicy
   ) {}
 
   build(
@@ -264,6 +266,11 @@ export class DispatchCenterProjection {
       plannedDepartureGameSecond: Number(
         trip.plannedDepartureGameSecond
       ),
+      boardingStartGameSecond:
+        Number(trip.plannedDepartureGameSecond) -
+        (route === undefined
+          ? 0
+          : this.policy.passengerBoardingLeadSeconds(route.id)),
       actualDepartureGameSecond:
         trip.actualDepartureGameSecond === null
           ? null
@@ -331,7 +338,8 @@ export class DispatchCenterProjection {
     const next = nextActionFor(
       actions,
       currentGameSecond,
-      (action) => action.vehicleId === vehicle.id
+      (action) => action.vehicleId === vehicle.id,
+      (action) => this.actionExecutionStart(action)
     );
 
     return {
@@ -394,8 +402,27 @@ export class DispatchCenterProjection {
       nextOperationGameSecond:
         next === null
           ? null
-          : Number(next.startsAtGameSecond)
+          : this.actionExecutionStart(next)
     };
+  }
+
+  private actionExecutionStart(
+    action: ScheduledOperation
+  ): number {
+    if (
+      action.kind !== "passenger_trip" ||
+      action.tripId === null
+    ) {
+      return Number(action.startsAtGameSecond);
+    }
+
+    const trip = this.repositories.trips.getById(action.tripId);
+    if (!trip) return Number(action.startsAtGameSecond);
+
+    return (
+      Number(action.startsAtGameSecond) -
+      this.policy.passengerBoardingLeadSeconds(trip.routeId)
+    );
   }
 
   private driverDto(
@@ -409,7 +436,8 @@ export class DispatchCenterProjection {
     const next = nextActionFor(
       actions,
       currentGameSecond,
-      (action) => action.driverId === driver.id
+      (action) => action.driverId === driver.id,
+      (action) => this.actionExecutionStart(action)
     );
 
     return {
@@ -436,7 +464,7 @@ export class DispatchCenterProjection {
       nextOperationGameSecond:
         next === null
           ? null
-          : Number(next.startsAtGameSecond)
+          : this.actionExecutionStart(next)
     };
   }
 }
@@ -444,7 +472,8 @@ export class DispatchCenterProjection {
 function nextActionFor(
   actions: readonly ScheduledOperation[],
   currentGameSecond: GameSecond,
-  predicate: (action: ScheduledOperation) => boolean
+  predicate: (action: ScheduledOperation) => boolean,
+  executionStart: (action: ScheduledOperation) => number
 ): ScheduledOperation | null {
   const current = Number(currentGameSecond);
 
@@ -453,13 +482,13 @@ function nextActionFor(
       .filter(
         (action) =>
           action.status === "planned" &&
-          Number(action.startsAtGameSecond) >= current &&
+          executionStart(action) >= current &&
           predicate(action)
       )
       .sort(
         (a, b) =>
-          Number(a.startsAtGameSecond) -
-            Number(b.startsAtGameSecond) ||
+          executionStart(a) -
+            executionStart(b) ||
           a.sequence - b.sequence
       )[0] ?? null
   );

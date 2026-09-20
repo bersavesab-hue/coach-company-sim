@@ -147,7 +147,8 @@ export function createApplication(
 
   const dispatchCenter = new DispatchCenterProjection(
     dependencies.repositories,
-    operationsPlanner
+    operationsPlanner,
+    dependencies.operationsPolicy
   );
 
   registerOperationsQueries(

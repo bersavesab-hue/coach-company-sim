@@ -39,6 +39,7 @@ export interface DispatchCenterTripDto {
   readonly destinationStationId: StationId | null;
   readonly destinationStationName: string | null;
   readonly plannedDepartureGameSecond: number;
+  readonly boardingStartGameSecond: number;
   readonly actualDepartureGameSecond: number | null;
   readonly actualArrivalGameSecond: number | null;
   readonly scheduledEndGameSecond: number | null;
