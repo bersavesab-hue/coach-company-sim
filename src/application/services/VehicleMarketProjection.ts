@@ -143,7 +143,11 @@ export class VehicleMarketProjection {
             ? Number(reservation.agreedPriceCents)
             : null,
         auctionId: auction?.id ?? null,
-        auctionStatus: auction?.status ?? null,
+        auctionStatus:
+          auction?.status === "scheduled" ||
+          auction?.status === "open"
+            ? auction.status
+            : null,
         highestBidCents:
           auction?.highestBidCents === null ||
           auction?.highestBidCents === undefined
