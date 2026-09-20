@@ -22,6 +22,10 @@ import { createApplication } from "../../src/bootstrap/createApplication.js";
 import type { RepositoryBundle } from "../../src/application/repositories/RepositoryBundle.js";
 import type { RuntimeIdAllocator } from "../../src/application/ids/RuntimeIdAllocator.js";
 import { createTestFinanceRepository, zeroEconomicPolicy } from "../helpers/TestFinance.js";
+import {
+  createTestVehicleRuntimeRepository,
+  zeroVehicleLifecyclePolicy
+} from "../helpers/TestVehicle.js";
 
 function buildFixture(companyLicenses = [ids.license("license.000001")]) {
   const regionId = ids.region("region.000001");
@@ -152,6 +156,7 @@ function buildFixture(companyLicenses = [ids.license("license.000001")]) {
       getById: (_id) => undefined as OwnedVehicle | undefined,
       save: (_vehicle) => undefined
     },
+    vehicleRuntime: createTestVehicleRuntimeRepository(),
     world: {
       get: () => graphResult.value,
       replace: (_world) => undefined
@@ -173,6 +178,9 @@ function buildFixture(companyLicenses = [ids.license("license.000001")]) {
     },
     nextTripId() {
       return ids.trip("trip.000000000001");
+    },
+    nextVehicleId() {
+      return ids.vehicle("vehicle.00000001");
     }
   };
 
@@ -182,7 +190,8 @@ function buildFixture(companyLicenses = [ids.license("license.000001")]) {
     passengerDemandPolicy: {
       frequencyMultiplierPermille: () => units.permille(1000)
     },
-    economicPolicy: zeroEconomicPolicy
+    economicPolicy: zeroEconomicPolicy,
+    vehicleLifecyclePolicy: zeroVehicleLifecyclePolicy
   });
 
   return { app, company, s1, s2 };
