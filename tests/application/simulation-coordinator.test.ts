@@ -38,7 +38,8 @@ import { FleetOperationsCoordinator } from "../../src/application/operations/Fle
 import { OperationsExecutionCoordinator } from "../../src/application/operations/OperationsExecutionCoordinator.js";
 import { CommandBus } from "../../src/application/CommandBus.js";
 import { zeroVehicleLifecyclePolicy,
-  createTestVehicleMarketRepository
+  createTestVehicleMarketRepository,
+  zeroVehicleMarketPolicy
 } from "../helpers/TestVehicle.js";
 import {
   createTestOwnedVehicle,

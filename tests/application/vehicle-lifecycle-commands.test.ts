@@ -21,7 +21,8 @@ import { createTestFinanceRepository } from "../helpers/TestFinance.js";
 import {
   createTestVehicleModel,
   createTestVehicleRuntimeRepository,
-  createTestVehicleMarketRepository
+  createTestVehicleMarketRepository,
+  zeroVehicleMarketPolicy
 } from "../helpers/TestVehicle.js";
 import {
   createTestFleetTaskRepository,
@@ -124,9 +125,13 @@ function fixture() {
         variantId,
         configurationId,
         sellerCompanyId: null,
+        sourceVehicleId: null,
         askingPriceCents: units.moneyCents(100_000),
+        sellerDisclosure: null,
+        reservation: null,
         stockCount: 1,
         usedSnapshot: null,
+        listedAtGameSecond: units.gameSecond(0),
         availableFromGameSecond: units.gameSecond(0),
         expiresAtGameSecond: null,
         status: "available"
@@ -282,6 +287,7 @@ function fixture() {
       stationPassengerServiceFeeCents: () => units.moneyCents(0),
       companyDailyRegulatoryFeeCents: () => units.moneyCents(0)
     },
+    vehicleMarketPolicy: zeroVehicleMarketPolicy,
     vehicleLifecyclePolicy: {
       quoteInitialOwnershipTerms: () => ({
         residualValueCents: units.moneyCents(20_000),
@@ -300,7 +306,6 @@ function fixture() {
         costCents: units.moneyCents(500),
         validForDays: 365
       }),
-      quoteResale: () => units.moneyCents(70_000),
       quoteScrap: () => units.moneyCents(10_000)
     },
     operationsPolicy: zeroOperationsPolicy

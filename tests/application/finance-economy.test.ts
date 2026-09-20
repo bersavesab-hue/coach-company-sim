@@ -28,7 +28,8 @@ import {
   createTestOwnedVehicle,
   createTestVehicleModel,
   createTestVehicleRuntimeRepository,
-  createTestVehicleMarketRepository
+  createTestVehicleMarketRepository,
+  zeroVehicleMarketPolicy
 } from "../helpers/TestVehicle.js";
 
 function fixture() {

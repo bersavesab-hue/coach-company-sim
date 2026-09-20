@@ -26,7 +26,8 @@ import {
   createTestVehicleMarketRepository,
   createTestVehicleModel,
   createTestVehicleRuntimeRepository,
-  zeroVehicleLifecyclePolicy
+  zeroVehicleLifecyclePolicy,
+  zeroVehicleMarketPolicy
 } from "../helpers/TestVehicle.js";
 
 function command<T>(
@@ -217,9 +218,13 @@ function fixture() {
         variantId,
         configurationId: standardConfigurationId,
         sellerCompanyId: null,
+        sourceVehicleId: null,
         askingPriceCents: units.moneyCents(120_000),
+        sellerDisclosure: null,
+        reservation: null,
         stockCount: 2,
         usedSnapshot: null,
+        listedAtGameSecond: units.gameSecond(0),
         availableFromGameSecond: units.gameSecond(0),
         expiresAtGameSecond: null,
         status: "available"
@@ -232,7 +237,10 @@ function fixture() {
         variantId,
         configurationId: standardConfigurationId,
         sellerCompanyId: null,
+        sourceVehicleId: null,
         askingPriceCents: units.moneyCents(60_000),
+        sellerDisclosure: null,
+        reservation: null,
         stockCount: 1,
         usedSnapshot: {
           mileageM: units.distanceM(88_000_000),
@@ -249,6 +257,7 @@ function fixture() {
           previousOwnerCount: 2,
           recordedAccidentCount: 1
         },
+        listedAtGameSecond: units.gameSecond(0),
         availableFromGameSecond: units.gameSecond(0),
         expiresAtGameSecond: null,
         status: "available"
@@ -370,6 +379,7 @@ function fixture() {
       stationPassengerServiceFeeCents: () => units.moneyCents(0),
       companyDailyRegulatoryFeeCents: () => units.moneyCents(0)
     },
+    vehicleMarketPolicy: zeroVehicleMarketPolicy,
     vehicleLifecyclePolicy: zeroVehicleLifecyclePolicy,
     operationsPolicy: zeroOperationsPolicy
   });

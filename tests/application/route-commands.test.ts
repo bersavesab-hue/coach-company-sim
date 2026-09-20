@@ -25,7 +25,8 @@ import { createTestFinanceRepository, zeroEconomicPolicy } from "../helpers/Test
 import {
   createTestVehicleRuntimeRepository,
   zeroVehicleLifecyclePolicy,
-  createTestVehicleMarketRepository
+  createTestVehicleMarketRepository,
+  zeroVehicleMarketPolicy
 } from "../helpers/TestVehicle.js";
 import {
   createTestFleetTaskRepository,
@@ -207,6 +208,7 @@ function buildFixture(companyLicenses = [ids.license("license.000001")]) {
       frequencyMultiplierPermille: () => units.permille(1000)
     },
     economicPolicy: zeroEconomicPolicy,
+    vehicleMarketPolicy: zeroVehicleMarketPolicy,
     vehicleLifecyclePolicy: zeroVehicleLifecyclePolicy,
     operationsPolicy: zeroOperationsPolicy
   });

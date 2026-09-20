@@ -16,6 +16,7 @@ import type { OwnedVehicle } from "../../src/domain/vehicle/OwnedVehicle.js";
 import { VehicleLifecycleRuntimeState } from "../../src/domain/vehicle/VehicleLifecycleRuntimeState.js";
 import type { VehicleModel } from "../../src/domain/vehicle/VehicleModel.js";
 import type { VehicleLifecyclePolicy } from "../../src/application/policies/VehicleLifecyclePolicy.js";
+import type { VehicleMarketPolicy } from "../../src/application/policies/VehicleMarketPolicy.js";
 import type { VehicleRuntimeRepository } from "../../src/application/repositories/VehicleRuntimeRepository.js";
 import type { VehicleMarketRepository } from "../../src/application/repositories/VehicleMarketRepository.js";
 import type { VehicleBrand } from "../../src/domain/vehicle-market/VehicleBrand.js";
@@ -26,6 +27,8 @@ import type { VehicleOptionDefinition } from "../../src/domain/vehicle-market/Ve
 import type { VehicleConfiguration } from "../../src/domain/vehicle-market/VehicleConfiguration.js";
 import type { VehicleDealer } from "../../src/domain/vehicle-market/VehicleDealer.js";
 import type { VehicleListing } from "../../src/domain/vehicle-market/VehicleListing.js";
+import type { VehicleInspectionReport } from "../../src/domain/vehicle-market/VehicleInspectionReport.js";
+import type { VehicleAuction } from "../../src/domain/vehicle-market/VehicleAuction.js";
 
 export function createTestVehicleModel(
   overrides: Partial<VehicleModel> = {}
@@ -65,6 +68,8 @@ export function createTestOwnedVehicle(input: {
   readonly energyCapacityUnits?: number;
   readonly gameSecond?: GameSecond;
   readonly nextMaintenanceMileageM?: number;
+  readonly previousOwnerCount?: number;
+  readonly recordedAccidentCount?: number;
 } = {}): OwnedVehicle {
   const now = input.gameSecond ?? units.gameSecond(0);
   const mileage = input.mileageM ?? 0;
@@ -76,6 +81,8 @@ export function createTestOwnedVehicle(input: {
     configurationId: null,
     seatCapacity: input.seatCapacity ?? 20,
     energyCapacityUnits: input.energyCapacityUnits ?? 100_000,
+    previousOwnerCount: input.previousOwnerCount ?? 0,
+    recordedAccidentCount: input.recordedAccidentCount ?? 0,
     mileageM: units.distanceM(mileage),
     energyUnits: input.energyUnits ?? 100_000,
     powertrainConditionPermille: units.permille(1000),
@@ -131,7 +138,6 @@ export const zeroVehicleLifecyclePolicy: VehicleLifecyclePolicy = {
     costCents: units.moneyCents(0),
     validForDays: 365
   }),
-  quoteResale: () => units.moneyCents(0),
   quoteScrap: () => units.moneyCents(0)
 };
 
@@ -145,6 +151,8 @@ export function createTestVehicleMarketRepository(input: {
   readonly configurations?: readonly VehicleConfiguration[];
   readonly dealers?: readonly VehicleDealer[];
   readonly listings?: readonly VehicleListing[];
+  readonly inspectionReports?: readonly VehicleInspectionReport[];
+  readonly auctions?: readonly VehicleAuction[];
 } = {}): VehicleMarketRepository {
   const brands = new Map(
     (input.brands ?? []).map((value) => [value.id, value])
@@ -176,6 +184,12 @@ export function createTestVehicleMarketRepository(input: {
   const listings = new Map(
     (input.listings ?? []).map((value) => [value.id, value])
   );
+  const inspectionReports = new Map(
+    (input.inspectionReports ?? []).map((value) => [value.id, value])
+  );
+  const auctions = new Map(
+    (input.auctions ?? []).map((value) => [value.id, value])
+  );
 
   return {
     getBrand: (id) => brands.get(id),
@@ -188,10 +202,38 @@ export function createTestVehicleMarketRepository(input: {
       configurations.set(value.id, value),
     getDealer: (id) => dealers.get(id),
     getListing: (id) => listings.get(id),
+    findListings: () => [...listings.values()],
     findAvailableListings: () =>
       [...listings.values()].filter(
         (value) => value.status === "available"
       ),
-    saveListing: (value) => listings.set(value.id, value)
+    saveListing: (value) => listings.set(value.id, value),
+    getInspectionReport: (id) => inspectionReports.get(id),
+    findInspectionReportsByListing: (listingId) =>
+      [...inspectionReports.values()].filter(
+        (value) => value.listingId === listingId
+      ),
+    saveInspectionReport: (value) =>
+      inspectionReports.set(value.id, value),
+    getAuction: (id) => auctions.get(id),
+    findAuctions: () => [...auctions.values()],
+    saveAuction: (value) => auctions.set(value.id, value)
   };
 }
+
+
+export const zeroVehicleMarketPolicy: VehicleMarketPolicy = {
+  ageValuePermille: () => units.permille(1000),
+  mileageValuePermille: () => units.permille(1000),
+  conditionValuePermille: () => units.permille(1000),
+  accidentValuePermille: () => units.permille(1000),
+  regionalDemandPermille: () => units.permille(1000),
+  dealerBuyPermille: () => units.permille(700),
+  suggestedAskPermille: () => units.permille(1000),
+  negotiationFloorPermille: () => units.permille(900),
+  listingFeeCents: () => units.moneyCents(0),
+  inspectionCostCents: () => units.moneyCents(0),
+  negotiationReservationSeconds: () => 3600,
+  auctionMinimumIncrementCents: () => units.moneyCents(1000),
+  auctionSellerFeePermille: () => units.permille(0)
+};

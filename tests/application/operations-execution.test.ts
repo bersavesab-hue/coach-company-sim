@@ -42,7 +42,8 @@ import {
   createTestVehicleModel,
   createTestVehicleRuntimeRepository,
   zeroVehicleLifecyclePolicy,
-  createTestVehicleMarketRepository
+  createTestVehicleMarketRepository,
+  zeroVehicleMarketPolicy
 } from "../helpers/TestVehicle.js";
 
 function command<T>(
@@ -368,6 +369,7 @@ function simpleFixture() {
       frequencyMultiplierPermille: () => units.permille(1000)
     },
     economicPolicy: zeroEconomicPolicy,
+    vehicleMarketPolicy: zeroVehicleMarketPolicy,
     vehicleLifecyclePolicy: zeroVehicleLifecyclePolicy,
     operationsPolicy: {
       vehicleTurnaroundSeconds: () => 60,
@@ -860,6 +862,7 @@ function faultFixture() {
       frequencyMultiplierPermille: () => units.permille(1000)
     },
     economicPolicy: zeroEconomicPolicy,
+    vehicleMarketPolicy: zeroVehicleMarketPolicy,
     vehicleLifecyclePolicy: zeroVehicleLifecyclePolicy,
     operationsPolicy: {
       vehicleTurnaroundSeconds: () => 0,

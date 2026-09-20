@@ -31,7 +31,8 @@ import {
   createTestVehicleModel,
   createTestVehicleRuntimeRepository,
   zeroVehicleLifecyclePolicy,
-  createTestVehicleMarketRepository
+  createTestVehicleMarketRepository,
+  zeroVehicleMarketPolicy
 } from "../helpers/TestVehicle.js";
 
 function fixture(
@@ -244,6 +245,7 @@ function fixture(
       frequencyMultiplierPermille: () => units.permille(1000)
     },
     economicPolicy: zeroEconomicPolicy,
+    vehicleMarketPolicy: zeroVehicleMarketPolicy,
     vehicleLifecyclePolicy: zeroVehicleLifecyclePolicy,
     operationsPolicy: {
       vehicleTurnaroundSeconds: () => 60,

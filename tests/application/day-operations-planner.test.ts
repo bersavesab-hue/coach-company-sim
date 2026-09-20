@@ -30,7 +30,8 @@ import {
   createTestOwnedVehicle,
   createTestVehicleModel,
   createTestVehicleRuntimeRepository,
-  createTestVehicleMarketRepository
+  createTestVehicleMarketRepository,
+  zeroVehicleMarketPolicy
 } from "../helpers/TestVehicle.js";
 
 interface FixtureOptions {

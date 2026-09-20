@@ -34,7 +34,8 @@ import {
   createTestVehicleModel,
   createTestVehicleRuntimeRepository,
   zeroVehicleLifecyclePolicy,
-  createTestVehicleMarketRepository
+  createTestVehicleMarketRepository,
+  zeroVehicleMarketPolicy
 } from "../helpers/TestVehicle.js";
 import { createTestDriver } from "../helpers/TestDriver.js";
 import {
@@ -273,6 +274,7 @@ function fixture() {
       frequencyMultiplierPermille: () => units.permille(1000)
     },
     economicPolicy: zeroEconomicPolicy,
+    vehicleMarketPolicy: zeroVehicleMarketPolicy,
     vehicleLifecyclePolicy: zeroVehicleLifecyclePolicy,
     operationsPolicy: zeroOperationsPolicy
   });
