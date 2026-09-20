@@ -11,8 +11,8 @@ import {
   type MoneyCents
 } from "../../../core/units/Units.js";
 import { accountBalanceCents } from "../../../domain/finance/LedgerMath.js";
+import type { FleetTask } from "../../../domain/operations/FleetTask.js";
 import type { OwnedVehicle } from "../../../domain/vehicle/OwnedVehicle.js";
-import { completeVehicleMaintenance } from "../../../domain/vehicle/VehicleLifecycleRules.js";
 import type { CommandBus } from "../../CommandBus.js";
 import type {
   PurchaseVehicleEnergyPayload,
@@ -22,6 +22,7 @@ import type {
 import type { DomainEventBus } from "../../events/DomainEventBus.js";
 import { createDomainEvent } from "../../events/createDomainEvent.js";
 import type { RuntimeIdAllocator } from "../../ids/RuntimeIdAllocator.js";
+import type { OperationsPolicy } from "../../policies/OperationsPolicy.js";
 import type { VehicleLifecyclePolicy } from "../../policies/VehicleLifecyclePolicy.js";
 import type { RepositoryBundle } from "../../repositories/RepositoryBundle.js";
 import type { EconomicPolicy } from "../../../simulation/finance/EconomicPolicy.js";
@@ -32,6 +33,7 @@ export interface VehicleHandlerDependencies {
   readonly events: DomainEventBus;
   readonly lifecyclePolicy: VehicleLifecyclePolicy;
   readonly economicPolicy: EconomicPolicy;
+  readonly operationsPolicy: OperationsPolicy;
 }
 
 export function registerVehicleHandlers(
@@ -46,9 +48,6 @@ export function registerVehicleHandlers(
   );
   commands.register("vehicle.sendToMaintenance", (command) =>
     handleSendToMaintenance(command, dependencies)
-  );
-  commands.register("vehicle.completeMaintenance", (command) =>
-    handleCompleteMaintenance(command, dependencies)
   );
   commands.register("vehicle.renewInsurance", (command) =>
     handleRenewInsurance(command, dependencies)
@@ -151,7 +150,10 @@ function handlePurchase(
     status: "available",
     activeIncident: null,
     depotStationId: payload.depotStationId,
-    activeTripId: null
+    currentStationId: payload.depotStationId,
+    availableAtGameSecond: command.issuedAtGameSecond,
+    activeTripId: null,
+    activeFleetTaskId: null
   };
 
   dependencies.repositories.vehicles.save(vehicle);
@@ -180,7 +182,7 @@ function handlePurchase(
 function handleEnergyPurchase(
   command: CommandEnvelope,
   dependencies: VehicleHandlerDependencies
-): Result<OwnedVehicle, DomainError> {
+): Result<FleetTask, DomainError> {
   const payload = command.payload as PurchaseVehicleEnergyPayload;
   if (!Number.isSafeInteger(payload.energyUnits) || payload.energyUnits <= 0) {
     return err(
@@ -193,29 +195,16 @@ function handleEnergyPurchase(
 
   const context = requireVehicle(payload.vehicleId, command, dependencies);
   if (!context.ok) return context;
-
   const { vehicle, model } = context.value;
-  if (
-    vehicle.status === "running" ||
-    vehicle.status === "maintenance" ||
-    vehicle.status === "sold" ||
-    vehicle.status === "retired"
-  ) {
-    return err(
-      new DomainError(
-        "VEHICLE_NOT_AVAILABLE",
-        "Vehicle cannot receive energy in its current state",
-        { vehicleId: vehicle.id, status: vehicle.status }
-      )
-    );
-  }
+
+  const idle = requireStationaryTaskVehicle(vehicle, command);
+  if (!idle.ok) return idle;
 
   const availableCapacity = model.energyCapacityUnits - vehicle.energyUnits;
   const purchasedUnits = Math.min(
     payload.energyUnits,
     Math.max(0, availableCapacity)
   );
-
   if (purchasedUnits <= 0) {
     return err(
       new DomainError(
@@ -234,7 +223,6 @@ function handleEnergyPurchase(
   const costCents = units.moneyCents(
     Math.ceil((priceMilliCents * purchasedUnits) / 1000)
   );
-
   const funds = requireCash(
     dependencies.repositories,
     vehicle.companyId,
@@ -242,121 +230,133 @@ function handleEnergyPurchase(
   );
   if (!funds.ok) return funds;
 
-  const newEnergyUnits = vehicle.energyUnits + purchasedUnits;
-  const energyRecovery =
-    vehicle.status === "broken" &&
-    vehicle.activeTripId === null &&
-    vehicle.activeIncident?.kind === "energy_depleted" &&
-    newEnergyUnits >= model.minimumDispatchEnergyUnits;
+  const seconds = dependencies.operationsPolicy.refuelServiceSeconds(
+    model.energyKind,
+    purchasedUnits
+  );
+  const end = units.gameSecond(
+    Number(command.issuedAtGameSecond) + seconds
+  );
+  const conflict = ensureVehicleTaskWindow(
+    dependencies.repositories,
+    vehicle.id,
+    end
+  );
+  if (!conflict.ok) return conflict;
 
-  const updated: OwnedVehicle = {
-    ...vehicle,
-    energyUnits: newEnergyUnits,
-    status: energyRecovery ? "available" : vehicle.status,
-    activeIncident: energyRecovery ? null : vehicle.activeIncident
+  const task: FleetTask = {
+    id: dependencies.ids.nextFleetTaskId(),
+    companyId: vehicle.companyId,
+    kind: "refuel",
+    status: "running",
+    vehicleId: vehicle.id,
+    driverId: null,
+    tripId: null,
+    fromStationId: vehicle.currentStationId,
+    toStationId: vehicle.currentStationId,
+    pathLegs: [],
+    startedAtGameSecond: command.issuedAtGameSecond,
+    completesAtGameSecond: end,
+    completedAtGameSecond: null,
+    energyUnits: purchasedUnits,
+    quotedCostCents: costCents
   };
 
-  dependencies.repositories.vehicles.save(updated);
+  dependencies.repositories.fleetTasks.save(task);
+  dependencies.repositories.vehicles.save({
+    ...vehicle,
+    status: "refueling",
+    availableAtGameSecond: end,
+    activeFleetTaskId: task.id
+  });
   dependencies.events.publish(
     createDomainEvent(
       command,
-      "vehicle.energyPurchased",
+      "fleet.taskStarted",
       "vehicle",
       vehicle.id,
-      {
-        vehicleId: vehicle.id,
-        companyId: vehicle.companyId,
-        energyKind: model.energyKind,
-        energyUnits: purchasedUnits,
-        totalCostCents: costCents
-      }
+      { taskId: task.id, kind: task.kind }
     )
   );
-
-  return ok(updated);
+  return ok(task);
 }
 
 function handleSendToMaintenance(
   command: CommandEnvelope,
   dependencies: VehicleHandlerDependencies
-): Result<OwnedVehicle, DomainError> {
+): Result<FleetTask, DomainError> {
   const payload = command.payload as VehicleByIdPayload;
   const context = requireVehicle(payload.vehicleId, command, dependencies);
   if (!context.ok) return context;
-
-  const { vehicle } = context.value;
-  if (
-    vehicle.activeTripId !== null ||
-    (vehicle.status !== "available" && vehicle.status !== "broken")
-  ) {
-    return err(
-      new DomainError(
-        "VEHICLE_NOT_AVAILABLE",
-        "Vehicle must be off-trip before entering maintenance",
-        { vehicleId: vehicle.id, status: vehicle.status }
-      )
-    );
-  }
-
-  const updated: OwnedVehicle = {
-    ...vehicle,
-    status: "maintenance"
-  };
-  dependencies.repositories.vehicles.save(updated);
-  dependencies.events.publish(
-    createDomainEvent(
-      command,
-      "vehicle.maintenanceStarted",
-      "vehicle",
-      vehicle.id,
-      { vehicleId: vehicle.id }
-    )
-  );
-  return ok(updated);
-}
-
-function handleCompleteMaintenance(
-  command: CommandEnvelope,
-  dependencies: VehicleHandlerDependencies
-): Result<OwnedVehicle, DomainError> {
-  const payload = command.payload as VehicleByIdPayload;
-  const context = requireVehicle(payload.vehicleId, command, dependencies);
-  if (!context.ok) return context;
-
   const { vehicle, model } = context.value;
-  if (vehicle.status !== "maintenance" || vehicle.activeTripId !== null) {
-    return err(
-      new DomainError(
-        "VEHICLE_IN_MAINTENANCE",
-        "Vehicle must be in maintenance with no active trip",
-        { vehicleId: vehicle.id }
-      )
-    );
-  }
+
+  const idle = requireStationaryTaskVehicle(vehicle, command);
+  if (!idle.ok) return idle;
 
   const costCents = dependencies.lifecyclePolicy.quoteMaintenance(
     vehicle,
     model,
     command.issuedAtGameSecond
   );
-  const updated = completeVehicleMaintenance(vehicle, model);
+  const seconds = dependencies.operationsPolicy.maintenanceServiceSeconds(
+    vehicle.id
+  );
+  const end = units.gameSecond(
+    Number(command.issuedAtGameSecond) + seconds
+  );
+  const conflict = ensureVehicleTaskWindow(
+    dependencies.repositories,
+    vehicle.id,
+    end
+  );
+  if (!conflict.ok) return conflict;
 
-  dependencies.repositories.vehicles.save(updated);
+  const task: FleetTask = {
+    id: dependencies.ids.nextFleetTaskId(),
+    companyId: vehicle.companyId,
+    kind: "maintenance",
+    status: "running",
+    vehicleId: vehicle.id,
+    driverId: null,
+    tripId: null,
+    fromStationId: vehicle.currentStationId,
+    toStationId: vehicle.currentStationId,
+    pathLegs: [],
+    startedAtGameSecond: command.issuedAtGameSecond,
+    completesAtGameSecond: end,
+    completedAtGameSecond: null,
+    energyUnits: 0,
+    quotedCostCents: costCents
+  };
+
+  dependencies.repositories.fleetTasks.save(task);
+  dependencies.repositories.vehicles.save({
+    ...vehicle,
+    status: "maintenance",
+    availableAtGameSecond: end,
+    activeFleetTaskId: task.id
+  });
   dependencies.events.publish(
     createDomainEvent(
       command,
-      "vehicle.maintenanceCompleted",
+      "vehicle.maintenanceStarted",
       "vehicle",
       vehicle.id,
-      {
-        vehicleId: vehicle.id,
-        companyId: vehicle.companyId,
-        costCents
-      }
+      { vehicleId: vehicle.id, taskId: task.id }
+    )
+  );
+  dependencies.events.publish(
+    createDomainEvent(
+      command,
+      "fleet.taskStarted",
+      "vehicle",
+      vehicle.id,
+      { taskId: task.id, kind: task.kind },
+      2
     )
   );
 
-  return ok(updated);
+  return ok(task);
 }
 
 function handleRenewInsurance(
@@ -366,8 +366,8 @@ function handleRenewInsurance(
   const payload = command.payload as VehicleByIdPayload;
   const context = requireVehicle(payload.vehicleId, command, dependencies);
   if (!context.ok) return context;
-
   const { vehicle } = context.value;
+
   const stationary = ensureStationary(vehicle);
   if (!stationary.ok) return stationary;
 
@@ -375,7 +375,6 @@ function handleRenewInsurance(
     vehicle,
     command.issuedAtGameSecond
   );
-
   const base = Math.max(
     Number(vehicle.insuranceValidUntilGameSecond),
     Number(command.issuedAtGameSecond)
@@ -398,8 +397,7 @@ function handleRenewInsurance(
         vehicleId: vehicle.id,
         companyId: vehicle.companyId,
         costCents: quote.costCents,
-        validUntilGameSecond:
-          updated.insuranceValidUntilGameSecond
+        validUntilGameSecond: updated.insuranceValidUntilGameSecond
       }
     )
   );
@@ -413,8 +411,8 @@ function handleInspection(
   const payload = command.payload as VehicleByIdPayload;
   const context = requireVehicle(payload.vehicleId, command, dependencies);
   if (!context.ok) return context;
-
   const { vehicle, model } = context.value;
+
   const stationary = ensureStationary(vehicle);
   if (!stationary.ok) return stationary;
 
@@ -461,12 +459,10 @@ function handleInspection(
         vehicleId: vehicle.id,
         companyId: vehicle.companyId,
         costCents: quote.costCents,
-        validUntilGameSecond:
-          updated.inspectionValidUntilGameSecond
+        validUntilGameSecond: updated.inspectionValidUntilGameSecond
       }
     )
   );
-
   return ok(updated);
 }
 
@@ -492,29 +488,24 @@ function disposeVehicle(
   const payload = command.payload as VehicleByIdPayload;
   const context = requireVehicle(payload.vehicleId, command, dependencies);
   if (!context.ok) return context;
-
   const { vehicle, model } = context.value;
-  if (
-    vehicle.activeTripId !== null ||
-    vehicle.status === "running" ||
-    vehicle.status === "assigned" ||
-    vehicle.status === "maintenance"
-  ) {
-    return err(
-      new DomainError(
-        "VEHICLE_NOT_AVAILABLE",
-        "Vehicle cannot be disposed while assigned, running or in maintenance",
-        { vehicleId: vehicle.id, status: vehicle.status }
-      )
-    );
-  }
 
-  if (vehicle.status === "sold" || vehicle.status === "retired") {
+  const stationary = ensureStationary(vehicle);
+  if (!stationary.ok) return stationary;
+
+  const futureTrips = dependencies.repositories.trips
+    .findByVehicle(vehicle.id)
+    .filter(
+      (trip) =>
+        trip.status !== "completed" &&
+        trip.status !== "cancelled"
+    );
+  if (futureTrips.length > 0) {
     return err(
       new DomainError(
-        "VEHICLE_ALREADY_DISPOSED",
-        "Vehicle was already disposed",
-        { vehicleId: vehicle.id }
+        "FLEET_TASK_CONFLICT",
+        "Vehicle cannot be disposed while future trips still reserve it",
+        { vehicleId: vehicle.id, tripIds: futureTrips.map((t) => t.id) }
       )
     );
   }
@@ -551,7 +542,6 @@ function disposeVehicle(
       }
     )
   );
-
   return ok(updated);
 }
 
@@ -610,14 +600,10 @@ function requireActor(
       new DomainError(
         "INVALID_ARGUMENT",
         "Command actor does not own this vehicle",
-        {
-          companyId,
-          actorCompanyId: command.actorCompanyId
-        }
+        { companyId, actorCompanyId: command.actorCompanyId }
       )
     );
   }
-
   return ok(true);
 }
 
@@ -630,7 +616,6 @@ function requireCash(
     repositories.finance.ledgerEntriesByCompany(companyId),
     "cash"
   );
-
   if (cash < Number(required)) {
     return err(
       new DomainError(
@@ -644,7 +629,6 @@ function requireCash(
       )
     );
   }
-
   return ok(true);
 }
 
@@ -665,19 +649,73 @@ function ensureStationary(
 ): Result<true, DomainError> {
   if (
     vehicle.activeTripId !== null ||
+    vehicle.activeFleetTaskId !== null ||
     vehicle.status === "running" ||
     vehicle.status === "assigned" ||
+    vehicle.status === "repositioning" ||
+    vehicle.status === "refueling" ||
+    vehicle.status === "maintenance" ||
+    vehicle.status === "recovering" ||
     vehicle.status === "sold" ||
     vehicle.status === "retired"
   ) {
     return err(
       new DomainError(
         "VEHICLE_NOT_AVAILABLE",
-        "Vehicle must be stationary and owned for this operation",
+        "Vehicle must be stationary and not executing another operation",
         { vehicleId: vehicle.id, status: vehicle.status }
       )
     );
   }
+  return ok(true);
+}
 
+function requireStationaryTaskVehicle(
+  vehicle: OwnedVehicle,
+  command: CommandEnvelope
+): Result<true, DomainError> {
+  const stationary = ensureStationary(vehicle);
+  if (!stationary.ok) return stationary;
+  if (
+    vehicle.currentStationId === null ||
+    Number(vehicle.availableAtGameSecond) > Number(command.issuedAtGameSecond)
+  ) {
+    return err(
+      new DomainError(
+        "RESOURCE_LOCATION_MISMATCH",
+        "Vehicle is not at an available station for this operation",
+        {
+          vehicleId: vehicle.id,
+          currentStationId: vehicle.currentStationId,
+          availableAtGameSecond: vehicle.availableAtGameSecond
+        }
+      )
+    );
+  }
+  return ok(true);
+}
+
+function ensureVehicleTaskWindow(
+  repositories: RepositoryBundle,
+  vehicleId: VehicleId,
+  end: ReturnType<typeof units.gameSecond>
+): Result<true, DomainError> {
+  const conflict = repositories.trips
+    .findByVehicle(vehicleId)
+    .find(
+      (trip) =>
+        trip.status !== "completed" &&
+        trip.status !== "cancelled" &&
+        Number(trip.plannedDepartureGameSecond) < Number(end)
+    );
+  if (conflict) {
+    return err(
+      new DomainError(
+        "FLEET_TASK_CONFLICT",
+        "Vehicle operation would overlap an upcoming trip",
+        { vehicleId, tripId: conflict.id }
+      )
+    );
+  }
   return ok(true);
 }
