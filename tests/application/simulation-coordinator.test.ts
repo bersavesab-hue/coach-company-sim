@@ -36,6 +36,7 @@ import {
 } from "../helpers/TestOperations.js";
 import { FleetOperationsCoordinator } from "../../src/application/operations/FleetOperationsCoordinator.js";
 import { OperationsExecutionCoordinator } from "../../src/application/operations/OperationsExecutionCoordinator.js";
+import type { VehicleMarketCoordinator } from "../../src/application/vehicle-market/VehicleMarketCoordinator.js";
 import { CommandBus } from "../../src/application/CommandBus.js";
 import { zeroVehicleLifecyclePolicy,
   createTestVehicleMarketRepository,
@@ -305,6 +306,7 @@ function fixture() {
     finance,
     fleetOperations,
     operationsExecution,
+    { advanceTo: () => undefined } as unknown as VehicleMarketCoordinator,
     zeroOperationsPolicy,
     index
   );

@@ -319,6 +319,7 @@ function fixture() {
     model,
     listingId,
     configurationId,
+    dealerId,
     vehicles
   };
 }
@@ -434,8 +435,10 @@ test("purchase, timed refuel, timed maintenance and sale form one audited lifecy
   );
 
   const sold = await f.app.commands.dispatch(
-    command(5, "vehicle.sell", f.companyId, {
-      vehicleId: vehicle.id
+    command(5, "vehicleMarket.sellToDealer", f.companyId, {
+      companyId: f.companyId,
+      vehicleId: vehicle.id,
+      dealerId: f.dealerId
     })
   );
   assert.equal(sold.ok, true);
