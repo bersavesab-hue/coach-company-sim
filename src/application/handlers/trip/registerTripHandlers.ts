@@ -21,6 +21,7 @@ import {
   assignDriverToTrip,
   assignVehicleToTrip,
   cancelTrip,
+  clearTripResources,
   departTrip,
   prepareTrip,
   resumeDisruptedTrip,
@@ -39,6 +40,7 @@ import type { CommandBus } from "../../CommandBus.js";
 import type {
   AssignTripDriverPayload,
   AssignTripVehiclePayload,
+  ClearTripResourcesPayload,
   PrepareTripPayload,
   ResumeTripPayload,
   TripByIdPayload
@@ -74,6 +76,9 @@ export function registerTripHandlers(
   );
   commands.register("trip.assignDriver", (command) =>
     handleAssignDriver(command, dependencies, dispatch)
+  );
+  commands.register("trip.clearResources", (command) =>
+    handleClearResources(command, dependencies)
   );
   commands.register("trip.startBoarding", (command) =>
     handleStartBoarding(command, dependencies)
@@ -399,6 +404,34 @@ function handleAssignDriver(
     )
   );
   return updatedTrip;
+}
+
+function handleClearResources(
+  command: CommandEnvelope,
+  dependencies: TripHandlerDependencies
+): Result<TripInstance, DomainError> {
+  const payload = command.payload as ClearTripResourcesPayload;
+  const context = requireTripContext(payload.tripId, dependencies.repositories);
+  if (!context.ok) return context;
+
+  const actorCheck = requireActor(command, context.value.companyId);
+  if (!actorCheck.ok) return actorCheck;
+
+  const cleared = clearTripResources(context.value.trip);
+  if (!cleared.ok) return cleared;
+
+  dependencies.repositories.trips.save(cleared.value);
+  dependencies.events.publish(
+    createDomainEvent(
+      command,
+      "trip.resourcesCleared",
+      "trip",
+      cleared.value.id,
+      { tripId: cleared.value.id }
+    )
+  );
+
+  return cleared;
 }
 
 function handleStartBoarding(
