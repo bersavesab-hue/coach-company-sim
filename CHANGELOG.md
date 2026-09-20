@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.2.0-stage1
+
+### Removed
+- 删除 V0.1 的 PassengerTransportApp、GameState、旧 commands/events/units/version。
+- 删除 V0.1 的 Vehicle -> Route 直接绑定运行模型。
+- 删除旧 VehicleMovementSystem、PassengerDemandSystem 与 demo 入口。
+- 删除旧 SaveCodec 与单体 core.test。
+
+### Added
+- 建立正式 Contracts：强类型 ID、CommandEnvelope、DomainEventEnvelope。
+- 建立 Core：整数单位、GameClock、Result、DomainError/ErrorCode、版本协议。
+- 建立 Domain：World、Route、ServicePlan、TripInstance、OwnedVehicle、Company。
+- 建立 Trip 正式状态机。
+- 建立按领域 Repository 接口。
+- 建立 CommandBus / QueryBus 骨架。
+- 建立 SaveEnvelope / Migration 边界。
+- 建立 Bootstrap composition root。
+- 建立唯一 public-api。
+- 建立架构守卫和新的分层测试。
+
+### Breaking
+- 开发期 V0.1 临时接口全部失效，不提供兼容壳。
+- Vehicle 不再持有 routeId、当前位置或道路偏移；运行事实归 TripInstance。
+- 不再存在总 GameState。
+
+# Changelog
+
 ## 0.1.3-stage1-blueprint
 
 ### Added

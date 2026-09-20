@@ -1,53 +1,42 @@
-export { GAME_VERSION, SAVE_VERSION } from "./core/version.js";
-export { GameClock } from "./core/GameClock.js";
-export { EventBus } from "./core/events.js";
+export * from "./contracts/ids/EntityIds.js";
+export * from "./contracts/ids/IdPrefix.js";
+export * from "./contracts/commands/CommandEnvelope.js";
+export * from "./contracts/commands/CommandTypes.js";
+export * from "./contracts/events/DomainEventEnvelope.js";
+export * from "./contracts/events/EventTypes.js";
+export * from "./contracts/dto/CommonDto.js";
 
-export type { DomainEvent } from "./core/events.js";
-export type {
-  MoneyCents,
-  DistanceM,
-  GameSeconds,
-  WorldMeter,
-  SpeedMps,
-  Permille
-} from "./core/units.js";
+export * from "./core/units/Units.js";
+export * from "./core/time/GameClock.js";
+export * from "./core/time/GameTime.js";
+export * from "./core/result/Result.js";
+export * from "./core/errors/ErrorCode.js";
+export * from "./core/errors/DomainError.js";
+export * from "./core/version/Versions.js";
 
-export type {
-  MapNode,
-  MapNodeType,
-  RoadSegment,
-  WorldMap,
-  WorldPoint
-} from "./domain/map.js";
+export * from "./domain/world/WorldPoint.js";
+export * from "./domain/world/WorldNode.js";
+export * from "./domain/world/RoadSegment.js";
+export * from "./domain/world/WorldGraph.js";
+export * from "./domain/route/RouteType.js";
+export * from "./domain/route/PassengerRoute.js";
+export * from "./domain/schedule/ServiceCalendar.js";
+export * from "./domain/schedule/DeparturePattern.js";
+export * from "./domain/schedule/ServicePlan.js";
+export * from "./domain/trip/TripStatus.js";
+export * from "./domain/trip/TripPosition.js";
+export * from "./domain/trip/TripInstance.js";
+export * from "./domain/trip/TripStateMachine.js";
+export * from "./domain/vehicle/VehicleStatus.js";
+export * from "./domain/vehicle/OwnedVehicle.js";
+export * from "./domain/company/CompanyStatus.js";
+export * from "./domain/company/Company.js";
 
-export type {
-  PassengerRoute,
-  RouteType
-} from "./domain/route.js";
+export * from "./application/CommandBus.js";
+export * from "./application/QueryBus.js";
+export * from "./application/repositories/RepositoryBundle.js";
 
-export type {
-  Vehicle,
-  VehicleStatus
-} from "./domain/vehicle.js";
-
-export type {
-  CompanyState,
-  LicenseLevel
-} from "./domain/company.js";
-
-export { GameState } from "./state/GameState.js";
-export type {
-  PassengerDemandProfile
-} from "./state/GameState.js";
-
-export type { GameCommand } from "./application/commands.js";
-export { PassengerTransportApp } from "./application/PassengerTransportApp.js";
-
-export { pointOnRoad } from "./simulation/mapGeometry.js";
-
-export {
-  encodeSave,
-  decodeSave
-} from "./save/SaveCodec.js";
-
-export { createDemoState } from "./demo/createDemoState.js";
+export * from "./save/schema/SaveEnvelope.js";
+export * from "./save/schema/SaveVersion.js";
+export * from "./save/migrations/Migration.js";
+export * from "./bootstrap/createApplication.js";
