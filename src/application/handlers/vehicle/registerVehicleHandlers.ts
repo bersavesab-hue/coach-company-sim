@@ -513,6 +513,7 @@ function ensureStationary(
     vehicle.status === "refueling" ||
     vehicle.status === "maintenance" ||
     vehicle.status === "recovering" ||
+    vehicle.status === "listed_for_sale" ||
     vehicle.status === "sold" ||
     vehicle.status === "retired"
   ) {

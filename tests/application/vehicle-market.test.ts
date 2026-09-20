@@ -572,13 +572,13 @@ test("market queries expose dealer stock and configurator options", async () => 
     readonly brandName: string;
     readonly modelName: string;
     readonly stockCount: number;
-    readonly mileageM: number | null;
+    readonly reportedMileageM: number | null;
   }[];
   assert.equal(items.length, 2);
   assert.equal(items[0]?.dealerName, "星河直营网点");
   assert.equal(items[0]?.brandName, "星河客车");
   assert.equal(
-    items.some((item) => item.listingKind === "used" && item.mileageM === 88_000_000),
+    items.some((item) => item.listingKind === "used" && item.reportedMileageM === 88_000_000),
     true
   );
 
