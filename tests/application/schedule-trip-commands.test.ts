@@ -35,6 +35,11 @@ import {
   createTestVehicleRuntimeRepository,
   zeroVehicleLifecyclePolicy
 } from "../helpers/TestVehicle.js";
+import { createTestDriver } from "../helpers/TestDriver.js";
+import {
+  createTestFleetTaskRepository,
+  zeroOperationsPolicy
+} from "../helpers/TestOperations.js";
 
 function fixture() {
   const company: Company = {
@@ -136,14 +141,12 @@ function fixture() {
     energyUnits: 100_000
   });
 
-  const driver: Driver = {
+  const driver: Driver = createTestDriver({
     id: ids.staff("staff.00000001"),
     companyId: company.id,
-    name: "司机甲",
-    status: "available",
-    qualifiedVehicleClasses: ["county_midibus"],
-    activeTripId: null
-  };
+    stationId: s1.id,
+    qualifiedVehicleClasses: ["county_midibus"]
+  });
 
   const companies = new Map<CompanyId, Company>([[company.id, company]]);
   const routes = new Map<RouteId, PassengerRoute>([[route.id, route]]);
@@ -162,6 +165,7 @@ function fixture() {
       save: (value) => companies.set(value.id, value)
     },
     finance: createTestFinanceRepository(),
+    fleetTasks: createTestFleetTaskRepository(),
     passengerDemand: { all: () => [] },
     passengerRuntime: {
       get: () => passengerRuntime,
@@ -198,6 +202,10 @@ function fixture() {
             value.servicePlanId === planId &&
             value.plannedDepartureGameSecond === departure
         ),
+      findByVehicle: (vehicleId) =>
+        [...trips.values()].filter((value) => value.vehicleId === vehicleId),
+      findByDriver: (driverId) =>
+        [...trips.values()].filter((value) => value.driverId === driverId),
       findRunning: () =>
         [...trips.values()].filter((value) => value.status === "running"),
       save: (value) => trips.set(value.id, value)
@@ -236,6 +244,9 @@ function fixture() {
         `trip.${String(tripSequence).padStart(12, "0")}`
       );
     },
+    nextFleetTaskId() {
+      return ids.fleetTask("fleet_task.00000001");
+    },
     nextVehicleId() {
       return ids.vehicle("vehicle.00000002");
     }
@@ -248,7 +259,8 @@ function fixture() {
       frequencyMultiplierPermille: () => units.permille(1000)
     },
     economicPolicy: zeroEconomicPolicy,
-    vehicleLifecyclePolicy: zeroVehicleLifecyclePolicy
+    vehicleLifecyclePolicy: zeroVehicleLifecyclePolicy,
+    operationsPolicy: zeroOperationsPolicy
   });
 
   return {
