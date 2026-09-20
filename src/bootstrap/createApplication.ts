@@ -3,6 +3,7 @@ import { QueryBus } from "../application/QueryBus.js";
 import { DomainEventBus } from "../application/events/DomainEventBus.js";
 import { FinanceCoordinator } from "../application/finance/FinanceCoordinator.js";
 import { registerFinanceQueries } from "../application/handlers/finance/registerFinanceQueries.js";
+import { registerOperationsQueries } from "../application/handlers/operations/registerOperationsQueries.js";
 import { registerFleetHandlers } from "../application/handlers/fleet/registerFleetHandlers.js";
 import { registerMapQueries } from "../application/handlers/map/registerMapQueries.js";
 import { registerPassengerQueries } from "../application/handlers/passenger/registerPassengerQueries.js";
@@ -115,13 +116,7 @@ export function createApplication(
     dependencies.repositories,
     dependencies.operationsPolicy
   );
-  queries.register("operations.planDay", (query) =>
-    operationsPlanner.planCompanyDay(
-      query.payload as Parameters<
-        DayOperationsPlanner["planCompanyDay"]
-      >[0]
-    )
-  );
+  registerOperationsQueries(queries, operationsPlanner);
 
   const simulation = new SimulationCoordinator(
     dependencies.repositories,

@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.11.0-stage10
+
+### Added
+- 新增 DayOperationsPlan，正式表达一天运营计划、班次覆盖、支援动作、缺口与统计。
+- 新增 DayOperationsPlanner，从 ServicePlan 当日发车槽自动生成可执行车辆/司机运营方案。
+- 自动选择符合 requiredVehicleClass 的车辆和有对应资质的司机。
+- 自动维护车辆虚拟运营状态：所在站、最早可用时间、能源、里程、部件状态和下次保养里程。
+- 自动维护司机虚拟运营状态：所在站、可用时间、值勤开始、连续驾驶与休息窗口。
+- 当上一班终点与下一班始发站不一致时，自动通过真实 WorldGraph 寻路插入 deadhead。
+- 空驶调车在计划层计算真实路网时间、距离和能源需求。
+- 能源不足时自动插入 refuel，并按 OperationsPolicy 计算补能占用时间。
+- 预计超过保养里程或部件安全阈值时自动插入 maintenance。
+- 司机存在足够休息窗口时自动插入 rest，并重置连续驾驶链。
+- 无法找到可执行车辆/司机组合时输出 uncovered Trip 与明确 issue，而不是静默丢班。
+- 支持已有 planned Trip 的既定车辆/司机约束；已执行/完成 Trip 标记为 locked_existing，不重新排写。
+- 新增 operations.planDay Query，UI/调度中心只读获取完整日计划。
+- VehicleRepository 新增 findByCompany；StaffRepository 新增 findDriversByCompany。
+- 新增整日自动排班专项测试：往返复用、同向空驶、自动补能/保养、缺司机暴露。
+
+### Architecture
+- DayOperationsPlanner 是只读推演层，不直接 save/replace 任何 Vehicle、Driver、Trip 或 FleetTask。
+- 未来运营计划与正在执行的 FleetTask 严格分离：计划层只产出 PlannedOperationAction，运行时到点后再转真实命令/任务。
+- UI 不直接拼车辆/司机排班逻辑，只调用 operations.planDay。
+- 计划算法使用 Stage 9 的唯一车辆/司机运营状态和 OperationsPolicy，不建立第二套运行状态。
+- 架构守卫禁止 DayOperationsPlanner 写 Repository，并强制车辆/司机仓库保留公司级资源发现接口。
+
+
 ## 0.10.0-stage9
 
 ### Removed

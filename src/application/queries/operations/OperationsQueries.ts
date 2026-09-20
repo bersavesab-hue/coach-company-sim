@@ -1,0 +1,11 @@
+import type { CompanyId } from "../../../contracts/ids/EntityIds.js";
+import type { GameSecond } from "../../../core/units/Units.js";
+
+export interface PlanDayOperationsQuery {
+  readonly type: "operations.planDay";
+  readonly payload: {
+    readonly companyId: CompanyId;
+    readonly gameDay: number;
+    readonly generatedAtGameSecond: GameSecond;
+  };
+}

@@ -174,6 +174,45 @@ for (const file of sourceFiles) {
     );
   }
 
+  if (rel.includes("/services/DayOperationsPlanner.ts")) {
+    for (const forbiddenMutation of [
+      ".save(",
+      ".replace("
+    ]) {
+      if (text.includes(forbiddenMutation)) {
+        failures.push(
+          `DayOperationsPlanner must remain read-only in ${rel}: ${forbiddenMutation}`
+        );
+      }
+    }
+
+    for (const requiredPlanningToken of [
+      "maintenance",
+      "refuel",
+      "deadhead",
+      "rest",
+      "uncovered"
+    ]) {
+      if (!text.includes(requiredPlanningToken)) {
+        failures.push(
+          `DayOperationsPlanner missing Stage 10 planning capability in ${rel}: ${requiredPlanningToken}`
+        );
+      }
+    }
+  }
+
+  if (rel.includes("/repositories/VehicleRepository.ts") && !text.includes("findByCompany(")) {
+    failures.push(
+      "VehicleRepository must support company fleet discovery for Stage 10"
+    );
+  }
+
+  if (rel.includes("/repositories/StaffRepository.ts") && !text.includes("findDriversByCompany(")) {
+    failures.push(
+      "StaffRepository must support company driver discovery for Stage 10"
+    );
+  }
+
   if (rel.includes("/finance/FinancialProfiles.ts")) {
     for (const forbiddenField of [
       "energyKind:",

@@ -97,6 +97,7 @@ export * from "./application/policies/OperationsPolicy.js";
 export * from "./application/policies/VehicleLifecyclePolicy.js";
 export * from "./application/queries/finance/FinanceQueries.js";
 export * from "./application/queries/map/MapQueries.js";
+export * from "./application/queries/operations/OperationsQueries.js";
 export * from "./application/queries/passenger/PassengerQueries.js";
 export * from "./application/queries/vehicle/VehicleQueries.js";
 export * from "./application/repositories/PassengerDemandRepository.js";
