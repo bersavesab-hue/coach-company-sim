@@ -1,11 +1,9 @@
 import type { VisibleVehicleDto } from "../../contracts/dto/MapDto.js";
 import type { TripId } from "../../contracts/ids/EntityIds.js";
 import type { DomainError } from "../../core/errors/DomainError.js";
-import {
-  units,
-  type GameSecond
-} from "../../core/units/Units.js";
+import type { GameSecond } from "../../core/units/Units.js";
 import type { TripInstance } from "../../domain/trip/TripInstance.js";
+import { disruptTrip } from "../../domain/trip/TripRules.js";
 import { releaseDriverFromTrip } from "../../domain/staff/DriverAssignmentRules.js";
 import { releaseVehicleFromTrip } from "../../domain/vehicle/VehicleAssignmentRules.js";
 import { advanceRunningTrip } from "../../simulation/movement/TripMovement.js";
@@ -95,6 +93,31 @@ export class SimulationCoordinator {
 
       if (!route || !vehicle) continue;
 
+      if (vehicle.status === "broken") {
+        const disrupted = disruptTrip(trip);
+        if (disrupted.ok) {
+          this.repositories.trips.save(disrupted.value);
+          this.vehicleIndex.remove(trip.id);
+          blockedTripIds.push(trip.id);
+          this.events.publish(
+            createSimulationDomainEvent(
+              "trip.disrupted",
+              "trip",
+              trip.id,
+              targetGameSecond,
+              {
+                tripId: trip.id,
+                vehicleId: vehicle.id,
+                incident: vehicle.activeIncident?.kind ?? null
+              }
+            )
+          );
+        }
+        continue;
+      }
+
+      if (vehicle.status !== "running") continue;
+
       const model = this.repositories.vehicleModels.getById(vehicle.modelId);
       if (!model) continue;
 
@@ -110,16 +133,6 @@ export class SimulationCoordinator {
       if (!moved.ok) {
         issues.push({ tripId: trip.id, error: moved.error });
         continue;
-      }
-
-      if (moved.value.distanceTraveledM > 0) {
-        this.repositories.vehicles.save({
-          ...vehicle,
-          mileageM: units.distanceM(
-            Number(vehicle.mileageM) +
-              moved.value.distanceTraveledM
-          )
-        });
       }
 
       if (
@@ -212,6 +225,41 @@ export class SimulationCoordinator {
               }
             )
           );
+        }
+      }
+
+      const vehicleAfterLifecycle =
+        trip.vehicleId === null
+          ? undefined
+          : this.repositories.vehicles.getById(trip.vehicleId);
+
+      if (
+        !moved.value.completed &&
+        vehicleAfterLifecycle?.status === "broken"
+      ) {
+        const disrupted = disruptTrip(processedTrip);
+        if (disrupted.ok) {
+          processedTrip = disrupted.value;
+          this.repositories.trips.save(processedTrip);
+          advancedTripIds.push(trip.id);
+          blockedTripIds.push(trip.id);
+          this.vehicleIndex.remove(trip.id);
+
+          this.events.publish(
+            createSimulationDomainEvent(
+              "trip.disrupted",
+              "trip",
+              trip.id,
+              processedTrip.position.lastUpdatedGameSecond,
+              {
+                tripId: trip.id,
+                vehicleId: vehicleAfterLifecycle.id,
+                incident:
+                  vehicleAfterLifecycle.activeIncident?.kind ?? null
+              }
+            )
+          );
+          continue;
         }
       }
 
