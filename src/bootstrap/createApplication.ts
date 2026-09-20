@@ -32,6 +32,7 @@ import { VehicleMarketValuationService } from "../application/services/VehicleMa
 import { VehicleMarketCoordinator } from "../application/vehicle-market/VehicleMarketCoordinator.js";
 import { NewVehicleStockGenerator } from "../application/vehicle-market/NewVehicleStockGenerator.js";
 import { UsedVehicleStockGenerator } from "../application/vehicle-market/UsedVehicleStockGenerator.js";
+import { VehicleVariantLifecycleRefresher } from "../application/vehicle-market/VehicleVariantLifecycleRefresher.js";
 import { SimulationCoordinator } from "../application/simulation/SimulationCoordinator.js";
 import { VehicleSpatialIndex } from "../application/spatial/VehicleSpatialIndex.js";
 import { VehicleLifecycleCoordinator } from "../application/vehicle/VehicleLifecycleCoordinator.js";
@@ -63,6 +64,7 @@ export interface ApplicationRuntime {
   readonly vehicleMarketValuation: VehicleMarketValuationService;
   readonly vehicleMarketTrading: VehicleMarketTradingService;
   readonly vehicleMarketCoordinator: VehicleMarketCoordinator;
+  readonly vehicleVariantLifecycle: VehicleVariantLifecycleRefresher;
   readonly newVehicleStock: NewVehicleStockGenerator;
   readonly usedVehicleStock: UsedVehicleStockGenerator;
   readonly operationsSchedules: OperationsScheduleService;
@@ -134,8 +136,14 @@ export function createApplication(
     vehicleMarketValuation
   );
 
+  const vehicleVariantLifecycle =
+    new VehicleVariantLifecycleRefresher(
+      dependencies.repositories
+    );
+
   const vehicleMarketCoordinator = new VehicleMarketCoordinator(
     vehicleMarketTrading,
+    vehicleVariantLifecycle,
     newVehicleStock,
     usedVehicleStock
   );
@@ -250,6 +258,7 @@ export function createApplication(
     vehicleMarketValuation,
     vehicleMarketTrading,
     vehicleMarketCoordinator,
+    vehicleVariantLifecycle,
     newVehicleStock,
     usedVehicleStock,
     operationsSchedules,
