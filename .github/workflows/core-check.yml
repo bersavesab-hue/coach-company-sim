@@ -7,11 +7,13 @@ on:
       - "android-app/**"
       - ".github/workflows/android-apk.yml"
       - "scripts/build-apk-web.mts"
+      - "presentation/apk/**"
   pull_request:
     paths-ignore:
       - "android-app/**"
       - ".github/workflows/android-apk.yml"
       - "scripts/build-apk-web.mts"
+      - "presentation/apk/**"
 
 jobs:
   core:
