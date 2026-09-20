@@ -108,6 +108,7 @@ function fixture() {
     },
     staff: {
       getDriverById: () => undefined,
+      findDriversByCompany: () => [],
       saveDriver: () => undefined
     },
     stations: {
@@ -135,6 +136,10 @@ function fixture() {
     },
     vehicles: {
       getById: (id) => vehicles.get(id),
+      findByCompany: (company) =>
+        [...vehicles.values()].filter(
+          (value) => value.companyId === company
+        ),
       save: (value) => vehicles.set(value.id, value)
     },
     vehicleRuntime: createTestVehicleRuntimeRepository(),

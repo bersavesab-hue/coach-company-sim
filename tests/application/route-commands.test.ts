@@ -143,6 +143,7 @@ function buildFixture(companyLicenses = [ids.license("license.000001")]) {
     },
     staff: {
       getDriverById: (_id) => undefined,
+      findDriversByCompany: (_companyId) => [],
       saveDriver: (_driver) => undefined
     },
     stations: {
@@ -161,6 +162,7 @@ function buildFixture(companyLicenses = [ids.license("license.000001")]) {
     },
     vehicles: {
       getById: (_id) => undefined as OwnedVehicle | undefined,
+      findByCompany: (_companyId) => [],
       save: (_vehicle) => undefined
     },
     vehicleRuntime: createTestVehicleRuntimeRepository(),
