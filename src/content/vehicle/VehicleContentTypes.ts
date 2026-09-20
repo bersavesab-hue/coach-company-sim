@@ -72,6 +72,11 @@ export interface VehicleModelContentRecord {
   readonly metadata: VehicleModelContentMetadata;
 }
 
+export interface VehicleVariantContentRecord {
+  readonly variant: import("../../domain/vehicle-market/VehicleVariant.js").VehicleVariant;
+  readonly lifecycle: VehicleVariantLifecycleMetadata;
+}
+
 export interface VehicleVariantLifecycleMetadata {
   readonly variantId: VehicleVariantId;
   readonly launchGameDay: number;

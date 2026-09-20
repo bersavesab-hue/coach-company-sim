@@ -162,3 +162,6 @@ export * from "./content/vehicle/VehicleUnlockRules.js";
 export * from "./application/services/VehicleContentAccessService.js";
 export * from "./content/vehicle/VehicleModelCatalog.js";
 export * from "./content/vehicle/VehicleContentValidator.js";
+export * from "./content/vehicle/VehicleOptionCodes.js";
+export * from "./content/vehicle/VehicleVariantCatalog.js";
+export * from "./content/vehicle/VehicleVariantContentValidator.js";
