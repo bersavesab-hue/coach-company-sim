@@ -1,11 +1,12 @@
 import type {
   CompanyId,
   EventId,
+  RoadSegmentId,
   StaffId,
   StationId,
   TripId,
   VehicleId,
-  RoadSegmentId
+  VehicleModelId
 } from "../../contracts/ids/EntityIds.js";
 import { ids } from "../../contracts/ids/EntityIds.js";
 import type { DomainEventEnvelope } from "../../contracts/events/DomainEventEnvelope.js";
@@ -15,11 +16,12 @@ import {
   type GameSecond,
   type MoneyCents
 } from "../../core/units/Units.js";
+import type { FinanceAccount } from "../../domain/finance/FinanceAccount.js";
 import { calculateFareCents } from "../../domain/finance/FareCalculator.js";
 import {
-  accountBalanceCents
+  accountBalanceCents,
+  creditTotalCents
 } from "../../domain/finance/LedgerMath.js";
-import type { FinanceAccount } from "../../domain/finance/FinanceAccount.js";
 import {
   assertBalancedLedgerEntry,
   type FinanceEntryKind,
@@ -64,6 +66,42 @@ interface OperatingIntervalPayload {
   }[];
 }
 
+interface VehiclePurchasedPayload {
+  readonly vehicleId: VehicleId;
+  readonly companyId: CompanyId;
+  readonly vehicleModelId: VehicleModelId;
+  readonly purchasePriceCents: MoneyCents;
+  readonly residualValueCents: MoneyCents;
+  readonly usefulLifeDays: number;
+  readonly dailyInsuranceCents: MoneyCents;
+  readonly dailyVehicleTaxCents: MoneyCents;
+}
+
+interface VehicleEnergyPurchasedPayload {
+  readonly vehicleId: VehicleId;
+  readonly companyId: CompanyId;
+  readonly energyUnits: number;
+  readonly totalCostCents: MoneyCents;
+}
+
+interface VehicleEnergyConsumedPayload {
+  readonly vehicleId: VehicleId;
+  readonly tripId: TripId;
+  readonly energyUnits: number;
+}
+
+interface VehicleCostPayload {
+  readonly vehicleId: VehicleId;
+  readonly companyId: CompanyId;
+  readonly costCents: MoneyCents;
+}
+
+interface VehicleDisposalPayload {
+  readonly vehicleId: VehicleId;
+  readonly companyId: CompanyId;
+  readonly proceedsCents: MoneyCents;
+}
+
 export class FinanceCoordinator {
   constructor(
     private readonly repositories: RepositoryBundle,
@@ -84,6 +122,7 @@ export class FinanceCoordinator {
         sourceRef: `opening:${profile.companyId}`,
         sourceEventId: null,
         tripId: null,
+        vehicleId: null,
         memo: "Opening capital",
         postings: [
           debit("cash", profile.openingCapitalCents),
@@ -135,6 +174,58 @@ export class FinanceCoordinator {
         this.postOperatingInterval(
           event,
           event.payload as OperatingIntervalPayload
+        );
+        break;
+      case "vehicle.purchased":
+        this.postVehiclePurchase(
+          event,
+          event.payload as VehiclePurchasedPayload
+        );
+        break;
+      case "vehicle.energyPurchased":
+        this.postEnergyPurchase(
+          event,
+          event.payload as VehicleEnergyPurchasedPayload
+        );
+        break;
+      case "vehicle.energyConsumed":
+        this.postEnergyConsumption(
+          event,
+          event.payload as VehicleEnergyConsumedPayload
+        );
+        break;
+      case "vehicle.maintenanceCompleted":
+        this.postVehicleCost(
+          event,
+          event.payload as VehicleCostPayload,
+          "maintenance",
+          "maintenance_expense",
+          "Vehicle maintenance"
+        );
+        break;
+      case "vehicle.insuranceRenewed":
+        this.postVehicleCost(
+          event,
+          event.payload as VehicleCostPayload,
+          "insurance_renewal",
+          "insurance_expense",
+          "Insurance renewal"
+        );
+        break;
+      case "vehicle.inspectionPassed":
+        this.postVehicleCost(
+          event,
+          event.payload as VehicleCostPayload,
+          "inspection",
+          "inspection_expense",
+          "Vehicle inspection"
+        );
+        break;
+      case "vehicle.sold":
+      case "vehicle.retired":
+        this.postVehicleDisposal(
+          event,
+          event.payload as VehicleDisposalPayload
         );
         break;
     }
@@ -199,6 +290,7 @@ export class FinanceCoordinator {
         sourceRef: `${event.eventId}:ticket`,
         sourceEventId: event.eventId,
         tripId: trip.id,
+        vehicleId: trip.vehicleId,
         memo: "Passenger ticket sales",
         postings
       });
@@ -217,6 +309,7 @@ export class FinanceCoordinator {
         `${event.eventId}:passenger_service`,
         event.eventId,
         trip.id,
+        trip.vehicleId,
         "station_fee_expense",
         serviceFee,
         "Station passenger service fee"
@@ -246,6 +339,7 @@ export class FinanceCoordinator {
       `${event.eventId}:departure_station`,
       event.eventId,
       trip.id,
+      trip.vehicleId,
       "station_fee_expense",
       fee,
       "Station departure/platform fee"
@@ -275,6 +369,7 @@ export class FinanceCoordinator {
       `${event.eventId}:arrival_station`,
       event.eventId,
       trip.id,
+      trip.vehicleId,
       "station_fee_expense",
       fee,
       "Station arrival/platform fee"
@@ -297,47 +392,6 @@ export class FinanceCoordinator {
       this.repositories.finance.getVehicleEconomicProfile(vehicle.modelId);
 
     if (vehicleEconomics) {
-      const drivingEnergyUnits = runtime.consumeFraction(
-        `energy.drive:${vehicle.id}`,
-        vehicleEconomics.drivingEnergyUnitsPer100Km *
-          payload.distanceTraveledM,
-        100_000
-      );
-      const idleEnergyUnits = runtime.consumeFraction(
-        `energy.idle:${vehicle.id}`,
-        vehicleEconomics.idleEnergyUnitsPerHour *
-          payload.idleSeconds,
-        3_600
-      );
-      const energyUnits = drivingEnergyUnits + idleEnergyUnits;
-
-      if (energyUnits > 0) {
-        const priceMilliCents =
-          this.policy.energyPriceMilliCentsPerUnit(
-            vehicleEconomics.energyKind,
-            event.gameSecond
-          );
-        const energyCostCents = runtime.consumeFraction(
-          `energy.cost:${vehicle.id}`,
-          energyUnits * priceMilliCents,
-          1000
-        );
-
-        if (energyCostCents > 0) {
-          this.postExpensePayable(
-            route.companyId,
-            event.gameSecond,
-            "energy_cost",
-            `${event.eventId}:energy`,
-            event.eventId,
-            trip.id,
-            "energy_expense",
-            units.moneyCents(energyCostCents),
-            "Consumed traction/idling energy"
-          );
-        }
-      }
-
       this.postManagementDistanceCost(
         event,
         route.companyId,
@@ -385,6 +439,7 @@ export class FinanceCoordinator {
           `${event.eventId}:toll:${road.id}`,
           event.eventId,
           trip.id,
+          vehicle.id,
           "road_toll_expense",
           units.moneyCents(tollCents),
           "Road toll"
@@ -401,6 +456,7 @@ export class FinanceCoordinator {
         event,
         route.companyId,
         trip.id,
+        vehicle.id,
         driverProfile,
         payload.movingSeconds + payload.idleSeconds,
         runtime
@@ -410,10 +466,246 @@ export class FinanceCoordinator {
     this.repositories.finance.replaceRuntimeState(runtime);
   }
 
+  private postVehiclePurchase(
+    event: DomainEventEnvelope,
+    payload: VehiclePurchasedPayload
+  ): void {
+    this.repositories.finance.saveVehicleAssetProfile({
+      vehicleId: payload.vehicleId,
+      companyId: payload.companyId,
+      acquisitionCostCents: payload.purchasePriceCents,
+      residualValueCents: payload.residualValueCents,
+      usefulLifeDays: payload.usefulLifeDays,
+      acquiredGameSecond: event.gameSecond,
+      dailyInsuranceCents: payload.dailyInsuranceCents,
+      dailyVehicleTaxCents: payload.dailyVehicleTaxCents
+    });
+
+    if (Number(payload.purchasePriceCents) <= 0) return;
+
+    this.postLedger({
+      companyId: payload.companyId,
+      gameSecond: event.gameSecond,
+      kind: "vehicle_purchase",
+      sourceRef: `${event.eventId}:purchase`,
+      sourceEventId: event.eventId,
+      tripId: null,
+      vehicleId: payload.vehicleId,
+      memo: "Vehicle acquisition",
+      postings: [
+        debit("vehicle_asset", payload.purchasePriceCents),
+        credit("cash", payload.purchasePriceCents)
+      ]
+    });
+  }
+
+  private postEnergyPurchase(
+    event: DomainEventEnvelope,
+    payload: VehicleEnergyPurchasedPayload
+  ): void {
+    const sourceRef = `${event.eventId}:energy_inventory`;
+    const runtime = this.repositories.finance.getRuntimeState();
+
+    if (runtime.hasProcessedRuntimeSource(sourceRef)) return;
+
+    runtime.addEnergyInventory(
+      payload.vehicleId,
+      payload.energyUnits,
+      Number(payload.totalCostCents)
+    );
+    runtime.markProcessedRuntimeSource(sourceRef);
+    this.repositories.finance.replaceRuntimeState(runtime);
+
+    if (Number(payload.totalCostCents) <= 0) return;
+
+    this.postLedger({
+      companyId: payload.companyId,
+      gameSecond: event.gameSecond,
+      kind: "energy_purchase",
+      sourceRef,
+      sourceEventId: event.eventId,
+      tripId: null,
+      vehicleId: payload.vehicleId,
+      memo: "Vehicle energy inventory purchase",
+      postings: [
+        debit("energy_inventory", payload.totalCostCents),
+        credit("cash", payload.totalCostCents)
+      ]
+    });
+  }
+
+  private postEnergyConsumption(
+    event: DomainEventEnvelope,
+    payload: VehicleEnergyConsumedPayload
+  ): void {
+    const sourceRef = `${event.eventId}:energy_consumption`;
+    const runtime = this.repositories.finance.getRuntimeState();
+
+    if (runtime.hasProcessedRuntimeSource(sourceRef)) return;
+
+    const consumed = runtime.consumeEnergyInventory(
+      payload.vehicleId,
+      payload.energyUnits
+    );
+    runtime.markProcessedRuntimeSource(sourceRef);
+    this.repositories.finance.replaceRuntimeState(runtime);
+
+    if (consumed.bookValueCents <= 0) return;
+
+    const vehicle = this.repositories.vehicles.getById(payload.vehicleId);
+    if (!vehicle) return;
+
+    const amount = units.moneyCents(consumed.bookValueCents);
+    this.postLedger({
+      companyId: vehicle.companyId,
+      gameSecond: event.gameSecond,
+      kind: "energy_consumption",
+      sourceRef,
+      sourceEventId: event.eventId,
+      tripId: payload.tripId,
+      vehicleId: payload.vehicleId,
+      memo: "Consumed vehicle energy inventory",
+      postings: [
+        debit("energy_expense", amount),
+        credit("energy_inventory", amount)
+      ]
+    });
+  }
+
+  private postVehicleCost(
+    event: DomainEventEnvelope,
+    payload: VehicleCostPayload,
+    kind: FinanceEntryKind,
+    account: FinanceAccount,
+    memo: string
+  ): void {
+    if (Number(payload.costCents) <= 0) return;
+
+    this.postExpensePayable(
+      payload.companyId,
+      event.gameSecond,
+      kind,
+      `${event.eventId}:${kind}`,
+      event.eventId,
+      null,
+      payload.vehicleId,
+      account,
+      payload.costCents,
+      memo
+    );
+  }
+
+  private postVehicleDisposal(
+    event: DomainEventEnvelope,
+    payload: VehicleDisposalPayload
+  ): void {
+    const asset = this.repositories.finance.getVehicleAssetProfile(
+      payload.vehicleId
+    );
+    const runtime = this.repositories.finance.getRuntimeState();
+    const energy = runtime.removeEnergyInventory(payload.vehicleId);
+    this.repositories.finance.replaceRuntimeState(runtime);
+
+    if (!asset) {
+      if (Number(payload.proceedsCents) > 0) {
+        this.postLedger({
+          companyId: payload.companyId,
+          gameSecond: event.gameSecond,
+          kind: "vehicle_disposal",
+          sourceRef: `${event.eventId}:disposal`,
+          sourceEventId: event.eventId,
+          tripId: null,
+          vehicleId: payload.vehicleId,
+          memo: "Vehicle disposal without active asset profile",
+          postings: [
+            debit("cash", payload.proceedsCents),
+            credit("gain_on_vehicle_disposal", payload.proceedsCents)
+          ]
+        });
+      }
+      return;
+    }
+
+    const vehicleEntries =
+      this.repositories.finance.ledgerEntriesByVehicle(payload.vehicleId);
+    const accumulatedDepreciation = creditTotalCents(
+      vehicleEntries,
+      "accumulated_depreciation"
+    );
+    const acquisition = Number(asset.acquisitionCostCents);
+    const netVehicleBook = Math.max(
+      0,
+      acquisition - accumulatedDepreciation
+    );
+    const totalBook = netVehicleBook + energy.bookValueCents;
+    const proceeds = Number(payload.proceedsCents);
+    const postings: LedgerPosting[] = [];
+
+    if (proceeds > 0) {
+      postings.push(debit("cash", payload.proceedsCents));
+    }
+    if (accumulatedDepreciation > 0) {
+      postings.push(
+        debit(
+          "accumulated_depreciation",
+          units.moneyCents(accumulatedDepreciation)
+        )
+      );
+    }
+
+    if (proceeds < totalBook) {
+      postings.push(
+        debit(
+          "loss_on_vehicle_disposal",
+          units.moneyCents(totalBook - proceeds)
+        )
+      );
+    }
+
+    if (acquisition > 0) {
+      postings.push(
+        credit("vehicle_asset", units.moneyCents(acquisition))
+      );
+    }
+    if (energy.bookValueCents > 0) {
+      postings.push(
+        credit(
+          "energy_inventory",
+          units.moneyCents(energy.bookValueCents)
+        )
+      );
+    }
+    if (proceeds > totalBook) {
+      postings.push(
+        credit(
+          "gain_on_vehicle_disposal",
+          units.moneyCents(proceeds - totalBook)
+        )
+      );
+    }
+
+    this.repositories.finance.removeVehicleAssetProfile(payload.vehicleId);
+
+    if (postings.length >= 2) {
+      this.postLedger({
+        companyId: payload.companyId,
+        gameSecond: event.gameSecond,
+        kind: "vehicle_disposal",
+        sourceRef: `${event.eventId}:disposal`,
+        sourceEventId: event.eventId,
+        tripId: null,
+        vehicleId: payload.vehicleId,
+        memo: "Vehicle disposal and asset derecognition",
+        postings
+      });
+    }
+  }
+
   private postVariableDriverLabor(
     event: DomainEventEnvelope,
     companyId: CompanyId,
     tripId: TripId,
+    vehicleId: VehicleId,
     profile: DriverCompensationProfile,
     dutySeconds: number,
     runtime: ReturnType<RepositoryBundle["finance"]["getRuntimeState"]>
@@ -456,6 +748,7 @@ export class FinanceCoordinator {
       sourceRef: `${event.eventId}:driver_allowance`,
       sourceEventId: event.eventId,
       tripId,
+      vehicleId,
       memo: "Driver trip allowance and employer burden",
       postings
     });
@@ -513,6 +806,7 @@ export class FinanceCoordinator {
         `daily:${companyId}:${day}:overhead`,
         null,
         null,
+        null,
         "company_overhead_expense",
         companyProfile.dailyOverheadCents,
         "Daily company administration overhead"
@@ -529,6 +823,7 @@ export class FinanceCoordinator {
         gameSecond,
         "company_overhead",
         `daily:${companyId}:${day}:regulatory`,
+        null,
         null,
         null,
         "company_overhead_expense",
@@ -577,6 +872,7 @@ export class FinanceCoordinator {
         sourceRef: `daily:${companyId}:${day}:driver:${driver.staffId}`,
         sourceEventId: null,
         tripId: null,
+        vehicleId: null,
         memo: "Daily driver base wage and employer burden",
         postings
       });
@@ -593,6 +889,7 @@ export class FinanceCoordinator {
         gameSecond,
         "station_lease",
         `daily:${companyId}:${day}:station:${station.stationId}`,
+        null,
         null,
         null,
         "station_lease_expense",
@@ -617,6 +914,7 @@ export class FinanceCoordinator {
         `daily:${profile.companyId}:${day}:insurance:${profile.vehicleId}`,
         null,
         null,
+        profile.vehicleId,
         "insurance_expense",
         profile.dailyInsuranceCents,
         "Daily vehicle insurance allocation"
@@ -631,6 +929,7 @@ export class FinanceCoordinator {
         `daily:${profile.companyId}:${day}:vehicle_tax:${profile.vehicleId}`,
         null,
         null,
+        profile.vehicleId,
         "vehicle_tax_expense",
         profile.dailyVehicleTaxCents,
         "Daily vehicle tax/inspection allocation"
@@ -647,6 +946,7 @@ export class FinanceCoordinator {
         sourceRef: `daily:${profile.companyId}:${day}:depreciation:${profile.vehicleId}`,
         sourceEventId: null,
         tripId: null,
+        vehicleId: profile.vehicleId,
         memo: "Straight-line vehicle depreciation",
         postings: [
           debit("depreciation_expense", amount),
@@ -687,6 +987,7 @@ export class FinanceCoordinator {
             `settlement:${companyProfile.companyId}:${Number(gameSecond)}:${account}`,
           sourceEventId: null,
           tripId: null,
+          vehicleId: null,
           memo: `Settle ${account}`,
           postings: [
             debit(account, amount),
@@ -704,6 +1005,7 @@ export class FinanceCoordinator {
     sourceRef: string,
     sourceEventId: EventId | null,
     tripId: TripId | null,
+    vehicleId: VehicleId | null,
     expenseAccount: FinanceAccount,
     amount: MoneyCents,
     memo: string
@@ -717,6 +1019,7 @@ export class FinanceCoordinator {
       sourceRef,
       sourceEventId,
       tripId,
+      vehicleId,
       memo,
       postings: [
         debit(expenseAccount, amount),
