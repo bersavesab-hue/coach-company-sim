@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.15.2-stage15-models20
+
+### Added
+- 新增 Stage 15 VehicleContentValidator，正式校验品牌、车系、车型引用、正整数技术参数、解锁层级、车系计划数量与重复技术签名。
+- 新增第一批 20 个正式 VehicleModel + VehicleModelIdentity + VehicleModelContentMetadata。
+- 第一批覆盖江驰 V/M、宇盛 M/C、中衡 C、金程 J。
+- 20 辆车采用不同座位、极速、能源容量、百公里能耗、怠速能耗、保养周期和部件磨损，不允许只换名称复制技术参数。
+- 新增同车系逐车型解锁；例如江驰 V5 可开局获得，V6/V6L/V7 随游戏天数、声誉和车队规模逐步开放。
+- VehicleContentAccessService 优先读取车型自身解锁规则，未进入正式内容库的测试/兼容数据才回退车系基础 Tier。
+- 新增第一批车型内容专项测试，要求 20 个车型无验证错误、无完全重复技术签名。
+
+### Content
+- CONTENT_VERSION 从 2 升至 3。
+- 当前正式基础车型完成 20 / 100。
+- 后续批次继续补齐剩余 80 个 VehicleModel，再进入 180 个 VehicleVariant。
+
+
 ## 0.15.1-stage15-foundation
 
 ### Added
