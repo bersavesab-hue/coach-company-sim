@@ -387,7 +387,7 @@ for (const file of sourceFiles) {
   }
 
   if (rel.includes("/content/vehicle/VehicleModelCatalog.ts")) {
-    const formalModelCount = (text.match(/\\bmodel\\(\\{/g) ?? []).length;
+    const formalModelCount = text.split("model({").length - 1;
     if (formalModelCount !== 100) {
       failures.push(
         `Stage 15 VehicleModelCatalog must contain exactly 100 formal models, found ${formalModelCount}`
