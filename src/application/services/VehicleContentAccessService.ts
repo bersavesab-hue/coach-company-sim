@@ -5,6 +5,7 @@ import type {
 import { SECONDS_PER_DAY } from "../../core/time/GameTime.js";
 import type { GameSecond } from "../../core/units/Units.js";
 import { VEHICLE_SERIES } from "../../content/vehicle/VehicleSeriesCatalog.js";
+import { VEHICLE_MODELS } from "../../content/vehicle/VehicleModelCatalog.js";
 import {
   evaluateVehicleUnlock,
   vehicleUnlockRuleForTier
@@ -30,12 +31,22 @@ const SERIES_BY_ID = new Map(
   ])
 );
 
+const MODEL_BY_ID = new Map(
+  VEHICLE_MODELS.map((record) => [
+    String(record.model.id),
+    record
+  ])
+);
+
 export class VehicleContentAccessService {
   constructor(
     private readonly repositories: RepositoryBundle
   ) {}
 
   tierForModel(modelId: VehicleModelId): VehicleUnlockTier {
+    const modelContent = MODEL_BY_ID.get(String(modelId));
+    if (modelContent) return modelContent.metadata.unlock.tier;
+
     const identity =
       this.repositories.vehicleMarket.getModelIdentity(modelId);
     if (!identity) return 1;
@@ -76,8 +87,10 @@ export class VehicleContentAccessService {
       gameDay,
       ownedVehicleCount
     };
+    const modelContent = MODEL_BY_ID.get(String(modelId));
     const result = evaluateVehicleUnlock(
-      vehicleUnlockRuleForTier(tier),
+      modelContent?.metadata.unlock ??
+        vehicleUnlockRuleForTier(tier),
       context
     );
 

@@ -8,6 +8,8 @@ import type { RepositoryBundle } from "../../src/application/repositories/Reposi
 import { VehicleContentAccessService } from "../../src/application/services/VehicleContentAccessService.js";
 import { VEHICLE_BRANDS } from "../../src/content/vehicle/VehicleBrandCatalog.js";
 import { VEHICLE_SERIES } from "../../src/content/vehicle/VehicleSeriesCatalog.js";
+import { VEHICLE_MODELS } from "../../src/content/vehicle/VehicleModelCatalog.js";
+import { validateVehicleContent } from "../../src/content/vehicle/VehicleContentValidator.js";
 import {
   evaluateVehicleUnlock,
   vehicleUnlockRuleForTier
@@ -169,4 +171,109 @@ test("formal premium series remain locked even if a listing appears early", () =
     "reputation",
     "fleet_size"
   ]);
+});
+
+
+test("first formal vehicle batch contains 20 validated non-clone models", () => {
+  const result = validateVehicleContent({
+    brands: VEHICLE_BRANDS,
+    series: VEHICLE_SERIES,
+    models: VEHICLE_MODELS,
+    expectedModelCount: 20
+  });
+
+  assert.equal(result.valid, true);
+  assert.equal(result.counts.models, 20);
+  assert.equal(result.counts.plannedModels, 100);
+  assert.deepEqual(
+    result.issues.filter((issue) => issue.severity === "error"),
+    []
+  );
+  assert.deepEqual(
+    result.issues.filter(
+      (issue) => issue.code === "DUPLICATE_TECHNICAL_MODEL"
+    ),
+    []
+  );
+
+  assert.deepEqual(
+    VEHICLE_MODELS.map((record) => record.identity.displayName),
+    [
+      "江驰 V5",
+      "江驰 V6",
+      "江驰 V6L",
+      "江驰 V7",
+      "江驰 M6",
+      "江驰 M7",
+      "江驰 M8",
+      "江驰 M8L",
+      "宇盛 M6",
+      "宇盛 M7",
+      "宇盛 M8",
+      "宇盛 C8",
+      "宇盛 C9",
+      "宇盛 C10",
+      "中衡 C7",
+      "中衡 C8",
+      "中衡 C9",
+      "金程 J7",
+      "金程 J8",
+      "金程 J9"
+    ]
+  );
+});
+
+test("individual models inside the same series unlock progressively", () => {
+  const v5 = VEHICLE_MODELS.find(
+    (record) => record.identity.displayName === "江驰 V5"
+  );
+  const v7 = VEHICLE_MODELS.find(
+    (record) => record.identity.displayName === "江驰 V7"
+  );
+  assert.ok(v5);
+  assert.ok(v7);
+
+  const companyId = ids.company("company.00000001");
+  const company: Company = {
+    id: companyId,
+    name: "测试客运",
+    status: "active",
+    reputationPermille: units.permille(100),
+    licenseIds: [],
+    homeStationId: null
+  };
+
+  const repositories = {
+    companies: {
+      getById: () => company
+    },
+    vehicles: {
+      findByCompany: () => []
+    },
+    vehicleMarket: {
+      getModelIdentity: (id: unknown) =>
+        VEHICLE_MODELS.find((record) => record.model.id === id)?.identity
+    }
+  } as unknown as RepositoryBundle;
+
+  const access = new VehicleContentAccessService(repositories);
+
+  assert.equal(
+    access.evaluateModel(
+      companyId,
+      v5.model.id,
+      units.gameSecond(0)
+    ).unlocked,
+    true
+  );
+
+  const v7Result = access.evaluateModel(
+    companyId,
+    v7.model.id,
+    units.gameSecond(0)
+  );
+  assert.equal(v7Result.unlocked, false);
+  assert.equal(v7Result.missing.includes("game_day"), true);
+  assert.equal(v7Result.missing.includes("reputation"), true);
+  assert.equal(v7Result.missing.includes("fleet_size"), true);
 });
