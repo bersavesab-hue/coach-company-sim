@@ -1,3 +1,34 @@
-# Coach Company Sim
+# 客运公司模拟器
 
-Fresh start repository for the passenger transport company simulator.
+全新仓库，从 0 开发。
+
+当前版本：**V0.1 Core Foundation**
+
+当前阶段只建立以后不轻易推翻的底层：
+
+- 连续世界坐标
+- 地图节点与道路
+- 客运线路
+- 车辆真实运行位置
+- 动态基础客流
+- 公司状态
+- 游戏时间
+- 唯一命令入口
+- 领域事件
+- 存档版本协议
+
+暂时不做 UI、不做 Android 壳、不做真实地图资源、不做广告。
+
+## 核心原则
+
+地图只是表现层。车辆在全国视角、区域视角、城市视角、汽车站局部视角中，都必须读取同一个真实运行状态，禁止 UI 自己播放一套假的车辆动画。
+
+## 开发检查
+
+```bash
+npm install
+npm run check
+npm run dev
+```
+
+详细开发纪律见 `AGENTS.md`。
