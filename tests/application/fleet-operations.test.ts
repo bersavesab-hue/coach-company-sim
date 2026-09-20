@@ -163,6 +163,7 @@ function fixture(
     },
     finance: createTestFinanceRepository(),
     fleetTasks,
+    operationsSchedules: createTestOperationsScheduleRepository(),
     passengerDemand: { all: () => [] },
     passengerRuntime: {
       get: () => new PassengerRuntimeState(),
