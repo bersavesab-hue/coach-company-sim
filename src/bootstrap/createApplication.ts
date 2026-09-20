@@ -18,6 +18,7 @@ import { registerVehicleQueries } from "../application/handlers/vehicle/register
 import type { RuntimeIdAllocator } from "../application/ids/RuntimeIdAllocator.js";
 import type { OperationsPolicy } from "../application/policies/OperationsPolicy.js";
 import type { VehicleLifecyclePolicy } from "../application/policies/VehicleLifecyclePolicy.js";
+import type { VehicleMarketPolicy } from "../application/policies/VehicleMarketPolicy.js";
 import type { RepositoryBundle } from "../application/repositories/RepositoryBundle.js";
 import { FleetOperationsCoordinator } from "../application/operations/FleetOperationsCoordinator.js";
 import { OperationsExecutionCoordinator } from "../application/operations/OperationsExecutionCoordinator.js";
@@ -25,6 +26,9 @@ import { OperationsScheduleService } from "../application/operations/OperationsS
 import { DayOperationsPlanner } from "../application/services/DayOperationsPlanner.js";
 import { DispatchCenterProjection } from "../application/services/DispatchCenterProjection.js";
 import { VehicleMarketProjection } from "../application/services/VehicleMarketProjection.js";
+import { VehicleMarketTradingService } from "../application/services/VehicleMarketTradingService.js";
+import { VehicleMarketValuationService } from "../application/services/VehicleMarketValuationService.js";
+import { VehicleMarketCoordinator } from "../application/vehicle-market/VehicleMarketCoordinator.js";
 import { SimulationCoordinator } from "../application/simulation/SimulationCoordinator.js";
 import { VehicleSpatialIndex } from "../application/spatial/VehicleSpatialIndex.js";
 import { VehicleLifecycleCoordinator } from "../application/vehicle/VehicleLifecycleCoordinator.js";
@@ -37,6 +41,7 @@ export interface ApplicationDependencies {
   readonly passengerDemandPolicy: PassengerDemandPolicy;
   readonly economicPolicy: EconomicPolicy;
   readonly vehicleLifecyclePolicy: VehicleLifecyclePolicy;
+  readonly vehicleMarketPolicy: VehicleMarketPolicy;
   readonly operationsPolicy: OperationsPolicy;
 }
 
@@ -51,6 +56,9 @@ export interface ApplicationRuntime {
   readonly operationsPlanner: DayOperationsPlanner;
   readonly dispatchCenter: DispatchCenterProjection;
   readonly vehicleMarket: VehicleMarketProjection;
+  readonly vehicleMarketValuation: VehicleMarketValuationService;
+  readonly vehicleMarketTrading: VehicleMarketTradingService;
+  readonly vehicleMarketCoordinator: VehicleMarketCoordinator;
   readonly operationsSchedules: OperationsScheduleService;
   readonly operationsExecution: OperationsExecutionCoordinator;
   readonly simulation: SimulationCoordinator;
@@ -92,12 +100,28 @@ export function createApplication(
     operationsPolicy: dependencies.operationsPolicy
   });
 
-  registerVehicleMarketHandlers(commands, {
+  const vehicleMarketValuation = new VehicleMarketValuationService(
+    dependencies.repositories,
+    dependencies.vehicleMarketPolicy
+  );
+
+  const vehicleMarketTrading = new VehicleMarketTradingService({
     repositories: dependencies.repositories,
     ids: dependencies.ids,
     events,
-    lifecyclePolicy: dependencies.vehicleLifecyclePolicy
+    lifecyclePolicy: dependencies.vehicleLifecyclePolicy,
+    marketPolicy: dependencies.vehicleMarketPolicy,
+    valuation: vehicleMarketValuation
   });
+
+  const vehicleMarketCoordinator = new VehicleMarketCoordinator(
+    vehicleMarketTrading
+  );
+
+  registerVehicleMarketHandlers(
+    commands,
+    vehicleMarketTrading
+  );
 
   registerFleetHandlers(commands, {
     repositories: dependencies.repositories,
@@ -181,6 +205,7 @@ export function createApplication(
     finance,
     fleetOperations,
     operationsExecution,
+    vehicleMarketCoordinator,
     dependencies.operationsPolicy,
     vehicleIndex
   );
@@ -197,6 +222,9 @@ export function createApplication(
     operationsPlanner,
     dispatchCenter,
     vehicleMarket,
+    vehicleMarketValuation,
+    vehicleMarketTrading,
+    vehicleMarketCoordinator,
     operationsSchedules,
     operationsExecution,
     simulation

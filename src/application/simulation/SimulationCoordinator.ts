@@ -19,6 +19,7 @@ import { createSimulationDomainEvent } from "../events/createSimulationDomainEve
 import type { FinanceCoordinator } from "../finance/FinanceCoordinator.js";
 import type { FleetOperationsCoordinator } from "../operations/FleetOperationsCoordinator.js";
 import type { OperationsExecutionCoordinator } from "../operations/OperationsExecutionCoordinator.js";
+import type { VehicleMarketCoordinator } from "../vehicle-market/VehicleMarketCoordinator.js";
 import type { OperationsPolicy } from "../policies/OperationsPolicy.js";
 import type { RepositoryBundle } from "../repositories/RepositoryBundle.js";
 import { VehicleSpatialIndex } from "../spatial/VehicleSpatialIndex.js";
@@ -51,6 +52,7 @@ export class SimulationCoordinator {
     private readonly finance: FinanceCoordinator,
     private readonly fleetOperations: FleetOperationsCoordinator,
     private readonly operationsExecution: OperationsExecutionCoordinator,
+    private readonly vehicleMarket: VehicleMarketCoordinator,
     private readonly operationsPolicy: OperationsPolicy,
     readonly vehicleIndex: VehicleSpatialIndex
   ) {
@@ -129,6 +131,7 @@ export class SimulationCoordinator {
     tierForTrip: SimulationTierResolver
   ): SimulationAdvanceReport {
     this.fleetOperations.advanceTo(targetGameSecond);
+    this.vehicleMarket.advanceTo(targetGameSecond);
     this.passengerDemand.advanceTo(targetGameSecond);
 
     const advancedTripIds: TripId[] = [];
@@ -238,7 +241,7 @@ export class SimulationCoordinator {
           processedTrip,
           route,
           stopIndex,
-          model.seatCapacity,
+          vehicle.seatCapacity,
           this.repositories.passengerRuntime.get()
         );
         processedTrip = flow.trip;

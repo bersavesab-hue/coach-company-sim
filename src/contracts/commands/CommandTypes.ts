@@ -15,7 +15,6 @@ export type CommandType =
   | "vehicleMarket.startAuction"
   | "vehicleMarket.placeAuctionBid"
   | "vehicleMarket.settleAuction"
-  | "vehicleMarket.refresh"
   | "fleet.reposition"
   | "fleet.recover"
   | "operations.commitDayPlan"
