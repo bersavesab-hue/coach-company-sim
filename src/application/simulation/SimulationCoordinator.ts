@@ -17,6 +17,8 @@ import {
 import type { DomainEventBus } from "../events/DomainEventBus.js";
 import { createSimulationDomainEvent } from "../events/createSimulationDomainEvent.js";
 import type { FinanceCoordinator } from "../finance/FinanceCoordinator.js";
+import type { FleetOperationsCoordinator } from "../operations/FleetOperationsCoordinator.js";
+import type { OperationsPolicy } from "../policies/OperationsPolicy.js";
 import type { RepositoryBundle } from "../repositories/RepositoryBundle.js";
 import { VehicleSpatialIndex } from "../spatial/VehicleSpatialIndex.js";
 import { PassengerDemandCoordinator } from "./PassengerDemandCoordinator.js";
@@ -45,6 +47,8 @@ export class SimulationCoordinator {
     private readonly events: DomainEventBus,
     passengerPolicy: PassengerDemandPolicy,
     private readonly finance: FinanceCoordinator,
+    private readonly fleetOperations: FleetOperationsCoordinator,
+    private readonly operationsPolicy: OperationsPolicy,
     readonly vehicleIndex: VehicleSpatialIndex
   ) {
     this.passengerDemand = new PassengerDemandCoordinator(
@@ -65,6 +69,7 @@ export class SimulationCoordinator {
     targetGameSecond: GameSecond,
     tierForTrip: SimulationTierResolver = () => "foreground"
   ): SimulationAdvanceReport {
+    this.fleetOperations.advanceTo(targetGameSecond);
     this.passengerDemand.advanceTo(targetGameSecond);
 
     const advancedTripIds: TripId[] = [];
@@ -308,11 +313,34 @@ export class SimulationCoordinator {
   }
 
   private releaseResources(trip: TripInstance): void {
+    const route = this.repositories.routes.getById(trip.routeId);
+    const destination =
+      route?.stopPoints[route.stopPoints.length - 1]?.stationId ?? null;
+    const arrival =
+      trip.actualArrivalGameSecond ??
+      trip.position.lastUpdatedGameSecond;
+
     if (trip.vehicleId !== null) {
       const vehicle = this.repositories.vehicles.getById(trip.vehicleId);
       if (vehicle) {
+        const availableAt =
+          destination === null
+            ? arrival
+            : ((
+                Number(arrival) +
+                this.operationsPolicy.vehicleTurnaroundSeconds(
+                  vehicle.id,
+                  destination
+                )
+              ) as GameSecond);
+
         this.repositories.vehicles.save(
-          releaseVehicleFromTrip(vehicle, trip.id)
+          releaseVehicleFromTrip(
+            vehicle,
+            trip.id,
+            destination,
+            availableAt
+          )
         );
       }
     }
@@ -320,8 +348,34 @@ export class SimulationCoordinator {
     if (trip.driverId !== null) {
       const driver = this.repositories.staff.getDriverById(trip.driverId);
       if (driver) {
+        const availableAt =
+          destination === null
+            ? arrival
+            : ((
+                Number(arrival) +
+                this.operationsPolicy.driverTurnaroundSeconds(
+                  driver.id,
+                  destination
+                )
+              ) as GameSecond);
+        const drivingSeconds =
+          trip.actualDepartureGameSecond === null
+            ? 0
+            : Math.max(
+                0,
+                Number(arrival) -
+                  Number(trip.actualDepartureGameSecond)
+              );
+
         this.repositories.staff.saveDriver(
-          releaseDriverFromTrip(driver, trip.id)
+          releaseDriverFromTrip(
+            driver,
+            trip.id,
+            destination,
+            availableAt,
+            drivingSeconds,
+            arrival
+          )
         );
       }
     }
