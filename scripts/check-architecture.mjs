@@ -512,6 +512,48 @@ for (const file of sourceFiles) {
     }
   }
 
+  if (rel.includes("/vehicle-market/NewVehicleStockGenerator.ts")) {
+    for (const requiredStockToken of [
+      "STOCK_CYCLE_DAYS = 7",
+      "generated_new",
+      "manufacturer_dealer",
+      "regional_dealer",
+      "dealerClearanceEndGameDay",
+      "supplyCycleKey",
+      "ensureStandardConfiguration"
+    ]) {
+      if (!text.includes(requiredStockToken)) {
+        failures.push(
+          `Stage 15 dynamic new stock missing rule: ${requiredStockToken}`
+        );
+      }
+    }
+    for (const forbiddenStockToken of [
+      "Math.random(",
+      "Date.now("
+    ]) {
+      if (text.includes(forbiddenStockToken)) {
+        failures.push(
+          `Stage 15 new stock must remain deterministic: ${forbiddenStockToken}`
+        );
+      }
+    }
+  }
+
+  if (rel.includes("/vehicle-market/VehicleMarketCoordinator.ts") &&
+      !text.includes("newVehicleStock.refresh(gameSecond)")) {
+    failures.push(
+      "Stage 15 new vehicle stock must remain wired into VehicleMarketCoordinator"
+    );
+  }
+
+  if (rel.includes("/services/VehicleMarketTradingService.ts") &&
+      !text.includes('current.supplySource !== "generated_new"')) {
+    failures.push(
+      "Stage 15 generated new stock pricing must remain owned by its stock cycle"
+    );
+  }
+
   if (rel.includes("/finance/FinancialProfiles.ts")) {
     for (const forbiddenField of [
       "energyKind:",

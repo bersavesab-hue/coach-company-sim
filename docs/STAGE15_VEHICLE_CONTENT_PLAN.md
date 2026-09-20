@@ -238,6 +238,13 @@ Variant 表达：
 - 老款停产
 - 地区缺货
 
+动态新车库存已采用 7 天确定性周期：
+- 同周期幂等
+- 卖光不瞬间补货
+- 下周期生成新批次
+- Variant launch / productionEnd / clearance 生命周期真实参与供给
+- manufacturer_dealer / regional_dealer 才能产生普通新车
+
 生成器只创建 VehicleListing，不创建第二套 Market 对象。
 
 ---
@@ -345,7 +352,7 @@ Stage 15 必须先做 validator，再批量填内容。
 7. 180 Variant ✅ 已完成
 8. 48 Option ✅ 已完成
 9. 24 Dealer ✅ 已完成
-10. 新车库存生成器
+10. 新车库存生成器 ✅ 已完成
 11. 二手车动态生成器
 12. 地区需求配置
 13. 生命周期刷新

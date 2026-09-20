@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.15.7-stage15-newstock
+
+### Added
+- 正式完成 Stage 15 动态新车库存生成器。
+- 新车库存按 7 天周期确定性刷新；同一周期反复推进时间不会重复刷车。
+- 已售罄车源在本周期不会立即补货，只能等待下一库存周期。
+- 新车只由 manufacturer_dealer 与 regional_dealer 生成；二手车商和拍卖行不会生成普通新车。
+- 生成候选同时校验品牌支持、Variant 生命周期、运行时 Dealer / Variant / Model / ModelIdentity 是否存在。
+- 正常在产 Variant 与停产清库存 Variant 分开处理；清库存车辆库存更少并带生命周期折扣。
+- 自动为每个在售 Variant 建立稳定的厂家标准 VehicleConfiguration，玩家仍可使用同 Variant 的合法自定义配置购买。
+- 新增 generated_new supplySource / supplyCycleKey，避免市场刷新逻辑覆盖动态库存自己的周期价格。
+- 新增 FORMAL_VEHICLE_CONTENT seed bundle，供运行时 Repository adapter 一次注入 10 品牌、32 车系、100 Model、180 Variant、48 Option、24 Dealer。
+- NewVehicleStockGenerator 已接入 VehicleMarketCoordinator，随正式 Simulation 市场刷新链推进。
+- 新增动态库存专项测试：来源类型、同周期幂等、卖光不重生、跨周期刷新、标准配置、清库存行为。
+
+### Content
+- CONTENT_VERSION 从 7 升至 8。
+- Stage 15 新车动态供给完成。
+- 下一阶段：动态二手车生成器。
+
+
 ## 0.15.6-stage15-dealers24
 
 ### Added
