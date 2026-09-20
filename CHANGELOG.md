@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.16.0-stage16-android-foundation
+
+### Added
+- 新增 Android 应用壳，使用单一 WebView 承载移动端 Presentation，不复制核心领域状态。
+- 新增 APK Presentation 构建器，构建时直接读取正式 Vehicle Content 并先执行 Stage 15 全量内容校验。
+- 新增手机端总览、品牌、100 基础车型搜索、24 车商与 6 市场区域需求浏览界面。
+- 新增 Android APK GitHub Actions 工作流，自动生成 debug APK 并上传构建产物。
+- APK 工作流与 Core Check 分离；Android 壳或 APK Presentation-only 改动不再重复触发整套核心测试。
+
+### Architecture
+- APK 展示数据由正式 Content 生成，不维护第二份车型、车商或地区市场数据。
+- 当前 Android 客户端是 Stage 16 Presentation Foundation；尚未伪造未接入的经营 Command / Query 功能。
+- 后续经营 UI 必须继续复用正式 Command / Query / Projection 边界。
+
+### Changed
+- GAME_VERSION 更新为 0.16.0-stage16-android-foundation。
+- package version 更新为 0.16.0。
+- SAVE_VERSION 与 CONTENT_VERSION 不变。
+
+
 ## 0.15.9-stage15-complete
 
 ### Added
