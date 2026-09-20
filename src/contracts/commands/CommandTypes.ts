@@ -7,6 +7,8 @@ export type CommandType =
   | "vehicle.sendToMaintenance"
   | "vehicle.renewInsurance"
   | "vehicle.passInspection"
+  | "fleet.reposition"
+  | "fleet.recover"
   | "route.create"
   | "route.updateStops"
   | "route.setFare"
@@ -20,4 +22,5 @@ export type CommandType =
   | "trip.assignDriver"
   | "trip.startBoarding"
   | "trip.depart"
+  | "trip.resume"
   | "trip.cancel";

@@ -82,7 +82,10 @@ export function createTestOwnedVehicle(input: {
     status: input.status ?? "available",
     activeIncident: null,
     depotStationId: input.depotStationId ?? null,
-    activeTripId: input.activeTripId ?? null
+    currentStationId: input.depotStationId ?? null,
+    availableAtGameSecond: now,
+    activeTripId: input.activeTripId ?? null,
+    activeFleetTaskId: null
   };
 }
 
