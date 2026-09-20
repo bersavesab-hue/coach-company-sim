@@ -174,11 +174,12 @@ test("formal premium series remain locked even if a listing appears early", () =
 });
 
 
-test("first formal vehicle batch contains 20 validated non-clone models", () => {
+test("first formal vehicle batch remains a valid 20-model opening slice", () => {
+  const firstBatch = VEHICLE_MODELS.slice(0, 20);
   const result = validateVehicleContent({
     brands: VEHICLE_BRANDS,
     series: VEHICLE_SERIES,
-    models: VEHICLE_MODELS,
+    models: firstBatch,
     expectedModelCount: 20
   });
 
@@ -197,7 +198,7 @@ test("first formal vehicle batch contains 20 validated non-clone models", () => 
   );
 
   assert.deepEqual(
-    VEHICLE_MODELS.map((record) => record.identity.displayName),
+    firstBatch.map((record) => record.identity.displayName),
     [
       "江驰 V5",
       "江驰 V6",
@@ -276,4 +277,95 @@ test("individual models inside the same series unlock progressively", () => {
   assert.equal(v7Result.missing.includes("game_day"), true);
   assert.equal(v7Result.missing.includes("reputation"), true);
   assert.equal(v7Result.missing.includes("fleet_size"), true);
+});
+
+
+test("stage 15 base vehicle catalog is complete at 100 models across all 32 series", () => {
+  const result = validateVehicleContent({
+    brands: VEHICLE_BRANDS,
+    series: VEHICLE_SERIES,
+    models: VEHICLE_MODELS,
+    expectedModelCount: 100,
+    requireCompleteSeries: true
+  });
+
+  assert.equal(result.valid, true);
+  assert.equal(result.counts.models, 100);
+  assert.equal(result.counts.plannedModels, 100);
+  assert.deepEqual(
+    result.issues.filter((issue) => issue.severity === "error"),
+    []
+  );
+  assert.deepEqual(
+    result.issues.filter(
+      (issue) => issue.code === "DUPLICATE_TECHNICAL_MODEL"
+    ),
+    []
+  );
+
+  const modelCountBySeries = new Map<string, number>();
+  for (const record of VEHICLE_MODELS) {
+    const key = String(record.identity.seriesId);
+    modelCountBySeries.set(
+      key,
+      (modelCountBySeries.get(key) ?? 0) + 1
+    );
+  }
+
+  for (const series of VEHICLE_SERIES) {
+    assert.equal(
+      modelCountBySeries.get(String(series.series.id)),
+      series.plannedModelCount,
+      `series count mismatch: ${series.series.id}`
+    );
+  }
+});
+
+test("all 28 imported base models unlock no earlier than tier 4", () => {
+  const importedBrandIds = new Set(
+    VEHICLE_BRANDS
+      .filter((record) => record.origin === "imported")
+      .map((record) => String(record.brand.id))
+  );
+  const importedSeriesIds = new Set(
+    VEHICLE_SERIES
+      .filter((record) =>
+        importedBrandIds.has(String(record.series.brandId))
+      )
+      .map((record) => String(record.series.id))
+  );
+  const importedModels = VEHICLE_MODELS.filter((record) =>
+    importedSeriesIds.has(String(record.identity.seriesId))
+  );
+
+  assert.equal(importedModels.length, 28);
+  assert.equal(
+    importedModels.every(
+      (record) => record.metadata.unlock.tier >= 4
+    ),
+    true
+  );
+});
+
+test("Yunchi electric family uses electric energy units", () => {
+  const yunchiSeriesIds = new Set(
+    VEHICLE_SERIES
+      .filter(
+        (record) =>
+          String(record.series.brandId) ===
+          "vehicle_brand.yunchi"
+      )
+      .map((record) => String(record.series.id))
+  );
+  const yunchiModels = VEHICLE_MODELS.filter((record) =>
+    yunchiSeriesIds.has(String(record.identity.seriesId))
+  );
+
+  assert.equal(yunchiModels.length, 11);
+  assert.equal(
+    yunchiModels.every(
+      (record) => record.model.energyKind === "electric_wh"
+    ),
+    true
+  );
 });

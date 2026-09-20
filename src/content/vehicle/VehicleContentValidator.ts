@@ -26,6 +26,7 @@ export interface VehicleContentValidationInput {
   readonly series: readonly VehicleSeriesContentRecord[];
   readonly models: readonly VehicleModelContentRecord[];
   readonly expectedModelCount?: number;
+  readonly requireCompleteSeries?: boolean;
 }
 
 export function validateVehicleContent(
@@ -156,6 +157,17 @@ export function validateVehicleContent(
         issues,
         "SERIES_MODEL_COUNT_EXCEEDED",
         `Series contains ${actual} models but plannedModelCount is ${record.plannedModelCount}`,
+        String(record.series.id)
+      );
+    }
+    if (
+      input.requireCompleteSeries === true &&
+      actual !== record.plannedModelCount
+    ) {
+      error(
+        issues,
+        "SERIES_MODEL_COUNT_INCOMPLETE",
+        `Series contains ${actual} models but requires exactly ${record.plannedModelCount}`,
         String(record.series.id)
       );
     }
