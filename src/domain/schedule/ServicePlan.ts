@@ -6,7 +6,10 @@ import type { GameSecond } from "../../core/units/Units.js";
 import type { DeparturePattern } from "./DeparturePattern.js";
 import type { ServiceCalendar } from "./ServiceCalendar.js";
 
-export type ServicePlanStatus = "draft" | "active" | "suspended" | "retired";
+export type ServicePlanStatus =
+  | "active"
+  | "suspended"
+  | "cancelled";
 
 export interface ServicePlan {
   readonly id: ServicePlanId;

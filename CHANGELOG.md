@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.5.0-stage4
+
+### Added
+- 建立 ServicePlan 正式规则、校验与取消生命周期。
+- 建立 DepartureSlot 与班次展开器，支持 fixed_times / interval_window。
+- 固定游戏第 1 天为 Monday，并按 serviceDays/effective window 生成正式班次。
+- 建立最小 VehicleModel/serviceClass 契约。
+- 建立最小 Driver/资质/状态契约。
+- 建立车辆与司机的分配、发车、释放规则。
+- 建立 trip.prepare / assignVehicle / assignDriver / startBoarding / depart / cancel 正式 Handler。
+- Trip 只能从 ServicePlan 生成的合法 DepartureSlot 创建。
+- 调度时校验公司归属、车辆状态、车型级别、司机状态与司机资质。
+- 发车时同步推进 Trip、Vehicle、Driver 三个独立聚合状态。
+- 取消班次时释放已绑定车辆和司机。
+- RuntimeIdAllocator 新增 ServicePlanId / TripId。
+- RepositoryBundle 新增 StaffRepository / VehicleModelRepository。
+- 新增 Stage 4 文档与班次、调度、资源释放测试。
+
+### Changed
+- ServicePlan 状态正式收敛为 active / suspended / cancelled。
+- GAME_VERSION 更新为 0.5.0-stage4。
+
+### Architecture
+- ServicePlan 不拥有车辆/司机。
+- Trip 是一次真实班次的唯一运行聚合。
+- Vehicle/Driver 通过 activeTripId 与 Trip 关联，不永久绑定 Route。
+- DepartureSlot 是可重建派生值，不单独制造长期资产对象。
+
+# Changelog
+
 ## 0.4.0-stage3
 
 ### Removed
