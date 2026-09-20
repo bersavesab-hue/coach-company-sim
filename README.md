@@ -2,7 +2,7 @@
 
 从 0 开发的 2D 大地图客运公司经营模拟器。
 
-当前版本：**V0.16.0 — Android Presentation Foundation**
+当前版本：**V0.17.0 — Playable Android Client**
 
 当前规则核心已经完成从路网、线路、班次、车辆、司机、客流、财务，到自动运营、调度中心、车辆市场与正式车辆内容库的连续底层链路。
 
@@ -35,7 +35,7 @@
 
 ## 下一阶段
 
-Stage 15 已收尾。Stage 16 已建立 Android APK 打包基础与手机端正式内容浏览界面；下一步继续把 Command / Query 驱动的经营交互、大地图和管理页面接入同一个客户端。
+Stage 15 已收尾。Stage 16 已把正式 Command / Query / Simulation 接入 Android 客户端，当前 APK 已形成购车、补能、开线路、建班次、自动调度、时间推进、客流、收入成本、车队状态与地图车辆位置的完整可玩闭环。
 
 ## 开发检查
 

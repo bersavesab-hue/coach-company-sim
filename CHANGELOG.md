@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.17.0-stage16-playable-client
+
+### Added
+- Android 客户端从只读内容浏览器升级为可玩的经营客户端。
+- 新增正式 InMemoryRepositoryBundle 作为生产运行时适配层，供 CommandBus / QueryBus / Simulation 共用。
+- 新增架空 8 城市路网、8 个客运站、道路、客流需求、玩家公司、司机与正式经济种子。
+- 正式 10 品牌 / 32 车系 / 100 车型 / 180 Variant / 48 Option / 24 Dealer 全部接入同一局运行时。
+- 新增经营总览、大地图、线路、班次、车辆市场、调度中心、车队、财务七个可玩页面。
+- 支持购车、二手检测、议价、补能、保养、续保、年检、出售车辆。
+- 支持创建线路、建立班次计划、提交/重排运营计划与时间推进。
+- 地图车辆位置直接读取 map.visibleVehicles，不维护第二套 UI 车辆状态。
+- 新增完整集成测试：购车 → 补能 → 开线路 → 建班次 → 自动运营 → 客流 → 客运收入。
+- 新增浏览器 Runtime bundle，使 Android WebView 直接执行正式核心逻辑。
+
+### Changed
+- APK 版本升级至 0.17.0。
+- GAME_VERSION 更新为 0.17.0-stage16-playable-client。
+- 原 Stage 16 只读内容验收页已被正式可玩客户端替代。
+
+### Validation
+- Core Check 通过。
+- Android APK 构建通过。
+- 可玩闭环集成测试通过。
+
+
 ## 0.16.0-stage16-android-foundation
 
 ### Added
