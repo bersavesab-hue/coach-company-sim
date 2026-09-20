@@ -554,6 +554,49 @@ for (const file of sourceFiles) {
     );
   }
 
+  if (rel.includes("/vehicle-market/UsedVehicleStockGenerator.ts")) {
+    for (const requiredUsedStockToken of [
+      "USED_STOCK_CYCLE_DAYS = 7",
+      "generated_used",
+      "regional_dealer",
+      "used_vehicle_dealer",
+      "UsedVehicleSnapshot",
+      "buildSellerDisclosure",
+      "VehicleMarketValuationService",
+      "supplyCycleKey"
+    ]) {
+      if (!text.includes(requiredUsedStockToken)) {
+        failures.push(
+          `Stage 15 dynamic used stock missing rule: ${requiredUsedStockToken}`
+        );
+      }
+    }
+    for (const forbiddenUsedStockToken of [
+      "Math.random(",
+      "Date.now("
+    ]) {
+      if (text.includes(forbiddenUsedStockToken)) {
+        failures.push(
+          `Stage 15 used stock must remain deterministic: ${forbiddenUsedStockToken}`
+        );
+      }
+    }
+  }
+
+  if (rel.includes("/vehicle-market/VehicleMarketCoordinator.ts") &&
+      !text.includes("usedVehicleStock.refresh(gameSecond)")) {
+    failures.push(
+      "Stage 15 used vehicle stock must remain wired into VehicleMarketCoordinator"
+    );
+  }
+
+  if (rel.includes("/services/VehicleMarketTradingService.ts") &&
+      !text.includes('current.supplySource !== "generated_used"')) {
+    failures.push(
+      "Stage 15 generated used stock pricing must remain owned by its stock cycle"
+    );
+  }
+
   if (rel.includes("/finance/FinancialProfiles.ts")) {
     for (const forbiddenField of [
       "energyKind:",
