@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.10.0-stage9
+
+### Removed
+- 删除 Stage 8 的 `vehicle.completeMaintenance` 手动完成保养接口。
+- 删除“给未来班次分配车辆/司机时立即把资源状态改成 assigned”的单班锁死模型。
+- 不保留 reserveVehicleForTrip / reserveDriverForTrip 旧接口或兼容壳。
+
+### Added
+- 新增 FleetTask，正式承载 deadhead / refuel / maintenance / recovery 运营任务。
+- OwnedVehicle 新增 currentStationId、availableAtGameSecond、activeFleetTaskId。
+- Driver 新增 currentStationId、availableAtGameSecond、dutyStartedAtGameSecond、lastDutyEndedAtGameSecond、continuousDrivingSeconds、activeFleetTaskId。
+- 新增 DispatchPlanningService，按真实线路耗时、终点站、周转时间校验车辆和司机未来排班。
+- 同一辆车/司机可以排多个未来班次，但上一班实际终点必须与下一班始发站衔接，且必须留足周转时间。
+- 新增 OperationsPolicy，统一注入车辆周转、司机周转、最小休息、连续驾驶上限、值勤上限、补能耗时、保养耗时和救援耗时。
+- 新增 fleet.reposition，空驶调车沿真实路网计算时间，并真实累计里程、能源、部件磨损和司机工时。
+- 调车前校验能源储备、预计技术状态、司机连续驾驶和总值勤时间。
+- 补能与保养改成真实占用游戏时间的 FleetTask，到期后由 FleetOperationsCoordinator 自动完成。
+- 新增 fleet.recover，将故障车辆与司机从 disrupted Trip 中脱离并拖救到线路站点。
+- disrupted Trip 支持重新分配备用车辆/替补司机并通过 trip.resume 继续运行，保留乘客与已完成路段进度。
+- 班次完成后车辆和司机记录真实终点站与最早再可用时间。
+- 新增 Stage 9 调车与未来班次链专项测试。
+
+### Architecture
+- Trip 只保存客运班次事实；调车/补能/保养/救援不伪装成客运 Trip。
+- Vehicle/Driver 只保存当前执行中的 Trip/FleetTask；未来预约事实保存在 Trip 并由调度服务校验。
+- 运营位置只记录 StationId，不把世界坐标写进 Vehicle/Driver；运行中地图坐标继续从 Trip 路径派生。
+- FleetTask 的空驶运行同样进入车辆生命周期和财务事件链，不允许免费瞬移。
+- 调度安全检查与车辆技术安全检查分层，避免 assigned 状态成为技术规则前置条件。
+
+
 ## 0.9.0-stage8
 
 ### Removed

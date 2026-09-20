@@ -123,7 +123,10 @@ for (const file of sourceFiles) {
       "brakeConditionPermille:",
       "tireConditionPermille:",
       "insuranceValidUntilGameSecond:",
-      "inspectionValidUntilGameSecond:"
+      "inspectionValidUntilGameSecond:",
+      "currentStationId:",
+      "availableAtGameSecond:",
+      "activeFleetTaskId:"
     ]) {
       if (!text.includes(requiredField)) {
         failures.push(
@@ -131,6 +134,44 @@ for (const file of sourceFiles) {
         );
       }
     }
+  }
+
+  if (text.includes('"vehicle.completeMaintenance"')) {
+    failures.push(
+      `Removed Stage 8 manual maintenance command returned in ${rel}`
+    );
+  }
+
+  if (
+    text.includes("reserveVehicleForTrip") ||
+    text.includes("reserveDriverForTrip")
+  ) {
+    failures.push(
+      `Removed Stage 8 single-trip reservation API returned in ${rel}`
+    );
+  }
+
+  if (rel.includes("/staff/Driver.ts")) {
+    for (const requiredField of [
+      "currentStationId:",
+      "availableAtGameSecond:",
+      "dutyStartedAtGameSecond:",
+      "lastDutyEndedAtGameSecond:",
+      "continuousDrivingSeconds:",
+      "activeFleetTaskId:"
+    ]) {
+      if (!text.includes(requiredField)) {
+        failures.push(
+          `Driver missing Stage 9 operations field in ${rel}: ${requiredField}`
+        );
+      }
+    }
+  }
+
+  if (rel.includes("/trip/TripInstance.ts") && !text.includes("recoveryStationId:")) {
+    failures.push(
+      "TripInstance must retain recoveryStationId for disrupted-trip substitution"
+    );
   }
 
   if (rel.includes("/finance/FinancialProfiles.ts")) {
