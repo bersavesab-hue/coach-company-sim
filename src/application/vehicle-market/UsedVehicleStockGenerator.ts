@@ -790,6 +790,13 @@ function usedConfigurationId(
   );
 }
 
+function safeSuffix(value: string): string {
+  return value.replace(
+    /[^a-zA-Z0-9_.-]/g,
+    "_"
+  );
+}
+
 function usedExteriorColor(score: number): string {
   const colors = [
     "fleet_white",
