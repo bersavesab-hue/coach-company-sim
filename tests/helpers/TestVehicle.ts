@@ -17,6 +17,15 @@ import { VehicleLifecycleRuntimeState } from "../../src/domain/vehicle/VehicleLi
 import type { VehicleModel } from "../../src/domain/vehicle/VehicleModel.js";
 import type { VehicleLifecyclePolicy } from "../../src/application/policies/VehicleLifecyclePolicy.js";
 import type { VehicleRuntimeRepository } from "../../src/application/repositories/VehicleRuntimeRepository.js";
+import type { VehicleMarketRepository } from "../../src/application/repositories/VehicleMarketRepository.js";
+import type { VehicleBrand } from "../../src/domain/vehicle-market/VehicleBrand.js";
+import type { VehicleSeries } from "../../src/domain/vehicle-market/VehicleSeries.js";
+import type { VehicleModelIdentity } from "../../src/domain/vehicle-market/VehicleModelIdentity.js";
+import type { VehicleVariant } from "../../src/domain/vehicle-market/VehicleVariant.js";
+import type { VehicleOptionDefinition } from "../../src/domain/vehicle-market/VehicleOptionDefinition.js";
+import type { VehicleConfiguration } from "../../src/domain/vehicle-market/VehicleConfiguration.js";
+import type { VehicleDealer } from "../../src/domain/vehicle-market/VehicleDealer.js";
+import type { VehicleListing } from "../../src/domain/vehicle-market/VehicleListing.js";
 
 export function createTestVehicleModel(
   overrides: Partial<VehicleModel> = {}
@@ -123,3 +132,64 @@ export const zeroVehicleLifecyclePolicy: VehicleLifecyclePolicy = {
   quoteResale: () => units.moneyCents(0),
   quoteScrap: () => units.moneyCents(0)
 };
+
+
+export function createTestVehicleMarketRepository(input: {
+  readonly brands?: readonly VehicleBrand[];
+  readonly series?: readonly VehicleSeries[];
+  readonly modelIdentities?: readonly VehicleModelIdentity[];
+  readonly variants?: readonly VehicleVariant[];
+  readonly options?: readonly VehicleOptionDefinition[];
+  readonly configurations?: readonly VehicleConfiguration[];
+  readonly dealers?: readonly VehicleDealer[];
+  readonly listings?: readonly VehicleListing[];
+} = {}): VehicleMarketRepository {
+  const brands = new Map(
+    (input.brands ?? []).map((value) => [value.id, value])
+  );
+  const series = new Map(
+    (input.series ?? []).map((value) => [value.id, value])
+  );
+  const modelIdentities = new Map(
+    (input.modelIdentities ?? []).map((value) => [
+      value.modelId,
+      value
+    ])
+  );
+  const variants = new Map(
+    (input.variants ?? []).map((value) => [value.id, value])
+  );
+  const options = new Map(
+    (input.options ?? []).map((value) => [value.code, value])
+  );
+  const configurations = new Map(
+    (input.configurations ?? []).map((value) => [
+      value.id,
+      value
+    ])
+  );
+  const dealers = new Map(
+    (input.dealers ?? []).map((value) => [value.id, value])
+  );
+  const listings = new Map(
+    (input.listings ?? []).map((value) => [value.id, value])
+  );
+
+  return {
+    getBrand: (id) => brands.get(id),
+    getSeries: (id) => series.get(id),
+    getModelIdentity: (id) => modelIdentities.get(id),
+    getVariant: (id) => variants.get(id),
+    getOption: (code) => options.get(code),
+    getConfiguration: (id) => configurations.get(id),
+    saveConfiguration: (value) =>
+      configurations.set(value.id, value),
+    getDealer: (id) => dealers.get(id),
+    getListing: (id) => listings.get(id),
+    findAvailableListings: () =>
+      [...listings.values()].filter(
+        (value) => value.status === "available"
+      ),
+    saveListing: (value) => listings.set(value.id, value)
+  };
+}
