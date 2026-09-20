@@ -23,6 +23,7 @@ import type { TripInstance } from "../../src/domain/trip/TripInstance.js";
 import type { OwnedVehicle } from "../../src/domain/vehicle/OwnedVehicle.js";
 import type { VehicleModel } from "../../src/domain/vehicle/VehicleModel.js";
 import { WorldGraph } from "../../src/domain/world/WorldGraph.js";
+import { WorldRuntimeState } from "../../src/domain/world/WorldRuntimeState.js";
 import { createApplication } from "../../src/bootstrap/createApplication.js";
 import type { RepositoryBundle } from "../../src/application/repositories/RepositoryBundle.js";
 import type { RuntimeIdAllocator } from "../../src/application/ids/RuntimeIdAllocator.js";
@@ -111,6 +112,7 @@ function fixture() {
   const model: VehicleModel = {
     id: ids.vehicleModel("vehicle_model.000001"),
     serviceClass: "county_midibus",
+    maxSpeedMps: units.speedMps(25),
     active: true
   };
 
@@ -143,6 +145,8 @@ function fixture() {
   const models = new Map<VehicleModelId, VehicleModel>([[model.id, model]]);
   const drivers = new Map<StaffId, Driver>([[driver.id, driver]]);
   const stations = new Map<StationId, Station>([[s1.id, s1], [s2.id, s2]]);
+
+  const worldRuntime = new WorldRuntimeState();
 
   const repositories: RepositoryBundle = {
     companies: {
@@ -178,6 +182,8 @@ function fixture() {
             value.servicePlanId === planId &&
             value.plannedDepartureGameSecond === departure
         ),
+      findRunning: () =>
+        [...trips.values()].filter((value) => value.status === "running"),
       save: (value) => trips.set(value.id, value)
     },
     vehicleModels: {
@@ -190,6 +196,10 @@ function fixture() {
     world: {
       get: () => graphResult.value,
       replace: (_world) => undefined
+    },
+    worldRuntime: {
+      get: () => worldRuntime,
+      replace: (_state) => undefined
     }
   };
 

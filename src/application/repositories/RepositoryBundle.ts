@@ -7,6 +7,7 @@ import type { TripRepository } from "./TripRepository.js";
 import type { VehicleModelRepository } from "./VehicleModelRepository.js";
 import type { VehicleRepository } from "./VehicleRepository.js";
 import type { WorldRepository } from "./WorldRepository.js";
+import type { WorldRuntimeRepository } from "./WorldRuntimeRepository.js";
 
 export interface RepositoryBundle {
   readonly companies: CompanyRepository;
@@ -18,4 +19,5 @@ export interface RepositoryBundle {
   readonly vehicleModels: VehicleModelRepository;
   readonly vehicles: VehicleRepository;
   readonly world: WorldRepository;
+  readonly worldRuntime: WorldRuntimeRepository;
 }

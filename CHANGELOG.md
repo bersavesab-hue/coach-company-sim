@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.6.0-stage5
+
+### Added
+- VehicleModel 新增 maxSpeedMps，车辆移动正式受车型最高速度约束。
+- 新增离散秒 TripMovement，按 PathLeg 沿 WorldGraph 正式推进 TripPosition。
+- 有效速度同时受车型上限、道路限速和 RoadRuntimeState 速度倍率约束。
+- closed 道路正式阻止车辆继续推进，并把等待时间计入游戏时间。
+- 新增 RoadGeometry，支持正向/反向 PathLeg 的世界坐标派生。
+- 跑完最后 PathLeg 后正式完成 Trip、记录 actualArrivalGameSecond、释放车辆和司机并发布 trip.completed。
+- 新增 foreground / regional / background 三档模拟节奏（1/15/300秒）。
+- 新增 WorldRuntimeRepository，静态 WorldGraph 与动态道路状态继续分离。
+- TripRepository 新增 findRunning，供模拟层批处理运行班次。
+- 新增 PointSpatialIndex / VehicleSpatialIndex 派生空间索引。
+- 新增 map.visibleVehicles Query DTO 与查询 Handler。
+- ApplicationRuntime 新增 SimulationCoordinator。
+- 新增移动、封路、反向道路、完成释放、Tier 与空间索引测试。
+- 架构守卫新增 simulation 依赖边界和 TripPosition worldPosition 禁止项。
+
+### Changed
+- GAME_VERSION 更新为 0.6.0-stage5。
+- 核心地图世界坐标明确为派生数据，不写入 Vehicle/TripPosition。
+- 清理 CHANGELOG 重复一级标题，只保留一个正式标题。
+
+### Architecture
+- Simulation 只依赖 Domain/Core/Contracts；Repository/Event 编排留在 Application。
+- Tier A/B/C 只改变批量解析频率，不建立三套移动算法。
+- SpatialIndex 是可重建派生缓存，不成为存档事实。
+
 ## 0.5.0-stage4
 
 ### Added
@@ -28,7 +56,6 @@
 - Vehicle/Driver 通过 activeTripId 与 Trip 关联，不永久绑定 Route。
 - DepartureSlot 是可重建派生值，不单独制造长期资产对象。
 
-# Changelog
 
 ## 0.4.0-stage3
 

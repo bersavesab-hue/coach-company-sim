@@ -165,6 +165,36 @@ export function departTrip(
   });
 }
 
+export function completeTrip(
+  trip: TripInstance,
+  actualArrivalGameSecond: GameSecond,
+  finalRoadSegmentIndex: number,
+  finalOffsetOnSegmentM: number
+): Result<TripInstance, DomainError> {
+  if (trip.status !== "running") {
+    return err(
+      new DomainError(
+        "INVALID_STATE_TRANSITION",
+        "Only a running trip can complete",
+        { tripId: trip.id, status: trip.status }
+      )
+    );
+  }
+
+  const transitioned = transitionTrip(trip, "completed");
+  if (!transitioned.ok) return transitioned;
+
+  return ok({
+    ...transitioned.value,
+    actualArrivalGameSecond,
+    position: {
+      activeRoadSegmentIndex: finalRoadSegmentIndex,
+      offsetOnSegmentM: units.distanceM(finalOffsetOnSegmentM),
+      lastUpdatedGameSecond: actualArrivalGameSecond
+    }
+  });
+}
+
 export function cancelTrip(
   trip: TripInstance
 ): Result<TripInstance, DomainError> {

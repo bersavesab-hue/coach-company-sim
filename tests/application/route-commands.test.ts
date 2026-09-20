@@ -16,6 +16,7 @@ import type { Station } from "../../src/domain/station/Station.js";
 import type { TripInstance } from "../../src/domain/trip/TripInstance.js";
 import type { OwnedVehicle } from "../../src/domain/vehicle/OwnedVehicle.js";
 import { WorldGraph } from "../../src/domain/world/WorldGraph.js";
+import { WorldRuntimeState } from "../../src/domain/world/WorldRuntimeState.js";
 import { createApplication } from "../../src/bootstrap/createApplication.js";
 import type { RepositoryBundle } from "../../src/application/repositories/RepositoryBundle.js";
 import type { RuntimeIdAllocator } from "../../src/application/ids/RuntimeIdAllocator.js";
@@ -129,6 +130,7 @@ function buildFixture(companyLicenses = [ids.license("license.000001")]) {
     trips: {
       getById: (_id) => undefined as TripInstance | undefined,
       findByServicePlanAndDeparture: (_planId, _departure) => undefined,
+      findRunning: () => [],
       save: (_trip) => undefined
     },
     vehicleModels: {
@@ -141,6 +143,10 @@ function buildFixture(companyLicenses = [ids.license("license.000001")]) {
     world: {
       get: () => graphResult.value,
       replace: (_world) => undefined
+    },
+    worldRuntime: {
+      get: () => new WorldRuntimeState(),
+      replace: (_state) => undefined
     }
   };
 

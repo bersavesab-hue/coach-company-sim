@@ -74,25 +74,53 @@ for (const file of sourceFiles) {
   const text = fs.readFileSync(file, "utf8");
 
   if (rel.startsWith("src/domain/")) {
-    const bannedImports = [
+    for (const banned of [
       "/presentation/",
       "/application/",
       "react",
       "android",
       "canvas"
-    ];
-    for (const banned of bannedImports) {
+    ]) {
       if (text.includes(banned)) {
         failures.push(`Domain boundary violation in ${rel}: ${banned}`);
       }
     }
   }
 
-  if (rel.includes("/vehicle/OwnedVehicle.ts")) {
-    for (const forbiddenField of ["routeId:", "worldPosition:", "routeSegmentIndex:", "offsetOnSegmentM:"]) {
-      if (text.includes(forbiddenField)) {
-        failures.push(`Vehicle runtime ownership violation in ${rel}: ${forbiddenField}`);
+  if (rel.startsWith("src/simulation/")) {
+    for (const banned of [
+      "/presentation/",
+      "/application/",
+      "react",
+      "android",
+      "canvas"
+    ]) {
+      if (text.includes(banned)) {
+        failures.push(`Simulation boundary violation in ${rel}: ${banned}`);
       }
+    }
+  }
+
+  if (rel.includes("/vehicle/OwnedVehicle.ts")) {
+    for (const forbiddenField of [
+      "routeId:",
+      "worldPosition:",
+      "routeSegmentIndex:",
+      "offsetOnSegmentM:"
+    ]) {
+      if (text.includes(forbiddenField)) {
+        failures.push(
+          `Vehicle runtime ownership violation in ${rel}: ${forbiddenField}`
+        );
+      }
+    }
+  }
+
+  if (rel.includes("/trip/TripPosition.ts")) {
+    if (text.includes("worldPosition:")) {
+      failures.push(
+        "TripPosition must store road progress, not derived worldPosition"
+      );
     }
   }
 
@@ -105,14 +133,14 @@ for (const file of sourceFiles) {
       "roadPathSegmentIds:"
     ]) {
       if (text.includes(forbiddenField)) {
-        failures.push(`Route runtime/legacy ownership violation in ${rel}: ${forbiddenField}`);
+        failures.push(
+          `Route runtime/legacy ownership violation in ${rel}: ${forbiddenField}`
+        );
       }
     }
 
     if (!text.includes("pathLegs:")) {
-      failures.push(
-        "PassengerRoute must use direction-aware pathLegs"
-      );
+      failures.push("PassengerRoute must use direction-aware pathLegs");
     }
   }
 }

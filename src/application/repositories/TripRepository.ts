@@ -11,5 +11,6 @@ export interface TripRepository {
     servicePlanId: ServicePlanId,
     plannedDepartureGameSecond: GameSecond
   ): TripInstance | undefined;
+  findRunning(): readonly TripInstance[];
   save(trip: TripInstance): void;
 }

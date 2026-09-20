@@ -5,6 +5,7 @@ export * from "./contracts/commands/CommandTypes.js";
 export * from "./contracts/events/DomainEventEnvelope.js";
 export * from "./contracts/events/EventTypes.js";
 export * from "./contracts/dto/CommonDto.js";
+export * from "./contracts/dto/MapDto.js";
 
 export * from "./core/units/Units.js";
 export * from "./core/time/GameClock.js";
@@ -20,6 +21,7 @@ export * from "./domain/world/WorldNode.js";
 export * from "./domain/world/RoadSegment.js";
 export * from "./domain/world/RoadTraversal.js";
 export * from "./domain/world/RoadPath.js";
+export * from "./domain/world/RoadGeometry.js";
 export * from "./domain/world/RoadRuntimeState.js";
 export * from "./domain/world/WorldRuntimeState.js";
 export * from "./domain/world/WorldGraph.js";
@@ -50,6 +52,10 @@ export * from "./domain/staff/DriverAssignmentRules.js";
 export * from "./domain/company/CompanyStatus.js";
 export * from "./domain/company/Company.js";
 
+export * from "./simulation/tiering/SimulationTier.js";
+export * from "./simulation/movement/TripMovement.js";
+export * from "./simulation/movement/TripWorldPosition.js";
+
 export * from "./application/CommandBus.js";
 export * from "./application/QueryBus.js";
 export * from "./application/commands/route/RouteCommands.js";
@@ -57,11 +63,16 @@ export * from "./application/commands/schedule/ServicePlanCommands.js";
 export * from "./application/commands/trip/TripCommands.js";
 export * from "./application/events/DomainEventBus.js";
 export * from "./application/ids/RuntimeIdAllocator.js";
+export * from "./application/queries/map/MapQueries.js";
 export * from "./application/repositories/RepositoryBundle.js";
 export * from "./application/repositories/StationRepository.js";
 export * from "./application/repositories/StaffRepository.js";
 export * from "./application/repositories/VehicleModelRepository.js";
+export * from "./application/repositories/WorldRuntimeRepository.js";
 export * from "./application/services/RoutePathService.js";
+export * from "./application/simulation/SimulationCoordinator.js";
+export * from "./application/spatial/PointSpatialIndex.js";
+export * from "./application/spatial/VehicleSpatialIndex.js";
 
 export * from "./save/schema/SaveEnvelope.js";
 export * from "./save/schema/SaveVersion.js";
