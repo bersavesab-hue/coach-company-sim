@@ -41,7 +41,8 @@ import {
   createTestOwnedVehicle,
   createTestVehicleModel,
   createTestVehicleRuntimeRepository,
-  zeroVehicleLifecyclePolicy
+  zeroVehicleLifecyclePolicy,
+  createTestVehicleMarketRepository
 } from "../helpers/TestVehicle.js";
 
 function command<T>(
@@ -316,6 +317,7 @@ function simpleFixture() {
         ),
       save: (trip) => trips.set(trip.id, trip)
     },
+    vehicleMarket: createTestVehicleMarketRepository(),
     vehicleModels: {
       getById: (id) => models.get(id)
     },
@@ -807,6 +809,7 @@ function faultFixture() {
         ),
       save: (trip) => trips.set(trip.id, trip)
     },
+    vehicleMarket: createTestVehicleMarketRepository(),
     vehicleModels: {
       getById: (id) => models.get(id)
     },

@@ -30,7 +30,8 @@ import {
   createTestOwnedVehicle,
   createTestVehicleModel,
   createTestVehicleRuntimeRepository,
-  zeroVehicleLifecyclePolicy
+  zeroVehicleLifecyclePolicy,
+  createTestVehicleMarketRepository
 } from "../helpers/TestVehicle.js";
 
 function fixture(
@@ -199,6 +200,7 @@ function fixture(
       findRunning: () => [],
       save: () => undefined
     },
+    vehicleMarket: createTestVehicleMarketRepository(),
     vehicleModels: {
       getById: (id) => id === model.id ? model : undefined
     },

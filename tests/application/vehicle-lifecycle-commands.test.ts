@@ -20,7 +20,8 @@ import type { RuntimeIdAllocator } from "../../src/application/ids/RuntimeIdAllo
 import { createTestFinanceRepository } from "../helpers/TestFinance.js";
 import {
   createTestVehicleModel,
-  createTestVehicleRuntimeRepository
+  createTestVehicleRuntimeRepository,
+  createTestVehicleMarketRepository
 } from "../helpers/TestVehicle.js";
 import {
   createTestFleetTaskRepository,
@@ -133,6 +134,7 @@ function fixture() {
       findRunning: () => [],
       save: () => undefined
     },
+    vehicleMarket: createTestVehicleMarketRepository(),
     vehicleModels: {
       getById: (id) => id === model.id ? model : undefined
     },

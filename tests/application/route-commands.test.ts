@@ -24,7 +24,8 @@ import type { RuntimeIdAllocator } from "../../src/application/ids/RuntimeIdAllo
 import { createTestFinanceRepository, zeroEconomicPolicy } from "../helpers/TestFinance.js";
 import {
   createTestVehicleRuntimeRepository,
-  zeroVehicleLifecyclePolicy
+  zeroVehicleLifecyclePolicy,
+  createTestVehicleMarketRepository
 } from "../helpers/TestVehicle.js";
 import {
   createTestFleetTaskRepository,
@@ -159,6 +160,7 @@ function buildFixture(companyLicenses = [ids.license("license.000001")]) {
       findRunning: () => [],
       save: (_trip) => undefined
     },
+    vehicleMarket: createTestVehicleMarketRepository(),
     vehicleModels: {
       getById: (_id) => undefined
     },

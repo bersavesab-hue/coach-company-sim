@@ -33,7 +33,8 @@ import {
   createTestOwnedVehicle,
   createTestVehicleModel,
   createTestVehicleRuntimeRepository,
-  zeroVehicleLifecyclePolicy
+  zeroVehicleLifecyclePolicy,
+  createTestVehicleMarketRepository
 } from "../helpers/TestVehicle.js";
 import { createTestDriver } from "../helpers/TestDriver.js";
 import {
@@ -216,6 +217,7 @@ function fixture() {
         [...trips.values()].filter((value) => value.status === "running"),
       save: (value) => trips.set(value.id, value)
     },
+    vehicleMarket: createTestVehicleMarketRepository(),
     vehicleModels: {
       getById: (id) => models.get(id)
     },

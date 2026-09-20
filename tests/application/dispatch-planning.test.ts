@@ -22,7 +22,8 @@ import { createTestFleetTaskRepository,
 import {
   createTestOwnedVehicle,
   createTestVehicleModel,
-  createTestVehicleRuntimeRepository
+  createTestVehicleRuntimeRepository,
+  createTestVehicleMarketRepository
 } from "../helpers/TestVehicle.js";
 
 function fixture() {
@@ -211,6 +212,7 @@ function fixture() {
       findRunning: () => [],
       save: (trip) => trips.set(trip.id, trip)
     },
+    vehicleMarket: createTestVehicleMarketRepository(),
     vehicleModels: {
       getById: (id) => id === model.id ? model : undefined
     },

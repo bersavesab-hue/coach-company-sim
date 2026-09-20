@@ -29,7 +29,8 @@ import { createTestFleetTaskRepository,
 import {
   createTestOwnedVehicle,
   createTestVehicleModel,
-  createTestVehicleRuntimeRepository
+  createTestVehicleRuntimeRepository,
+  createTestVehicleMarketRepository
 } from "../helpers/TestVehicle.js";
 
 interface FixtureOptions {
@@ -294,6 +295,7 @@ function fixture(options: FixtureOptions) {
       findRunning: () => [],
       save: () => undefined
     },
+    vehicleMarket: createTestVehicleMarketRepository(),
     vehicleModels: {
       getById: (id) => id === model.id ? model : undefined
     },
