@@ -17,3 +17,12 @@ export interface CommittedDayOperationsQuery {
     readonly gameDay: number;
   };
 }
+
+export interface DispatchCenterQuery {
+  readonly type: "operations.dispatchCenter";
+  readonly payload: {
+    readonly companyId: CompanyId;
+    readonly gameDay: number;
+    readonly currentGameSecond: GameSecond;
+  };
+}

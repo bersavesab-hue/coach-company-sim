@@ -9,6 +9,7 @@ export * from "./contracts/dto/MapDto.js";
 export * from "./contracts/dto/PassengerDto.js";
 export * from "./contracts/dto/FinanceDto.js";
 export * from "./contracts/dto/VehicleDto.js";
+export * from "./contracts/dto/OperationsDto.js";
 
 export * from "./core/units/Units.js";
 export * from "./core/time/GameClock.js";
@@ -114,6 +115,7 @@ export * from "./application/repositories/VehicleModelRepository.js";
 export * from "./application/repositories/VehicleRuntimeRepository.js";
 export * from "./application/repositories/WorldRuntimeRepository.js";
 export * from "./application/services/DispatchPlanningService.js";
+export * from "./application/services/DispatchCenterProjection.js";
 export * from "./application/services/DayOperationsPlanner.js";
 export * from "./application/services/FleetTaskTiming.js";
 export * from "./application/services/RoutePathService.js";

@@ -21,6 +21,7 @@ import { FleetOperationsCoordinator } from "../application/operations/FleetOpera
 import { OperationsExecutionCoordinator } from "../application/operations/OperationsExecutionCoordinator.js";
 import { OperationsScheduleService } from "../application/operations/OperationsScheduleService.js";
 import { DayOperationsPlanner } from "../application/services/DayOperationsPlanner.js";
+import { DispatchCenterProjection } from "../application/services/DispatchCenterProjection.js";
 import { SimulationCoordinator } from "../application/simulation/SimulationCoordinator.js";
 import { VehicleSpatialIndex } from "../application/spatial/VehicleSpatialIndex.js";
 import { VehicleLifecycleCoordinator } from "../application/vehicle/VehicleLifecycleCoordinator.js";
@@ -45,6 +46,7 @@ export interface ApplicationRuntime {
   readonly vehicleLifecycle: VehicleLifecycleCoordinator;
   readonly fleetOperations: FleetOperationsCoordinator;
   readonly operationsPlanner: DayOperationsPlanner;
+  readonly dispatchCenter: DispatchCenterProjection;
   readonly operationsSchedules: OperationsScheduleService;
   readonly operationsExecution: OperationsExecutionCoordinator;
   readonly simulation: SimulationCoordinator;
@@ -143,10 +145,16 @@ export function createApplication(
   registerFinanceQueries(queries, dependencies.repositories);
   registerVehicleQueries(queries, dependencies.repositories);
 
+  const dispatchCenter = new DispatchCenterProjection(
+    dependencies.repositories,
+    operationsPlanner
+  );
+
   registerOperationsQueries(
     queries,
     operationsPlanner,
-    dependencies.repositories
+    dependencies.repositories,
+    dispatchCenter
   );
 
   const simulation = new SimulationCoordinator(
@@ -170,6 +178,7 @@ export function createApplication(
     vehicleLifecycle,
     fleetOperations,
     operationsPlanner,
+    dispatchCenter,
     operationsSchedules,
     operationsExecution,
     simulation
