@@ -387,14 +387,7 @@ function targetListingCount(
     2,
     Math.min(
       18,
-      Math.round(
-        (
-          base *
-          weightPermille *
-          marketDemandPermille
-        ) /
-          1_000_000
-      )
+      Math.round((base * weightPermille) / 1000)
     )
   );
 }
@@ -412,7 +405,14 @@ function calculateStockCount(
     1,
     Math.min(
       8,
-      Math.round((base * weightPermille) / 1000)
+      Math.round(
+        (
+          base *
+          weightPermille *
+          marketDemandPermille
+        ) /
+          1_000_000
+      )
     )
   );
 }
