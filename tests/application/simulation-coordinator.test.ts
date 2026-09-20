@@ -26,7 +26,13 @@ import { WorldGraph } from "../../src/domain/world/WorldGraph.js";
 import { WorldRuntimeState } from "../../src/domain/world/WorldRuntimeState.js";
 import { DomainEventBus } from "../../src/application/events/DomainEventBus.js";
 import { FinanceCoordinator } from "../../src/application/finance/FinanceCoordinator.js";
+import { VehicleLifecycleCoordinator } from "../../src/application/vehicle/VehicleLifecycleCoordinator.js";
 import { createTestFinanceRepository, zeroEconomicPolicy } from "../helpers/TestFinance.js";
+import {
+  createTestOwnedVehicle,
+  createTestVehicleModel,
+  createTestVehicleRuntimeRepository
+} from "../helpers/TestVehicle.js";
 import type { RepositoryBundle } from "../../src/application/repositories/RepositoryBundle.js";
 import { SimulationCoordinator } from "../../src/application/simulation/SimulationCoordinator.js";
 import { VehicleSpatialIndex } from "../../src/application/spatial/VehicleSpatialIndex.js";
@@ -120,25 +126,21 @@ function fixture() {
     status: "active"
   };
 
-  const vehicle: OwnedVehicle = {
+  const vehicle: OwnedVehicle = createTestOwnedVehicle({
     id: vehicleId,
     companyId,
     modelId,
-    mileageM: units.distanceM(0),
-    conditionPermille: units.permille(1000),
-    fuelPermille: units.permille(1000),
     status: "running",
-    depotStationId: null,
-    activeTripId: tripId
-  };
+    activeTripId: tripId,
+    energyUnits: 100_000
+  });
 
-  const model: VehicleModel = {
+  const model: VehicleModel = createTestVehicleModel({
     id: modelId,
     serviceClass: "county_midibus",
     seatCapacity: 20,
-    maxSpeedMps: units.speedMps(20),
-    active: true
-  };
+    maxSpeedMps: units.speedMps(20)
+  });
 
   const driver: Driver = {
     id: driverId,
@@ -225,6 +227,7 @@ function fixture() {
       getById: (id) => vehicles.get(id),
       save: (value) => vehicles.set(value.id, value)
     },
+    vehicleRuntime: createTestVehicleRuntimeRepository(),
     world: {
       get: () => graphResult.value,
       replace: () => undefined
@@ -243,6 +246,12 @@ function fixture() {
     zeroEconomicPolicy
   );
   finance.initialize();
+
+  const lifecycle = new VehicleLifecycleCoordinator(
+    repositories,
+    events
+  );
+  void lifecycle;
 
   const simulation = new SimulationCoordinator(
     repositories,
@@ -303,6 +312,7 @@ test("final stop alights passengers, releases resources and completes trip", () 
     "available"
   );
   assert.deepEqual(eventTypes, [
+    "vehicle.energyConsumed",
     "trip.operatingInterval",
     "trip.arrivedAtStop",
     "passengers.alighted",
