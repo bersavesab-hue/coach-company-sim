@@ -13,6 +13,13 @@ import {
 import type { VehicleListing } from "../../domain/vehicle-market/VehicleListing.js";
 import type { VehicleConfiguration } from "../../domain/vehicle-market/VehicleConfiguration.js";
 import type { RepositoryBundle } from "../repositories/RepositoryBundle.js";
+import {
+  quoteVehicleMarketDemand,
+  vehicleMarketDemandPricePermille
+} from "../services/VehicleMarketDemandService.js";
+import type {
+  VehicleMarketZoneCode
+} from "../../content/vehicle/VehicleContentTypes.js";
 import { VEHICLE_DEALERS } from "../../content/vehicle/VehicleDealerCatalog.js";
 import { VEHICLE_MODELS } from "../../content/vehicle/VehicleModelCatalog.js";
 import { VEHICLE_SERIES } from "../../content/vehicle/VehicleSeriesCatalog.js";
@@ -36,6 +43,7 @@ interface Candidate {
   readonly brandId: VehicleBrandId;
   readonly phase: LifecyclePhase;
   readonly score: number;
+  readonly marketDemandPermille: number;
 }
 
 export interface NewVehicleStockRefreshResult {
@@ -97,7 +105,8 @@ export class NewVehicleStockGenerator {
         dealer.id,
         dealer.supportedBrandIds,
         gameDay,
-        cycleKey
+        cycleKey,
+        dealerRecord.marketZoneCode
       );
       const targetCount = targetListingCount(
         dealer.kind,
@@ -108,7 +117,8 @@ export class NewVehicleStockGenerator {
         const listingId = generatedListingId(
           cycleKey,
           candidate.dealerId,
-          candidate.variantId
+          candidate.variantId,
+          candidate.phase
         );
         if (
           this.repositories.vehicleMarket.getListing(
@@ -164,12 +174,14 @@ export class NewVehicleStockGenerator {
           Number(runtimeVariant.basePriceCents),
           dealerRecord.priceBiasPermille,
           candidate.phase,
-          candidate.score
+          candidate.score,
+          candidate.marketDemandPermille
         );
         const stockCount = calculateStockCount(
           dealerRecord.newStockWeightPermille,
           candidate.phase,
-          candidate.score
+          candidate.score,
+          candidate.marketDemandPermille
         );
 
         const listing: VehicleListing = {
@@ -199,7 +211,7 @@ export class NewVehicleStockGenerator {
           ),
           status: "available",
           supplySource: "generated_new",
-          supplyCycleKey: String(cycleKey)
+          supplyCycleKey: `${cycleKey}:${candidate.phase}`
         };
 
         this.repositories.vehicleMarket.saveListing(
@@ -227,7 +239,8 @@ export class NewVehicleStockGenerator {
     dealerId: VehicleDealerId,
     supportedBrandIds: readonly VehicleBrandId[],
     gameDay: number,
-    cycleKey: number
+    cycleKey: number,
+    marketZoneCode: VehicleMarketZoneCode | null
   ): readonly Candidate[] {
     const supported = new Set(
       supportedBrandIds.map(String)
@@ -264,6 +277,15 @@ export class NewVehicleStockGenerator {
         );
       if (!runtimeVariant?.active) continue;
 
+      const demand = quoteVehicleMarketDemand({
+        zoneCode: marketZoneCode,
+        role: model.metadata.role,
+        energyKind: model.model.energyKind,
+        basePriceCents: Number(
+          record.variant.basePriceCents
+        )
+      });
+
       candidates.push({
         dealerId,
         variantId: record.variant.id,
@@ -272,7 +294,9 @@ export class NewVehicleStockGenerator {
         phase,
         score: deterministicHash(
           `${cycleKey}|${dealerId}|${record.variant.id}`
-        )
+        ),
+        marketDemandPermille:
+          demand.combinedDemandPermille
       });
     }
 
@@ -282,7 +306,8 @@ export class NewVehicleStockGenerator {
         Number(a.phase === "clearance");
       return (
         phaseBias ||
-        b.score - a.score ||
+        b.score * b.marketDemandPermille -
+          a.score * a.marketDemandPermille ||
         String(a.variantId).localeCompare(
           String(b.variantId)
         )
@@ -362,7 +387,14 @@ function targetListingCount(
     2,
     Math.min(
       18,
-      Math.round((base * weightPermille) / 1000)
+      Math.round(
+        (
+          base *
+          weightPermille *
+          marketDemandPermille
+        ) /
+          1_000_000
+      )
     )
   );
 }
@@ -370,7 +402,8 @@ function targetListingCount(
 function calculateStockCount(
   weightPermille: number,
   phase: LifecyclePhase,
-  score: number
+  score: number,
+  marketDemandPermille: number
 ): number {
   if (phase === "clearance") return 1;
 
@@ -388,12 +421,17 @@ function calculateAskingPriceCents(
   basePriceCents: number,
   dealerBiasPermille: number,
   phase: LifecyclePhase,
-  score: number
+  score: number,
+  marketDemandPermille: number
 ): number {
   const cycleMarketPermille =
     970 + (score % 61);
   const lifecyclePermille =
     phase === "clearance" ? 900 : 1000;
+  const demandPricePermille =
+    vehicleMarketDemandPricePermille(
+      marketDemandPermille
+    );
 
   return Math.max(
     1,
@@ -402,9 +440,10 @@ function calculateAskingPriceCents(
         basePriceCents *
         dealerBiasPermille *
         cycleMarketPermille *
-        lifecyclePermille
+        lifecyclePermille *
+        demandPricePermille
       ) /
-      1_000_000_000
+      1_000_000_000_000
     )
   );
 }
@@ -420,10 +459,11 @@ function stockCycleKey(
 function generatedListingId(
   cycleKey: number,
   dealerId: VehicleDealerId,
-  variantId: VehicleVariantId
+  variantId: VehicleVariantId,
+  phase: LifecyclePhase
 ) {
   return ids.vehicleListing(
-    `vehicle_listing.auto_new.${cycleKey}.${safeSuffix(
+    `vehicle_listing.auto_new.${cycleKey}.${phase}.${safeSuffix(
       String(dealerId)
     )}.${safeSuffix(String(variantId))}`
   );
