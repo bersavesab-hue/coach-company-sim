@@ -1138,3 +1138,63 @@ test("dispatch center exposes automatic support actions and energy state", async
     "refuel"
   );
 });
+
+
+test("dispatch center keeps uncovered shortages visible after partial commit", async () => {
+  const f = simpleFixture();
+  const driver = f.repositories.staff.getDriverById(f.driverId);
+  assert.ok(driver);
+  if (!driver) return;
+
+  f.repositories.staff.saveDriver({
+    ...driver,
+    status: "suspended"
+  });
+
+  const committed = f.app.commands.dispatch(
+    command(
+      23,
+      "operations.commitDayPlan",
+      f.companyId,
+      0,
+      {
+        companyId: f.companyId,
+        gameDay: 1,
+        allowPartial: true
+      }
+    )
+  );
+  assert.equal(committed.ok, true);
+
+  const result = await f.app.queries.execute({
+    type: "operations.dispatchCenter",
+    payload: {
+      companyId: f.companyId,
+      gameDay: 1,
+      currentGameSecond: units.gameSecond(0)
+    }
+  });
+  assert.equal(result.ok, true);
+  if (!result.ok) return;
+
+  const snapshot = result.value as {
+    readonly summary: {
+      readonly passengerTripsTotal: number;
+      readonly shortageTrips: number;
+    };
+    readonly shortages: readonly {
+      readonly code: string;
+      readonly routeCode: string;
+      readonly plannedDepartureGameSecond: number;
+    }[];
+  };
+
+  assert.equal(snapshot.summary.passengerTripsTotal, 0);
+  assert.equal(snapshot.summary.shortageTrips, 1);
+  assert.equal(snapshot.shortages[0]?.code, "NO_DRIVER");
+  assert.equal(snapshot.shortages[0]?.routeCode, "A-B");
+  assert.equal(
+    snapshot.shortages[0]?.plannedDepartureGameSecond,
+    1000
+  );
+});
