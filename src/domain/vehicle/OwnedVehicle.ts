@@ -1,5 +1,6 @@
 import type {
   CompanyId,
+  FleetTaskId,
   StationId,
   TripId,
   VehicleId,
@@ -36,5 +37,8 @@ export interface OwnedVehicle {
   readonly status: VehicleStatus;
   readonly activeIncident: VehicleIncident | null;
   readonly depotStationId: StationId | null;
+  readonly currentStationId: StationId | null;
+  readonly availableAtGameSecond: GameSecond;
   readonly activeTripId: TripId | null;
+  readonly activeFleetTaskId: FleetTaskId | null;
 }

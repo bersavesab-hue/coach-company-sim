@@ -1,15 +1,20 @@
-import type { TripId } from "../../contracts/ids/EntityIds.js";
+import type {
+  GameSecond
+} from "../../core/units/Units.js";
+import type {
+  StationId,
+  TripId
+} from "../../contracts/ids/EntityIds.js";
 import { DomainError } from "../../core/errors/DomainError.js";
 import { err, ok, type Result } from "../../core/result/Result.js";
 import type { OwnedVehicle } from "./OwnedVehicle.js";
 import type { VehicleModel } from "./VehicleModel.js";
 
-export function reserveVehicleForTrip(
+export function validateVehicleQualification(
   vehicle: OwnedVehicle,
   model: VehicleModel,
-  tripId: TripId,
   requiredVehicleClass: string
-): Result<OwnedVehicle, DomainError> {
+): Result<true, DomainError> {
   if (!model.active) {
     return err(
       new DomainError(
@@ -20,11 +25,15 @@ export function reserveVehicleForTrip(
     );
   }
 
-  if (vehicle.status !== "available" || vehicle.activeTripId !== null) {
+  if (
+    vehicle.status === "sold" ||
+    vehicle.status === "retired" ||
+    vehicle.status === "maintenance"
+  ) {
     return err(
       new DomainError(
         "VEHICLE_NOT_AVAILABLE",
-        "Vehicle is not available for assignment",
+        "Vehicle cannot be reserved in its current state",
         { vehicleId: vehicle.id, status: vehicle.status }
       )
     );
@@ -39,6 +48,47 @@ export function reserveVehicleForTrip(
           vehicleId: vehicle.id,
           vehicleClass: model.serviceClass,
           requiredVehicleClass
+        }
+      )
+    );
+  }
+
+  return ok(true);
+}
+
+export function beginVehicleBoarding(
+  vehicle: OwnedVehicle,
+  tripId: TripId,
+  originStationId: StationId,
+  gameSecond: GameSecond
+): Result<OwnedVehicle, DomainError> {
+  if (
+    vehicle.status !== "available" ||
+    vehicle.activeTripId !== null ||
+    vehicle.activeFleetTaskId !== null
+  ) {
+    return err(
+      new DomainError(
+        "VEHICLE_NOT_AVAILABLE",
+        "Vehicle is not physically available for boarding",
+        { vehicleId: vehicle.id, status: vehicle.status }
+      )
+    );
+  }
+
+  if (
+    vehicle.currentStationId !== originStationId ||
+    Number(vehicle.availableAtGameSecond) > Number(gameSecond)
+  ) {
+    return err(
+      new DomainError(
+        "RESOURCE_LOCATION_MISMATCH",
+        "Vehicle is not at the trip origin or is still in turnaround",
+        {
+          vehicleId: vehicle.id,
+          currentStationId: vehicle.currentStationId,
+          originStationId,
+          availableAtGameSecond: vehicle.availableAtGameSecond
         }
       )
     );
@@ -70,13 +120,16 @@ export function startVehicleTrip(
 
   return ok({
     ...vehicle,
-    status: "running"
+    status: "running",
+    currentStationId: null
   });
 }
 
 export function releaseVehicleFromTrip(
   vehicle: OwnedVehicle,
-  tripId: TripId
+  tripId: TripId,
+  stationId: StationId | null = vehicle.currentStationId,
+  availableAtGameSecond: GameSecond = vehicle.availableAtGameSecond
 ): OwnedVehicle {
   if (vehicle.activeTripId !== tripId) return vehicle;
 
@@ -86,6 +139,8 @@ export function releaseVehicleFromTrip(
   return {
     ...vehicle,
     status: releasableStatus ? "available" : vehicle.status,
-    activeTripId: null
+    activeTripId: null,
+    currentStationId: stationId,
+    availableAtGameSecond
   };
 }

@@ -14,6 +14,7 @@ export type RegionId = Brand<string, "RegionId">;
 export type RouteId = Brand<string, "RouteId">;
 export type ServicePlanId = Brand<string, "ServicePlanId">;
 export type TripId = Brand<string, "TripId">;
+export type FleetTaskId = Brand<string, "FleetTaskId">;
 export type VehicleId = Brand<string, "VehicleId">;
 export type VehicleModelId = Brand<string, "VehicleModelId">;
 export type StaffId = Brand<string, "StaffId">;
@@ -55,6 +56,8 @@ export const ids = {
     asId<"ServicePlanId">(value, ID_PREFIX.servicePlan, "ServicePlanId"),
   trip: (value: string): TripId =>
     asId<"TripId">(value, ID_PREFIX.trip, "TripId"),
+  fleetTask: (value: string): FleetTaskId =>
+    asId<"FleetTaskId">(value, ID_PREFIX.fleetTask, "FleetTaskId"),
   vehicle: (value: string): VehicleId =>
     asId<"VehicleId">(value, ID_PREFIX.vehicle, "VehicleId"),
   vehicleModel: (value: string): VehicleModelId =>

@@ -6,6 +6,7 @@ export const ID_PREFIX = {
   route: "route",
   servicePlan: "service_plan",
   trip: "trip",
+  fleetTask: "fleet_task",
   vehicle: "vehicle",
   vehicleModel: "vehicle_model",
   staff: "staff",

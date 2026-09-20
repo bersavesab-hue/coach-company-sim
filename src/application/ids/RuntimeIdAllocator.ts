@@ -1,4 +1,5 @@
 import type {
+  FleetTaskId,
   RouteId,
   ServicePlanId,
   TripId,
@@ -9,5 +10,6 @@ export interface RuntimeIdAllocator {
   nextRouteId(): RouteId;
   nextServicePlanId(): ServicePlanId;
   nextTripId(): TripId;
+  nextFleetTaskId(): FleetTaskId;
   nextVehicleId(): VehicleId;
 }
