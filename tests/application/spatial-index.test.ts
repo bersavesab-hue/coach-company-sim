@@ -11,12 +11,12 @@ test("point spatial index returns only values inside bbox", () => {
   index.upsert("c", { xM: 500, yM: 500 }, "C");
 
   assert.deepEqual(
-    index.query({
+    [...index.query({
       minXM: 0,
       minYM: 0,
       maxXM: 200,
       maxYM: 100
-    }).sort(),
+    })].sort(),
     ["A", "B"]
   );
 });
