@@ -2,11 +2,11 @@ import type {
   CompanyId,
   FarePolicyId,
   LicenseId,
-  RouteId,
-  StationId
+  RouteId
 } from "../../contracts/ids/EntityIds.js";
 import type { PathLeg } from "../world/RoadPath.js";
 import type { RoutingPreference } from "../world/RoutingCost.js";
+import type { RouteStopPoint } from "./RouteStopPoint.js";
 import type { RouteType } from "./RouteType.js";
 
 export type RouteStatus = "draft" | "active" | "suspended" | "retired";
@@ -16,7 +16,7 @@ export interface PassengerRoute {
   readonly companyId: CompanyId;
   readonly code: string;
   readonly type: RouteType;
-  readonly orderedStationIds: readonly StationId[];
+  readonly stopPoints: readonly RouteStopPoint[];
   readonly pathLegs: readonly PathLeg[];
   readonly routingPreference: RoutingPreference;
   readonly farePolicyId: FarePolicyId;

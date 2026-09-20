@@ -29,6 +29,7 @@ import {
   reserveVehicleForTrip,
   startVehicleTrip
 } from "../../../domain/vehicle/VehicleAssignmentRules.js";
+import { serveRouteStop } from "../../../simulation/passenger/PassengerFlow.js";
 import type { CommandBus } from "../../CommandBus.js";
 import type {
   AssignTripDriverPayload,
@@ -104,17 +105,19 @@ function handlePrepare(
   const actorCheck = requireActor(command, route.companyId);
   if (!actorCheck.ok) return actorCheck;
 
-  const gameDay = gameDayAt(payload.plannedDepartureGameSecond);
-  const slots = generateDepartureSlots(plan, gameDay);
+  const slots = generateDepartureSlots(
+    plan,
+    gameDayAt(payload.plannedDepartureGameSecond)
+  );
   if (!slots.ok) return slots;
 
-  const isOfficialSlot = slots.value.some(
-    (slot) =>
-      slot.plannedDepartureGameSecond ===
-      payload.plannedDepartureGameSecond
-  );
-
-  if (!isOfficialSlot) {
+  if (
+    !slots.value.some(
+      (slot) =>
+        slot.plannedDepartureGameSecond ===
+        payload.plannedDepartureGameSecond
+    )
+  ) {
     return err(
       new DomainError(
         "DEPARTURE_SLOT_INVALID",
@@ -132,7 +135,6 @@ function handlePrepare(
       plan.id,
       payload.plannedDepartureGameSecond
     );
-
   if (duplicate) {
     return err(
       new DomainError(
@@ -223,25 +225,18 @@ function handleAssignVehicle(
   );
   if (!reserved.ok) return reserved;
 
-  const updatedTrip = assignVehicleToTrip(
-    context.value.trip,
-    vehicle.id
-  );
+  const updatedTrip = assignVehicleToTrip(context.value.trip, vehicle.id);
   if (!updatedTrip.ok) return updatedTrip;
 
   dependencies.repositories.vehicles.save(reserved.value);
   dependencies.repositories.trips.save(updatedTrip.value);
-
   dependencies.events.publish(
     createDomainEvent(
       command,
       "trip.vehicleAssigned",
       "trip",
       updatedTrip.value.id,
-      {
-        tripId: updatedTrip.value.id,
-        vehicleId: vehicle.id
-      }
+      { tripId: updatedTrip.value.id, vehicleId: vehicle.id }
     )
   );
 
@@ -287,25 +282,18 @@ function handleAssignDriver(
   );
   if (!reserved.ok) return reserved;
 
-  const updatedTrip = assignDriverToTrip(
-    context.value.trip,
-    driver.id
-  );
+  const updatedTrip = assignDriverToTrip(context.value.trip, driver.id);
   if (!updatedTrip.ok) return updatedTrip;
 
   dependencies.repositories.staff.saveDriver(reserved.value);
   dependencies.repositories.trips.save(updatedTrip.value);
-
   dependencies.events.publish(
     createDomainEvent(
       command,
       "trip.driverAssigned",
       "trip",
       updatedTrip.value.id,
-      {
-        tripId: updatedTrip.value.id,
-        driverId: driver.id
-      }
+      { tripId: updatedTrip.value.id, driverId: driver.id }
     )
   );
 
@@ -323,21 +311,66 @@ function handleStartBoarding(
   const actorCheck = requireActor(command, context.value.companyId);
   if (!actorCheck.ok) return actorCheck;
 
-  const updated = startTripBoarding(context.value.trip);
-  if (!updated.ok) return updated;
+  const resources = requireAssignedResources(
+    context.value.trip,
+    dependencies.repositories
+  );
+  if (!resources.ok) return resources;
 
-  dependencies.repositories.trips.save(updated.value);
+  const model = dependencies.repositories.vehicleModels.getById(
+    resources.value.vehicle.modelId
+  );
+  if (!model) {
+    return err(
+      new DomainError(
+        "REFERENCE_NOT_FOUND",
+        "Assigned vehicle model is missing"
+      )
+    );
+  }
+
+  const boarding = startTripBoarding(context.value.trip);
+  if (!boarding.ok) return boarding;
+
+  const flow = serveRouteStop(
+    boarding.value,
+    context.value.route,
+    0,
+    model.seatCapacity,
+    dependencies.repositories.passengerRuntime.get()
+  );
+
+  dependencies.repositories.trips.save(flow.trip);
   dependencies.events.publish(
     createDomainEvent(
       command,
       "trip.boardingStarted",
       "trip",
-      updated.value.id,
-      { tripId: updated.value.id }
+      flow.trip.id,
+      { tripId: flow.trip.id },
+      1
     )
   );
 
-  return updated;
+  if (flow.boardedCount > 0) {
+    dependencies.events.publish(
+      createDomainEvent(
+        command,
+        "passengers.boarded",
+        "trip",
+        flow.trip.id,
+        {
+          tripId: flow.trip.id,
+          stationId: context.value.route.stopPoints[0]!.stationId,
+          count: flow.boardedCount,
+          leftWaitingCount: flow.leftWaitingCount
+        },
+        2
+      )
+    );
+  }
+
+  return ok(flow.trip);
 }
 
 function handleDepart(
@@ -450,6 +483,7 @@ function handleCancel(
 interface TripContext {
   readonly trip: TripInstance;
   readonly plan: ServicePlan;
+  readonly route: NonNullable<ReturnType<RepositoryBundle["routes"]["getById"]>>;
   readonly companyId: CompanyId;
 }
 
@@ -499,6 +533,7 @@ function requireTripContext(
   return ok({
     trip,
     plan,
+    route,
     companyId: route.companyId
   });
 }

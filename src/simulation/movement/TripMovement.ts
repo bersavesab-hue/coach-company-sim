@@ -10,11 +10,17 @@ import type { VehicleModel } from "../../domain/vehicle/VehicleModel.js";
 import type { WorldGraph } from "../../domain/world/WorldGraph.js";
 import type { WorldRuntimeState } from "../../domain/world/WorldRuntimeState.js";
 
+export interface ReachedPathBoundary {
+  readonly pathLegBoundaryIndex: number;
+  readonly gameSecond: GameSecond;
+}
+
 export interface TripMovementResult {
   readonly trip: TripInstance;
   readonly completed: boolean;
   readonly completionGameSecond: GameSecond | null;
   readonly blockedRoadSegmentId: RoadSegmentId | null;
+  readonly reachedBoundaries: readonly ReachedPathBoundary[];
 }
 
 export function effectiveRoadSpeedMps(
@@ -85,40 +91,13 @@ export function advanceRunningTrip(
 
   let legIndex = trip.position.activeRoadSegmentIndex;
   let offsetM = Number(trip.position.offsetOnSegmentM);
+  const reachedBoundaries: ReachedPathBoundary[] = [];
 
   while (currentTime < target) {
     const leg = route.pathLegs[legIndex];
 
     if (!leg) {
-      const finalIndex = route.pathLegs.length - 1;
-      const finalLeg = route.pathLegs[finalIndex]!;
-      const finalRoad = graph.getRoad(finalLeg.roadSegmentId);
-
-      if (!finalRoad) {
-        return err(
-          new DomainError(
-            "REFERENCE_NOT_FOUND",
-            "Route references a missing final road segment",
-            { routeId: route.id, roadSegmentId: finalLeg.roadSegmentId }
-          )
-        );
-      }
-
-      const completed = completeTrip(
-        trip,
-        units.gameSecond(currentTime),
-        finalIndex,
-        Number(finalRoad.lengthM)
-      );
-
-      if (!completed.ok) return completed;
-
-      return ok({
-        trip: completed.value,
-        completed: true,
-        completionGameSecond: units.gameSecond(currentTime),
-        blockedRoadSegmentId: null
-      });
+      break;
     }
 
     const road = graph.getRoad(leg.roadSegmentId);
@@ -151,15 +130,11 @@ export function advanceRunningTrip(
 
     if (roadState.status === "closed") {
       return ok({
-        trip: withPosition(
-          trip,
-          legIndex,
-          offsetM,
-          targetGameSecond
-        ),
+        trip: withPosition(trip, legIndex, offsetM, targetGameSecond),
         completed: false,
         completionGameSecond: null,
-        blockedRoadSegmentId: road.id
+        blockedRoadSegmentId: road.id,
+        reachedBoundaries
       });
     }
 
@@ -171,15 +146,11 @@ export function advanceRunningTrip(
 
     if (speedMps <= 0) {
       return ok({
-        trip: withPosition(
-          trip,
-          legIndex,
-          offsetM,
-          targetGameSecond
-        ),
+        trip: withPosition(trip, legIndex, offsetM, targetGameSecond),
         completed: false,
         completionGameSecond: null,
-        blockedRoadSegmentId: road.id
+        blockedRoadSegmentId: road.id,
+        reachedBoundaries
       });
     }
 
@@ -204,6 +175,10 @@ export function advanceRunningTrip(
     currentTime += secondsToFinish;
     legIndex += 1;
     offsetM = 0;
+    reachedBoundaries.push({
+      pathLegBoundaryIndex: legIndex,
+      gameSecond: units.gameSecond(currentTime)
+    });
 
     if (legIndex >= route.pathLegs.length) {
       const completed = completeTrip(
@@ -212,31 +187,26 @@ export function advanceRunningTrip(
         route.pathLegs.length - 1,
         roadLengthM
       );
-
       if (!completed.ok) return completed;
 
       return ok({
         trip: completed.value,
         completed: true,
         completionGameSecond: units.gameSecond(currentTime),
-        blockedRoadSegmentId: null
+        blockedRoadSegmentId: null,
+        reachedBoundaries
       });
     }
   }
 
   return ok({
-    trip: withPosition(
-      trip,
-      legIndex,
-      offsetM,
-      targetGameSecond
-    ),
+    trip: withPosition(trip, legIndex, offsetM, targetGameSecond),
     completed: false,
     completionGameSecond: null,
-    blockedRoadSegmentId: null
+    blockedRoadSegmentId: null,
+    reachedBoundaries
   });
 }
-
 function withPosition(
   trip: TripInstance,
   activeRoadSegmentIndex: number,

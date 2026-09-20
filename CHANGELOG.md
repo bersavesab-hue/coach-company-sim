@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.7.0-stage6
+
+### Removed
+- 删除 PassengerRoute 内部的 orderedStationIds 双重站序状态。
+- 删除 TripInstance.onboardPassengerCount，避免与目的地分组形成双重事实。
+
+### Added
+- 新增 RouteStopPoint，以 pathLegBoundaryIndex 将正式站点映射到线路道路路径。
+- RoutePathService 创建线路时同步生成唯一 stopPoints。
+- 新增 PassengerDemandProfile、PassengerRuntimeState 与站点 OD 候车队列。
+- 新增 onboardPassengerGroups，车内乘客按目的地聚合。
+- VehicleModel 新增 seatCapacity，正式约束客运容量。
+- 新增 PassengerDemandPolicy 注入点，班次频率影响客流但平衡曲线不硬编码进核心。
+- 新增整数余数式 DemandGeneration，保证不同批量推进粒度下客流生成一致。
+- 新增 PassengerDemandCoordinator，按 active Route + ServicePlan 当日班次数计算 OD 服务频率。
+- 新增 PassengerFlow，完成下客、容量判断、上客与滞留。
+- TripMovement 返回 reachedBoundaries，使批量移动仍能识别中途站。
+- trip.startBoarding 正式在起点执行第一次上客。
+- SimulationCoordinator 在中途站/终点执行上下客并发布 arrivedAtStop / boarded / alighted。
+- 新增 passenger.stationQueue Query。
+- 新增 demand、capacity、overflow、alighting、route stop boundary 等测试。
+
+### Architecture
+- 站外候车唯一状态源为 PassengerRuntimeState。
+- 车内客流唯一状态源为 TripInstance.onboardPassengerGroups。
+- Route 内唯一站序为 RouteStopPoint[]；Command 的 orderedStationIds 仅作为用户输入。
+- PassengerDemandPolicy 从 Application 注入，后续可直接接 balance content。
+
+# Changelog
+
 ## 0.6.0-stage5
 
 ### Added

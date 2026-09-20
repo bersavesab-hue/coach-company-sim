@@ -1,12 +1,14 @@
-import type { TripId } from "../../contracts/ids/EntityIds.js";
 import type { VisibleVehicleDto } from "../../contracts/dto/MapDto.js";
+import type { TripId } from "../../contracts/ids/EntityIds.js";
 import type { DomainError } from "../../core/errors/DomainError.js";
 import type { GameSecond } from "../../core/units/Units.js";
-import { releaseDriverFromTrip } from "../../domain/staff/DriverAssignmentRules.js";
 import type { TripInstance } from "../../domain/trip/TripInstance.js";
+import { releaseDriverFromTrip } from "../../domain/staff/DriverAssignmentRules.js";
 import { releaseVehicleFromTrip } from "../../domain/vehicle/VehicleAssignmentRules.js";
 import { advanceRunningTrip } from "../../simulation/movement/TripMovement.js";
 import { resolveTripWorldPosition } from "../../simulation/movement/TripWorldPosition.js";
+import { serveRouteStop } from "../../simulation/passenger/PassengerFlow.js";
+import type { PassengerDemandPolicy } from "../../simulation/passenger/PassengerDemandPolicy.js";
 import {
   isSimulationTierDue,
   type SimulationTier
@@ -15,6 +17,7 @@ import type { DomainEventBus } from "../events/DomainEventBus.js";
 import { createSimulationDomainEvent } from "../events/createSimulationDomainEvent.js";
 import type { RepositoryBundle } from "../repositories/RepositoryBundle.js";
 import { VehicleSpatialIndex } from "../spatial/VehicleSpatialIndex.js";
+import { PassengerDemandCoordinator } from "./PassengerDemandCoordinator.js";
 
 export type SimulationTierResolver = (
   trip: TripInstance
@@ -33,15 +36,23 @@ export interface SimulationAdvanceReport {
 }
 
 export class SimulationCoordinator {
+  private readonly passengerDemand: PassengerDemandCoordinator;
+
   constructor(
     private readonly repositories: RepositoryBundle,
     private readonly events: DomainEventBus,
+    private readonly passengerPolicy: PassengerDemandPolicy,
     readonly vehicleIndex: VehicleSpatialIndex
-  ) {}
+  ) {
+    this.passengerDemand = new PassengerDemandCoordinator(
+      repositories,
+      events,
+      passengerPolicy
+    );
+  }
 
   rebuildVehicleIndex(): void {
     this.vehicleIndex.clear();
-
     for (const trip of this.repositories.trips.findRunning()) {
       this.indexTrip(trip);
     }
@@ -51,6 +62,8 @@ export class SimulationCoordinator {
     targetGameSecond: GameSecond,
     tierForTrip: SimulationTierResolver = () => "foreground"
   ): SimulationAdvanceReport {
+    this.passengerDemand.advanceTo(targetGameSecond);
+
     const advancedTripIds: TripId[] = [];
     const completedTripIds: TripId[] = [];
     const blockedTripIds: TripId[] = [];
@@ -75,14 +88,10 @@ export class SimulationCoordinator {
           ? undefined
           : this.repositories.vehicles.getById(trip.vehicleId);
 
-      if (!route || !vehicle) {
-        continue;
-      }
+      if (!route || !vehicle) continue;
 
       const model = this.repositories.vehicleModels.getById(vehicle.modelId);
-      if (!model) {
-        continue;
-      }
+      if (!model) continue;
 
       const moved = advanceRunningTrip(
         trip,
@@ -94,14 +103,77 @@ export class SimulationCoordinator {
       );
 
       if (!moved.ok) {
-        issues.push({
-          tripId: trip.id,
-          error: moved.error
-        });
+        issues.push({ tripId: trip.id, error: moved.error });
         continue;
       }
 
-      this.repositories.trips.save(moved.value.trip);
+      let processedTrip = moved.value.trip;
+
+      for (const reached of moved.value.reachedBoundaries) {
+        const stopIndex = route.stopPoints.findIndex(
+          (stop) =>
+            stop.pathLegBoundaryIndex === reached.pathLegBoundaryIndex
+        );
+        if (stopIndex < 0) continue;
+
+        const stop = route.stopPoints[stopIndex]!;
+        const flow = serveRouteStop(
+          processedTrip,
+          route,
+          stopIndex,
+          model.seatCapacity,
+          this.repositories.passengerRuntime.get()
+        );
+        processedTrip = flow.trip;
+
+        this.events.publish(
+          createSimulationDomainEvent(
+            "trip.arrivedAtStop",
+            "trip",
+            processedTrip.id,
+            reached.gameSecond,
+            {
+              tripId: processedTrip.id,
+              stationId: stop.stationId
+            }
+          )
+        );
+
+        if (flow.alightedCount > 0) {
+          this.events.publish(
+            createSimulationDomainEvent(
+              "passengers.alighted",
+              "trip",
+              processedTrip.id,
+              reached.gameSecond,
+              {
+                tripId: processedTrip.id,
+                stationId: stop.stationId,
+                count: flow.alightedCount
+              }
+            )
+          );
+        }
+
+        if (flow.boardedCount > 0) {
+          this.events.publish(
+            createSimulationDomainEvent(
+              "passengers.boarded",
+              "trip",
+              processedTrip.id,
+              reached.gameSecond,
+              {
+                tripId: processedTrip.id,
+                stationId: stop.stationId,
+                count: flow.boardedCount,
+                leftWaitingCount: flow.leftWaitingCount
+              }
+            )
+          );
+        }
+      }
+
+      this.repositories.trips.save(processedTrip);
       advancedTripIds.push(trip.id);
 
       if (moved.value.blockedRoadSegmentId !== null) {
@@ -109,7 +181,7 @@ export class SimulationCoordinator {
       }
 
       if (moved.value.completed) {
-        this.releaseResources(moved.value.trip);
+        this.releaseResources(processedTrip);
         this.vehicleIndex.remove(trip.id);
         completedTripIds.push(trip.id);
 
@@ -119,19 +191,19 @@ export class SimulationCoordinator {
             "trip",
             trip.id,
             moved.value.completionGameSecond ??
-              moved.value.trip.position.lastUpdatedGameSecond,
+              processedTrip.position.lastUpdatedGameSecond,
             {
               tripId: trip.id,
               routeId: trip.routeId,
               vehicleId: trip.vehicleId,
               driverId: trip.driverId,
               actualArrivalGameSecond:
-                moved.value.trip.actualArrivalGameSecond
+                processedTrip.actualArrivalGameSecond
             }
           )
         );
       } else {
-        this.indexTrip(moved.value.trip);
+        this.indexTrip(processedTrip);
       }
     }
 

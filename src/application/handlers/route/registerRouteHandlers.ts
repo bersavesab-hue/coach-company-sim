@@ -2,25 +2,25 @@ import type { CommandEnvelope } from "../../../contracts/commands/CommandEnvelop
 import type { CompanyId, RouteId } from "../../../contracts/ids/EntityIds.js";
 import { DomainError } from "../../../core/errors/DomainError.js";
 import { err, ok, type Result } from "../../../core/result/Result.js";
+import type { PassengerRoute } from "../../../domain/route/PassengerRoute.js";
 import {
   activateRoute,
   createPassengerRoute,
   deactivateRoute,
   updateRouteStops
 } from "../../../domain/route/RouteRules.js";
-import type { PassengerRoute } from "../../../domain/route/PassengerRoute.js";
 import type { CommandBus } from "../../CommandBus.js";
-import type { DomainEventBus } from "../../events/DomainEventBus.js";
-import { createDomainEvent } from "../../events/createDomainEvent.js";
-import type { RuntimeIdAllocator } from "../../ids/RuntimeIdAllocator.js";
-import type { RepositoryBundle } from "../../repositories/RepositoryBundle.js";
-import { buildOfficialRoutePath } from "../../services/RoutePathService.js";
 import type {
   ActivateRoutePayload,
   CreateRoutePayload,
   DeactivateRoutePayload,
   UpdateRouteStopsPayload
 } from "../../commands/route/RouteCommands.js";
+import type { DomainEventBus } from "../../events/DomainEventBus.js";
+import { createDomainEvent } from "../../events/createDomainEvent.js";
+import type { RuntimeIdAllocator } from "../../ids/RuntimeIdAllocator.js";
+import type { RepositoryBundle } from "../../repositories/RepositoryBundle.js";
+import { buildOfficialRoutePath } from "../../services/RoutePathService.js";
 
 export interface RouteHandlerDependencies {
   readonly repositories: RepositoryBundle;
@@ -35,15 +35,12 @@ export function registerRouteHandlers(
   commands.register("route.create", (command) =>
     handleCreateRoute(command, dependencies)
   );
-
   commands.register("route.updateStops", (command) =>
     handleUpdateRouteStops(command, dependencies)
   );
-
   commands.register("route.activate", (command) =>
     handleActivateRoute(command, dependencies)
   );
-
   commands.register("route.deactivate", (command) =>
     handleDeactivateRoute(command, dependencies)
   );
@@ -56,10 +53,7 @@ function handleCreateRoute(
   const payload = command.payload as CreateRoutePayload;
   const { repositories } = dependencies;
 
-  const actorCheck = requireActorCompany(
-    command,
-    payload.companyId
-  );
+  const actorCheck = requireActorCompany(command, payload.companyId);
   if (!actorCheck.ok) return actorCheck;
 
   const company = repositories.companies.getById(payload.companyId);
@@ -77,7 +71,6 @@ function handleCreateRoute(
     payload.companyId,
     payload.code.trim()
   );
-
   if (existing) {
     return err(
       new DomainError(
@@ -104,7 +97,7 @@ function handleCreateRoute(
     company,
     code: payload.code,
     type: payload.routeType,
-    orderedStationIds: payload.orderedStationIds,
+    stopPoints: builtPath.value.stopPoints,
     pathLegs: builtPath.value.legs,
     routingPreference: payload.routingPreference,
     farePolicyId: payload.farePolicyId,
@@ -113,7 +106,6 @@ function handleCreateRoute(
   if (!created.ok) return created;
 
   repositories.routes.save(created.value);
-
   dependencies.events.publish(
     createDomainEvent(
       command,
@@ -124,7 +116,7 @@ function handleCreateRoute(
         routeId: created.value.id,
         companyId: created.value.companyId,
         code: created.value.code,
-        orderedStationIds: created.value.orderedStationIds
+        stationIds: created.value.stopPoints.map((stop) => stop.stationId)
       }
     )
   );
@@ -137,10 +129,7 @@ function handleUpdateRouteStops(
   dependencies: RouteHandlerDependencies
 ): Result<PassengerRoute, DomainError> {
   const payload = command.payload as UpdateRouteStopsPayload;
-  const routeResult = requireRoute(
-    payload.routeId,
-    dependencies.repositories
-  );
+  const routeResult = requireRoute(payload.routeId, dependencies.repositories);
   if (!routeResult.ok) return routeResult;
 
   const actorCheck = requireActorCompany(
@@ -159,14 +148,13 @@ function handleUpdateRouteStops(
 
   const updated = updateRouteStops(
     routeResult.value,
-    payload.orderedStationIds,
+    builtPath.value.stopPoints,
     builtPath.value.legs,
     payload.routingPreference
   );
   if (!updated.ok) return updated;
 
   dependencies.repositories.routes.save(updated.value);
-
   dependencies.events.publish(
     createDomainEvent(
       command,
@@ -175,7 +163,7 @@ function handleUpdateRouteStops(
       updated.value.id,
       {
         routeId: updated.value.id,
-        orderedStationIds: updated.value.orderedStationIds
+        stationIds: updated.value.stopPoints.map((stop) => stop.stationId)
       }
     )
   );
@@ -188,10 +176,7 @@ function handleActivateRoute(
   dependencies: RouteHandlerDependencies
 ): Result<PassengerRoute, DomainError> {
   const payload = command.payload as ActivateRoutePayload;
-  const routeResult = requireRoute(
-    payload.routeId,
-    dependencies.repositories
-  );
+  const routeResult = requireRoute(payload.routeId, dependencies.repositories);
   if (!routeResult.ok) return routeResult;
 
   const actorCheck = requireActorCompany(
@@ -217,7 +202,6 @@ function handleActivateRoute(
   if (!activated.ok) return activated;
 
   dependencies.repositories.routes.save(activated.value);
-
   dependencies.events.publish(
     createDomainEvent(
       command,
@@ -236,10 +220,7 @@ function handleDeactivateRoute(
   dependencies: RouteHandlerDependencies
 ): Result<PassengerRoute, DomainError> {
   const payload = command.payload as DeactivateRoutePayload;
-  const routeResult = requireRoute(
-    payload.routeId,
-    dependencies.repositories
-  );
+  const routeResult = requireRoute(payload.routeId, dependencies.repositories);
   if (!routeResult.ok) return routeResult;
 
   const actorCheck = requireActorCompany(
@@ -252,7 +233,6 @@ function handleDeactivateRoute(
   if (!deactivated.ok) return deactivated;
 
   dependencies.repositories.routes.save(deactivated.value);
-
   dependencies.events.publish(
     createDomainEvent(
       command,
@@ -271,18 +251,15 @@ function requireRoute(
   repositories: RepositoryBundle
 ): Result<PassengerRoute, DomainError> {
   const route = repositories.routes.getById(routeId);
-
-  if (!route) {
-    return err(
-      new DomainError(
-        "ENTITY_NOT_FOUND",
-        "Route does not exist",
-        { routeId }
-      )
-    );
-  }
-
-  return ok(route);
+  return route
+    ? ok(route)
+    : err(
+        new DomainError(
+          "ENTITY_NOT_FOUND",
+          "Route does not exist",
+          { routeId }
+        )
+      );
 }
 
 function requireActorCompany(

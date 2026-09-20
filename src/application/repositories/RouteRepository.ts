@@ -10,5 +10,6 @@ export interface RouteRepository {
     companyId: CompanyId,
     code: string
   ): PassengerRoute | undefined;
+  findActive(): readonly PassengerRoute[];
   save(route: PassengerRoute): void;
 }

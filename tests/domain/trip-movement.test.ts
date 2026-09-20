@@ -54,9 +54,9 @@ function fixture(direction: "forward" | "reverse" = "forward") {
     companyId: ids.company("company.00000001"),
     code: "K01",
     type: "county",
-    orderedStationIds: [
-      ids.station("station.000001"),
-      ids.station("station.000002")
+    stopPoints: [
+      { stationId: ids.station("station.000001"), pathLegBoundaryIndex: 0 },
+      { stationId: ids.station("station.000002"), pathLegBoundaryIndex: 1 }
     ],
     pathLegs: [
       {
@@ -87,13 +87,14 @@ function fixture(direction: "forward" | "reverse" = "forward") {
       offsetOnSegmentM: units.distanceM(0),
       lastUpdatedGameSecond: units.gameSecond(0)
     },
-    onboardPassengerCount: 0,
+    onboardPassengerGroups: [],
     delaySeconds: units.gameSecond(0)
   };
 
   const model: VehicleModel = {
     id: ids.vehicleModel("vehicle_model.000001"),
     serviceClass: "county_midibus",
+    seatCapacity: 20,
     maxSpeedMps: units.speedMps(30),
     active: true
   };
@@ -127,7 +128,6 @@ test("movement respects road limit and runtime speed multiplier", () => {
 
   assert.equal(moved.ok, true);
   if (!moved.ok) return;
-
   assert.equal(Number(moved.value.trip.position.offsetOnSegmentM), 100);
 });
 
@@ -150,12 +150,8 @@ test("closed road consumes time as waiting without changing road progress", () =
 
   assert.equal(moved.ok, true);
   if (!moved.ok) return;
-
   assert.equal(Number(moved.value.trip.position.offsetOnSegmentM), 0);
-  assert.equal(
-    Number(moved.value.trip.position.lastUpdatedGameSecond),
-    60
-  );
+  assert.equal(Number(moved.value.trip.position.lastUpdatedGameSecond), 60);
   assert.equal(moved.value.blockedRoadSegmentId, f.roadId);
 });
 
@@ -183,7 +179,7 @@ test("reverse PathLeg derives world position from the opposite road endpoint", (
   assert.equal(point.xM, 800);
 });
 
-test("movement completion records exact discrete arrival second", () => {
+test("movement completion records final boundary and exact arrival second", () => {
   const f = fixture();
 
   const moved = advanceRunningTrip(
@@ -201,4 +197,8 @@ test("movement completion records exact discrete arrival second", () => {
   assert.equal(moved.value.completed, true);
   assert.equal(moved.value.trip.status, "completed");
   assert.equal(Number(moved.value.trip.actualArrivalGameSecond), 50);
+  assert.deepEqual(
+    moved.value.reachedBoundaries.map((value) => value.pathLegBoundaryIndex),
+    [1]
+  );
 });

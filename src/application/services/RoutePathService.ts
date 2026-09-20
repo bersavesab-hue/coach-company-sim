@@ -1,6 +1,7 @@
 import type { StationId } from "../../contracts/ids/EntityIds.js";
 import { DomainError } from "../../core/errors/DomainError.js";
 import { err, ok, type Result } from "../../core/result/Result.js";
+import type { RouteStopPoint } from "../../domain/route/RouteStopPoint.js";
 import { findPath } from "../../domain/world/PathFinder.js";
 import type { PathLeg } from "../../domain/world/RoadPath.js";
 import type { RoutingPreference } from "../../domain/world/RoutingCost.js";
@@ -10,6 +11,7 @@ import type { WorldRepository } from "../repositories/WorldRepository.js";
 
 export interface BuiltRoutePath {
   readonly legs: readonly PathLeg[];
+  readonly stopPoints: readonly RouteStopPoint[];
 }
 
 export function buildOfficialRoutePath(
@@ -66,6 +68,12 @@ export function buildOfficialRoutePath(
   const graph = worldRepository.get();
   const staticRoutingState = new WorldRuntimeState();
   const legs: PathLeg[] = [];
+  const stopPoints: RouteStopPoint[] = [
+    {
+      stationId: stationIds[0]!,
+      pathLegBoundaryIndex: 0
+    }
+  ];
 
   for (let index = 0; index < stationList.length - 1; index += 1) {
     const from = stationList[index]?.station;
@@ -113,10 +121,7 @@ export function buildOfficialRoutePath(
       to.worldNodeId,
       preference
     );
-
-    if (!path.ok) {
-      return path;
-    }
+    if (!path.ok) return path;
 
     if (path.value.legs.length === 0) {
       return err(
@@ -132,7 +137,11 @@ export function buildOfficialRoutePath(
     }
 
     legs.push(...path.value.legs);
+    stopPoints.push({
+      stationId: to.id,
+      pathLegBoundaryIndex: legs.length
+    });
   }
 
-  return ok({ legs });
+  return ok({ legs, stopPoints });
 }

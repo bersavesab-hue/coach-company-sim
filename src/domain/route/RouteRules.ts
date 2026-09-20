@@ -1,15 +1,15 @@
-import type { Company } from "../company/Company.js";
-import type { PathLeg } from "../world/RoadPath.js";
-import type { RoutingPreference } from "../world/RoutingCost.js";
 import type {
   FarePolicyId,
   LicenseId,
-  RouteId,
-  StationId
+  RouteId
 } from "../../contracts/ids/EntityIds.js";
 import { DomainError } from "../../core/errors/DomainError.js";
 import { err, ok, type Result } from "../../core/result/Result.js";
+import type { Company } from "../company/Company.js";
+import type { PathLeg } from "../world/RoadPath.js";
+import type { RoutingPreference } from "../world/RoutingCost.js";
 import type { PassengerRoute } from "./PassengerRoute.js";
+import type { RouteStopPoint } from "./RouteStopPoint.js";
 import type { RouteType } from "./RouteType.js";
 
 export interface CreatePassengerRouteInput {
@@ -17,7 +17,7 @@ export interface CreatePassengerRouteInput {
   readonly company: Company;
   readonly code: string;
   readonly type: RouteType;
-  readonly orderedStationIds: readonly StationId[];
+  readonly stopPoints: readonly RouteStopPoint[];
   readonly pathLegs: readonly PathLeg[];
   readonly routingPreference: RoutingPreference;
   readonly farePolicyId: FarePolicyId;
@@ -45,39 +45,15 @@ export function createPassengerRoute(
     );
   }
 
-  if (input.orderedStationIds.length < 2) {
-    return err(
-      new DomainError(
-        "ROUTE_INVALID",
-        "A passenger route requires at least two stations"
-      )
-    );
-  }
-
-  if (new Set(input.orderedStationIds).size !== input.orderedStationIds.length) {
-    return err(
-      new DomainError(
-        "ROUTE_INVALID",
-        "A passenger route cannot contain duplicate stations"
-      )
-    );
-  }
-
-  if (input.pathLegs.length === 0) {
-    return err(
-      new DomainError(
-        "ROUTE_INVALID",
-        "A passenger route requires a non-empty road path"
-      )
-    );
-  }
+  const validation = validateRouteShape(input.stopPoints, input.pathLegs);
+  if (!validation.ok) return validation;
 
   return ok({
     id: input.id,
     companyId: input.company.id,
     code,
     type: input.type,
-    orderedStationIds: [...input.orderedStationIds],
+    stopPoints: input.stopPoints.map((stop) => ({ ...stop })),
     pathLegs: [...input.pathLegs],
     routingPreference: input.routingPreference,
     farePolicyId: input.farePolicyId,
@@ -88,7 +64,7 @@ export function createPassengerRoute(
 
 export function updateRouteStops(
   route: PassengerRoute,
-  orderedStationIds: readonly StationId[],
+  stopPoints: readonly RouteStopPoint[],
   pathLegs: readonly PathLeg[],
   routingPreference: RoutingPreference
 ): Result<PassengerRoute, DomainError> {
@@ -102,27 +78,12 @@ export function updateRouteStops(
     );
   }
 
-  if (orderedStationIds.length < 2 || pathLegs.length === 0) {
-    return err(
-      new DomainError(
-        "ROUTE_INVALID",
-        "Updated route requires at least two stations and a road path"
-      )
-    );
-  }
-
-  if (new Set(orderedStationIds).size !== orderedStationIds.length) {
-    return err(
-      new DomainError(
-        "ROUTE_INVALID",
-        "Updated route cannot contain duplicate stations"
-      )
-    );
-  }
+  const validation = validateRouteShape(stopPoints, pathLegs);
+  if (!validation.ok) return validation;
 
   return ok({
     ...route,
-    orderedStationIds: [...orderedStationIds],
+    stopPoints: stopPoints.map((stop) => ({ ...stop })),
     pathLegs: [...pathLegs],
     routingPreference
   });
@@ -174,4 +135,70 @@ export function deactivateRoute(
   }
 
   return ok({ ...route, status: "suspended" });
+}
+
+function validateRouteShape(
+  stopPoints: readonly RouteStopPoint[],
+  pathLegs: readonly PathLeg[]
+): Result<true, DomainError> {
+  if (stopPoints.length < 2 || pathLegs.length === 0) {
+    return err(
+      new DomainError(
+        "ROUTE_INVALID",
+        "Route requires at least two stops and a non-empty road path"
+      )
+    );
+  }
+
+  if (
+    new Set(stopPoints.map((stop) => stop.stationId)).size !==
+    stopPoints.length
+  ) {
+    return err(
+      new DomainError(
+        "ROUTE_INVALID",
+        "Route cannot contain duplicate stations"
+      )
+    );
+  }
+
+  if (stopPoints[0]?.pathLegBoundaryIndex !== 0) {
+    return err(
+      new DomainError(
+        "ROUTE_INVALID",
+        "First route stop must be at path boundary 0"
+      )
+    );
+  }
+
+  if (
+    stopPoints.at(-1)?.pathLegBoundaryIndex !== pathLegs.length
+  ) {
+    return err(
+      new DomainError(
+        "ROUTE_INVALID",
+        "Final route stop must be at the final path boundary"
+      )
+    );
+  }
+
+  let previousBoundary = -1;
+  for (const stop of stopPoints) {
+    if (
+      !Number.isSafeInteger(stop.pathLegBoundaryIndex) ||
+      stop.pathLegBoundaryIndex < 0 ||
+      stop.pathLegBoundaryIndex > pathLegs.length ||
+      stop.pathLegBoundaryIndex <= previousBoundary
+    ) {
+      return err(
+        new DomainError(
+          "ROUTE_INVALID",
+          "Route stop path boundaries must be strictly increasing"
+        )
+      );
+    }
+    previousBoundary = stop.pathLegBoundaryIndex;
+  }
+
+  return ok(true);
 }

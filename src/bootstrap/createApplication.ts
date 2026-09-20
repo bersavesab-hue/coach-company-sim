@@ -2,6 +2,7 @@ import { CommandBus } from "../application/CommandBus.js";
 import { QueryBus } from "../application/QueryBus.js";
 import { DomainEventBus } from "../application/events/DomainEventBus.js";
 import { registerMapQueries } from "../application/handlers/map/registerMapQueries.js";
+import { registerPassengerQueries } from "../application/handlers/passenger/registerPassengerQueries.js";
 import { registerRouteHandlers } from "../application/handlers/route/registerRouteHandlers.js";
 import { registerServicePlanHandlers } from "../application/handlers/schedule/registerServicePlanHandlers.js";
 import { registerTripHandlers } from "../application/handlers/trip/registerTripHandlers.js";
@@ -9,10 +10,12 @@ import type { RuntimeIdAllocator } from "../application/ids/RuntimeIdAllocator.j
 import type { RepositoryBundle } from "../application/repositories/RepositoryBundle.js";
 import { SimulationCoordinator } from "../application/simulation/SimulationCoordinator.js";
 import { VehicleSpatialIndex } from "../application/spatial/VehicleSpatialIndex.js";
+import type { PassengerDemandPolicy } from "../simulation/passenger/PassengerDemandPolicy.js";
 
 export interface ApplicationDependencies {
   readonly repositories: RepositoryBundle;
   readonly ids: RuntimeIdAllocator;
+  readonly passengerDemandPolicy: PassengerDemandPolicy;
 }
 
 export interface ApplicationRuntime {
@@ -50,10 +53,12 @@ export function createApplication(
   });
 
   registerMapQueries(queries, vehicleIndex);
+  registerPassengerQueries(queries, dependencies.repositories);
 
   const simulation = new SimulationCoordinator(
     dependencies.repositories,
     events,
+    dependencies.passengerDemandPolicy,
     vehicleIndex
   );
   simulation.rebuildVehicleIndex();

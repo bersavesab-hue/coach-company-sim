@@ -50,7 +50,7 @@ export function prepareTrip(
       offsetOnSegmentM: units.distanceM(0),
       lastUpdatedGameSecond: input.createdAtGameSecond
     },
-    onboardPassengerCount: 0,
+    onboardPassengerGroups: [],
     delaySeconds: units.gameSecond(0)
   });
 }
@@ -79,10 +79,7 @@ export function assignVehicleToTrip(
     );
   }
 
-  return ok({
-    ...trip,
-    vehicleId
-  });
+  return ok({ ...trip, vehicleId });
 }
 
 export function assignDriverToTrip(
@@ -109,10 +106,7 @@ export function assignDriverToTrip(
     );
   }
 
-  return ok({
-    ...trip,
-    driverId
-  });
+  return ok({ ...trip, driverId });
 }
 
 export function startTripBoarding(

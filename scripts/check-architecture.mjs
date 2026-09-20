@@ -116,10 +116,21 @@ for (const file of sourceFiles) {
     }
   }
 
-  if (rel.includes("/trip/TripPosition.ts")) {
-    if (text.includes("worldPosition:")) {
+  if (rel.includes("/trip/TripPosition.ts") && text.includes("worldPosition:")) {
+    failures.push(
+      "TripPosition must store road progress, not derived worldPosition"
+    );
+  }
+
+  if (rel.includes("/trip/TripInstance.ts")) {
+    if (text.includes("onboardPassengerCount:")) {
       failures.push(
-        "TripPosition must store road progress, not derived worldPosition"
+        "TripInstance must use destination groups, not a duplicate onboard count"
+      );
+    }
+    if (!text.includes("onboardPassengerGroups:")) {
+      failures.push(
+        "TripInstance must own onboard passenger destination groups"
       );
     }
   }
@@ -130,7 +141,8 @@ for (const file of sourceFiles) {
       "driverId:",
       "passengerCount:",
       "worldPosition:",
-      "roadPathSegmentIds:"
+      "roadPathSegmentIds:",
+      "orderedStationIds:"
     ]) {
       if (text.includes(forbiddenField)) {
         failures.push(
@@ -139,8 +151,10 @@ for (const file of sourceFiles) {
       }
     }
 
-    if (!text.includes("pathLegs:")) {
-      failures.push("PassengerRoute must use direction-aware pathLegs");
+    if (!text.includes("pathLegs:") || !text.includes("stopPoints:")) {
+      failures.push(
+        "PassengerRoute must use pathLegs plus canonical stopPoints"
+      );
     }
   }
 }
