@@ -23,6 +23,7 @@ function trip(): TripInstance {
       lastUpdatedGameSecond: units.gameSecond(0)
     },
     onboardPassengerGroups: [],
+    recoveryStationId: null,
     delaySeconds: units.gameSecond(0)
   };
 }

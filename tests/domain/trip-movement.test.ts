@@ -89,6 +89,7 @@ function fixture(direction: "forward" | "reverse" = "forward") {
       lastUpdatedGameSecond: units.gameSecond(0)
     },
     onboardPassengerGroups: [],
+    recoveryStationId: null,
     delaySeconds: units.gameSecond(0)
   };
 

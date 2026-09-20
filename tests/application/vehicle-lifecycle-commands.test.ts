@@ -22,6 +22,10 @@ import {
   createTestVehicleModel,
   createTestVehicleRuntimeRepository
 } from "../helpers/TestVehicle.js";
+import {
+  createTestFleetTaskRepository,
+  zeroOperationsPolicy
+} from "../helpers/TestOperations.js";
 
 function fixture() {
   const companyId = ids.company("company.00000001");
@@ -85,6 +89,7 @@ function fixture() {
       save: () => undefined
     },
     finance,
+    fleetTasks: createTestFleetTaskRepository(),
     passengerDemand: { all: () => [] },
     passengerRuntime: {
       get: () => new PassengerRuntimeState(),
@@ -120,6 +125,8 @@ function fixture() {
     trips: {
       getById: () => undefined,
       findByServicePlanAndDeparture: () => undefined,
+      findByVehicle: () => [],
+      findByDriver: () => [],
       findRunning: () => [],
       save: () => undefined
     },
@@ -146,6 +153,7 @@ function fixture() {
     nextRouteId: () => ids.route("route.00000001"),
     nextServicePlanId: () => ids.servicePlan("service_plan.00000001"),
     nextTripId: () => ids.trip("trip.000000000001"),
+    nextFleetTaskId: () => ids.fleetTask("fleet_task.00000001"),
     nextVehicleId: () => {
       vehicleSequence += 1;
       return ids.vehicle(
@@ -190,7 +198,8 @@ function fixture() {
       }),
       quoteResale: () => units.moneyCents(70_000),
       quoteScrap: () => units.moneyCents(10_000)
-    }
+    },
+    operationsPolicy: zeroOperationsPolicy
   });
 
   return { app, repositories, companyId, stationId, model, vehicles };
@@ -213,7 +222,7 @@ function command<T>(
   };
 }
 
-test("purchase, energy inventory, maintenance and sale form one audited lifecycle", async () => {
+test("purchase, timed refuel, timed maintenance and sale form one audited lifecycle", async () => {
   const f = fixture();
 
   const purchased = await f.app.commands.dispatch(
@@ -235,9 +244,6 @@ test("purchase, energy inventory, maintenance and sale form one audited lifecycl
     ),
     100_000
   );
-  assert.ok(
-    f.repositories.finance.getVehicleAssetProfile(vehicle.id)
-  );
 
   const fueled = await f.app.commands.dispatch(
     command(2, "vehicle.refuel", f.companyId, {
@@ -247,8 +253,19 @@ test("purchase, energy inventory, maintenance and sale form one audited lifecycl
   );
   assert.equal(fueled.ok, true);
   assert.equal(
+    f.repositories.vehicles.getById(vehicle.id)?.status,
+    "refueling"
+  );
+
+  f.app.simulation.advanceTo(units.gameSecond(200));
+
+  assert.equal(
     f.repositories.vehicles.getById(vehicle.id)?.energyUnits,
     20_000
+  );
+  assert.equal(
+    f.repositories.vehicles.getById(vehicle.id)?.status,
+    "available"
   );
   assert.equal(
     accountBalanceCents(
@@ -271,22 +288,17 @@ test("purchase, energy inventory, maintenance and sale form one audited lifecycl
     })
   );
   assert.equal(sent.ok, true);
-
-  const maintained = await f.app.commands.dispatch(
-    command(4, "vehicle.completeMaintenance", f.companyId, {
-      vehicleId: vehicle.id
-    })
-  );
-  assert.equal(maintained.ok, true);
   assert.equal(
-    accountBalanceCents(
-      f.repositories.finance.ledgerEntriesByCompany(f.companyId),
-      "accounts_payable"
-    ),
-    5_000
+    f.repositories.vehicles.getById(vehicle.id)?.status,
+    "maintenance"
   );
 
-  f.app.finance.advanceTo(units.gameSecond(450));
+  f.app.simulation.advanceTo(units.gameSecond(300));
+
+  assert.equal(
+    f.repositories.vehicles.getById(vehicle.id)?.status,
+    "available"
+  );
   assert.equal(
     accountBalanceCents(
       f.repositories.finance.ledgerEntriesByCompany(f.companyId),

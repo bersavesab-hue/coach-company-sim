@@ -176,6 +176,7 @@ function fixture() {
     onboardPassengerGroups: [
       { destinationStationId: stationB, count: 5 }
     ],
+    recoveryStationId: null,
     delaySeconds: units.gameSecond(0)
   };
 
@@ -224,6 +225,10 @@ function fixture() {
     trips: {
       getById: (id) => trips.get(id),
       findByServicePlanAndDeparture: () => undefined,
+      findByVehicle: (vehicleId) =>
+        [...trips.values()].filter((value) => value.vehicleId === vehicleId),
+      findByDriver: (driverId) =>
+        [...trips.values()].filter((value) => value.driverId === driverId),
       findRunning: () =>
         [...trips.values()].filter((value) => value.status === "running"),
       save: (value) => trips.set(value.id, value)
