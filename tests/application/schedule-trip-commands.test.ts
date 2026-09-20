@@ -265,8 +265,9 @@ async function createPlanAndTrip() {
       requiredVehicleClass: "county_midibus"
     })
   );
-  assert.equal(planResult.ok, true);
-  if (!planResult.ok) throw planResult.error;
+  if (!planResult.ok) {
+    assert.fail(planResult.error.message);
+  }
 
   const plan = planResult.value as ServicePlan;
 
@@ -276,8 +277,9 @@ async function createPlanAndTrip() {
       plannedDepartureGameSecond: units.gameSecond(6 * 3600)
     })
   );
-  assert.equal(tripResult.ok, true);
-  if (!tripResult.ok) throw tripResult.error;
+  if (!tripResult.ok) {
+    assert.fail(tripResult.error.message);
+  }
 
   return {
     ...f,
