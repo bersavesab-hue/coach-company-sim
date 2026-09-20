@@ -527,6 +527,12 @@ export class DayOperationsPlanner {
       tripDistanceM
     );
 
+    const departure = Number(demand.departure);
+    const boardingLeadSeconds =
+      this.policy.passengerBoardingLeadSeconds(demand.route.id);
+    const boardingStart = departure - boardingLeadSeconds;
+    if (boardingStart < 0) return null;
+
     let vehicleCursor = vehicleState.availableAt;
     let energyUnits = vehicleState.energyUnits;
     let mileageM = vehicleState.mileageM;
@@ -564,7 +570,7 @@ export class DayOperationsPlanner {
         vehicleState.vehicle.id
       );
       const end = vehicleCursor + seconds;
-      if (end > Number(demand.departure)) return null;
+      if (end > boardingStart - deadheadSeconds) return null;
 
       actions.push({
         kind: "maintenance",
@@ -605,7 +611,7 @@ export class DayOperationsPlanner {
         purchaseUnits
       );
       const end = vehicleCursor + seconds;
-      if (end > Number(demand.departure)) return null;
+      if (end > boardingStart - deadheadSeconds) return null;
 
       actions.push({
         kind: "refuel",
@@ -626,8 +632,7 @@ export class DayOperationsPlanner {
       energyUnits += purchaseUnits;
     }
 
-    const departure = Number(demand.departure);
-    const deadheadStart = departure - deadheadSeconds;
+    const deadheadStart = boardingStart - deadheadSeconds;
     if (vehicleCursor > deadheadStart) return null;
 
     const driveSegments: DriveSegment[] = [];
@@ -642,14 +647,14 @@ export class DayOperationsPlanner {
 
       driveSegments.push({
         startsAt: deadheadStart,
-        endsAt: departure,
+        endsAt: boardingStart,
         fromStationId: vehicleState.stationId,
         toStationId: origin,
         kind: "deadhead"
       });
     } else if (
       driverState.stationId !== origin ||
-      driverState.availableAt > departure
+      driverState.availableAt > boardingStart
     ) {
       return null;
     }
@@ -675,7 +680,7 @@ export class DayOperationsPlanner {
       actions.push({
         kind: "deadhead",
         startsAtGameSecond: units.gameSecond(deadheadStart),
-        endsAtGameSecond: units.gameSecond(departure),
+        endsAtGameSecond: units.gameSecond(boardingStart),
         vehicleId: vehicleState.vehicle.id,
         driverId: driverState.driver.id,
         routeId: null,

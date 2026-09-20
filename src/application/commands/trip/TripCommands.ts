@@ -28,3 +28,7 @@ export interface TripByIdPayload {
 export interface ResumeTripPayload {
   readonly tripId: TripId;
 }
+
+export interface ClearTripResourcesPayload {
+  readonly tripId: TripId;
+}

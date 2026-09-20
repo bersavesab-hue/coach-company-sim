@@ -112,6 +112,26 @@ export function assignDriverToTrip(
   return ok({ ...trip, driverId });
 }
 
+export function clearTripResources(
+  trip: TripInstance
+): Result<TripInstance, DomainError> {
+  if (trip.status !== "planned" && trip.status !== "disrupted") {
+    return err(
+      new DomainError(
+        "INVALID_STATE_TRANSITION",
+        "Trip resources can only be cleared while planned or disrupted",
+        { tripId: trip.id, status: trip.status }
+      )
+    );
+  }
+
+  return ok({
+    ...trip,
+    vehicleId: null,
+    driverId: null
+  });
+}
+
 export function startTripBoarding(
   trip: TripInstance
 ): Result<TripInstance, DomainError> {

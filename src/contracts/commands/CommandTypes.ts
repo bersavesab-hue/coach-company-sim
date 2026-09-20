@@ -24,6 +24,7 @@ export type CommandType =
   | "trip.prepare"
   | "trip.assignVehicle"
   | "trip.assignDriver"
+  | "trip.clearResources"
   | "trip.startBoarding"
   | "trip.depart"
   | "trip.resume"
