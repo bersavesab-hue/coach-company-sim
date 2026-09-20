@@ -28,6 +28,13 @@ import { DomainEventBus } from "../../src/application/events/DomainEventBus.js";
 import { FinanceCoordinator } from "../../src/application/finance/FinanceCoordinator.js";
 import { VehicleLifecycleCoordinator } from "../../src/application/vehicle/VehicleLifecycleCoordinator.js";
 import { createTestFinanceRepository, zeroEconomicPolicy } from "../helpers/TestFinance.js";
+import { createTestDriver } from "../helpers/TestDriver.js";
+import {
+  createTestFleetTaskRepository,
+  zeroOperationsPolicy
+} from "../helpers/TestOperations.js";
+import { FleetOperationsCoordinator } from "../../src/application/operations/FleetOperationsCoordinator.js";
+import { zeroVehicleLifecyclePolicy } from "../helpers/TestVehicle.js";
 import {
   createTestOwnedVehicle,
   createTestVehicleModel,
@@ -142,14 +149,14 @@ function fixture() {
     maxSpeedMps: units.speedMps(20)
   });
 
-  const driver: Driver = {
+  const driver: Driver = createTestDriver({
     id: driverId,
     companyId,
-    name: "司机",
+    stationId: null,
     status: "driving",
-    qualifiedVehicleClasses: ["county_midibus"],
-    activeTripId: tripId
-  };
+    activeTripId: tripId,
+    qualifiedVehicleClasses: ["county_midibus"]
+  });
 
   const trip: TripInstance = {
     id: tripId,
@@ -189,6 +196,7 @@ function fixture() {
       save: (value) => companies.set(value.id, value)
     },
     finance: createTestFinanceRepository(),
+    fleetTasks: createTestFleetTaskRepository(),
     passengerDemand: { all: () => [] },
     passengerRuntime: {
       get: () => passengerRuntime,
@@ -253,6 +261,13 @@ function fixture() {
   );
   void lifecycle;
 
+  const fleetOperations = new FleetOperationsCoordinator(
+    repositories,
+    events,
+    zeroEconomicPolicy,
+    zeroVehicleLifecyclePolicy
+  );
+
   const simulation = new SimulationCoordinator(
     repositories,
     events,
@@ -260,6 +275,8 @@ function fixture() {
       frequencyMultiplierPermille: () => units.permille(1000)
     },
     finance,
+    fleetOperations,
+    zeroOperationsPolicy,
     index
   );
   simulation.rebuildVehicleIndex();
