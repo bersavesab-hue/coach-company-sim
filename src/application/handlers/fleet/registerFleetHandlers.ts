@@ -152,9 +152,104 @@ function handleReposition(
     model,
     dependencies.repositories.world.get()
   );
+
+  const requiredEnergy =
+    Math.ceil(
+      (model.drivingEnergyUnitsPer100Km * timing.distanceM) / 100_000
+    ) + model.minimumDispatchEnergyUnits;
+  if (vehicle.energyUnits < requiredEnergy) {
+    return err(
+      new DomainError(
+        "VEHICLE_ENERGY_INSUFFICIENT",
+        "Vehicle lacks energy for repositioning plus dispatch reserve",
+        {
+          vehicleId: vehicle.id,
+          availableEnergyUnits: vehicle.energyUnits,
+          requiredEnergyUnits: requiredEnergy
+        }
+      )
+    );
+  }
+
+  const projectedPowertrainWear = Math.ceil(
+    (model.powertrainWearPermillePer1000Km * timing.distanceM) /
+      1_000_000
+  );
+  const projectedBrakeWear = Math.ceil(
+    (model.brakeWearPermillePer1000Km * timing.distanceM) /
+      1_000_000
+  );
+  const projectedTireWear = Math.ceil(
+    (model.tireWearPermillePer1000Km * timing.distanceM) /
+      1_000_000
+  );
+
+  if (
+    Number(vehicle.powertrainConditionPermille) -
+        projectedPowertrainWear <
+      model.minimumPowertrainConditionPermille ||
+    Number(vehicle.brakeConditionPermille) - projectedBrakeWear <
+      model.minimumBrakeConditionPermille ||
+    Number(vehicle.tireConditionPermille) - projectedTireWear <
+      model.minimumTireConditionPermille
+  ) {
+    return err(
+      new DomainError(
+        "VEHICLE_UNSAFE",
+        "Vehicle condition would fall below dispatch standard during repositioning",
+        { vehicleId: vehicle.id }
+      )
+    );
+  }
+
+  const minimumRest =
+    dependencies.operationsPolicy.minimumDriverRestSeconds(driver.id);
+  const rested =
+    driver.lastDutyEndedAtGameSecond === null ||
+    Number(command.issuedAtGameSecond) -
+        Number(driver.lastDutyEndedAtGameSecond) >=
+      minimumRest;
+  const continuousDriving = rested
+    ? 0
+    : driver.continuousDrivingSeconds;
+  const dutyStart =
+    rested || driver.dutyStartedAtGameSecond === null
+      ? Number(command.issuedAtGameSecond)
+      : Number(driver.dutyStartedAtGameSecond);
+
+  if (
+    continuousDriving + timing.seconds >
+    dependencies.operationsPolicy.maximumContinuousDrivingSeconds(driver.id)
+  ) {
+    return err(
+      new DomainError(
+        "DRIVER_REST_REQUIRED",
+        "Driver must rest before this repositioning task",
+        {
+          driverId: driver.id,
+          continuousDrivingSeconds: continuousDriving,
+          repositionDrivingSeconds: timing.seconds
+        }
+      )
+    );
+  }
+
   const end = units.gameSecond(
     Number(command.issuedAtGameSecond) + timing.seconds
   );
+
+  if (
+    Number(end) - dutyStart >
+    dependencies.operationsPolicy.maximumDutySeconds(driver.id)
+  ) {
+    return err(
+      new DomainError(
+        "DRIVER_DUTY_LIMIT",
+        "Driver duty-time limit would be exceeded by repositioning",
+        { driverId: driver.id }
+      )
+    );
+  }
 
   const reservation = ensureNoUpcomingReservation(
     dependencies.repositories,
@@ -195,6 +290,13 @@ function handleReposition(
     status: "repositioning",
     currentStationId: null,
     availableAtGameSecond: end,
+    dutyStartedAtGameSecond:
+      rested || driver.dutyStartedAtGameSecond === null
+        ? command.issuedAtGameSecond
+        : driver.dutyStartedAtGameSecond,
+    continuousDrivingSeconds: rested
+      ? 0
+      : driver.continuousDrivingSeconds,
     activeFleetTaskId: task.id
   });
 
