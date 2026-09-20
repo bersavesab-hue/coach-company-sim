@@ -1,4 +1,5 @@
 import type {
+  RouteId,
   StaffId,
   StationId,
   VehicleId
@@ -16,6 +17,8 @@ export interface OperationsPolicy {
     driverId: StaffId,
     stationId: StationId
   ): number;
+
+  passengerBoardingLeadSeconds(routeId: RouteId): number;
 
   minimumDriverRestSeconds(driverId: StaffId): number;
   maximumContinuousDrivingSeconds(driverId: StaffId): number;

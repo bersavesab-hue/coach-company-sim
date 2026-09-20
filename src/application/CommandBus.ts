@@ -5,9 +5,7 @@ import { err, type Result } from "../core/result/Result.js";
 
 export type CommandHandler = (
   command: CommandEnvelope
-) =>
-  | Result<unknown, DomainError>
-  | Promise<Result<unknown, DomainError>>;
+) => Result<unknown, DomainError>;
 
 export class CommandBus {
   private readonly handlers = new Map<CommandType, CommandHandler>();
@@ -19,9 +17,9 @@ export class CommandBus {
     this.handlers.set(type, handler);
   }
 
-  async dispatch(
+  dispatch(
     command: CommandEnvelope
-  ): Promise<Result<unknown, DomainError>> {
+  ): Result<unknown, DomainError> {
     const handler = this.handlers.get(command.type);
 
     if (!handler) {
