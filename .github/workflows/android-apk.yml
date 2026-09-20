@@ -6,6 +6,7 @@ on:
     paths:
       - "android-app/**"
       - "scripts/build-apk-web.mts"
+      - "presentation/apk/**"
       - "src/content/vehicle/**"
       - "src/core/version/**"
       - "package.json"
@@ -15,6 +16,7 @@ on:
     paths:
       - "android-app/**"
       - "scripts/build-apk-web.mts"
+      - "presentation/apk/**"
       - "src/content/vehicle/**"
       - "src/core/version/**"
       - "package.json"
