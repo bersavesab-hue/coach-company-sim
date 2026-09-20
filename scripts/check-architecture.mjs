@@ -407,6 +407,38 @@ for (const file of sourceFiles) {
     );
   }
 
+  if (rel.includes("/content/vehicle/VehicleVariantCatalog.ts")) {
+    if (!text.includes("Vehicle variant catalog must contain exactly 180 variants")) {
+      failures.push(
+        "Stage 15 VehicleVariantCatalog must enforce exactly 180 variants"
+      );
+    }
+    for (const requiredVariantToken of [
+      "basePriceCents",
+      "standardSeatCapacity",
+      "standardEnergyCapacityUnits",
+      "standardLuggageCapacityL",
+      "standardComfortPermille",
+      "allowedOptionCodes",
+      "launchGameDay",
+      "productionEndGameDay",
+      "dealerClearanceEndGameDay"
+    ]) {
+      if (!text.includes(requiredVariantToken)) {
+        failures.push(
+          `Stage 15 VehicleVariantCatalog missing formal variant field: ${requiredVariantToken}`
+        );
+      }
+    }
+  }
+
+  if (rel.includes("/content/vehicle/VehicleOptionCodes.ts") &&
+      !text.includes("exactly 48 codes")) {
+    failures.push(
+      "Stage 15 VehicleOptionCodes must enforce exactly 48 stable option codes"
+    );
+  }
+
   if (rel.includes("/finance/FinancialProfiles.ts")) {
     for (const forbiddenField of [
       "energyKind:",

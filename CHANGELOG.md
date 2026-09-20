@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.15.4-stage15-variants180
+
+### Added
+- 一次性完成 180 / 180 个正式 VehicleVariant。
+- 100 个基础 VehicleModel 全部至少拥有 1 个厂家版本；分布为 40 个单版本、40 个双版本、20 个三版本车型。
+- Variant 正式承载年款、基础价格、标准座位、标准能源容量、行李舱、舒适度和允许选装。
+- 柴油与纯电 Variant 使用不同续航增量逻辑；云驰新能源版本继续使用 electric_wh。
+- 新增长途版、豪华版、旅游版、商务版、高运力版、长续航版和旗舰版等正式版本逻辑。
+- 新增 Variant 生命周期：launchGameDay / productionEndGameDay / dealerClearanceEndGameDay。
+- 冻结 48 个 VehicleOptionCode，供 Variant 稳定引用；下一步只补选装定义属性，不需要返工 180 个 Variant。
+- 新增 VehicleVariantContentValidator，检查 Variant ID、Model 引用、价格、座位、能源、舒适度、生命周期、选装代码与每 Model 1–3 Variant 规则。
+- 新增 180 Variant 全量专项测试。
+
+### Content
+- CONTENT_VERSION 从 4 升至 5。
+- VehicleModel：100 / 100 complete。
+- VehicleVariant：180 / 180 complete。
+- 下一阶段：48 个 VehicleOptionDefinition + 24 个 VehicleDealer。
+
+
 ## 0.15.3-stage15-models100
 
 ### Added
