@@ -16,6 +16,12 @@ export type ServicePlanId = Brand<string, "ServicePlanId">;
 export type TripId = Brand<string, "TripId">;
 export type FleetTaskId = Brand<string, "FleetTaskId">;
 export type VehicleId = Brand<string, "VehicleId">;
+export type VehicleBrandId = Brand<string, "VehicleBrandId">;
+export type VehicleSeriesId = Brand<string, "VehicleSeriesId">;
+export type VehicleVariantId = Brand<string, "VehicleVariantId">;
+export type VehicleConfigurationId = Brand<string, "VehicleConfigurationId">;
+export type VehicleDealerId = Brand<string, "VehicleDealerId">;
+export type VehicleListingId = Brand<string, "VehicleListingId">;
 export type VehicleModelId = Brand<string, "VehicleModelId">;
 export type StaffId = Brand<string, "StaffId">;
 export type StationId = Brand<string, "StationId">;
@@ -60,6 +66,22 @@ export const ids = {
     asId<"FleetTaskId">(value, ID_PREFIX.fleetTask, "FleetTaskId"),
   vehicle: (value: string): VehicleId =>
     asId<"VehicleId">(value, ID_PREFIX.vehicle, "VehicleId"),
+  vehicleBrand: (value: string): VehicleBrandId =>
+    asId<"VehicleBrandId">(value, ID_PREFIX.vehicleBrand, "VehicleBrandId"),
+  vehicleSeries: (value: string): VehicleSeriesId =>
+    asId<"VehicleSeriesId">(value, ID_PREFIX.vehicleSeries, "VehicleSeriesId"),
+  vehicleVariant: (value: string): VehicleVariantId =>
+    asId<"VehicleVariantId">(value, ID_PREFIX.vehicleVariant, "VehicleVariantId"),
+  vehicleConfiguration: (value: string): VehicleConfigurationId =>
+    asId<"VehicleConfigurationId">(
+      value,
+      ID_PREFIX.vehicleConfiguration,
+      "VehicleConfigurationId"
+    ),
+  vehicleDealer: (value: string): VehicleDealerId =>
+    asId<"VehicleDealerId">(value, ID_PREFIX.vehicleDealer, "VehicleDealerId"),
+  vehicleListing: (value: string): VehicleListingId =>
+    asId<"VehicleListingId">(value, ID_PREFIX.vehicleListing, "VehicleListingId"),
   vehicleModel: (value: string): VehicleModelId =>
     asId<"VehicleModelId">(value, ID_PREFIX.vehicleModel, "VehicleModelId"),
   staff: (value: string): StaffId =>

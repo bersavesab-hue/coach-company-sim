@@ -3,6 +3,7 @@ import type {
   FleetTaskId,
   StationId,
   TripId,
+  VehicleConfigurationId,
   VehicleId,
   VehicleModelId
 } from "../../contracts/ids/EntityIds.js";
@@ -18,6 +19,12 @@ export interface OwnedVehicle {
   readonly id: VehicleId;
   readonly companyId: CompanyId;
   readonly modelId: VehicleModelId;
+  readonly configurationId: VehicleConfigurationId | null;
+
+  // Concrete physical build facts. These may differ from the base model
+  // because manufacturer-approved configurations can change seating/storage.
+  readonly seatCapacity: number;
+  readonly energyCapacityUnits: number;
 
   readonly mileageM: DistanceM;
   readonly energyUnits: number;
