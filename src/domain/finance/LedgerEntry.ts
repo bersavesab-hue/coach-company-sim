@@ -2,7 +2,8 @@ import type {
   CompanyId,
   EventId,
   FinanceEntryId,
-  TripId
+  TripId,
+  VehicleId
 } from "../../contracts/ids/EntityIds.js";
 import type {
   GameSecond,
@@ -15,11 +16,18 @@ export type LedgerSide = "debit" | "credit";
 export type FinanceEntryKind =
   | "opening_capital"
   | "ticket_sale"
+  | "vehicle_purchase"
+  | "vehicle_disposal"
+  | "energy_purchase"
+  | "energy_consumption"
   | "energy_cost"
   | "road_toll"
   | "station_usage"
   | "driver_allowance"
   | "driver_base_wage"
+  | "maintenance"
+  | "insurance_renewal"
+  | "inspection"
   | "insurance"
   | "vehicle_tax"
   | "station_lease"
@@ -41,6 +49,7 @@ export interface LedgerEntry {
   readonly sourceRef: string;
   readonly sourceEventId: EventId | null;
   readonly tripId: TripId | null;
+  readonly vehicleId?: VehicleId | null;
   readonly memo: string;
   readonly postings: readonly LedgerPosting[];
 }

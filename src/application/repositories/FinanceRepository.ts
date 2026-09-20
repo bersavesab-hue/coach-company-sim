@@ -28,6 +28,8 @@ export interface FinanceRepository {
   getVehicleAssetProfile(
     vehicleId: VehicleId
   ): VehicleAssetProfile | undefined;
+  saveVehicleAssetProfile(profile: VehicleAssetProfile): void;
+  removeVehicleAssetProfile(vehicleId: VehicleId): void;
 
   getDriverCompensationProfile(
     staffId: StaffId
@@ -48,6 +50,7 @@ export interface FinanceRepository {
   appendLedgerEntry(entry: LedgerEntry): void;
   ledgerEntriesByCompany(companyId: CompanyId): readonly LedgerEntry[];
   ledgerEntriesByTrip(tripId: TripId): readonly LedgerEntry[];
+  ledgerEntriesByVehicle(vehicleId: VehicleId): readonly LedgerEntry[];
 
   hasManagementCostSourceRef(sourceRef: string): boolean;
   appendManagementCost(entry: ManagementCostEntry): void;

@@ -80,9 +80,12 @@ export function releaseVehicleFromTrip(
 ): OwnedVehicle {
   if (vehicle.activeTripId !== tripId) return vehicle;
 
+  const releasableStatus =
+    vehicle.status === "assigned" || vehicle.status === "running";
+
   return {
     ...vehicle,
-    status: "available",
+    status: releasableStatus ? "available" : vehicle.status,
     activeTripId: null
   };
 }

@@ -6,7 +6,8 @@ import type { TripStatus } from "./TripStatus.js";
 const ALLOWED: Readonly<Record<TripStatus, readonly TripStatus[]>> = {
   planned: ["boarding", "cancelled"],
   boarding: ["running", "cancelled"],
-  running: ["completed", "cancelled"],
+  running: ["disrupted", "completed", "cancelled"],
+  disrupted: ["running", "cancelled"],
   completed: [],
   cancelled: []
 };

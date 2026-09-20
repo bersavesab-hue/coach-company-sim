@@ -1,8 +1,13 @@
 export type CommandType =
   | "company.create"
   | "vehicle.purchase"
+  | "vehicle.refuel"
   | "vehicle.sell"
+  | "vehicle.retire"
   | "vehicle.sendToMaintenance"
+  | "vehicle.completeMaintenance"
+  | "vehicle.renewInsurance"
+  | "vehicle.passInspection"
   | "route.create"
   | "route.updateStops"
   | "route.setFare"

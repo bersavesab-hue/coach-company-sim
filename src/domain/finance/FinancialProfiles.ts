@@ -11,12 +11,6 @@ import type {
   Permille
 } from "../../core/units/Units.js";
 
-export type EnergyKind =
-  | "diesel_ml"
-  | "gasoline_ml"
-  | "electric_wh"
-  | "hydrogen_gram";
-
 export interface CompanyFinancialProfile {
   readonly companyId: CompanyId;
   readonly openingCapitalCents: MoneyCents;
@@ -25,9 +19,6 @@ export interface CompanyFinancialProfile {
 
 export interface VehicleEconomicProfile {
   readonly vehicleModelId: VehicleModelId;
-  readonly energyKind: EnergyKind;
-  readonly drivingEnergyUnitsPer100Km: number;
-  readonly idleEnergyUnitsPerHour: number;
   readonly maintenanceEconomicCostCentsPerKm: MoneyCents;
   readonly economicDepreciationCentsPerKm: MoneyCents;
 }

@@ -4,4 +4,5 @@ export type VehicleStatus =
   | "running"
   | "maintenance"
   | "broken"
+  | "sold"
   | "retired";

@@ -189,6 +189,22 @@ export function completeTrip(
   });
 }
 
+export function disruptTrip(
+  trip: TripInstance
+): Result<TripInstance, DomainError> {
+  if (trip.status !== "running") {
+    return err(
+      new DomainError(
+        "INVALID_STATE_TRANSITION",
+        "Only a running trip can be disrupted",
+        { tripId: trip.id, status: trip.status }
+      )
+    );
+  }
+
+  return transitionTrip(trip, "disrupted");
+}
+
 export function cancelTrip(
   trip: TripInstance
 ): Result<TripInstance, DomainError> {
