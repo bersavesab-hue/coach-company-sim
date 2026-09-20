@@ -1,5 +1,53 @@
 # Changelog
 
+## 0.13.0-stage12
+
+### Added
+- 新增 DispatchCenterDto，作为运营调度中心唯一 UI 只读快照。
+- 新增 DispatchCenterProjection，统一聚合 CommittedOperationsSchedule、Trip、FleetTask、Vehicle、Driver、Station 与实时 DayOperationsPlan 缺口。
+- 新增 operations.dispatchCenter Query。
+- 调度中心快照正式提供今日班次、支援动作、车辆、司机、缺口、当前 revision、replan 时间和总体统计。
+- 班次 DTO 提供线路编号、始发/终到站、计划发车、真实上客开始、实际发车、实际到站、延误、故障、恢复站和失败原因。
+- 车辆 DTO 提供当前位置、可用时间、能源比例、里程、距离下次保养、安全状态、故障和下一运营动作。
+- 司机 DTO 提供当前位置、可用时间、连续驾驶、当前任务和下一运营动作。
+- 支援 DTO 提供调车、补能、保养、休息的时间窗、站点、资源、里程、能源和失败原因。
+- 未覆盖班次即使采用 allowPartial 提交，也通过 NO_VEHICLE / NO_DRIVER / NO_RESOURCE_PAIR 持续展示在调度中心。
+- 下一运营动作时间按真实执行边界计算；客运班次使用 boardingStartGameSecond，而不是误用发车时间。
+- 新增调度中心专项测试：已提交班次快照、运行状态变化、自动补能展示、部分提交缺口可见性。
+
+### Architecture
+- UI 不再跨 Repository 自行拼接调度数据，只读取 operations.dispatchCenter。
+- DispatchCenterProjection 为只读投影，不允许 save/replace 任何领域状态。
+- 调度中心展示状态全部来自 Stage 9–11 的唯一运行事实，不建立 UI 专用第二套车辆/司机/Trip 状态。
+- 缺口来源为 DayOperationsPlanner 的实时只读推演，与已提交运营状态并列展示，不伪造已排班动作。
+
+
+## 0.12.0-stage11
+
+### Added
+- 新增 CommittedOperationsSchedule，正式区分只读 DayOperationsPlan 与已经提交执行的日程。
+- 新增 operations.commitDayPlan / operations.replanDay。
+- 提交日计划时通过现有 CommandBus 创建 Trip 并绑定车辆/司机，不直接写底层运行状态。
+- 新增 trip.clearResources，只允许 planned/disrupted Trip 在重排时安全清空未来资源预约。
+- 新增 OperationsExecutionCoordinator，到运营时间点自动执行 deadhead / refuel / maintenance / rest / passenger_trip。
+- 新增 passengerBoardingLeadSeconds，车辆和司机必须在真正上客时间前到位。
+- SimulationCoordinator 按运营边界切片推进；一次大跨度快进仍按补能结束、调车、上客、发车、到站等顺序执行。
+- 新增 driver.startRest / driver.completeRest，司机休息进入正式运行链。
+- 自动动作失败时同一游戏时刻触发重排，不延迟到下一次时间推进。
+- 途中 trip.disrupted 自动发起 fleet.recover，拖救完成后尝试同站备用车辆和合格司机接班恢复。
+- 备用车 trip.resume 前重新校验剩余线路的保险、年检、保养、技术状态和能源储备。
+- 故障恢复或实际运营偏差会提升 schedule revision 并重新计算剩余日程。
+- 新增 operations.committedDay Query。
+- 新增端到端自动执行测试：计划提交、自动上客、自动发车、自动补能、途中故障、拖救、备用车接班和日程重排。
+
+### Architecture
+- 自动运营与玩家手动运营共用同一个 CommandBus、Trip、FleetTask、Vehicle、Driver、Finance 与 Simulation 规则链。
+- 未来支援动作只保存在 CommittedOperationsSchedule；到执行时间才创建真实 FleetTask。
+- CommittedOperationsSchedule 只保存动作状态和领域实体引用，不复制车辆位置、能源、司机工时等运行事实。
+- OperationsExecutionCoordinator 只编排命令和日程状态，不直接修改 Vehicle、Driver、Trip 或 FleetTask。
+- 时间快进必须经过运营边界，禁止先跳到未来再补发自动事件。
+
+
 ## 0.11.0-stage10
 
 ### Added

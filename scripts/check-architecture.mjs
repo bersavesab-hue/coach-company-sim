@@ -213,6 +213,62 @@ for (const file of sourceFiles) {
     );
   }
 
+  if (rel.includes("/operations/OperationsExecutionCoordinator.ts")) {
+    for (const forbiddenMutation of [
+      "repositories.vehicles.save(",
+      "repositories.staff.saveDriver(",
+      "repositories.trips.save(",
+      "repositories.fleetTasks.save("
+    ]) {
+      if (text.includes(forbiddenMutation)) {
+        failures.push(
+          `OperationsExecutionCoordinator must execute domain changes through CommandBus in ${rel}: ${forbiddenMutation}`
+        );
+      }
+    }
+
+    if (!text.includes("commands.dispatch(")) {
+      failures.push(
+        "OperationsExecutionCoordinator must execute operations through CommandBus"
+      );
+    }
+  }
+
+  if (rel.includes("/services/DispatchCenterProjection.ts")) {
+    for (const forbiddenMutation of [
+      ".save(",
+      ".replace("
+    ]) {
+      if (text.includes(forbiddenMutation)) {
+        failures.push(
+          `DispatchCenterProjection must remain read-only in ${rel}: ${forbiddenMutation}`
+        );
+      }
+    }
+
+    for (const requiredSection of [
+      "trips",
+      "support",
+      "vehicles",
+      "drivers",
+      "shortages",
+      "summary"
+    ]) {
+      if (!text.includes(requiredSection)) {
+        failures.push(
+          `DispatchCenterProjection missing Stage 12 UI section in ${rel}: ${requiredSection}`
+        );
+      }
+    }
+  }
+
+  if (rel.includes("/handlers/operations/registerOperationsQueries.ts") &&
+      !text.includes('"operations.dispatchCenter"')) {
+    failures.push(
+      "Stage 12 operations.dispatchCenter query must remain registered"
+    );
+  }
+
   if (rel.includes("/finance/FinancialProfiles.ts")) {
     for (const forbiddenField of [
       "energyKind:",
