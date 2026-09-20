@@ -1,6 +1,6 @@
 # 客运公司模拟器：完整系统地图
 
-状态：**System Map Freeze v1**
+状态：**System Map Freeze v2（Stage 15）**
 
 本文件定义“整个游戏最终有哪些系统、谁拥有数据、谁依赖谁、第一版做什么、哪些只预留边界”。  
 以后新增功能必须先在这里找到归属；找不到归属时先修改架构文档，禁止随手新建 Manager 或把逻辑塞进页面。
@@ -81,7 +81,13 @@ Company Progression
 
 ## P2：第一版之后扩展
 
-先规划边界，不在第一阶段写空实现：
+当前已提前完成：
+- Used Vehicle Market（Stage 13–14）
+- 4S / Dealer Network（Stage 13–14）
+- Vehicle Custom Configuration（Stage 13）
+- Used Vehicle Auction / Negotiation / Inspection（Stage 14）
+
+仍待后续实现：
 
 - Advanced Competitor AI
 - Urban Bus
@@ -89,8 +95,6 @@ Company Progression
 - Airport Express
 - School / Customized Transport
 - Terminal Commercial Operations
-- Used Vehicle Market
-- 4S / Dealer Network
 - Loan / Insurance
 - Branch Company
 - Advanced HR
@@ -456,16 +460,19 @@ Vehicle 分两层：
 - 维护成本
 - 运营限制
 
-第一版先做：
-- purchase
-- available
-- assigned
-- running
-- maintenance
-- broken
-- retired
+当前 Vehicle 已推进到 Stage 14：
 
-车型差异由数据决定。
+- available / boarding / running
+- repositioning / refueling / maintenance / recovering
+- broken / listed_for_sale / sold / retired
+- VehicleBrand / VehicleSeries / VehicleModelIdentity
+- VehicleVariant / VehicleConfiguration
+- VehicleDealer / VehicleListing
+- 新车、二手车、议价、检测、拍卖、真实过户
+
+车型运行差异继续由 VehicleModel + VehicleConfiguration 数据决定。
+
+Stage 15 开始补正式车辆内容库和动态市场供给，不再扩张新的车辆运行状态。
 
 ---
 
@@ -664,8 +671,6 @@ UI 报表只读 Statistics/Query DTO，不自己扫所有业务对象计算。
 - 复杂员工人生系统
 - 高级竞争公司 AI
 - 贷款金融衍生玩法
-- 4S 店完整经营
-- 二手车拍卖
 - 复杂事故调查
 - 广告 SDK 正式接入
 
@@ -796,6 +801,95 @@ UI 报表只读 Statistics/Query DTO，不自己扫所有业务对象计算。
 
 表现层只能调用 Command/Query。
 
+
+## Stage 10：自动日运营排班
+
+建立：
+- DayOperationsPlanner
+- 全天车辆/司机链
+- deadhead / refuel / maintenance / rest 计划
+- 缺车/缺司机识别
+
+状态：Implemented。
+
+## Stage 11：运营计划落地与自动执行
+
+建立：
+- CommittedOperationsSchedule
+- 自动上客/发车
+- 自动调车/补能/保养/休息
+- 故障救援与剩余日程重排
+
+状态：Implemented。
+
+## Stage 12：调度中心只读模型
+
+建立：
+- DispatchCenterDto
+- operations.dispatchCenter
+- Trip / Vehicle / Driver / Support / Shortage 聚合快照
+
+状态：Implemented。
+
+## Stage 13：车辆产业与交易底层
+
+建立：
+- 品牌 / 车系 / 基础车型
+- 年款 / 厂家版本
+- 自定义配置
+- 4S / 车商
+- 新车 / 二手车 Listing
+
+状态：Implemented。
+
+## Stage 14：二手车完整流通市场
+
+建立：
+- 自有车辆挂牌
+- 动态估价
+- 卖方披露
+- 买方检测
+- 议价
+- 拍卖
+- 同一 VehicleId 真实过户
+- 市场自动刷新
+
+状态：Implemented。
+
+## Stage 15：车辆内容库 + 动态车商供给
+
+目标不是增加第二套车辆逻辑，而是向 Stage 13–14 的正式接口提供足够丰富、可持续变化的 Content。
+
+固定第一版内容量：
+
+- 10 个架空车辆品牌
+- 32 个车系
+- 100 个基础 VehicleModel
+- 180 个 VehicleVariant
+- 48 个 VehicleOptionDefinition
+- 24 个正式 VehicleDealer
+- 8 类车辆用途/服务定位
+- 6 档价格与产品定位
+- 新车动态库存生成器
+- 二手车动态生成器
+- 年款发布 / 停产 / 清库存生命周期
+- 地区车型偏好与保值率
+- Content Validator
+
+Stage 15 不允许：
+- 手写几百辆固定 VehicleListing 作为长期市场
+- 一个自定义配置生成一个 VehicleModel
+- 在 UI 内随机生成车源
+- 用真实品牌/真实车型直接写入正式内容库
+- 为不同市场复制 VehicleModel / VehicleVariant
+
+验收：
+- 市场在不手写单辆车源的情况下可以持续生成新车和二手车
+- 同一个基础车型能产生不同年款、厂家版本和玩家配置
+- 不同地区/车商库存和价格结构不同
+- 停产/新年款/清库存能够随游戏时间发生
+- 全部内容通过自动验证器
+
 ---
 
 # 22. 每个新功能进入仓库前必须回答
@@ -833,19 +927,18 @@ UI 报表只读 Statistics/Query DTO，不自己扫所有业务对象计算。
 
 # 24. 当前结论
 
-从此以后开发主线固定为：
+当前主线已经推进到：
 
 ```text
-架构
-→ 正式 Trip 模型
-→ WorldGraph
-→ Pathfinding
-→ Schedule/Dispatch
-→ Vehicle Movement
-→ Passenger
-→ Economy
-→ Company Loop
-→ Presentation
+核心架构
+→ 路网 / 线路 / 班次 / 调度
+→ Movement / Passenger / Economy
+→ 自动运营
+→ 调度中心只读模型
+→ 车辆产业与新车市场
+→ 二手车完整流通
+→ Stage 15 车辆内容库与动态供给
+→ Presentation / UI
 ```
 
-在底层闭环之前，不为了“先看到页面”提前把经营逻辑写进 UI。
+Stage 15 完成前，不为车辆市场先写死最终 UI；先保证正式内容规模、动态库存和内容校验稳定。

@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.15.1-stage15-blueprint
+
+### Added
+- 更新 SYSTEM_MAP 至 Freeze v2，使 Stage 10–14 与当前仓库实现一致。
+- 冻结 Stage 15 车辆内容库与动态供给目标。
+- 固定第一版内容规模：10 品牌、32 车系、100 基础车型、180 厂家版本、48 选装、24 车商。
+- 固定 8 类车辆用途及 100 个基础车型分布。
+- 固定新车动态库存、二手车动态生成、车型生命周期、地区偏好和 Content Validator 边界。
+- 固定 Stage 15 的 14 步实施顺序。
+- 明确 Stage 15 不在 UI 中生成市场数据，不复制 VehicleModel，不手写长期固定 Listing。
+
+### Runtime
+- 本提交仅冻结 Stage 15 内容与架构规划，不改变运行时业务逻辑。
+
+
 ## 0.15.0-stage14
 
 ### Added
