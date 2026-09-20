@@ -14,10 +14,17 @@ export * from "./core/errors/ErrorCode.js";
 export * from "./core/errors/DomainError.js";
 export * from "./core/version/Versions.js";
 
+export * from "./domain/world/Region.js";
 export * from "./domain/world/WorldPoint.js";
 export * from "./domain/world/WorldNode.js";
 export * from "./domain/world/RoadSegment.js";
+export * from "./domain/world/RoadTraversal.js";
+export * from "./domain/world/RoadRuntimeState.js";
+export * from "./domain/world/WorldRuntimeState.js";
 export * from "./domain/world/WorldGraph.js";
+export * from "./domain/world/RoutingCost.js";
+export * from "./domain/world/PathFinder.js";
+
 export * from "./domain/route/RouteType.js";
 export * from "./domain/route/PassengerRoute.js";
 export * from "./domain/schedule/ServiceCalendar.js";

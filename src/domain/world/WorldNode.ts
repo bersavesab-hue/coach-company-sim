@@ -1,4 +1,7 @@
-import type { WorldNodeId } from "../../contracts/ids/EntityIds.js";
+import type {
+  RegionId,
+  WorldNodeId
+} from "../../contracts/ids/EntityIds.js";
 import type { WorldPoint } from "./WorldPoint.js";
 
 export type WorldNodeType =
@@ -15,6 +18,7 @@ export type WorldNodeType =
 
 export interface WorldNode {
   readonly id: WorldNodeId;
+  readonly regionId: RegionId;
   readonly type: WorldNodeType;
   readonly name: string;
   readonly position: WorldPoint;

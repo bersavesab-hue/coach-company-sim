@@ -2,6 +2,7 @@ export const ID_PREFIX = {
   command: "command",
   event: "event",
   company: "company",
+  region: "region",
   route: "route",
   servicePlan: "service_plan",
   trip: "trip",

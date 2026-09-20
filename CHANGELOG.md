@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.3.0-stage2
+
+### Added
+- 建立 Region 与区域层级/边界模型。
+- WorldNode 与 RoadSegment 正式绑定 Region。
+- WorldGraph 建立方向感知的道路邻接图。
+- 新增 RoadTraversal，明确道路正向/反向经过方向。
+- 新增 RoadRuntimeState / WorldRuntimeState，支持封路与速度修正。
+- 新增 shortest_distance / fastest_time 路径代价。
+- 新增基础确定性 Dijkstra 寻路。
+- 寻路结果使用 PathLeg，保留每段道路的 traversal direction。
+- 新增区域、邻接、运行状态与路径查询测试。
+
+### Changed
+- 道路等级改为受控 RoadClass。
+- GAME_VERSION 更新为 0.3.0-stage2。
+- WorldGraph.create 现在要求 Regions、Nodes、Roads 三类正式输入。
+
+### Architecture
+- 道路静态事实与道路临时运行状态正式分离。
+- 路径结果不再只表达 roadSegmentId，为 Stage 3 双向线路路径奠定正式协议。
+
 ## 0.2.0-stage1
 
 ### Removed
@@ -24,8 +46,6 @@
 - 开发期 V0.1 临时接口全部失效，不提供兼容壳。
 - Vehicle 不再持有 routeId、当前位置或道路偏移；运行事实归 TripInstance。
 - 不再存在总 GameState。
-
-# Changelog
 
 ## 0.1.3-stage1-blueprint
 
