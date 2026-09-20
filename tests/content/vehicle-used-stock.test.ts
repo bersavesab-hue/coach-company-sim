@@ -46,7 +46,13 @@ function fixture() {
   const valuation =
     new VehicleMarketValuationService(
       repositories as RepositoryBundle,
-      zeroVehicleMarketPolicy
+      {
+        ...zeroVehicleMarketPolicy,
+        ageValuePermille: () => units.permille(900),
+        mileageValuePermille: () => units.permille(900),
+        conditionValuePermille: () => units.permille(900),
+        accidentValuePermille: () => units.permille(950)
+      }
     );
 
   return {
@@ -288,9 +294,19 @@ test("generated used asking prices are positive and below equivalent new price f
       listing.variantId
     );
     assert.ok(variant);
+    const configuration =
+      listing.configurationId === null
+        ? undefined
+        : f.market.getConfiguration(
+            listing.configurationId
+          );
+    assert.ok(configuration);
+    const equivalentConfiguredNewPrice =
+      Number(variant.basePriceCents) +
+      Number(configuration.priceAdjustmentCents);
     return (
       Number(listing.askingPriceCents) <
-      Number(variant.basePriceCents)
+      equivalentConfiguredNewPrice
     );
   });
 
