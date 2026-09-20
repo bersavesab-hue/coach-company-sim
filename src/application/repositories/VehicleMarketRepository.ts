@@ -2,6 +2,8 @@ import type {
   VehicleBrandId,
   VehicleConfigurationId,
   VehicleDealerId,
+  VehicleAuctionId,
+  VehicleInspectionReportId,
   VehicleListingId,
   VehicleModelId,
   VehicleSeriesId,
@@ -10,6 +12,8 @@ import type {
 import type { VehicleBrand } from "../../domain/vehicle-market/VehicleBrand.js";
 import type { VehicleConfiguration } from "../../domain/vehicle-market/VehicleConfiguration.js";
 import type { VehicleDealer } from "../../domain/vehicle-market/VehicleDealer.js";
+import type { VehicleAuction } from "../../domain/vehicle-market/VehicleAuction.js";
+import type { VehicleInspectionReport } from "../../domain/vehicle-market/VehicleInspectionReport.js";
 import type { VehicleListing } from "../../domain/vehicle-market/VehicleListing.js";
 import type { VehicleModelIdentity } from "../../domain/vehicle-market/VehicleModelIdentity.js";
 import type { VehicleOptionDefinition } from "../../domain/vehicle-market/VehicleOptionDefinition.js";
@@ -28,6 +32,19 @@ export interface VehicleMarketRepository {
   saveConfiguration(configuration: VehicleConfiguration): void;
   getDealer(id: VehicleDealerId): VehicleDealer | undefined;
   getListing(id: VehicleListingId): VehicleListing | undefined;
+  findListings(): readonly VehicleListing[];
   findAvailableListings(): readonly VehicleListing[];
   saveListing(listing: VehicleListing): void;
+
+  getInspectionReport(
+    id: VehicleInspectionReportId
+  ): VehicleInspectionReport | undefined;
+  findInspectionReportsByListing(
+    listingId: VehicleListingId
+  ): readonly VehicleInspectionReport[];
+  saveInspectionReport(report: VehicleInspectionReport): void;
+
+  getAuction(id: VehicleAuctionId): VehicleAuction | undefined;
+  findAuctions(): readonly VehicleAuction[];
+  saveAuction(auction: VehicleAuction): void;
 }

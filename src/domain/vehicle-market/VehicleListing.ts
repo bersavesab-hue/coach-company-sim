@@ -4,6 +4,7 @@ import type {
   VehicleDealerId,
   VehicleListingId,
   VehicleModelId,
+  VehicleId,
   VehicleVariantId
 } from "../../contracts/ids/EntityIds.js";
 import type {
@@ -37,6 +38,18 @@ export interface UsedVehicleSnapshot {
   readonly recordedAccidentCount: number;
 }
 
+export interface UsedVehicleDisclosure {
+  readonly reportedMileageM: DistanceM;
+  readonly reportedAccidentCount: number | null;
+  readonly reportedConditionPermille: Permille | null;
+}
+
+export interface VehicleListingReservation {
+  readonly buyerCompanyId: CompanyId;
+  readonly agreedPriceCents: MoneyCents;
+  readonly expiresAtGameSecond: GameSecond;
+}
+
 export interface VehicleListing {
   readonly id: VehicleListingId;
   readonly dealerId: VehicleDealerId;
@@ -47,9 +60,13 @@ export interface VehicleListing {
   // allow the buyer to supply another valid configuration for the same variant.
   readonly configurationId: VehicleConfigurationId | null;
   readonly sellerCompanyId: CompanyId | null;
+  readonly sourceVehicleId: VehicleId | null;
   readonly askingPriceCents: MoneyCents;
+  readonly sellerDisclosure: UsedVehicleDisclosure | null;
+  readonly reservation: VehicleListingReservation | null;
   readonly stockCount: number;
   readonly usedSnapshot: UsedVehicleSnapshot | null;
+  readonly listedAtGameSecond: GameSecond;
   readonly availableFromGameSecond: GameSecond;
   readonly expiresAtGameSecond: GameSecond | null;
   readonly status: VehicleListingStatus;

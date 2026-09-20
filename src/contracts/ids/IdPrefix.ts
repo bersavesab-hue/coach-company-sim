@@ -14,6 +14,8 @@ export const ID_PREFIX = {
   vehicleConfiguration: "vehicle_configuration",
   vehicleDealer: "vehicle_dealer",
   vehicleListing: "vehicle_listing",
+  vehicleInspectionReport: "vehicle_inspection",
+  vehicleAuction: "vehicle_auction",
   vehicleModel: "vehicle_model",
   staff: "staff",
   station: "station",

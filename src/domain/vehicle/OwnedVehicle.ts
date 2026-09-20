@@ -25,6 +25,8 @@ export interface OwnedVehicle {
   // because manufacturer-approved configurations can change seating/storage.
   readonly seatCapacity: number;
   readonly energyCapacityUnits: number;
+  readonly previousOwnerCount: number;
+  readonly recordedAccidentCount: number;
 
   readonly mileageM: DistanceM;
   readonly energyUnits: number;

@@ -22,6 +22,8 @@ export type VehicleVariantId = Brand<string, "VehicleVariantId">;
 export type VehicleConfigurationId = Brand<string, "VehicleConfigurationId">;
 export type VehicleDealerId = Brand<string, "VehicleDealerId">;
 export type VehicleListingId = Brand<string, "VehicleListingId">;
+export type VehicleInspectionReportId = Brand<string, "VehicleInspectionReportId">;
+export type VehicleAuctionId = Brand<string, "VehicleAuctionId">;
 export type VehicleModelId = Brand<string, "VehicleModelId">;
 export type StaffId = Brand<string, "StaffId">;
 export type StationId = Brand<string, "StationId">;
@@ -82,6 +84,14 @@ export const ids = {
     asId<"VehicleDealerId">(value, ID_PREFIX.vehicleDealer, "VehicleDealerId"),
   vehicleListing: (value: string): VehicleListingId =>
     asId<"VehicleListingId">(value, ID_PREFIX.vehicleListing, "VehicleListingId"),
+  vehicleInspectionReport: (value: string): VehicleInspectionReportId =>
+    asId<"VehicleInspectionReportId">(
+      value,
+      ID_PREFIX.vehicleInspectionReport,
+      "VehicleInspectionReportId"
+    ),
+  vehicleAuction: (value: string): VehicleAuctionId =>
+    asId<"VehicleAuctionId">(value, ID_PREFIX.vehicleAuction, "VehicleAuctionId"),
   vehicleModel: (value: string): VehicleModelId =>
     asId<"VehicleModelId">(value, ID_PREFIX.vehicleModel, "VehicleModelId"),
   staff: (value: string): StaffId =>

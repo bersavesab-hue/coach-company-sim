@@ -7,5 +7,6 @@ export type VehicleStatus =
   | "maintenance"
   | "recovering"
   | "broken"
+  | "listed_for_sale"
   | "sold"
   | "retired";
