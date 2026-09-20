@@ -6,7 +6,7 @@ import type {
   TripId,
   VehicleId
 } from "../../contracts/ids/EntityIds.js";
-import type { GameSecond } from "../../core/units/Units.js";
+import type { GameSecond, MoneyCents } from "../../core/units/Units.js";
 import type { PathLeg } from "../world/RoadPath.js";
 
 export type FleetTaskKind =
@@ -32,4 +32,5 @@ export interface FleetTask {
   readonly completesAtGameSecond: GameSecond;
   readonly completedAtGameSecond: GameSecond | null;
   readonly energyUnits: number;
+  readonly quotedCostCents: MoneyCents | null;
 }

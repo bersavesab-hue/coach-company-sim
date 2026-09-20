@@ -12,6 +12,7 @@ export type DomainEventType =
   | "vehicle.brokenDown"
   | "fleet.taskStarted"
   | "fleet.taskCompleted"
+  | "vehicle.operatingInterval"
   | "trip.resumed"
   | "route.created"
   | "route.stopsUpdated"
