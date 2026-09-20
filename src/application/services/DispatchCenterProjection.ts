@@ -356,9 +356,9 @@ export class DispatchCenterProjection {
             )?.name ?? null,
       availableAtGameSecond: Number(vehicle.availableAtGameSecond),
       energyUnits: vehicle.energyUnits,
-      energyCapacityUnits: model.energyCapacityUnits,
+      energyCapacityUnits: vehicle.energyCapacityUnits,
       energyPermille:
-        model.energyCapacityUnits <= 0
+        vehicle.energyCapacityUnits <= 0
           ? 0
           : Math.max(
               0,
@@ -366,7 +366,7 @@ export class DispatchCenterProjection {
                 1000,
                 Math.floor(
                   (vehicle.energyUnits * 1000) /
-                    model.energyCapacityUnits
+                    vehicle.energyCapacityUnits
                 )
               )
             ),

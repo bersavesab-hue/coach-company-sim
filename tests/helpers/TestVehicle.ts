@@ -62,6 +62,9 @@ export function createTestOwnedVehicle(input: {
     id: input.id ?? ids.vehicle("vehicle.00000001"),
     companyId: input.companyId ?? ids.company("company.00000001"),
     modelId: input.modelId ?? ids.vehicleModel("vehicle_model.000001"),
+    configurationId: null,
+    seatCapacity: 20,
+    energyCapacityUnits: 100_000,
     mileageM: units.distanceM(mileage),
     energyUnits: input.energyUnits ?? 100_000,
     powertrainConditionPermille: units.permille(1000),
@@ -100,8 +103,7 @@ export function createTestVehicleRuntimeRepository(): VehicleRuntimeRepository {
 }
 
 export const zeroVehicleLifecyclePolicy: VehicleLifecyclePolicy = {
-  quotePurchase: () => ({
-    purchasePriceCents: units.moneyCents(0),
+  quoteInitialOwnershipTerms: () => ({
     residualValueCents: units.moneyCents(0),
     usefulLifeDays: 3650,
     initialInsuranceValidDays: 365,

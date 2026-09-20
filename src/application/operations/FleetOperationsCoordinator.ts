@@ -89,7 +89,7 @@ export class FleetOperationsCoordinator {
         const cost = task.quotedCostCents ?? units.moneyCents(0);
         const capacity = Math.max(
           0,
-          model.energyCapacityUnits - vehicle.energyUnits
+          vehicle.energyCapacityUnits - vehicle.energyUnits
         );
         const added = Math.min(task.energyUnits, capacity);
 

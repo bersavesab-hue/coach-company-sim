@@ -508,7 +508,7 @@ function handleStartBoarding(
     boarding.value,
     context.value.route,
     0,
-    model.seatCapacity,
+    resources.value.vehicle.seatCapacity,
     dependencies.repositories.passengerRuntime.get()
   );
 

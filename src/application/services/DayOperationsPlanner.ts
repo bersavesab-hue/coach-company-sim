@@ -600,7 +600,7 @@ export class DayOperationsPlanner {
       tripEnergyUnits +
       vehicleState.model.minimumDispatchEnergyUnits;
 
-    if (requiredEnergy > vehicleState.model.energyCapacityUnits) {
+    if (requiredEnergy > vehicleState.vehicle.energyCapacityUnits) {
       return null;
     }
 
