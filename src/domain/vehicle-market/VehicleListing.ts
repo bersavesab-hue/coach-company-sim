@@ -23,6 +23,9 @@ export type VehicleListingStatus =
 
 export interface UsedVehicleSnapshot {
   readonly mileageM: DistanceM;
+  readonly energyUnits: number;
+  readonly lastMaintenanceMileageM: DistanceM;
+  readonly nextMaintenanceMileageM: DistanceM;
   readonly registeredAtGameSecond: GameSecond;
   readonly insuranceValidUntilGameSecond: GameSecond;
   readonly inspectionValidUntilGameSecond: GameSecond;

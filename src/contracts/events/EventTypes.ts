@@ -1,6 +1,8 @@
 export type DomainEventType =
   | "company.created"
   | "vehicle.purchased"
+  | "vehicleMarket.configurationCreated"
+  | "vehicleMarket.listingPurchased"
   | "vehicle.energyPurchased"
   | "vehicle.energyConsumed"
   | "vehicle.sold"
