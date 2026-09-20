@@ -92,34 +92,42 @@ export class OperationsExecutionCoordinator {
       this.tryResumeRecoveredTrips(initial, gameSecond);
     }
 
-    for (const initial of this.repositories.operationsSchedules.findActive()) {
-      if (
-        initial.status === "replan_required" &&
-        initial.replanAtGameSecond !== null &&
-        Number(initial.replanAtGameSecond) <= Number(gameSecond)
-      ) {
-        this.commands.dispatch({
-          commandId: internalCommandId(
-            initial.companyId,
-            initial.gameDay,
-            initial.revision,
-            0,
-            "replan",
-            gameSecond
-          ),
-          type: "operations.replanDay",
-          issuedAtGameSecond: gameSecond,
-          actorCompanyId: initial.companyId,
-          payload: {
-            companyId: initial.companyId,
-            gameDay: initial.gameDay
-          }
-        });
-      }
-    }
+    this.replanDueSchedules(gameSecond);
 
     for (const schedule of this.repositories.operationsSchedules.findActive()) {
       this.executeScheduleDue(schedule, gameSecond);
+    }
+
+    this.replanDueSchedules(gameSecond);
+  }
+
+  private replanDueSchedules(gameSecond: GameSecond): void {
+    for (const schedule of this.repositories.operationsSchedules.findActive()) {
+      if (
+        schedule.status !== "replan_required" ||
+        schedule.replanAtGameSecond === null ||
+        Number(schedule.replanAtGameSecond) > Number(gameSecond)
+      ) {
+        continue;
+      }
+
+      this.commands.dispatch({
+        commandId: internalCommandId(
+          schedule.companyId,
+          schedule.gameDay,
+          schedule.revision,
+          0,
+          "replan",
+          gameSecond
+        ),
+        type: "operations.replanDay",
+        issuedAtGameSecond: gameSecond,
+        actorCompanyId: schedule.companyId,
+        payload: {
+          companyId: schedule.companyId,
+          gameDay: schedule.gameDay
+        }
+      });
     }
   }
 
