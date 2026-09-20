@@ -38,6 +38,102 @@ function fixture() {
     minimumDispatchEnergyUnits: 5_000
   });
 
+  const brandId = ids.vehicleBrand("vehicle_brand.000001");
+  const seriesId = ids.vehicleSeries("vehicle_series.000001");
+  const variantId = ids.vehicleVariant("vehicle_variant.000001");
+  const configurationId = ids.vehicleConfiguration(
+    "vehicle_configuration.000001"
+  );
+  const dealerId = ids.vehicleDealer("vehicle_dealer.000001");
+  const listingId = ids.vehicleListing("vehicle_listing.000001");
+
+  const vehicleMarket = createTestVehicleMarketRepository({
+    brands: [
+      {
+        id: brandId,
+        name: "测试牌",
+        originCode: "TEST",
+        active: true
+      }
+    ],
+    series: [
+      {
+        id: seriesId,
+        brandId,
+        name: "测试客车系列",
+        active: true
+      }
+    ],
+    modelIdentities: [
+      {
+        modelId: model.id,
+        seriesId,
+        displayName: "测试20座客车",
+        productionStartYear: 2025,
+        productionEndYear: null
+      }
+    ],
+    variants: [
+      {
+        id: variantId,
+        modelId: model.id,
+        name: "标准版",
+        modelYear: 2026,
+        basePriceCents: units.moneyCents(100_000),
+        standardSeatCapacity: 20,
+        standardEnergyCapacityUnits: 100_000,
+        standardLuggageCapacityL: 2_000,
+        standardComfortPermille: 500,
+        allowedOptionCodes: [],
+        active: true
+      }
+    ],
+    configurations: [
+      {
+        id: configurationId,
+        variantId,
+        createdByCompanyId: null,
+        customName: "标准配置",
+        selectedOptionCodes: [],
+        seatCapacity: 20,
+        energyCapacityUnits: 100_000,
+        luggageCapacityL: 2_000,
+        comfortPermille: 500,
+        priceAdjustmentCents: units.moneyCents(0),
+        exteriorColorCode: null,
+        liveryCode: null,
+        active: true
+      }
+    ],
+    dealers: [
+      {
+        id: dealerId,
+        name: "测试4S店",
+        kind: "manufacturer_dealer",
+        regionId: null,
+        supportedBrandIds: [brandId],
+        active: true
+      }
+    ],
+    listings: [
+      {
+        id: listingId,
+        dealerId,
+        kind: "new",
+        modelId: model.id,
+        variantId,
+        configurationId,
+        sellerCompanyId: null,
+        askingPriceCents: units.moneyCents(100_000),
+        stockCount: 1,
+        usedSnapshot: null,
+        availableFromGameSecond: units.gameSecond(0),
+        expiresAtGameSecond: null,
+        status: "available"
+      }
+    ]
+  });
+
   const company: Company = {
     id: companyId,
     name: "测试客运",
@@ -134,7 +230,7 @@ function fixture() {
       findRunning: () => [],
       save: () => undefined
     },
-    vehicleMarket: createTestVehicleMarketRepository(),
+    vehicleMarket,
     vehicleModels: {
       getById: (id) => id === model.id ? model : undefined
     },
@@ -187,8 +283,7 @@ function fixture() {
       companyDailyRegulatoryFeeCents: () => units.moneyCents(0)
     },
     vehicleLifecyclePolicy: {
-      quotePurchase: () => ({
-        purchasePriceCents: units.moneyCents(100_000),
+      quoteInitialOwnershipTerms: () => ({
         residualValueCents: units.moneyCents(20_000),
         usefulLifeDays: 3650,
         initialInsuranceValidDays: 365,
@@ -211,7 +306,16 @@ function fixture() {
     operationsPolicy: zeroOperationsPolicy
   });
 
-  return { app, repositories, companyId, stationId, model, vehicles };
+  return {
+    app,
+    repositories,
+    companyId,
+    stationId,
+    model,
+    listingId,
+    configurationId,
+    vehicles
+  };
 }
 
 function command<T>(
@@ -235,9 +339,10 @@ test("purchase, timed refuel, timed maintenance and sale form one audited lifecy
   const f = fixture();
 
   const purchased = await f.app.commands.dispatch(
-    command(1, "vehicle.purchase", f.companyId, {
+    command(1, "vehicleMarket.purchaseListing", f.companyId, {
       companyId: f.companyId,
-      vehicleModelId: f.model.id,
+      listingId: f.listingId,
+      configurationId: null,
       depotStationId: f.stationId
     })
   );
