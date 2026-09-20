@@ -40,6 +40,7 @@ import type { VehicleLifecyclePolicy } from "../policies/VehicleLifecyclePolicy.
 import type { VehicleMarketPolicy } from "../policies/VehicleMarketPolicy.js";
 import type { RepositoryBundle } from "../repositories/RepositoryBundle.js";
 import type { VehicleMarketValuationService } from "./VehicleMarketValuationService.js";
+import type { VehicleContentAccessService } from "./VehicleContentAccessService.js";
 
 export interface VehicleMarketTradingDependencies {
   readonly repositories: RepositoryBundle;
@@ -48,6 +49,7 @@ export interface VehicleMarketTradingDependencies {
   readonly lifecyclePolicy: VehicleLifecyclePolicy;
   readonly marketPolicy: VehicleMarketPolicy;
   readonly valuation: VehicleMarketValuationService;
+  readonly contentAccess: VehicleContentAccessService;
 }
 
 export interface VehicleMarketRefreshResult {
@@ -963,6 +965,25 @@ export class VehicleMarketTradingService {
         new DomainError(
           "INVALID_ARGUMENT",
           "Company cannot purchase its own listed vehicle"
+        )
+      );
+    }
+
+    const contentAccess = this.dependencies.contentAccess.evaluateModel(
+      payload.companyId,
+      listing.modelId,
+      command.issuedAtGameSecond
+    );
+    if (!contentAccess.unlocked) {
+      return err(
+        new DomainError(
+          "VEHICLE_MODEL_LOCKED",
+          "Vehicle model has not been unlocked by company progression",
+          {
+            modelId: listing.modelId,
+            unlockTier: contentAccess.tier,
+            missing: contentAccess.missing
+          }
         )
       );
     }

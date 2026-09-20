@@ -155,3 +155,8 @@ export * from "./application/policies/VehicleMarketPolicy.js";
 export * from "./application/services/VehicleMarketValuationService.js";
 export * from "./application/services/VehicleMarketTradingService.js";
 export * from "./application/vehicle-market/VehicleMarketCoordinator.js";
+export * from "./content/vehicle/VehicleContentTypes.js";
+export * from "./content/vehicle/VehicleBrandCatalog.js";
+export * from "./content/vehicle/VehicleSeriesCatalog.js";
+export * from "./content/vehicle/VehicleUnlockRules.js";
+export * from "./application/services/VehicleContentAccessService.js";

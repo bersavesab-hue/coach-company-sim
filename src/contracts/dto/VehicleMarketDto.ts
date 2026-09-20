@@ -25,6 +25,9 @@ export interface VehicleMarketListingDto {
   readonly variantId: VehicleVariantId;
   readonly variantName: string;
   readonly modelYear: number;
+  readonly unlockTier: number;
+  readonly purchaseUnlocked: boolean | null;
+  readonly unlockMissing: readonly ("game_day" | "reputation" | "fleet_size")[];
   readonly configurationId: VehicleConfigurationId | null;
   readonly configurationName: string | null;
   readonly askingPriceCents: number;

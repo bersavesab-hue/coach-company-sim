@@ -17,11 +17,13 @@ import type { VehicleListingKind } from "../../domain/vehicle-market/VehicleList
 import type { VehicleOptionDefinition } from "../../domain/vehicle-market/VehicleOptionDefinition.js";
 import type { RepositoryBundle } from "../repositories/RepositoryBundle.js";
 import type { VehicleMarketValuationService } from "./VehicleMarketValuationService.js";
+import type { VehicleContentAccessService } from "./VehicleContentAccessService.js";
 
 export class VehicleMarketProjection {
   constructor(
     private readonly repositories: RepositoryBundle,
-    private readonly valuation: VehicleMarketValuationService
+    private readonly valuation: VehicleMarketValuationService,
+    private readonly contentAccess: VehicleContentAccessService
   ) {}
 
   listings(
@@ -88,6 +90,15 @@ export class VehicleMarketProjection {
       const disclosure = listing.sellerDisclosure;
       const used = listing.usedSnapshot;
 
+      const unlock =
+        viewerCompanyId === undefined
+          ? null
+          : this.contentAccess.evaluateModel(
+              viewerCompanyId,
+              listing.modelId,
+              currentGameSecond
+            );
+
       result.push({
         listingId: listing.id,
         listingKind: listing.kind,
@@ -101,6 +112,9 @@ export class VehicleMarketProjection {
         variantId: variant.id,
         variantName: variant.name,
         modelYear: variant.modelYear,
+        unlockTier: unlock?.tier ?? this.contentAccess.tierForModel(listing.modelId),
+        purchaseUnlocked: unlock?.unlocked ?? null,
+        unlockMissing: unlock?.missing ?? [],
         configurationId: configuration?.id ?? null,
         configurationName: configuration?.customName ?? null,
         askingPriceCents: Number(listing.askingPriceCents),

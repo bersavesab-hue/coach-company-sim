@@ -26,6 +26,7 @@ import { OperationsScheduleService } from "../application/operations/OperationsS
 import { DayOperationsPlanner } from "../application/services/DayOperationsPlanner.js";
 import { DispatchCenterProjection } from "../application/services/DispatchCenterProjection.js";
 import { VehicleMarketProjection } from "../application/services/VehicleMarketProjection.js";
+import { VehicleContentAccessService } from "../application/services/VehicleContentAccessService.js";
 import { VehicleMarketTradingService } from "../application/services/VehicleMarketTradingService.js";
 import { VehicleMarketValuationService } from "../application/services/VehicleMarketValuationService.js";
 import { VehicleMarketCoordinator } from "../application/vehicle-market/VehicleMarketCoordinator.js";
@@ -56,6 +57,7 @@ export interface ApplicationRuntime {
   readonly operationsPlanner: DayOperationsPlanner;
   readonly dispatchCenter: DispatchCenterProjection;
   readonly vehicleMarket: VehicleMarketProjection;
+  readonly vehicleContentAccess: VehicleContentAccessService;
   readonly vehicleMarketValuation: VehicleMarketValuationService;
   readonly vehicleMarketTrading: VehicleMarketTradingService;
   readonly vehicleMarketCoordinator: VehicleMarketCoordinator;
@@ -100,6 +102,10 @@ export function createApplication(
     operationsPolicy: dependencies.operationsPolicy
   });
 
+  const vehicleContentAccess = new VehicleContentAccessService(
+    dependencies.repositories
+  );
+
   const vehicleMarketValuation = new VehicleMarketValuationService(
     dependencies.repositories,
     dependencies.vehicleMarketPolicy
@@ -111,7 +117,8 @@ export function createApplication(
     events,
     lifecyclePolicy: dependencies.vehicleLifecyclePolicy,
     marketPolicy: dependencies.vehicleMarketPolicy,
-    valuation: vehicleMarketValuation
+    valuation: vehicleMarketValuation,
+    contentAccess: vehicleContentAccess
   });
 
   const vehicleMarketCoordinator = new VehicleMarketCoordinator(
@@ -182,7 +189,8 @@ export function createApplication(
 
   const vehicleMarket = new VehicleMarketProjection(
     dependencies.repositories,
-    vehicleMarketValuation
+    vehicleMarketValuation,
+    vehicleContentAccess
   );
   registerVehicleMarketQueries(queries, vehicleMarket);
 
@@ -223,6 +231,7 @@ export function createApplication(
     operationsPlanner,
     dispatchCenter,
     vehicleMarket,
+    vehicleContentAccess,
     vehicleMarketValuation,
     vehicleMarketTrading,
     vehicleMarketCoordinator,
