@@ -4,7 +4,8 @@ import type {
   StaffId,
   StationId,
   TripId,
-  VehicleId
+  VehicleId,
+  RoadSegmentId
 } from "../../contracts/ids/EntityIds.js";
 import { ids } from "../../contracts/ids/EntityIds.js";
 import type { DomainEventEnvelope } from "../../contracts/events/DomainEventEnvelope.js";
@@ -58,7 +59,7 @@ interface OperatingIntervalPayload {
   readonly idleSeconds: number;
   readonly distanceTraveledM: number;
   readonly roadUsage: readonly {
-    readonly roadSegmentId: string;
+    readonly roadSegmentId: RoadSegmentId;
     readonly distanceM: number;
   }[];
 }
@@ -171,13 +172,16 @@ export class FinanceCoordinator {
 
     if (grossFareCents > 0) {
       const gross = units.moneyCents(grossFareCents);
-      const tax = this.policy.ticketTaxCents(
+      const rawTax = this.policy.ticketTaxCents(
         gross,
         route.id,
         event.gameSecond
       );
+      const tax = units.moneyCents(
+        Math.min(grossFareCents, Number(rawTax))
+      );
       const net = units.moneyCents(
-        Math.max(0, grossFareCents - Number(tax))
+        grossFareCents - Number(tax)
       );
 
       const postings: LedgerPosting[] = [debit("cash", gross)];
@@ -359,7 +363,7 @@ export class FinanceCoordinator {
 
     for (const usage of payload.roadUsage) {
       const road = this.repositories.world.get().getRoad(
-        usage.roadSegmentId as never
+        usage.roadSegmentId
       );
       if (!road) continue;
 

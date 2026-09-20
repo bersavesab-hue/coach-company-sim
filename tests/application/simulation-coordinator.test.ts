@@ -25,6 +25,8 @@ import type { VehicleModel } from "../../src/domain/vehicle/VehicleModel.js";
 import { WorldGraph } from "../../src/domain/world/WorldGraph.js";
 import { WorldRuntimeState } from "../../src/domain/world/WorldRuntimeState.js";
 import { DomainEventBus } from "../../src/application/events/DomainEventBus.js";
+import { FinanceCoordinator } from "../../src/application/finance/FinanceCoordinator.js";
+import { createTestFinanceRepository, zeroEconomicPolicy } from "../helpers/TestFinance.js";
 import type { RepositoryBundle } from "../../src/application/repositories/RepositoryBundle.js";
 import { SimulationCoordinator } from "../../src/application/simulation/SimulationCoordinator.js";
 import { VehicleSpatialIndex } from "../../src/application/spatial/VehicleSpatialIndex.js";
@@ -184,6 +186,7 @@ function fixture() {
       getById: (id) => companies.get(id),
       save: (value) => companies.set(value.id, value)
     },
+    finance: createTestFinanceRepository(),
     passengerDemand: { all: () => [] },
     passengerRuntime: {
       get: () => passengerRuntime,
@@ -234,12 +237,20 @@ function fixture() {
 
   const events = new DomainEventBus();
   const index = new VehicleSpatialIndex();
+  const finance = new FinanceCoordinator(
+    repositories,
+    events,
+    zeroEconomicPolicy
+  );
+  finance.initialize();
+
   const simulation = new SimulationCoordinator(
     repositories,
     events,
     {
       frequencyMultiplierPermille: () => units.permille(1000)
     },
+    finance,
     index
   );
   simulation.rebuildVehicleIndex();
@@ -292,6 +303,7 @@ test("final stop alights passengers, releases resources and completes trip", () 
     "available"
   );
   assert.deepEqual(eventTypes, [
+    "trip.operatingInterval",
     "trip.arrivedAtStop",
     "passengers.alighted",
     "trip.completed"

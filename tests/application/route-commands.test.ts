@@ -21,6 +21,7 @@ import { WorldRuntimeState } from "../../src/domain/world/WorldRuntimeState.js";
 import { createApplication } from "../../src/bootstrap/createApplication.js";
 import type { RepositoryBundle } from "../../src/application/repositories/RepositoryBundle.js";
 import type { RuntimeIdAllocator } from "../../src/application/ids/RuntimeIdAllocator.js";
+import { createTestFinanceRepository, zeroEconomicPolicy } from "../helpers/TestFinance.js";
 
 function buildFixture(companyLicenses = [ids.license("license.000001")]) {
   const regionId = ids.region("region.000001");
@@ -108,6 +109,7 @@ function buildFixture(companyLicenses = [ids.license("license.000001")]) {
       getById: (id) => companies.get(id),
       save: (value) => companies.set(value.id, value)
     },
+    finance: createTestFinanceRepository(),
     passengerDemand: {
       all: () => []
     },
@@ -179,7 +181,8 @@ function buildFixture(companyLicenses = [ids.license("license.000001")]) {
     ids: allocator,
     passengerDemandPolicy: {
       frequencyMultiplierPermille: () => units.permille(1000)
-    }
+    },
+    economicPolicy: zeroEconomicPolicy
   });
 
   return { app, company, s1, s2 };

@@ -7,6 +7,7 @@ export * from "./contracts/events/EventTypes.js";
 export * from "./contracts/dto/CommonDto.js";
 export * from "./contracts/dto/MapDto.js";
 export * from "./contracts/dto/PassengerDto.js";
+export * from "./contracts/dto/FinanceDto.js";
 
 export * from "./core/units/Units.js";
 export * from "./core/time/GameClock.js";
@@ -28,6 +29,15 @@ export * from "./domain/world/WorldRuntimeState.js";
 export * from "./domain/world/WorldGraph.js";
 export * from "./domain/world/RoutingCost.js";
 export * from "./domain/world/PathFinder.js";
+
+export * from "./domain/finance/FinanceAccount.js";
+export * from "./domain/finance/LedgerEntry.js";
+export * from "./domain/finance/LedgerMath.js";
+export * from "./domain/finance/FarePolicy.js";
+export * from "./domain/finance/FareCalculator.js";
+export * from "./domain/finance/FinancialProfiles.js";
+export * from "./domain/finance/FinanceRuntimeState.js";
+export * from "./domain/finance/ManagementCostEntry.js";
 
 export * from "./domain/passenger/PassengerDemandProfile.js";
 export * from "./domain/passenger/PassengerRuntimeState.js";
@@ -57,6 +67,7 @@ export * from "./domain/staff/DriverAssignmentRules.js";
 export * from "./domain/company/CompanyStatus.js";
 export * from "./domain/company/Company.js";
 
+export * from "./simulation/finance/EconomicPolicy.js";
 export * from "./simulation/tiering/SimulationTier.js";
 export * from "./simulation/movement/TripMovement.js";
 export * from "./simulation/movement/TripWorldPosition.js";
@@ -70,11 +81,14 @@ export * from "./application/commands/route/RouteCommands.js";
 export * from "./application/commands/schedule/ServicePlanCommands.js";
 export * from "./application/commands/trip/TripCommands.js";
 export * from "./application/events/DomainEventBus.js";
+export * from "./application/finance/FinanceCoordinator.js";
 export * from "./application/ids/RuntimeIdAllocator.js";
+export * from "./application/queries/finance/FinanceQueries.js";
 export * from "./application/queries/map/MapQueries.js";
 export * from "./application/queries/passenger/PassengerQueries.js";
 export * from "./application/repositories/PassengerDemandRepository.js";
 export * from "./application/repositories/PassengerRuntimeRepository.js";
+export * from "./application/repositories/FinanceRepository.js";
 export * from "./application/repositories/RepositoryBundle.js";
 export * from "./application/repositories/StationRepository.js";
 export * from "./application/repositories/StaffRepository.js";

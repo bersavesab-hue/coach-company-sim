@@ -363,6 +363,7 @@ function handleStartBoarding(
           tripId: flow.trip.id,
           stationId: context.value.route.stopPoints[0]!.stationId,
           count: flow.boardedCount,
+          boardedGroups: flow.boardedGroups,
           leftWaitingCount: flow.leftWaitingCount
         },
         2
