@@ -1,11 +1,15 @@
 import type {
+  CompanyId,
+  VehicleAuctionId,
   VehicleConfigurationId,
   VehicleDealerId,
+  VehicleInspectionReportId,
   VehicleListingId,
   VehicleModelId,
   VehicleVariantId
 } from "../ids/EntityIds.js";
 import type { VehicleDealerKind } from "../../domain/vehicle-market/VehicleDealer.js";
+import type { VehicleInspectionLevel } from "../../domain/vehicle-market/VehicleInspectionReport.js";
 import type { VehicleListingKind } from "../../domain/vehicle-market/VehicleListing.js";
 
 export interface VehicleMarketListingDto {
@@ -29,13 +33,18 @@ export interface VehicleMarketListingDto {
   readonly energyCapacityUnits: number | null;
   readonly luggageCapacityL: number | null;
   readonly comfortPermille: number | null;
-  readonly mileageM: number | null;
-  readonly powertrainConditionPermille: number | null;
-  readonly brakeConditionPermille: number | null;
-  readonly tireConditionPermille: number | null;
-  readonly bodyConditionPermille: number | null;
+  readonly reportedMileageM: number | null;
+  readonly reportedConditionPermille: number | null;
+  readonly reportedAccidentCount: number | null;
   readonly previousOwnerCount: number | null;
-  readonly recordedAccidentCount: number | null;
+  readonly reservationStatus:
+    | "none"
+    | "reserved_for_you"
+    | "reserved_for_other";
+  readonly yourAgreedPriceCents: number | null;
+  readonly auctionId: VehicleAuctionId | null;
+  readonly auctionStatus: "scheduled" | "open" | null;
+  readonly highestBidCents: number | null;
 }
 
 export interface VehicleConfiguratorOptionDto {
@@ -60,4 +69,36 @@ export interface VehicleConfiguratorDto {
   readonly standardLuggageCapacityL: number;
   readonly standardComfortPermille: number;
   readonly options: readonly VehicleConfiguratorOptionDto[];
+}
+
+export interface VehicleMarketValuationDto {
+  readonly fairMarketValueCents: number;
+  readonly dealerBuyOfferCents: number;
+  readonly suggestedAskingPriceCents: number;
+}
+
+export interface VehicleInspectionReportDto {
+  readonly inspectionReportId: VehicleInspectionReportId;
+  readonly listingId: VehicleListingId;
+  readonly level: VehicleInspectionLevel;
+  readonly inspectedAtGameSecond: number;
+  readonly costCents: number;
+  readonly mileageVerified: boolean;
+  readonly verifiedMileageM: number | null;
+  readonly mechanicalConditionPermille: number;
+  readonly bodyConditionPermille: number;
+  readonly accidentEvidenceCount: number | null;
+  readonly disclosureMismatch: boolean;
+}
+
+export interface VehicleAuctionDto {
+  readonly auctionId: VehicleAuctionId;
+  readonly listingId: VehicleListingId;
+  readonly sellerCompanyId: CompanyId;
+  readonly startsAtGameSecond: number;
+  readonly endsAtGameSecond: number;
+  readonly reservePriceCents: number | null;
+  readonly highestBidCents: number | null;
+  readonly highestBidderCompanyId: CompanyId | null;
+  readonly status: string;
 }

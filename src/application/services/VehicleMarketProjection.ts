@@ -1,21 +1,33 @@
 import type {
+  VehicleAuctionDto,
   VehicleConfiguratorDto,
-  VehicleMarketListingDto
+  VehicleInspectionReportDto,
+  VehicleMarketListingDto,
+  VehicleMarketValuationDto
 } from "../../contracts/dto/VehicleMarketDto.js";
-import type { VehicleVariantId } from "../../contracts/ids/EntityIds.js";
+import type {
+  CompanyId,
+  VehicleDealerId,
+  VehicleListingId,
+  VehicleVariantId,
+  VehicleId
+} from "../../contracts/ids/EntityIds.js";
 import type { GameSecond } from "../../core/units/Units.js";
 import type { VehicleListingKind } from "../../domain/vehicle-market/VehicleListing.js";
 import type { VehicleOptionDefinition } from "../../domain/vehicle-market/VehicleOptionDefinition.js";
 import type { RepositoryBundle } from "../repositories/RepositoryBundle.js";
+import type { VehicleMarketValuationService } from "./VehicleMarketValuationService.js";
 
 export class VehicleMarketProjection {
   constructor(
-    private readonly repositories: RepositoryBundle
+    private readonly repositories: RepositoryBundle,
+    private readonly valuation: VehicleMarketValuationService
   ) {}
 
   listings(
     currentGameSecond: GameSecond,
-    listingKind: VehicleListingKind | null
+    listingKind: VehicleListingKind | null,
+    viewerCompanyId?: CompanyId
   ): readonly VehicleMarketListingDto[] {
     const result: VehicleMarketListingDto[] = [];
 
@@ -58,6 +70,24 @@ export class VehicleMarketProjection {
         continue;
       }
 
+      const reservation =
+        listing.reservation !== null &&
+        Number(listing.reservation.expiresAtGameSecond) >
+          Number(currentGameSecond)
+          ? listing.reservation
+          : null;
+
+      const auction = this.repositories.vehicleMarket
+        .findAuctions()
+        .find(
+          (value) =>
+            value.listingId === listing.id &&
+            (value.status === "scheduled" || value.status === "open")
+        );
+
+      const disclosure = listing.sellerDisclosure;
+      const used = listing.usedSnapshot;
+
       result.push({
         listingId: listing.id,
         listingKind: listing.kind,
@@ -87,30 +117,38 @@ export class VehicleMarketProjection {
         comfortPermille:
           configuration?.comfortPermille ??
           variant.standardComfortPermille,
-        mileageM:
-          listing.usedSnapshot === null
+        reportedMileageM:
+          disclosure !== null
+            ? Number(disclosure.reportedMileageM)
+            : used === null
+              ? null
+              : Number(used.mileageM),
+        reportedConditionPermille:
+          disclosure?.reportedConditionPermille === null ||
+          disclosure?.reportedConditionPermille === undefined
             ? null
-            : Number(listing.usedSnapshot.mileageM),
-        powertrainConditionPermille:
-          listing.usedSnapshot === null
+            : Number(disclosure.reportedConditionPermille),
+        reportedAccidentCount:
+          disclosure?.reportedAccidentCount ?? null,
+        previousOwnerCount: used?.previousOwnerCount ?? null,
+        reservationStatus:
+          reservation === null
+            ? "none"
+            : reservation.buyerCompanyId === viewerCompanyId
+              ? "reserved_for_you"
+              : "reserved_for_other",
+        yourAgreedPriceCents:
+          reservation !== null &&
+          reservation.buyerCompanyId === viewerCompanyId
+            ? Number(reservation.agreedPriceCents)
+            : null,
+        auctionId: auction?.id ?? null,
+        auctionStatus: auction?.status ?? null,
+        highestBidCents:
+          auction?.highestBidCents === null ||
+          auction?.highestBidCents === undefined
             ? null
-            : Number(listing.usedSnapshot.powertrainConditionPermille),
-        brakeConditionPermille:
-          listing.usedSnapshot === null
-            ? null
-            : Number(listing.usedSnapshot.brakeConditionPermille),
-        tireConditionPermille:
-          listing.usedSnapshot === null
-            ? null
-            : Number(listing.usedSnapshot.tireConditionPermille),
-        bodyConditionPermille:
-          listing.usedSnapshot === null
-            ? null
-            : Number(listing.usedSnapshot.bodyConditionPermille),
-        previousOwnerCount:
-          listing.usedSnapshot?.previousOwnerCount ?? null,
-        recordedAccidentCount:
-          listing.usedSnapshot?.recordedAccidentCount ?? null
+            : Number(auction.highestBidCents)
       });
     }
 
@@ -119,6 +157,95 @@ export class VehicleMarketProjection {
         a.askingPriceCents - b.askingPriceCents ||
         String(a.listingId).localeCompare(String(b.listingId))
     );
+  }
+
+  valuationForOwnedVehicle(
+    vehicleId: VehicleId,
+    dealerId: VehicleDealerId,
+    currentGameSecond: GameSecond
+  ): VehicleMarketValuationDto | null {
+    const result = this.valuation.estimateOwnedVehicle(
+      vehicleId,
+      dealerId,
+      currentGameSecond
+    );
+    if (!result.ok) return null;
+    return {
+      fairMarketValueCents: Number(
+        result.value.fairMarketValueCents
+      ),
+      dealerBuyOfferCents: Number(
+        result.value.dealerBuyOfferCents
+      ),
+      suggestedAskingPriceCents: Number(
+        result.value.suggestedAskingPriceCents
+      )
+    };
+  }
+
+  inspections(
+    companyId: CompanyId,
+    listingId: VehicleListingId
+  ): readonly VehicleInspectionReportDto[] {
+    return this.repositories.vehicleMarket
+      .findInspectionReportsByListing(listingId)
+      .filter(
+        (report) => report.requestedByCompanyId === companyId
+      )
+      .sort(
+        (a, b) =>
+          Number(b.inspectedAtGameSecond) -
+          Number(a.inspectedAtGameSecond)
+      )
+      .map((report) => ({
+        inspectionReportId: report.id,
+        listingId: report.listingId,
+        level: report.level,
+        inspectedAtGameSecond: Number(
+          report.inspectedAtGameSecond
+        ),
+        costCents: Number(report.costCents),
+        mileageVerified: report.mileageVerified,
+        verifiedMileageM: report.verifiedMileageM,
+        mechanicalConditionPermille: Number(
+          report.mechanicalConditionPermille
+        ),
+        bodyConditionPermille: Number(
+          report.bodyConditionPermille
+        ),
+        accidentEvidenceCount: report.accidentEvidenceCount,
+        disclosureMismatch: report.disclosureMismatch
+      }));
+  }
+
+  auctions(
+    companyId: CompanyId
+  ): readonly VehicleAuctionDto[] {
+    return this.repositories.vehicleMarket
+      .findAuctions()
+      .map((auction) => ({
+        auctionId: auction.id,
+        listingId: auction.listingId,
+        sellerCompanyId: auction.sellerCompanyId,
+        startsAtGameSecond: Number(auction.startsAtGameSecond),
+        endsAtGameSecond: Number(auction.endsAtGameSecond),
+        reservePriceCents:
+          auction.sellerCompanyId === companyId
+            ? Number(auction.reservePriceCents)
+            : null,
+        highestBidCents:
+          auction.highestBidCents === null
+            ? null
+            : Number(auction.highestBidCents),
+        highestBidderCompanyId:
+          auction.highestBidderCompanyId,
+        status: auction.status
+      }))
+      .sort(
+        (a, b) =>
+          a.endsAtGameSecond - b.endsAtGameSecond ||
+          String(a.auctionId).localeCompare(String(b.auctionId))
+      );
   }
 
   configurator(

@@ -181,7 +181,8 @@ export function createApplication(
   registerVehicleQueries(queries, dependencies.repositories);
 
   const vehicleMarket = new VehicleMarketProjection(
-    dependencies.repositories
+    dependencies.repositories,
+    vehicleMarketValuation
   );
   registerVehicleMarketQueries(queries, vehicleMarket);
 
