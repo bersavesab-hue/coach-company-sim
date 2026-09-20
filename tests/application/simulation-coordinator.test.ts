@@ -14,6 +14,7 @@ import {
 } from "../../src/contracts/ids/EntityIds.js";
 import { units } from "../../src/core/units/Units.js";
 import type { Company } from "../../src/domain/company/Company.js";
+import { PassengerRuntimeState } from "../../src/domain/passenger/PassengerRuntimeState.js";
 import type { PassengerRoute } from "../../src/domain/route/PassengerRoute.js";
 import type { ServicePlan } from "../../src/domain/schedule/ServicePlan.js";
 import type { Driver } from "../../src/domain/staff/Driver.js";
@@ -23,8 +24,8 @@ import type { OwnedVehicle } from "../../src/domain/vehicle/OwnedVehicle.js";
 import type { VehicleModel } from "../../src/domain/vehicle/VehicleModel.js";
 import { WorldGraph } from "../../src/domain/world/WorldGraph.js";
 import { WorldRuntimeState } from "../../src/domain/world/WorldRuntimeState.js";
-import type { RepositoryBundle } from "../../src/application/repositories/RepositoryBundle.js";
 import { DomainEventBus } from "../../src/application/events/DomainEventBus.js";
+import type { RepositoryBundle } from "../../src/application/repositories/RepositoryBundle.js";
 import { SimulationCoordinator } from "../../src/application/simulation/SimulationCoordinator.js";
 import { VehicleSpatialIndex } from "../../src/application/spatial/VehicleSpatialIndex.js";
 
@@ -36,6 +37,8 @@ function fixture() {
   const driverId = ids.staff("staff.00000001");
   const modelId = ids.vehicleModel("vehicle_model.000001");
   const regionId = ids.region("region.000001");
+  const stationA = ids.station("station.000001");
+  const stationB = ids.station("station.000002");
   const a = ids.worldNode("location.000001");
   const b = ids.worldNode("location.000002");
   const roadId = ids.roadSegment("road.000001");
@@ -86,9 +89,9 @@ function fixture() {
     companyId,
     code: "K01",
     type: "county",
-    orderedStationIds: [
-      ids.station("station.000001"),
-      ids.station("station.000002")
+    stopPoints: [
+      { stationId: stationA, pathLegBoundaryIndex: 0 },
+      { stationId: stationB, pathLegBoundaryIndex: 1 }
     ],
     pathLegs: [
       {
@@ -130,6 +133,7 @@ function fixture() {
   const model: VehicleModel = {
     id: modelId,
     serviceClass: "county_midibus",
+    seatCapacity: 20,
     maxSpeedMps: units.speedMps(20),
     active: true
   };
@@ -158,7 +162,9 @@ function fixture() {
       offsetOnSegmentM: units.distanceM(0),
       lastUpdatedGameSecond: units.gameSecond(0)
     },
-    onboardPassengerCount: 0,
+    onboardPassengerGroups: [
+      { destinationStationId: stationB, count: 5 }
+    ],
     delaySeconds: units.gameSecond(0)
   };
 
@@ -171,15 +177,22 @@ function fixture() {
   const drivers = new Map<StaffId, Driver>([[driverId, driver]]);
   const stations = new Map<StationId, Station>();
   const runtime = new WorldRuntimeState();
+  const passengerRuntime = new PassengerRuntimeState();
 
   const repositories: RepositoryBundle = {
     companies: {
       getById: (id) => companies.get(id),
       save: (value) => companies.set(value.id, value)
     },
+    passengerDemand: { all: () => [] },
+    passengerRuntime: {
+      get: () => passengerRuntime,
+      replace: (_state) => undefined
+    },
     routes: {
       getById: (id) => routes.get(id),
       findByCompanyAndCode: () => undefined,
+      findActive: () => [...routes.values()],
       save: (value) => routes.set(value.id, value)
     },
     servicePlans: {
@@ -221,7 +234,14 @@ function fixture() {
 
   const events = new DomainEventBus();
   const index = new VehicleSpatialIndex();
-  const simulation = new SimulationCoordinator(repositories, events, index);
+  const simulation = new SimulationCoordinator(
+    repositories,
+    events,
+    {
+      frequencyMultiplierPermille: () => units.permille(1000)
+    },
+    index
+  );
   simulation.rebuildVehicleIndex();
 
   return {
@@ -251,7 +271,7 @@ test("tier cadence can defer background work without changing movement rules", (
   assert.deepEqual(advanced.completedTripIds, [f.tripId]);
 });
 
-test("completed trip releases vehicle/driver and emits trip.completed", () => {
+test("final stop alights passengers, releases resources and completes trip", () => {
   const f = fixture();
   const eventTypes: string[] = [];
   f.events.subscribe((event) => eventTypes.push(event.type));
@@ -260,6 +280,10 @@ test("completed trip releases vehicle/driver and emits trip.completed", () => {
 
   assert.deepEqual(report.completedTripIds, [f.tripId]);
   assert.equal(
+    f.repositories.trips.getById(f.tripId)?.onboardPassengerGroups.length,
+    0
+  );
+  assert.equal(
     f.repositories.vehicles.getById(f.vehicleId)?.status,
     "available"
   );
@@ -267,7 +291,11 @@ test("completed trip releases vehicle/driver and emits trip.completed", () => {
     f.repositories.staff.getDriverById(f.driverId)?.status,
     "available"
   );
-  assert.deepEqual(eventTypes, ["trip.completed"]);
+  assert.deepEqual(eventTypes, [
+    "trip.arrivedAtStop",
+    "passengers.alighted",
+    "trip.completed"
+  ]);
   assert.deepEqual(
     f.index.query({ minXM: 0, minYM: -10, maxXM: 200, maxYM: 10 }),
     []

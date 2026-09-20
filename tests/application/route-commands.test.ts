@@ -10,6 +10,7 @@ import {
 } from "../../src/contracts/ids/EntityIds.js";
 import { units } from "../../src/core/units/Units.js";
 import type { Company } from "../../src/domain/company/Company.js";
+import { PassengerRuntimeState } from "../../src/domain/passenger/PassengerRuntimeState.js";
 import type { PassengerRoute } from "../../src/domain/route/PassengerRoute.js";
 import type { ServicePlan } from "../../src/domain/schedule/ServicePlan.js";
 import type { Station } from "../../src/domain/station/Station.js";
@@ -70,7 +71,6 @@ function buildFixture(companyLicenses = [ids.license("license.000001")]) {
       }
     ]
   );
-
   if (!graphResult.ok) throw graphResult.error;
 
   const company: Company = {
@@ -89,7 +89,6 @@ function buildFixture(companyLicenses = [ids.license("license.000001")]) {
     ownerCompanyId: null,
     status: "active"
   };
-
   const s2: Station = {
     id: ids.station("station.000002"),
     name: "C站",
@@ -101,11 +100,20 @@ function buildFixture(companyLicenses = [ids.license("license.000001")]) {
   const companies = new Map<CompanyId, Company>([[company.id, company]]);
   const stations = new Map<StationId, Station>([[s1.id, s1], [s2.id, s2]]);
   const routes = new Map<RouteId, PassengerRoute>();
+  const passengerRuntime = new PassengerRuntimeState();
+  const worldRuntime = new WorldRuntimeState();
 
   const repositories: RepositoryBundle = {
     companies: {
       getById: (id) => companies.get(id),
       save: (value) => companies.set(value.id, value)
+    },
+    passengerDemand: {
+      all: () => []
+    },
+    passengerRuntime: {
+      get: () => passengerRuntime,
+      replace: (_state) => undefined
     },
     routes: {
       getById: (id) => routes.get(id),
@@ -113,6 +121,8 @@ function buildFixture(companyLicenses = [ids.license("license.000001")]) {
         [...routes.values()].find(
           (route) => route.companyId === companyId && route.code === code
         ),
+      findActive: () =>
+        [...routes.values()].filter((route) => route.status === "active"),
       save: (route) => routes.set(route.id, route)
     },
     servicePlans: {
@@ -145,7 +155,7 @@ function buildFixture(companyLicenses = [ids.license("license.000001")]) {
       replace: (_world) => undefined
     },
     worldRuntime: {
-      get: () => new WorldRuntimeState(),
+      get: () => worldRuntime,
       replace: (_state) => undefined
     }
   };
@@ -164,7 +174,13 @@ function buildFixture(companyLicenses = [ids.license("license.000001")]) {
     }
   };
 
-  const app = createApplication({ repositories, ids: allocator });
+  const app = createApplication({
+    repositories,
+    ids: allocator,
+    passengerDemandPolicy: {
+      frequencyMultiplierPermille: () => units.permille(1000)
+    }
+  });
 
   return { app, company, s1, s2 };
 }
@@ -184,7 +200,7 @@ function command<T>(
   };
 }
 
-test("route.create builds a direction-aware official road path", async () => {
+test("route.create builds stop boundaries and direction-aware road path", async () => {
   const { app, company, s1, s2 } = buildFixture();
 
   const result = await app.commands.dispatch(
@@ -205,4 +221,8 @@ test("route.create builds a direction-aware official road path", async () => {
   const route = result.value as PassengerRoute;
   assert.equal(route.pathLegs.length, 2);
   assert.equal(route.pathLegs[0]?.direction, "forward");
+  assert.deepEqual(
+    route.stopPoints.map((stop) => stop.pathLegBoundaryIndex),
+    [0, 2]
+  );
 });

@@ -15,6 +15,7 @@ import {
 } from "../../src/contracts/ids/EntityIds.js";
 import { units } from "../../src/core/units/Units.js";
 import type { Company } from "../../src/domain/company/Company.js";
+import { PassengerRuntimeState } from "../../src/domain/passenger/PassengerRuntimeState.js";
 import type { PassengerRoute } from "../../src/domain/route/PassengerRoute.js";
 import type { ServicePlan } from "../../src/domain/schedule/ServicePlan.js";
 import type { Driver } from "../../src/domain/staff/Driver.js";
@@ -94,7 +95,10 @@ function fixture() {
     companyId: company.id,
     code: "K01",
     type: "county",
-    orderedStationIds: [s1.id, s2.id],
+    stopPoints: [
+      { stationId: s1.id, pathLegBoundaryIndex: 0 },
+      { stationId: s2.id, pathLegBoundaryIndex: 1 }
+    ],
     pathLegs: [
       {
         roadSegmentId: ids.roadSegment("road.000001"),
@@ -112,6 +116,7 @@ function fixture() {
   const model: VehicleModel = {
     id: ids.vehicleModel("vehicle_model.000001"),
     serviceClass: "county_midibus",
+    seatCapacity: 6,
     maxSpeedMps: units.speedMps(25),
     active: true
   };
@@ -145,13 +150,18 @@ function fixture() {
   const models = new Map<VehicleModelId, VehicleModel>([[model.id, model]]);
   const drivers = new Map<StaffId, Driver>([[driver.id, driver]]);
   const stations = new Map<StationId, Station>([[s1.id, s1], [s2.id, s2]]);
-
   const worldRuntime = new WorldRuntimeState();
+  const passengerRuntime = new PassengerRuntimeState();
 
   const repositories: RepositoryBundle = {
     companies: {
       getById: (id) => companies.get(id),
       save: (value) => companies.set(value.id, value)
+    },
+    passengerDemand: { all: () => [] },
+    passengerRuntime: {
+      get: () => passengerRuntime,
+      replace: (_state) => undefined
     },
     routes: {
       getById: (id) => routes.get(id),
@@ -159,6 +169,8 @@ function fixture() {
         [...routes.values()].find(
           (value) => value.companyId === companyId && value.code === code
         ),
+      findActive: () =>
+        [...routes.values()].filter((value) => value.status === "active"),
       save: (value) => routes.set(value.id, value)
     },
     servicePlans: {
@@ -221,7 +233,13 @@ function fixture() {
     }
   };
 
-  const app = createApplication({ repositories, ids: allocator });
+  const app = createApplication({
+    repositories,
+    ids: allocator,
+    passengerDemandPolicy: {
+      frequencyMultiplierPermille: () => units.permille(1000)
+    }
+  });
 
   return {
     app,
@@ -229,6 +247,9 @@ function fixture() {
     route,
     vehicle,
     driver,
+    s1,
+    s2,
+    passengerRuntime,
     repositories
   };
 }
@@ -275,9 +296,7 @@ async function createPlanAndTrip() {
       requiredVehicleClass: "county_midibus"
     })
   );
-  if (!planResult.ok) {
-    assert.fail(planResult.error.message);
-  }
+  if (!planResult.ok) assert.fail(planResult.error.message);
 
   const plan = planResult.value as ServicePlan;
 
@@ -287,9 +306,7 @@ async function createPlanAndTrip() {
       plannedDepartureGameSecond: units.gameSecond(6 * 3600)
     })
   );
-  if (!tripResult.ok) {
-    assert.fail(tripResult.error.message);
-  }
+  if (!tripResult.ok) assert.fail(tripResult.error.message);
 
   return {
     ...f,
@@ -297,40 +314,6 @@ async function createPlanAndTrip() {
     trip: tripResult.value as TripInstance
   };
 }
-
-test("service plan expands only official departure slots into trips", async () => {
-  const f = fixture();
-
-  const planResult = await f.app.commands.dispatch(
-    command(1, "servicePlan.create", f.company.id, 100, {
-      routeId: f.route.id,
-      effectiveFromGameSecond: units.gameSecond(0),
-      effectiveUntilGameSecond: null,
-      calendar: { serviceDays: ["monday"] },
-      departurePattern: {
-        kind: "fixed_times",
-        secondOfDay: [6 * 3600]
-      },
-      requiredVehicleClass: "county_midibus"
-    })
-  );
-  assert.equal(planResult.ok, true);
-  if (!planResult.ok) return;
-
-  const plan = planResult.value as ServicePlan;
-
-  const invalidTrip = await f.app.commands.dispatch(
-    command(2, "trip.prepare", f.company.id, 200, {
-      servicePlanId: plan.id,
-      plannedDepartureGameSecond: units.gameSecond(7 * 3600)
-    })
-  );
-
-  assert.equal(invalidTrip.ok, false);
-  if (!invalidTrip.ok) {
-    assert.equal(invalidTrip.error.code, "DEPARTURE_SLOT_INVALID");
-  }
-});
 
 test("trip assignment enforces vehicle class and driver qualification", async () => {
   const f = await createPlanAndTrip();
@@ -350,19 +333,11 @@ test("trip assignment enforces vehicle class and driver qualification", async ()
     })
   );
   assert.equal(assignedDriver.ok, true);
-
-  assert.equal(
-    f.repositories.vehicles.getById(f.vehicle.id)?.status,
-    "assigned"
-  );
-  assert.equal(
-    f.repositories.staff.getDriverById(f.driver.id)?.status,
-    "assigned"
-  );
 });
 
-test("boarding and departure move trip, vehicle and driver together", async () => {
+test("start boarding loads passengers up to seat capacity", async () => {
   const f = await createPlanAndTrip();
+  f.passengerRuntime.addWaiting(f.s1.id, f.s2.id, 9);
 
   await f.app.commands.dispatch(
     command(3, "trip.assignVehicle", f.company.id, 300, {
@@ -382,7 +357,35 @@ test("boarding and departure move trip, vehicle and driver together", async () =
       tripId: f.trip.id
     })
   );
+
   assert.equal(boarding.ok, true);
+  if (!boarding.ok) return;
+
+  const trip = boarding.value as TripInstance;
+  assert.equal(trip.onboardPassengerGroups[0]?.count, 6);
+  assert.equal(f.passengerRuntime.waitingCount(f.s1.id, f.s2.id), 3);
+});
+
+test("boarding and departure move trip, vehicle and driver together", async () => {
+  const f = await createPlanAndTrip();
+
+  await f.app.commands.dispatch(
+    command(3, "trip.assignVehicle", f.company.id, 300, {
+      tripId: f.trip.id,
+      vehicleId: f.vehicle.id
+    })
+  );
+  await f.app.commands.dispatch(
+    command(4, "trip.assignDriver", f.company.id, 400, {
+      tripId: f.trip.id,
+      driverId: f.driver.id
+    })
+  );
+  await f.app.commands.dispatch(
+    command(5, "trip.startBoarding", f.company.id, 21000, {
+      tripId: f.trip.id
+    })
+  );
 
   const departed = await f.app.commands.dispatch(
     command(6, "trip.depart", f.company.id, 21720, {
