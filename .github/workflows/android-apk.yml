@@ -9,6 +9,9 @@ on:
       - "presentation/apk/**"
       - "src/content/vehicle/**"
       - "src/core/version/**"
+      - "src/presentation/android/**"
+      - "src/bootstrap/createPlayableGame.ts"
+      - "src/infrastructure/**"
       - "package.json"
       - ".github/workflows/android-apk.yml"
   push:
@@ -19,6 +22,9 @@ on:
       - "presentation/apk/**"
       - "src/content/vehicle/**"
       - "src/core/version/**"
+      - "src/presentation/android/**"
+      - "src/bootstrap/createPlayableGame.ts"
+      - "src/infrastructure/**"
       - "package.json"
       - ".github/workflows/android-apk.yml"
 
@@ -65,11 +71,11 @@ jobs:
       - name: Prepare APK artifact
         run: |
           mkdir -p artifacts
-          cp android-app/app/build/outputs/apk/debug/app-debug.apk artifacts/coach-company-sim-v0.16.0-debug.apk
+          cp android-app/app/build/outputs/apk/debug/app-debug.apk artifacts/coach-company-sim-v0.17.0-playable.apk
 
       - uses: actions/upload-artifact@v4
         with:
-          name: coach-company-sim-v0.16.0-debug
-          path: artifacts/coach-company-sim-v0.16.0-debug.apk
+          name: coach-company-sim-v0.17.0-playable
+          path: artifacts/coach-company-sim-v0.17.0-playable.apk
           if-no-files-found: error
           retention-days: 14
