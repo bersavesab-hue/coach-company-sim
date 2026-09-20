@@ -61,6 +61,8 @@ export function createTestOwnedVehicle(input: {
   readonly status?: OwnedVehicle["status"];
   readonly mileageM?: number;
   readonly energyUnits?: number;
+  readonly seatCapacity?: number;
+  readonly energyCapacityUnits?: number;
   readonly gameSecond?: GameSecond;
   readonly nextMaintenanceMileageM?: number;
 } = {}): OwnedVehicle {
@@ -72,8 +74,8 @@ export function createTestOwnedVehicle(input: {
     companyId: input.companyId ?? ids.company("company.00000001"),
     modelId: input.modelId ?? ids.vehicleModel("vehicle_model.000001"),
     configurationId: null,
-    seatCapacity: 20,
-    energyCapacityUnits: 100_000,
+    seatCapacity: input.seatCapacity ?? 20,
+    energyCapacityUnits: input.energyCapacityUnits ?? 100_000,
     mileageM: units.distanceM(mileage),
     energyUnits: input.energyUnits ?? 100_000,
     powertrainConditionPermille: units.permille(1000),

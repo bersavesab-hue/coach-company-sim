@@ -140,7 +140,9 @@ function fixture() {
     modelId: model.id,
     depotStationId: s1.id,
     status: "available",
-    energyUnits: 100_000
+    energyUnits: 100_000,
+    seatCapacity: model.seatCapacity,
+    energyCapacityUnits: model.energyCapacityUnits
   });
 
   const driver: Driver = createTestDriver({
