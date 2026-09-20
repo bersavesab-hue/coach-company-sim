@@ -10,6 +10,7 @@ import { WorldGraph } from "../../src/domain/world/WorldGraph.js";
 import { WorldRuntimeState } from "../../src/domain/world/WorldRuntimeState.js";
 import { advanceRunningTrip } from "../../src/simulation/movement/TripMovement.js";
 import { resolveTripWorldPosition } from "../../src/simulation/movement/TripWorldPosition.js";
+import { createTestVehicleModel } from "../helpers/TestVehicle.js";
 
 function fixture(direction: "forward" | "reverse" = "forward") {
   const regionId = ids.region("region.000001");
@@ -91,13 +92,12 @@ function fixture(direction: "forward" | "reverse" = "forward") {
     delaySeconds: units.gameSecond(0)
   };
 
-  const model: VehicleModel = {
+  const model: VehicleModel = createTestVehicleModel({
     id: ids.vehicleModel("vehicle_model.000001"),
     serviceClass: "county_midibus",
     seatCapacity: 20,
-    maxSpeedMps: units.speedMps(30),
-    active: true
-  };
+    maxSpeedMps: units.speedMps(30)
+  });
 
   return {
     graph: graphResult.value,
