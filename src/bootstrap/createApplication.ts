@@ -4,6 +4,7 @@ import { DomainEventBus } from "../application/events/DomainEventBus.js";
 import { FinanceCoordinator } from "../application/finance/FinanceCoordinator.js";
 import { registerFinanceQueries } from "../application/handlers/finance/registerFinanceQueries.js";
 import { registerOperationsQueries } from "../application/handlers/operations/registerOperationsQueries.js";
+import { registerOperationsHandlers } from "../application/handlers/operations/registerOperationsHandlers.js";
 import { registerFleetHandlers } from "../application/handlers/fleet/registerFleetHandlers.js";
 import { registerMapQueries } from "../application/handlers/map/registerMapQueries.js";
 import { registerPassengerQueries } from "../application/handlers/passenger/registerPassengerQueries.js";
@@ -17,6 +18,8 @@ import type { OperationsPolicy } from "../application/policies/OperationsPolicy.
 import type { VehicleLifecyclePolicy } from "../application/policies/VehicleLifecyclePolicy.js";
 import type { RepositoryBundle } from "../application/repositories/RepositoryBundle.js";
 import { FleetOperationsCoordinator } from "../application/operations/FleetOperationsCoordinator.js";
+import { OperationsExecutionCoordinator } from "../application/operations/OperationsExecutionCoordinator.js";
+import { OperationsScheduleService } from "../application/operations/OperationsScheduleService.js";
 import { DayOperationsPlanner } from "../application/services/DayOperationsPlanner.js";
 import { SimulationCoordinator } from "../application/simulation/SimulationCoordinator.js";
 import { VehicleSpatialIndex } from "../application/spatial/VehicleSpatialIndex.js";
@@ -42,6 +45,8 @@ export interface ApplicationRuntime {
   readonly vehicleLifecycle: VehicleLifecycleCoordinator;
   readonly fleetOperations: FleetOperationsCoordinator;
   readonly operationsPlanner: DayOperationsPlanner;
+  readonly operationsSchedules: OperationsScheduleService;
+  readonly operationsExecution: OperationsExecutionCoordinator;
   readonly simulation: SimulationCoordinator;
 }
 
@@ -107,15 +112,37 @@ export function createApplication(
     operationsPolicy: dependencies.operationsPolicy
   });
 
+  const operationsPlanner = new DayOperationsPlanner(
+    dependencies.repositories,
+    dependencies.operationsPolicy
+  );
+
+  const operationsSchedules = new OperationsScheduleService(
+    dependencies.repositories,
+    commands,
+    operationsPlanner,
+    events
+  );
+
+  registerOperationsHandlers(
+    commands,
+    dependencies.repositories,
+    events,
+    operationsSchedules
+  );
+
+  const operationsExecution = new OperationsExecutionCoordinator(
+    dependencies.repositories,
+    commands,
+    events,
+    dependencies.operationsPolicy
+  );
+
   registerMapQueries(queries, vehicleIndex);
   registerPassengerQueries(queries, dependencies.repositories);
   registerFinanceQueries(queries, dependencies.repositories);
   registerVehicleQueries(queries, dependencies.repositories);
 
-  const operationsPlanner = new DayOperationsPlanner(
-    dependencies.repositories,
-    dependencies.operationsPolicy
-  );
   registerOperationsQueries(queries, operationsPlanner);
 
   const simulation = new SimulationCoordinator(
@@ -124,6 +151,7 @@ export function createApplication(
     dependencies.passengerDemandPolicy,
     finance,
     fleetOperations,
+    operationsExecution,
     dependencies.operationsPolicy,
     vehicleIndex
   );
@@ -138,6 +166,8 @@ export function createApplication(
     vehicleLifecycle,
     fleetOperations,
     operationsPlanner,
+    operationsSchedules,
+    operationsExecution,
     simulation
   };
 }
