@@ -114,6 +114,7 @@ export * from "./application/queries/map/MapQueries.js";
 export * from "./application/queries/operations/OperationsQueries.js";
 export * from "./application/queries/passenger/PassengerQueries.js";
 export * from "./application/queries/vehicle/VehicleQueries.js";
+export * from "./application/queries/vehicle-market/VehicleMarketQueries.js";
 export * from "./application/repositories/PassengerDemandRepository.js";
 export * from "./application/repositories/PassengerRuntimeRepository.js";
 export * from "./application/repositories/FinanceRepository.js";

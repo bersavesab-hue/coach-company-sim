@@ -269,6 +269,69 @@ for (const file of sourceFiles) {
     );
   }
 
+  if (text.includes('"vehicle.purchase"')) {
+    failures.push(
+      `Removed direct vehicle.purchase command returned in ${rel}`
+    );
+  }
+
+  if (text.includes("quotePurchase(")) {
+    failures.push(
+      `Removed direct vehicle purchase pricing API returned in ${rel}`
+    );
+  }
+
+  if (rel.includes("/vehicle/OwnedVehicle.ts")) {
+    for (const requiredStage13Field of [
+      "configurationId:",
+      "seatCapacity:",
+      "energyCapacityUnits:"
+    ]) {
+      if (!text.includes(requiredStage13Field)) {
+        failures.push(
+          `OwnedVehicle missing Stage 13 concrete configuration field in ${rel}: ${requiredStage13Field}`
+        );
+      }
+    }
+  }
+
+  if (rel.includes("/vehicle-market/VehicleConfiguration.ts") &&
+      text.includes("modelId:")) {
+    failures.push(
+      "VehicleConfiguration must reference a VehicleVariant, not duplicate VehicleModel"
+    );
+  }
+
+  if (rel.includes("/services/VehicleMarketProjection.ts")) {
+    for (const forbiddenMutation of [".save(", ".replace("]) {
+      if (text.includes(forbiddenMutation)) {
+        failures.push(
+          `VehicleMarketProjection must remain read-only in ${rel}: ${forbiddenMutation}`
+        );
+      }
+    }
+  }
+
+  if (rel.includes("/handlers/vehicle-market/registerVehicleMarketHandlers.ts")) {
+    for (const requiredCommand of [
+      '"vehicleMarket.createConfiguration"',
+      '"vehicleMarket.purchaseListing"'
+    ]) {
+      if (!text.includes(requiredCommand)) {
+        failures.push(
+          `Stage 13 vehicle market handler missing command in ${rel}: ${requiredCommand}`
+        );
+      }
+    }
+  }
+
+  if (rel.includes("/repositories/RepositoryBundle.ts") &&
+      !text.includes("vehicleMarket: VehicleMarketRepository")) {
+    failures.push(
+      "RepositoryBundle must expose the canonical Stage 13 VehicleMarketRepository"
+    );
+  }
+
   if (rel.includes("/finance/FinancialProfiles.ts")) {
     for (const forbiddenField of [
       "energyKind:",

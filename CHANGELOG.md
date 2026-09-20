@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.14.0-stage13
+
+### Removed
+- 删除旧 `vehicle.purchase` 车型 ID 直购入口；车辆不能再脱离车商/车源凭空生成。
+- VehicleLifecyclePolicy 删除 quotePurchase，购车成交价不再由生命周期策略伪造。
+- 运营座位数与能源容量不再强制读取基础 VehicleModel，改读具体 OwnedVehicle 的实际配置结果。
+
+### Added
+- 新增 VehicleBrand / VehicleSeries / VehicleModelIdentity，建立品牌→车系→基础技术车型的商业目录映射。
+- 新增 VehicleVariant，支持年款、厂家正式版本、标准座位、标准能源容量、行李舱、舒适度和允许选装。
+- 新增 VehicleOptionDefinition 与 VehicleConfigurationRules。
+- 玩家自定义配置支持座位布局、能源容量、行李舱、舒适度、外观颜色和公司涂装。
+- 自定义配置只生成 VehicleConfiguration，不创建重复 VehicleModel。
+- 新增 VehicleDealer，支持厂家经销商、地区车商、二手车商和拍卖行类型。
+- 新增 VehicleListing，统一承载新车和二手车车源、库存、报价、上架时间和状态。
+- 二手车车源保存真实里程、剩余能源、保养历史、保险/年检、动力/制动/轮胎/车身状态、过户次数和事故记录。
+- 新增 vehicleMarket.createConfiguration。
+- 新增 vehicleMarket.purchaseListing。
+- 新增 vehicleMarket.listings / vehicleMarket.configurator 查询。
+- 购买新车可选择同一厂家版本下的合法自定义配置，成交后 OwnedVehicle 保存 configurationId、实际座位数和实际能源容量。
+- 购买二手车时配置锁定，不允许购买前偷换选装。
+- 二手车买入后保留真实里程、车况、保养里程、保险和年检，不会洗成新车。
+- 新车库存成交后真实扣减，库存归零后 listing 转 sold。
+- 新增车商/自定义配置/二手车专项测试。
+
+### Architecture
+- VehicleModel 继续只负责运行技术参数；品牌、车系、年款、商业名称、车商和价格不写回 VehicleModel。
+- VehicleConfiguration 通过 VehicleVariant 引用基础车型，禁止“一次选装生成一个新 VehicleModel”。
+- OwnedVehicle 保存实际物理配置结果；Trip 上客与补能/调度读取单车实际容量。
+- 新车和二手车使用同一个 VehicleMarketRepository 与 Listing 边界，不建立平行市场实现。
+- UI 后续只读取 vehicleMarket.listings / vehicleMarket.configurator，不直接拼接市场仓库。
+
+
 ## 0.13.0-stage12
 
 ### Added
