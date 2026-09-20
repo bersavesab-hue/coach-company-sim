@@ -9,8 +9,7 @@ import type {
 import type { OwnedVehicle } from "../../domain/vehicle/OwnedVehicle.js";
 import type { VehicleModel } from "../../domain/vehicle/VehicleModel.js";
 
-export interface VehiclePurchaseTerms {
-  readonly purchasePriceCents: MoneyCents;
+export interface VehicleOwnershipTerms {
   readonly residualValueCents: MoneyCents;
   readonly usefulLifeDays: number;
   readonly initialInsuranceValidDays: number;
@@ -25,11 +24,11 @@ export interface CoverageRenewalQuote {
 }
 
 export interface VehicleLifecyclePolicy {
-  quotePurchase(
+  quoteInitialOwnershipTerms(
     companyId: CompanyId,
     vehicleModelId: VehicleModelId,
     gameSecond: GameSecond
-  ): VehiclePurchaseTerms;
+  ): VehicleOwnershipTerms;
 
   quoteMaintenance(
     vehicle: OwnedVehicle,

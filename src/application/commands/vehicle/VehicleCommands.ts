@@ -1,15 +1,7 @@
 import type {
-  CompanyId,
   StationId,
-  VehicleId,
-  VehicleModelId
+  VehicleId
 } from "../../../contracts/ids/EntityIds.js";
-
-export interface PurchaseVehiclePayload {
-  readonly companyId: CompanyId;
-  readonly vehicleModelId: VehicleModelId;
-  readonly depotStationId: StationId | null;
-}
 
 export interface VehicleByIdPayload {
   readonly vehicleId: VehicleId;

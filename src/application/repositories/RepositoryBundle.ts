@@ -9,6 +9,7 @@ import type { ServicePlanRepository } from "./ServicePlanRepository.js";
 import type { StaffRepository } from "./StaffRepository.js";
 import type { StationRepository } from "./StationRepository.js";
 import type { TripRepository } from "./TripRepository.js";
+import type { VehicleMarketRepository } from "./VehicleMarketRepository.js";
 import type { VehicleModelRepository } from "./VehicleModelRepository.js";
 import type { VehicleRepository } from "./VehicleRepository.js";
 import type { VehicleRuntimeRepository } from "./VehicleRuntimeRepository.js";
@@ -27,6 +28,7 @@ export interface RepositoryBundle {
   readonly staff: StaffRepository;
   readonly stations: StationRepository;
   readonly trips: TripRepository;
+  readonly vehicleMarket: VehicleMarketRepository;
   readonly vehicleModels: VehicleModelRepository;
   readonly vehicles: VehicleRepository;
   readonly vehicleRuntime: VehicleRuntimeRepository;
