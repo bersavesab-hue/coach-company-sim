@@ -24,6 +24,7 @@ import {
   startTripBoarding
 } from "../../../domain/trip/TripRules.js";
 import type { OwnedVehicle } from "../../../domain/vehicle/OwnedVehicle.js";
+import { validateVehicleDispatchReadiness } from "../../../domain/vehicle/VehicleLifecycleRules.js";
 import {
   releaseVehicleFromTrip,
   reserveVehicleForTrip,
@@ -390,6 +391,28 @@ function handleDepart(
     dependencies.repositories
   );
   if (!resources.ok) return resources;
+
+  const model = dependencies.repositories.vehicleModels.getById(
+    resources.value.vehicle.modelId
+  );
+  if (!model) {
+    return err(
+      new DomainError(
+        "REFERENCE_NOT_FOUND",
+        "Assigned vehicle model is missing",
+        { vehicleId: resources.value.vehicle.id }
+      )
+    );
+  }
+
+  const readiness = validateVehicleDispatchReadiness(
+    resources.value.vehicle,
+    model,
+    context.value.route,
+    dependencies.repositories.world.get(),
+    command.issuedAtGameSecond
+  );
+  if (!readiness.ok) return readiness;
 
   const updatedTrip = departTrip(
     context.value.trip,
