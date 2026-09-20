@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.15.8-stage15-usedstock
+
+### Added
+- 正式完成 Stage 15 动态二手车源生成器。
+- 二手库存按 7 天周期确定性刷新，同一周期重复推进不会重复刷同一车源。
+- 普通动态二手零售只进入 regional_dealer 与 used_vehicle_dealer；拍卖行继续只走正式拍卖链。
+- 每辆生成二手车拥有固定 VehicleConfiguration，并从 Variant 允许选装中确定性形成原车配置。
+- UsedVehicleSnapshot 正式包含车龄、里程、剩余能源、保养里程、保险/检验有效期、动力/制动/轮胎/车身状态、历史车主数与事故记录。
+- 卖方披露与真实 UsedVehicleSnapshot 分离；普通渠道可出现事故少报或车况偏乐观，高端/进口认证渠道更透明。
+- 动态二手挂牌价格继续使用 VehicleMarketValuationService，不建立第二套估价逻辑。
+- generated_used 使用独立 supplySource / supplyCycleKey，周期价格不会被通用市场刷新覆盖。
+- UsedVehicleStockGenerator 已接入 VehicleMarketCoordinator，与动态新车库存一起随 Simulation 推进。
+- 新增动态二手库存专项测试：渠道限制、同周期幂等、跨周期刷新、固定配置、真实车况、事故记录、披露差异与价格折旧。
+
+### Content
+- CONTENT_VERSION 从 8 升至 9。
+- Stage 15 新车动态供给与二手车动态供给均已完成。
+- 下一阶段：地区市场需求配置与车型生命周期刷新。
+
+
 ## 0.15.7-stage15-newstock
 
 ### Added
