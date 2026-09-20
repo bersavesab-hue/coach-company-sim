@@ -15,10 +15,16 @@ import { WorldRuntimeState } from "../../src/domain/world/WorldRuntimeState.js";
 import { DomainEventBus } from "../../src/application/events/DomainEventBus.js";
 import { createSimulationDomainEvent } from "../../src/application/events/createSimulationDomainEvent.js";
 import { FinanceCoordinator } from "../../src/application/finance/FinanceCoordinator.js";
+import { VehicleLifecycleCoordinator } from "../../src/application/vehicle/VehicleLifecycleCoordinator.js";
 import { registerFinanceQueries } from "../../src/application/handlers/finance/registerFinanceQueries.js";
 import { QueryBus } from "../../src/application/QueryBus.js";
 import type { RepositoryBundle } from "../../src/application/repositories/RepositoryBundle.js";
 import { createTestFinanceRepository } from "../helpers/TestFinance.js";
+import {
+  createTestOwnedVehicle,
+  createTestVehicleModel,
+  createTestVehicleRuntimeRepository
+} from "../helpers/TestVehicle.js";
 
 function fixture() {
   const companyId = ids.company("company.00000001");
@@ -109,25 +115,25 @@ function fixture() {
     pairOverrides: []
   };
 
-  const vehicle: OwnedVehicle = {
+  const vehicle: OwnedVehicle = createTestOwnedVehicle({
     id: vehicleId,
     companyId,
     modelId,
-    mileageM: units.distanceM(0),
-    conditionPermille: units.permille(1000),
-    fuelPermille: units.permille(1000),
     status: "running",
+    activeTripId: tripId,
     depotStationId: stationA,
-    activeTripId: tripId
-  };
+    energyUnits: 100_000
+  });
 
-  const model: VehicleModel = {
+  const model: VehicleModel = createTestVehicleModel({
     id: modelId,
     serviceClass: "intercity_coach",
     seatCapacity: 50,
     maxSpeedMps: units.speedMps(30),
-    active: true
-  };
+    energyKind: "diesel_ml",
+    drivingEnergyUnitsPer100Km: 20_000,
+    idleEnergyUnitsPerHour: 2_000
+  });
 
   const driver: Driver = {
     id: driverId,
@@ -171,9 +177,6 @@ function fixture() {
     vehicleEconomicProfiles: [
       {
         vehicleModelId: modelId,
-        energyKind: "diesel_ml",
-        drivingEnergyUnitsPer100Km: 20000,
-        idleEnergyUnitsPerHour: 2000,
         maintenanceEconomicCostCentsPerKm: units.moneyCents(30),
         economicDepreciationCentsPerKm: units.moneyCents(20)
       }
@@ -254,6 +257,7 @@ function fixture() {
       getById: (id) => vehicles.get(id),
       save: (value) => vehicles.set(value.id, value)
     },
+    vehicleRuntime: createTestVehicleRuntimeRepository(),
     world: {
       get: () => graph.value,
       replace: () => undefined
@@ -283,6 +287,12 @@ function fixture() {
   );
   coordinator.initialize();
 
+  const lifecycle = new VehicleLifecycleCoordinator(
+    repositories,
+    events
+  );
+  void lifecycle;
+
   return {
     companyId,
     routeId,
@@ -300,6 +310,22 @@ function fixture() {
 
 test("trip accounting posts ticket, energy, toll, labor and management costs", async () => {
   const f = fixture();
+
+  f.events.publish(
+    createSimulationDomainEvent(
+      "vehicle.energyPurchased",
+      "vehicle",
+      f.vehicleId,
+      units.gameSecond(0),
+      {
+        vehicleId: f.vehicleId,
+        companyId: f.companyId,
+        energyKind: "diesel_ml",
+        energyUnits: 20_000,
+        totalCostCents: units.moneyCents(15_000)
+      }
+    )
+  );
 
   f.events.publish(
     createSimulationDomainEvent(
