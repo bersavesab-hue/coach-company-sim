@@ -53,6 +53,7 @@ export function prepareTrip(
       lastUpdatedGameSecond: input.createdAtGameSecond
     },
     onboardPassengerGroups: [],
+    recoveryStationId: null,
     delaySeconds: units.gameSecond(0)
   });
 }
@@ -240,6 +241,7 @@ export function recoverDisruptedTripToStop(
     ...trip,
     vehicleId: null,
     driverId: null,
+    recoveryStationId: stationId,
     position: {
       activeRoadSegmentIndex: Math.min(
         stop.pathLegBoundaryIndex,
@@ -274,6 +276,7 @@ export function resumeDisruptedTrip(
 
   return ok({
     ...transitioned.value,
+    recoveryStationId: null,
     position: {
       ...transitioned.value.position,
       lastUpdatedGameSecond: gameSecond

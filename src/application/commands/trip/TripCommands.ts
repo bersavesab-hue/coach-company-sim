@@ -24,3 +24,7 @@ export interface AssignTripDriverPayload {
 export interface TripByIdPayload {
   readonly tripId: TripId;
 }
+
+export interface ResumeTripPayload {
+  readonly tripId: TripId;
+}

@@ -2,6 +2,7 @@ import type {
   RouteId,
   ServicePlanId,
   StaffId,
+  StationId,
   TripId,
   VehicleId
 } from "../../contracts/ids/EntityIds.js";
@@ -22,5 +23,6 @@ export interface TripInstance {
   readonly actualArrivalGameSecond: GameSecond | null;
   readonly position: TripPosition;
   readonly onboardPassengerGroups: readonly OnboardPassengerGroup[];
+  readonly recoveryStationId: StationId | null;
   readonly delaySeconds: GameSecond;
 }
