@@ -3,84 +3,81 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#111820">
+<meta name="theme-color" content="#0c1218">
 <title>客运公司模拟器</title>
 <style>
-:root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;color:#eaf0f5;background:#0b1016}
-*{box-sizing:border-box}body{margin:0;background:#0b1016;color:#eaf0f5}
-header{position:sticky;top:0;z-index:8;background:rgba(11,16,22,.96);border-bottom:1px solid #26323d;padding:calc(12px + env(safe-area-inset-top)) 16px 12px}
-h1{font-size:20px;margin:0 0 4px}.sub{font-size:12px;color:#8ea1b1}
-nav{display:flex;gap:8px;overflow:auto;padding:10px 16px;border-bottom:1px solid #202a33;background:#111820}
-nav button{border:1px solid #31404c;background:#17212a;color:#c9d5df;border-radius:12px;padding:9px 14px;white-space:nowrap}
-nav button.active{background:#e5edf3;color:#101820;border-color:#e5edf3}
-main{padding:14px 14px 84px;max-width:900px;margin:auto}.page{display:none}.page.active{display:block}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.metric,.card{background:#131c24;border:1px solid #283540;border-radius:14px;padding:13px}
-.metric strong{font-size:24px;display:block}.metric span{font-size:12px;color:#92a6b6}
-.section-title{font-size:16px;margin:18px 2px 10px}.status{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border-radius:999px;background:#143322;color:#b9efcc;font-size:12px}
-.dot{width:7px;height:7px;border-radius:50%;background:#64d68a}
-.search{width:100%;border:1px solid #31404c;border-radius:12px;background:#101820;color:#fff;padding:12px 13px;margin-bottom:10px;font-size:15px}
-.row{display:flex;justify-content:space-between;gap:10px}.muted{color:#91a3b2;font-size:12px}.name{font-weight:700}.tag{display:inline-block;padding:3px 7px;border-radius:8px;background:#202d38;color:#bfd0dc;font-size:11px;margin:5px 5px 0 0}
-.list{display:flex;flex-direction:column;gap:8px}.detail{font-size:13px;color:#cad5de;line-height:1.7;margin-top:8px}
-.kv{display:grid;grid-template-columns:1fr 1fr;gap:5px 10px}.kv b{font-weight:500;color:#fff}.empty{text-align:center;color:#8da0af;padding:28px}
-footer{position:fixed;bottom:0;left:0;right:0;background:rgba(11,16,22,.96);border-top:1px solid #26323d;padding:9px 14px calc(9px + env(safe-area-inset-bottom));font-size:11px;color:#8193a2;text-align:center}
-@media(min-width:700px){.grid{grid-template-columns:repeat(4,1fr)}}
+:root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;color:#e8eef4;background:#0a0f14}
+*{box-sizing:border-box}body{margin:0;background:#0a0f14;color:#e8eef4}
+button,input,select{font:inherit}
+header{position:sticky;top:0;z-index:10;background:#0d141b;border-bottom:1px solid #26323d;padding:calc(10px + env(safe-area-inset-top)) 14px 10px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px}.title{font-weight:800;font-size:18px}.clock{font-size:12px;color:#9aabba;text-align:right}
+nav{display:flex;gap:7px;overflow:auto;padding:9px 12px;background:#111922;border-bottom:1px solid #222e38}
+nav button{border:1px solid #31404c;background:#17212a;color:#cad6df;border-radius:10px;padding:8px 12px;white-space:nowrap}
+nav button.active{background:#e8eef4;color:#111820;border-color:#e8eef4}
+main{padding:12px 12px 90px;max-width:1100px;margin:auto}.page{display:none}.page.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.metric,.card,.panel{background:#131c24;border:1px solid #293641;border-radius:13px;padding:12px}
+.metric b{display:block;font-size:21px}.metric span,.muted{font-size:12px;color:#91a4b3}.section{font-size:15px;margin:16px 2px 9px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:8px}.name{font-weight:700}.tag{display:inline-block;background:#202d38;color:#c2d0db;padding:3px 7px;border-radius:7px;font-size:11px;margin:4px 4px 0 0}
+.list{display:flex;flex-direction:column;gap:8px}.detail{font-size:12px;line-height:1.65;color:#c9d4dd;margin-top:7px}
+.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.btn{border:0;border-radius:9px;padding:8px 10px;background:#e8eef4;color:#111820;font-weight:700}.btn.secondary{background:#24313c;color:#d9e3ea;border:1px solid #364754}.btn.danger{background:#432426;color:#ffd7d9}
+.toolbar{display:flex;gap:7px;flex-wrap:wrap}.toolbar .btn{flex:1;min-width:90px}
+input,select{width:100%;border:1px solid #34434f;border-radius:9px;background:#0e161d;color:#eef4f8;padding:10px}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:8px}.form .wide{grid-column:1/-1}
+.notice{position:fixed;left:12px;right:12px;bottom:calc(58px + env(safe-area-inset-bottom));z-index:30;padding:11px 12px;border-radius:11px;background:#e8eef4;color:#111820;font-size:13px;display:none;box-shadow:0 8px 30px #0008}.notice.error{background:#5b292d;color:#fff}
+footer{position:fixed;bottom:0;left:0;right:0;background:#0d141b;border-top:1px solid #26323d;padding:8px 12px calc(8px + env(safe-area-inset-bottom));display:flex;gap:7px}
+footer button{flex:1;border:0;border-radius:9px;padding:9px;background:#1d2933;color:#d8e2e9}.mapwrap{height:48vh;min-height:330px;background:#0e161d;border:1px solid #2a3742;border-radius:13px;overflow:hidden}.mapwrap svg{width:100%;height:100%}
+.road{stroke:#50606d;stroke-width:5;stroke-linecap:round}.road.expressway{stroke-width:8}.station{fill:#e8eef4;stroke:#101820;stroke-width:3}.vehicle{fill:#f4c95d;stroke:#111820;stroke-width:2}.maplabel{font-size:17px;fill:#cfd9e0}.routeLine{stroke:#88b9d8;stroke-width:7;opacity:.8}
+.money.pos{color:#91e0aa}.money.neg{color:#ff9d9d}.empty{padding:24px;text-align:center;color:#8295a5}
+@media(min-width:700px){.grid{grid-template-columns:repeat(4,1fr)}.form{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head>
 <body>
-<header><h1>客运公司模拟器</h1><div class="sub" id="version"></div></header>
-<nav>
-<button class="active" data-page="overview">总览</button>
-<button data-page="models">车型库</button>
-<button data-page="dealers">车商</button>
-<button data-page="zones">地区需求</button>
+<header><div class="top"><div><div class="title">客运公司模拟器</div><div class="muted" id="companyName">加载中</div></div><div class="clock" id="clock"></div></div></header>
+<nav id="nav">
+<button class="active" data-page="home">经营</button>
+<button data-page="map">地图</button>
+<button data-page="routes">线路</button>
+<button data-page="market">车市</button>
+<button data-page="dispatch">调度</button>
+<button data-page="fleet">车队</button>
+<button data-page="finance">财务</button>
 </nav>
 <main>
-<section class="page active" id="overview">
-<div class="status"><i class="dot"></i>Stage 15 内容校验通过</div>
-<h2 class="section-title">正式内容</h2>
-<div class="grid" id="metrics"></div>
-<h2 class="section-title">品牌</h2><div class="list" id="brand-list"></div>
-</section>
-<section class="page" id="models">
-<input class="search" id="model-search" placeholder="搜索品牌 / 车型 / 车系">
-<div class="muted" id="model-count"></div><div class="list" id="model-list"></div>
-</section>
-<section class="page" id="dealers">
-<input class="search" id="dealer-search" placeholder="搜索车商 / 地区 / 类型">
-<div class="list" id="dealer-list"></div>
-</section>
-<section class="page" id="zones"><div class="list" id="zone-list"></div></section>
+<section class="page active" id="home"><div class="grid" id="homeMetrics"></div><h2 class="section">快捷经营</h2><div class="toolbar"><button class="btn" onclick="advance(60)">推进1小时</button><button class="btn" onclick="advance(360)">推进6小时</button><button class="btn secondary" onclick="commitToday()">提交今日排班</button><button class="btn secondary" onclick="replanToday()">重排今日运营</button></div><h2 class="section">运营状态</h2><div id="homeStatus"></div></section>
+<section class="page" id="map"><div class="mapwrap"><svg id="mapSvg" viewBox="0 0 900 600"></svg></div><div class="muted" style="margin-top:8px">车辆位置来自 map.visibleVehicles，同一辆车不使用 UI 假动画。</div></section>
+<section class="page" id="routes"><div class="panel"><div class="name">新建线路</div><div class="form" style="margin-top:9px"><input id="routeCode" value="K01" placeholder="线路编号"><select id="origin"></select><select id="destination"></select><button class="btn" onclick="createRoute()">创建并开通</button></div></div><h2 class="section">已有线路</h2><div class="list" id="routeList"></div></section>
+<section class="page" id="market"><div class="toolbar"><button class="btn secondary" onclick="setMarketFilter('all')">全部</button><button class="btn secondary" onclick="setMarketFilter('new')">新车</button><button class="btn secondary" onclick="setMarketFilter('used')">二手</button></div><h2 class="section">动态车源</h2><div class="list" id="marketList"></div></section>
+<section class="page" id="dispatch"><div class="grid" id="dispatchMetrics"></div><h2 class="section">班次</h2><div class="list" id="tripList"></div><h2 class="section">缺口</h2><div class="list" id="shortageList"></div></section>
+<section class="page" id="fleet"><div class="list" id="fleetList"></div></section>
+<section class="page" id="finance"><div class="grid" id="financeMetrics"></div><h2 class="section">经营说明</h2><div class="card detail">票款、购车、能源、通行费、站务费、司机工资、维护、保险、车辆税和折旧均来自正式 Finance Ledger。时间推进后会自动结算。</div></section>
 </main>
-<footer>数据由正式 Content 构建生成；此 APK 不维护第二套车型或市场数据。</footer>
+<div class="notice" id="notice"></div>
+<footer><button onclick="advance(15)">+15分</button><button onclick="advance(60)">+1小时</button><button onclick="advance(360)">+6小时</button><button onclick="refresh()">刷新</button></footer>
+<script src="game.js"></script>
 <script>
-const DATA=__APP_DATA__;
-const roleNames={rural_minibus:"乡镇微客",county_midibus:"县域中巴",standard_coach:"普通客车",intercity_coach:"城际客车",premium_coach:"高端客车",tourist_coach:"旅游客车",airport_shuttle:"机场接驳",high_capacity_coach:"高运力干线"};
-const dealerKinds={manufacturer_dealer:"厂家网络",regional_dealer:"地区综合车商",used_vehicle_dealer:"二手车商",auction_house:"拍卖行"};
-const zoneNames={north:"北方",east:"东部",south:"南方",central:"中部",west:"西部",northeast:"东北"};
-const energyNames={diesel_ml:"柴油",gasoline_ml:"汽油",electric_wh:"纯电",hydrogen_gram:"氢能"};
-const esc=(v)=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-document.getElementById("version").textContent="Android 测试客户端 · "+DATA.version+" · Content "+DATA.contentVersion;
-document.getElementById("metrics").innerHTML=[
- ["品牌",DATA.counts.brands],["车系",DATA.counts.series],["基础车型",DATA.counts.models],["厂家版本",DATA.counts.variants],
- ["选装",DATA.counts.options],["车商",DATA.counts.dealers],["市场区域",DATA.counts.marketZones],["动态库存周期","7天"]
-].map(x=>'<div class="metric"><strong>'+esc(x[1])+'</strong><span>'+esc(x[0])+'</span></div>').join("");
-document.querySelectorAll("nav button").forEach(btn=>btn.onclick=()=>{
- document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
- document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
- btn.classList.add("active");document.getElementById(btn.dataset.page).classList.add("active");
-});
-document.getElementById("brand-list").innerHTML=DATA.brands.map(b=>'<div class="card"><div class="row"><div><div class="name">'+esc(b.name)+'</div><div class="muted">'+esc(b.latinName)+'</div></div><span class="tag">'+(b.origin==="domestic"?"国产":"进口")+'</span></div><div class="detail">车系：'+b.seriesCount+' · 定位：'+esc(b.positioning)+'</div></div>').join("");
-function renderModels(q=""){
- const key=q.trim().toLowerCase();const rows=DATA.models.filter(m=>!key||[m.name,m.brand,m.series,m.role].join(" ").toLowerCase().includes(key));
- document.getElementById("model-count").textContent="显示 "+rows.length+" / "+DATA.models.length+" 辆";
- document.getElementById("model-list").innerHTML=rows.map(m=>'<div class="card"><div class="row"><div><div class="name">'+esc(m.name)+'</div><div class="muted">'+esc(m.brand)+' · '+esc(m.series)+'</div></div><span class="tag">Tier '+m.tier+'</span></div><div><span class="tag">'+esc(roleNames[m.role]||m.role)+'</span><span class="tag">'+esc(energyNames[m.energyKind]||m.energyKind)+'</span><span class="tag">'+m.variantCount+' 个版本</span></div><div class="detail kv"><span>座位 <b>'+m.seatCapacity+'</b></span><span>极速 <b>'+m.maxSpeedKph+' km/h</b></span><span>保养 <b>'+m.serviceIntervalKm+' km</b></span><span>最早解锁 <b>第 '+m.earliestGameDay+' 天</b></span><span>声誉门槛 <b>'+m.minimumReputationPermille+'/1000</b></span><span>车队门槛 <b>'+m.minimumOwnedVehicleCount+' 辆</b></span></div></div>').join("")||'<div class="empty">没有匹配车型</div>';
-}
-renderModels();document.getElementById("model-search").oninput=e=>renderModels(e.target.value);
-function renderDealers(q=""){
- const key=q.trim().toLowerCase();const rows=DATA.dealers.filter(d=>!key||[d.name,d.kind,d.zone,d.inventoryProfile,...d.brands].join(" ").toLowerCase().includes(key));
- document.getElementById("dealer-list").innerHTML=rows.map(d=>'<div class="card"><div class="row"><div class="name">'+esc(d.name)+'</div><span class="tag">'+esc(dealerKinds[d.kind]||d.kind)+'</span></div><div class="detail">区域：'+(d.zone?esc(zoneNames[d.zone]||d.zone):"全国/总代理")+'<br>品牌：'+d.brands.map(esc).join("、")+'</div><div><span class="tag">新车权重 '+d.newStockWeightPermille+'</span><span class="tag">二手权重 '+d.usedSupplyWeightPermille+'</span><span class="tag">价格偏移 '+d.priceBiasPermille+'</span></div></div>').join("")||'<div class="empty">没有匹配车商</div>';
-}
-renderDealers();document.getElementById("dealer-search").oninput=e=>renderDealers(e.target.value);
-document.getElementById("zone-list").innerHTML=DATA.zones.map(z=>'<div class="card"><div class="name">'+esc(zoneNames[z.zoneCode]||z.zoneCode)+'</div><div class="detail kv"><span>微客 <b>'+z.minibusDemandPermille+'</b></span><span>中巴 <b>'+z.midibusDemandPermille+'</b></span><span>客车 <b>'+z.coachDemandPermille+'</b></span><span>高端 <b>'+z.premiumDemandPermille+'</b></span><span>旅游 <b>'+z.tourismDemandPermille+'</b></span><span>新能源 <b>'+z.newEnergyDemandPermille+'</b></span><span>价格敏感 <b>'+z.priceSensitivityPermille+'</b></span></div></div>').join("");
+let state=null,marketFilter="all";
+const q=id=>document.getElementById(id),esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const money=c=>"¥"+(Number(c||0)/100).toLocaleString("zh-CN",{maximumFractionDigits:0});
+const time=s=>{s=Number(s||0);const d=Math.floor(s/86400)+1,h=Math.floor((s%86400)/3600),m=Math.floor((s%3600)/60);return "第"+d+"天 "+String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")};
+document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#nav button").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));b.classList.add("active");q(b.dataset.page).classList.add("active")});
+async function call(fn,...args){try{const r=await CoachGame[fn](...args);toast(r.message,!r.ok);await refresh()}catch(e){toast(String(e),true)}}
+function toast(msg,error=false){const n=q("notice");n.textContent=msg;n.className="notice"+(error?" error":"");n.style.display="block";clearTimeout(window.__toast);window.__toast=setTimeout(()=>n.style.display="none",2600)}
+async function refresh(){state=await CoachGame.snapshot();render()}
+function render(){q("companyName").textContent=state.company.name+" · 声誉 "+state.company.reputationPermille+"/1000";q("clock").innerHTML=time(state.currentGameSecond)+"<br>V"+state.version;renderHome();renderMap();renderRoutes();renderMarket();renderDispatch();renderFleet();renderFinance();fillStations()}
+function renderHome(){const f=state.finance||{},d=state.dispatch?.summary||{};q("homeMetrics").innerHTML=metric("现金",money(f.cashBalanceCents))+metric("今日班次",d.passengerTripsTotal||0)+metric("运营车辆",d.fleetRunning||0)+metric("候补缺口",d.shortageTrips||0)+metric("客运收入",money(f.passengerRevenueCents))+metric("总费用",money(f.totalExpenseCents))+metric("利润",money(f.accountingProfitCents))+metric("车队",d.fleetTotal||0);q("homeStatus").innerHTML='<div class="card detail">完成闭环：买车 → 补能 → 开线路 → 建班次 → 提交排班 → 推进时间。调度中心会自动上客、发车、运行、结算和处理支持任务。</div>'}
+function metric(k,v){return '<div class="metric"><b>'+esc(v)+'</b><span>'+esc(k)+'</span></div>'}
+function fillStations(){const html=state.stations.map(s=>'<option value="'+esc(s.id)+'">'+esc(s.name)+'</option>').join("");if(!q("origin").options.length){q("origin").innerHTML=html;q("destination").innerHTML=html;if(q("destination").options.length>1)q("destination").selectedIndex=2}}
+function renderMap(){const sx=x=>x/1000,sy=y=>600-y/1000;let h='';state.roads.forEach(r=>h+='<line class="road '+esc(r.roadClass)+'" x1="'+sx(r.fromX)+'" y1="'+sy(r.fromY)+'" x2="'+sx(r.toX)+'" y2="'+sy(r.toY)+'"/>');state.stations.forEach(s=>{h+='<circle class="station" cx="'+sx(s.xM)+'" cy="'+sy(s.yM)+'" r="8"/><text class="maplabel" x="'+(sx(s.xM)+11)+'" y="'+(sy(s.yM)-9)+'">'+esc(s.name.replace("客运中心",""))+'</text>'});(state.visibleVehicles||[]).forEach(v=>h+='<circle class="vehicle" cx="'+sx(v.xM)+'" cy="'+sy(v.yM)+'" r="9"/>');q("mapSvg").innerHTML=h}
+function renderRoutes(){q("routeList").innerHTML=state.routes.length?state.routes.map(r=>{const plans=state.servicePlans.filter(p=>p.routeId===r.id);return '<div class="card"><div class="row"><div><div class="name">'+esc(r.code)+'</div><div class="muted">'+r.stations.map(x=>esc(x.name.replace("客运中心",""))).join(" → ")+'</div></div><span class="tag">'+esc(r.status)+'</span></div><div class="actions">'+(plans.length?'<span class="tag">已有 '+plans.length+' 个班次计划</span>':'<button class="btn" onclick="openPlan(\''+esc(r.id)+'\')">建立班次</button>')+'</div></div>'}).join(""):'<div class="empty">还没有线路</div>'}
+async function createRoute(){await call("createRoute",{code:q("routeCode").value,originStationId:q("origin").value,destinationStationId:q("destination").value})}
+async function openPlan(routeId){const cls=prompt("车辆级别：rural_minibus / county_midibus / standard_coach / intercity_coach / premium_coach / tourist_coach","county_midibus")||"county_midibus";const start=Number(prompt("首班小时（0-23）","7")||7),end=Number(prompt("末班小时（1-24）","21")||21),interval=Number(prompt("发车间隔分钟","90")||90);await call("createServicePlan",{routeId,vehicleClass:cls,startHour:start,endHour:end,intervalMinutes:interval})}
+function setMarketFilter(v){marketFilter=v;renderMarket()}
+function renderMarket(){let rows=Array.isArray(state.market)?state.market:[];if(marketFilter!=="all")rows=rows.filter(x=>x.listingKind===marketFilter);rows=rows.slice(0,60);q("marketList").innerHTML=rows.length?rows.map(x=>'<div class="card"><div class="row"><div><div class="name">'+esc(x.brandName+" "+x.modelName)+'</div><div class="muted">'+esc(x.dealerName)+' · '+x.modelYear+' · '+(x.listingKind==="new"?"新车":"二手")+'</div></div><div class="name">'+money(x.askingPriceCents)+'</div></div><div><span class="tag">'+x.seatCapacity+'座</span><span class="tag">舒适 '+x.comfortPermille+'</span><span class="tag">Tier '+x.unlockTier+'</span><span class="tag">库存 '+x.stockCount+'</span></div><div class="actions">'+(x.purchaseUnlocked?'<button class="btn" onclick="buy(\''+esc(x.listingId)+'\')">购买</button>':'<span class="tag">未解锁：'+esc(x.unlockMissing.join("/"))+'</span>')+(x.listingKind==="used"?'<button class="btn secondary" onclick="inspect(\''+esc(x.listingId)+'\')">全检</button><button class="btn secondary" onclick="negotiate(\''+esc(x.listingId)+'\','+x.askingPriceCents+')">议价</button>':'')+'</div></div>').join(""):'<div class="empty">当前没有可用车源</div>'}
+const buy=id=>call("buyVehicle",id),inspect=id=>call("inspectUsed",id);function negotiate(id,ask){const p=Number(prompt("报价（元）",Math.floor(ask/100*.94))||0);if(p>0)call("negotiate",id,p*100)}
+function renderDispatch(){const d=state.dispatch||{},s=d.summary||{};q("dispatchMetrics").innerHTML=metric("计划班次",s.passengerTripsTotal||0)+metric("运行中",s.passengerTripsRunning||0)+metric("已完成",s.passengerTripsCompleted||0)+metric("延误",s.delayedTrips||0)+metric("车辆",s.fleetTotal||0)+metric("司机",s.driversTotal||0)+metric("支持任务",s.supportActionsRunning||0)+metric("缺口",s.shortageTrips||0);q("tripList").innerHTML=(d.trips||[]).length?d.trips.slice(0,80).map(t=>'<div class="card"><div class="row"><div class="name">'+esc(t.routeCode)+'</div><span class="tag">'+esc(t.tripStatus)+'</span></div><div class="detail">'+esc(t.originStationName)+' → '+esc(t.destinationStationName)+'<br>计划 '+time(t.plannedDepartureGameSecond)+(t.actualDepartureGameSecond!==null?' · 实发 '+time(t.actualDepartureGameSecond):'')+'</div></div>').join(""):'<div class="empty">提交今日排班后显示班次</div>';q("shortageList").innerHTML=(d.shortages||[]).length?d.shortages.map(x=>'<div class="card detail">'+esc(x.routeCode)+' · '+esc(x.message)+'</div>').join(""):'<div class="card detail">当前没有资源缺口</div>'}
+function renderFleet(){const vehicles=state.dispatch?.vehicles||[];const dealers=(Array.isArray(state.market)?state.market:[]).reduce((m,x)=>(m[x.dealerId]=x.dealerName,m),{});const dealerId=Object.keys(dealers)[0]||"";q("fleetList").innerHTML=vehicles.length?vehicles.map(v=>'<div class="card"><div class="row"><div><div class="name">'+esc(v.vehicleId)+'</div><div class="muted">'+esc(v.serviceClass)+' · '+esc(v.status)+'</div></div><b>'+Math.round(v.energyPermille/10)+'%</b></div><div><span class="tag">里程 '+Math.round(v.mileageM/1000)+'km</span><span class="tag">保养余量 '+v.kilometersUntilMaintenance+'km</span><span class="tag">动力 '+v.powertrainConditionPermille+'</span></div><div class="actions"><button class="btn" onclick="call(\'refuelFull\',\''+esc(v.vehicleId)+'\')">加满</button><button class="btn secondary" onclick="call(\'maintain\',\''+esc(v.vehicleId)+'\')">保养</button><button class="btn secondary" onclick="call(\'renewInsurance\',\''+esc(v.vehicleId)+'\')">续保</button><button class="btn secondary" onclick="call(\'passInspection\',\''+esc(v.vehicleId)+'\')">年检</button>'+(dealerId?'<button class="btn danger" onclick="call(\'sellToDealer\',\''+esc(v.vehicleId)+'\',\''+esc(dealerId)+'\')">卖给车商</button>':'')+'</div></div>').join(""):'<div class="empty">还没有车辆，先去车市购买。</div>'}
+function renderFinance(){const f=state.finance||{};q("financeMetrics").innerHTML=metric("现金",money(f.cashBalanceCents))+metric("总资产",money(f.totalAssetsCents))+metric("客运收入",money(f.passengerRevenueCents))+metric("经营费用",money(f.totalExpenseCents))+metric("会计利润",money(f.accountingProfitCents))+metric("车辆净值",money(f.vehicleAssetNetCents))+metric("能源库存",money(f.energyInventoryCents))+metric("应付款",money(f.accountsPayableCents))}
+const advance=m=>call("advanceMinutes",m),commitToday=()=>call("commitToday"),replanToday=()=>call("replanToday");
+refresh();
 </script>
 </body></html>
