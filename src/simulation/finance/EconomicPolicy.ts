@@ -8,7 +8,7 @@ import type {
   MoneyCents
 } from "../../core/units/Units.js";
 import type { RoadClass } from "../../domain/world/RoadSegment.js";
-import type { EnergyKind } from "../../domain/finance/FinancialProfiles.js";
+import type { EnergyKind } from "../../domain/vehicle/EnergyKind.js";
 
 export interface EconomicPolicy {
   energyPriceMilliCentsPerUnit(

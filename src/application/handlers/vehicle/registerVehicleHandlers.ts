@@ -368,7 +368,8 @@ function handleRenewInsurance(
   if (!context.ok) return context;
 
   const { vehicle } = context.value;
-  ensureStationary(vehicle);
+  const stationary = ensureStationary(vehicle);
+  if (!stationary.ok) return stationary;
 
   const quote = dependencies.lifecyclePolicy.quoteInsuranceRenewal(
     vehicle,
@@ -414,7 +415,8 @@ function handleInspection(
   if (!context.ok) return context;
 
   const { vehicle, model } = context.value;
-  ensureStationary(vehicle);
+  const stationary = ensureStationary(vehicle);
+  if (!stationary.ok) return stationary;
 
   if (
     Number(vehicle.powertrainConditionPermille) <
@@ -658,7 +660,9 @@ function addDays(
   );
 }
 
-function ensureStationary(vehicle: OwnedVehicle): void {
+function ensureStationary(
+  vehicle: OwnedVehicle
+): Result<true, DomainError> {
   if (
     vehicle.activeTripId !== null ||
     vehicle.status === "running" ||
@@ -666,10 +670,14 @@ function ensureStationary(vehicle: OwnedVehicle): void {
     vehicle.status === "sold" ||
     vehicle.status === "retired"
   ) {
-    throw new DomainError(
-      "VEHICLE_NOT_AVAILABLE",
-      "Vehicle must be stationary and owned for this operation",
-      { vehicleId: vehicle.id, status: vehicle.status }
+    return err(
+      new DomainError(
+        "VEHICLE_NOT_AVAILABLE",
+        "Vehicle must be stationary and owned for this operation",
+        { vehicleId: vehicle.id, status: vehicle.status }
+      )
     );
   }
+
+  return ok(true);
 }

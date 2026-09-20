@@ -22,6 +22,9 @@ const EXPENSE_ACCOUNTS: readonly FinanceAccount[] = [
   "station_fee_expense",
   "driver_wage_expense",
   "employer_burden_expense",
+  "maintenance_expense",
+  "inspection_expense",
+  "loss_on_vehicle_disposal",
   "insurance_expense",
   "vehicle_tax_expense",
   "station_lease_expense",
@@ -56,9 +59,27 @@ export function registerFinanceQueries(
       0
     );
 
+    const cash = accountBalanceCents(entries, "cash");
+    const receivables = accountBalanceCents(
+      entries,
+      "accounts_receivable"
+    );
+    const energyInventory = accountBalanceCents(
+      entries,
+      "energy_inventory"
+    );
+    const vehicleAssetNet =
+      accountBalanceCents(entries, "vehicle_asset") -
+      accountBalanceCents(entries, "accumulated_depreciation");
+    const disposalGain = creditTotalCents(
+      entries,
+      "gain_on_vehicle_disposal"
+    );
+
     const dto: CompanyFinanceSnapshotDto = {
       companyId: typed.payload.companyId,
-      cashBalanceCents: accountBalanceCents(entries, "cash"),
+      cashBalanceCents: cash,
+      accountsReceivableCents: receivables,
       accountsPayableCents: accountBalanceCents(
         entries,
         "accounts_payable"
@@ -68,9 +89,15 @@ export function registerFinanceQueries(
         "payroll_payable"
       ),
       taxPayableCents: accountBalanceCents(entries, "tax_payable"),
+      energyInventoryCents: energyInventory,
+      vehicleAssetNetCents: vehicleAssetNet,
+      totalAssetsCents:
+        cash + receivables + energyInventory + vehicleAssetNet,
       passengerRevenueCents: passengerRevenue,
+      disposalGainCents: disposalGain,
       totalExpenseCents: expenses,
-      accountingProfitCents: passengerRevenue - expenses,
+      accountingProfitCents:
+        passengerRevenue + disposalGain - expenses,
       capitalInflowCents: entries
         .filter((entry) => entry.kind === "opening_capital")
         .reduce(

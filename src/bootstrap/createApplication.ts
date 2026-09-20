@@ -8,10 +8,14 @@ import { registerPassengerQueries } from "../application/handlers/passenger/regi
 import { registerRouteHandlers } from "../application/handlers/route/registerRouteHandlers.js";
 import { registerServicePlanHandlers } from "../application/handlers/schedule/registerServicePlanHandlers.js";
 import { registerTripHandlers } from "../application/handlers/trip/registerTripHandlers.js";
+import { registerVehicleHandlers } from "../application/handlers/vehicle/registerVehicleHandlers.js";
+import { registerVehicleQueries } from "../application/handlers/vehicle/registerVehicleQueries.js";
 import type { RuntimeIdAllocator } from "../application/ids/RuntimeIdAllocator.js";
+import type { VehicleLifecyclePolicy } from "../application/policies/VehicleLifecyclePolicy.js";
 import type { RepositoryBundle } from "../application/repositories/RepositoryBundle.js";
 import { SimulationCoordinator } from "../application/simulation/SimulationCoordinator.js";
 import { VehicleSpatialIndex } from "../application/spatial/VehicleSpatialIndex.js";
+import { VehicleLifecycleCoordinator } from "../application/vehicle/VehicleLifecycleCoordinator.js";
 import type { EconomicPolicy } from "../simulation/finance/EconomicPolicy.js";
 import type { PassengerDemandPolicy } from "../simulation/passenger/PassengerDemandPolicy.js";
 
@@ -20,6 +24,7 @@ export interface ApplicationDependencies {
   readonly ids: RuntimeIdAllocator;
   readonly passengerDemandPolicy: PassengerDemandPolicy;
   readonly economicPolicy: EconomicPolicy;
+  readonly vehicleLifecyclePolicy: VehicleLifecyclePolicy;
 }
 
 export interface ApplicationRuntime {
@@ -28,6 +33,7 @@ export interface ApplicationRuntime {
   readonly events: DomainEventBus;
   readonly repositories: RepositoryBundle;
   readonly finance: FinanceCoordinator;
+  readonly vehicleLifecycle: VehicleLifecycleCoordinator;
   readonly simulation: SimulationCoordinator;
 }
 
@@ -45,6 +51,19 @@ export function createApplication(
     dependencies.economicPolicy
   );
   finance.initialize();
+
+  const vehicleLifecycle = new VehicleLifecycleCoordinator(
+    dependencies.repositories,
+    events
+  );
+
+  registerVehicleHandlers(commands, {
+    repositories: dependencies.repositories,
+    ids: dependencies.ids,
+    events,
+    lifecyclePolicy: dependencies.vehicleLifecyclePolicy,
+    economicPolicy: dependencies.economicPolicy
+  });
 
   registerRouteHandlers(commands, {
     repositories: dependencies.repositories,
@@ -67,6 +86,7 @@ export function createApplication(
   registerMapQueries(queries, vehicleIndex);
   registerPassengerQueries(queries, dependencies.repositories);
   registerFinanceQueries(queries, dependencies.repositories);
+  registerVehicleQueries(queries, dependencies.repositories);
 
   const simulation = new SimulationCoordinator(
     dependencies.repositories,
@@ -83,6 +103,7 @@ export function createApplication(
     events,
     repositories: dependencies.repositories,
     finance,
+    vehicleLifecycle,
     simulation
   };
 }
