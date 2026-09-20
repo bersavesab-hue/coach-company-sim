@@ -152,7 +152,7 @@ export function advanceRunningTrip(
     if (roadState.status === "closed") {
       idleSeconds += target - currentTime;
       currentTime = target;
-      return movementResult(
+      return ok(movementResult(
         withPosition(trip, legIndex, offsetM, targetGameSecond),
         false,
         null,
@@ -162,7 +162,7 @@ export function advanceRunningTrip(
         distanceTraveledM,
         movingSeconds,
         idleSeconds
-      );
+      ));
     }
 
     const speedMps = effectiveRoadSpeedMps(
@@ -174,7 +174,7 @@ export function advanceRunningTrip(
     if (speedMps <= 0) {
       idleSeconds += target - currentTime;
       currentTime = target;
-      return movementResult(
+      return ok(movementResult(
         withPosition(trip, legIndex, offsetM, targetGameSecond),
         false,
         null,
@@ -184,7 +184,7 @@ export function advanceRunningTrip(
         distanceTraveledM,
         movingSeconds,
         idleSeconds
-      );
+      ));
     }
 
     const roadLengthM = Number(road.lengthM);
@@ -228,7 +228,7 @@ export function advanceRunningTrip(
       );
       if (!completed.ok) return completed;
 
-      return movementResult(
+      return ok(movementResult(
         completed.value,
         true,
         units.gameSecond(currentTime),
@@ -238,11 +238,11 @@ export function advanceRunningTrip(
         distanceTraveledM,
         movingSeconds,
         idleSeconds
-      );
+      ));
     }
   }
 
-  return movementResult(
+  return ok(movementResult(
     withPosition(trip, legIndex, offsetM, targetGameSecond),
     false,
     null,
@@ -252,7 +252,7 @@ export function advanceRunningTrip(
     distanceTraveledM,
     movingSeconds,
     idleSeconds
-  );
+  ));
 }
 
 function movementResult(
