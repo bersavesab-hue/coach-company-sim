@@ -16,7 +16,6 @@ import type { OwnedVehicle } from "../../../domain/vehicle/OwnedVehicle.js";
 import type { CommandBus } from "../../CommandBus.js";
 import type {
   PurchaseVehicleEnergyPayload,
-  PurchaseVehiclePayload,
   VehicleByIdPayload
 } from "../../commands/vehicle/VehicleCommands.js";
 import type { DomainEventBus } from "../../events/DomainEventBus.js";
@@ -40,9 +39,6 @@ export function registerVehicleHandlers(
   commands: CommandBus,
   dependencies: VehicleHandlerDependencies
 ): void {
-  commands.register("vehicle.purchase", (command) =>
-    handlePurchase(command, dependencies)
-  );
   commands.register("vehicle.refuel", (command) =>
     handleEnergyPurchase(command, dependencies)
   );
@@ -61,122 +57,6 @@ export function registerVehicleHandlers(
   commands.register("vehicle.retire", (command) =>
     handleRetire(command, dependencies)
   );
-}
-
-function handlePurchase(
-  command: CommandEnvelope,
-  dependencies: VehicleHandlerDependencies
-): Result<OwnedVehicle, DomainError> {
-  const payload = command.payload as PurchaseVehiclePayload;
-  const company = dependencies.repositories.companies.getById(
-    payload.companyId
-  );
-
-  if (!company || company.status !== "active") {
-    return err(
-      new DomainError(
-        "ENTITY_INACTIVE",
-        "Vehicle purchase requires an active company",
-        { companyId: payload.companyId }
-      )
-    );
-  }
-
-  const actor = requireActor(command, company.id);
-  if (!actor.ok) return actor;
-
-  const model = dependencies.repositories.vehicleModels.getById(
-    payload.vehicleModelId
-  );
-  if (!model || !model.active) {
-    return err(
-      new DomainError(
-        "ENTITY_INACTIVE",
-        "Vehicle model is not available for purchase",
-        { vehicleModelId: payload.vehicleModelId }
-      )
-    );
-  }
-
-  if (payload.depotStationId !== null) {
-    const depot = dependencies.repositories.stations.getById(
-      payload.depotStationId
-    );
-    if (!depot || depot.status !== "active") {
-      return err(
-        new DomainError(
-          "ENTITY_NOT_FOUND",
-          "Vehicle depot station is missing or inactive",
-          { stationId: payload.depotStationId }
-        )
-      );
-    }
-  }
-
-  const terms = dependencies.lifecyclePolicy.quotePurchase(
-    company.id,
-    model.id,
-    command.issuedAtGameSecond
-  );
-
-  const funds = requireCash(
-    dependencies.repositories,
-    company.id,
-    terms.purchasePriceCents
-  );
-  if (!funds.ok) return funds;
-
-  const vehicle: OwnedVehicle = {
-    id: dependencies.ids.nextVehicleId(),
-    companyId: company.id,
-    modelId: model.id,
-    mileageM: units.distanceM(0),
-    energyUnits: 0,
-    powertrainConditionPermille: units.permille(1000),
-    brakeConditionPermille: units.permille(1000),
-    tireConditionPermille: units.permille(1000),
-    bodyConditionPermille: units.permille(1000),
-    lastMaintenanceMileageM: units.distanceM(0),
-    nextMaintenanceMileageM: units.distanceM(model.serviceIntervalM),
-    registeredAtGameSecond: command.issuedAtGameSecond,
-    insuranceValidUntilGameSecond: addDays(
-      command.issuedAtGameSecond,
-      terms.initialInsuranceValidDays
-    ),
-    inspectionValidUntilGameSecond: addDays(
-      command.issuedAtGameSecond,
-      terms.initialInspectionValidDays
-    ),
-    status: "available",
-    activeIncident: null,
-    depotStationId: payload.depotStationId,
-    currentStationId: payload.depotStationId,
-    availableAtGameSecond: command.issuedAtGameSecond,
-    activeTripId: null,
-    activeFleetTaskId: null
-  };
-
-  dependencies.repositories.vehicles.save(vehicle);
-  dependencies.events.publish(
-    createDomainEvent(
-      command,
-      "vehicle.purchased",
-      "vehicle",
-      vehicle.id,
-      {
-        vehicleId: vehicle.id,
-        companyId: company.id,
-        vehicleModelId: model.id,
-        purchasePriceCents: terms.purchasePriceCents,
-        residualValueCents: terms.residualValueCents,
-        usefulLifeDays: terms.usefulLifeDays,
-        dailyInsuranceCents: terms.dailyInsuranceCents,
-        dailyVehicleTaxCents: terms.dailyVehicleTaxCents
-      }
-    )
-  );
-
-  return ok(vehicle);
 }
 
 function handleEnergyPurchase(
@@ -200,7 +80,8 @@ function handleEnergyPurchase(
   const idle = requireStationaryTaskVehicle(vehicle, command);
   if (!idle.ok) return idle;
 
-  const availableCapacity = model.energyCapacityUnits - vehicle.energyUnits;
+  const availableCapacity =
+    vehicle.energyCapacityUnits - vehicle.energyUnits;
   const purchasedUnits = Math.min(
     payload.energyUnits,
     Math.max(0, availableCapacity)
