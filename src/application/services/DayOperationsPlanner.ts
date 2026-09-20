@@ -25,6 +25,7 @@ import { generateDepartureSlots } from "../../domain/schedule/ScheduleExpander.j
 import type { ServicePlan } from "../../domain/schedule/ServicePlan.js";
 import type { Driver } from "../../domain/staff/Driver.js";
 import type { OwnedVehicle } from "../../domain/vehicle/OwnedVehicle.js";
+import type { WorldGraph } from "../../domain/world/WorldGraph.js";
 import type { VehicleModel } from "../../domain/vehicle/VehicleModel.js";
 import { findPath } from "../../domain/world/PathFinder.js";
 import type { OperationsPolicy } from "../policies/OperationsPolicy.js";
@@ -665,7 +666,6 @@ export class DayOperationsPlanner {
     const driverProjection = this.projectDriver(
       driverState,
       driveSegments,
-      demand
     );
     if (!driverProjection) return null;
 
@@ -768,8 +768,7 @@ export class DayOperationsPlanner {
 
   private projectDriver(
     initial: DriverState,
-    segments: readonly DriveSegment[],
-    demand: SlotDemand
+    segments: readonly DriveSegment[]
   ): {
     readonly state: DriverState;
     readonly restActions: readonly Omit<
@@ -927,9 +926,7 @@ export class DayOperationsPlanner {
 
 function routeDistanceM(
   route: PassengerRoute,
-  graph: RepositoryBundle["world"]["get"] extends () => infer T
-    ? T
-    : never
+  graph: WorldGraph
 ): number | null {
   let total = 0;
   for (const leg of route.pathLegs) {

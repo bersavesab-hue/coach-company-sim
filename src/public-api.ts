@@ -41,6 +41,7 @@ export * from "./domain/finance/FinanceRuntimeState.js";
 export * from "./domain/finance/ManagementCostEntry.js";
 
 export * from "./domain/operations/FleetTask.js";
+export * from "./domain/operations/DayOperationsPlan.js";
 
 export * from "./domain/passenger/PassengerDemandProfile.js";
 export * from "./domain/passenger/PassengerRuntimeState.js";
@@ -109,6 +110,7 @@ export * from "./application/repositories/VehicleModelRepository.js";
 export * from "./application/repositories/VehicleRuntimeRepository.js";
 export * from "./application/repositories/WorldRuntimeRepository.js";
 export * from "./application/services/DispatchPlanningService.js";
+export * from "./application/services/DayOperationsPlanner.js";
 export * from "./application/services/FleetTaskTiming.js";
 export * from "./application/services/RoutePathService.js";
 export * from "./application/services/TripTiming.js";

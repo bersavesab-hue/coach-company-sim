@@ -16,6 +16,7 @@ import type { OperationsPolicy } from "../application/policies/OperationsPolicy.
 import type { VehicleLifecyclePolicy } from "../application/policies/VehicleLifecyclePolicy.js";
 import type { RepositoryBundle } from "../application/repositories/RepositoryBundle.js";
 import { FleetOperationsCoordinator } from "../application/operations/FleetOperationsCoordinator.js";
+import { DayOperationsPlanner } from "../application/services/DayOperationsPlanner.js";
 import { SimulationCoordinator } from "../application/simulation/SimulationCoordinator.js";
 import { VehicleSpatialIndex } from "../application/spatial/VehicleSpatialIndex.js";
 import { VehicleLifecycleCoordinator } from "../application/vehicle/VehicleLifecycleCoordinator.js";
@@ -39,6 +40,7 @@ export interface ApplicationRuntime {
   readonly finance: FinanceCoordinator;
   readonly vehicleLifecycle: VehicleLifecycleCoordinator;
   readonly fleetOperations: FleetOperationsCoordinator;
+  readonly operationsPlanner: DayOperationsPlanner;
   readonly simulation: SimulationCoordinator;
 }
 
@@ -109,6 +111,18 @@ export function createApplication(
   registerFinanceQueries(queries, dependencies.repositories);
   registerVehicleQueries(queries, dependencies.repositories);
 
+  const operationsPlanner = new DayOperationsPlanner(
+    dependencies.repositories,
+    dependencies.operationsPolicy
+  );
+  queries.register("operations.planDay", (query) =>
+    operationsPlanner.planCompanyDay(
+      query.payload as Parameters<
+        DayOperationsPlanner["planCompanyDay"]
+      >[0]
+    )
+  );
+
   const simulation = new SimulationCoordinator(
     dependencies.repositories,
     events,
@@ -128,6 +142,7 @@ export function createApplication(
     finance,
     vehicleLifecycle,
     fleetOperations,
+    operationsPlanner,
     simulation
   };
 }
