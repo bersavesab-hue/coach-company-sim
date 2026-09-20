@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.9.0-stage8
+
+### Removed
+- 删除 OwnedVehicle.conditionPermille。
+- 删除 OwnedVehicle.fuelPermille。
+- VehicleEconomicProfile 删除能源类型与车辆能耗技术参数，技术事实回归 VehicleModel。
+- 不保留旧车况/油量兼容字段或第二套生命周期接口。
+
+### Added
+- VehicleModel 新增能源类型、容量、最低发车储备、行驶/怠速能耗、保养周期、部件磨损率和安全阈值。
+- OwnedVehicle 新增实际能源单位、动力/制动/轮胎/车身状态、保养里程、保险/检验有效期和 activeIncident。
+- 新增 VehicleLifecycleRuntimeState，以整数余数保证不同 Simulation Tier 的能耗/磨损一致。
+- 新增发车硬校验：保险、检验、保养、安全状态、整条线路预计能耗+储备。
+- 新增 VehicleLifecycleCoordinator，按 trip.operatingInterval 累计真实里程、能源和部件磨损。
+- 车辆能源耗尽或关键部件失效后进入 broken，并使 Trip 进入 disrupted。
+- 新增 vehicle.purchase / refuel / sendToMaintenance / completeMaintenance / renewInsurance / passInspection / sell / retire。
+- 新增 VehicleLifecyclePolicy，购置价、维修报价、保险、检验、二手售价和报废残值全部数据驱动。
+- 新增 vehicle.lifecycle Query。
+- 新增 vehicle_asset、energy_inventory、maintenance_expense、inspection_expense、车辆处置损益账户。
+- 补能改为先形成 energy_inventory，车辆实际消耗时再结转 energy_expense。
+- 出售/报废正式冲销车辆原值、累计折旧和剩余能源库存并确认处置损益。
+- Finance Ledger 支持 vehicleId 追溯，车辆折旧可按单车核算。
+- Company Finance Snapshot 新增能源库存、车辆净资产、总资产和车辆处置收益。
+- 新增车辆生命周期、发车门槛、运行故障中断和资产处置专项测试。
+
+### Architecture
+- 车辆技术事实归 Vehicle Domain；价格与会计事实归 Finance/Policy。
+- Simulation 不再直接增加车辆里程，车辆物理变化统一由 VehicleLifecycleCoordinator 处理。
+- 历史 sold/retired 车辆记录保留，但不再参与运营和后续资产折旧。
+- 架构守卫禁止 conditionPermille/fuelPermille 重新进入 OwnedVehicle。
+
 ## 0.8.0-stage7
 
 ### Added
@@ -31,7 +62,6 @@
 - 现实价格/费率完全数据驱动，不写死地区、年份、油价或税率。
 - Trip 贡献利润与 Company 会计利润使用不同口径，避免管理决策和财务报表混淆。
 
-# Changelog
 
 ## 0.7.0-stage6
 

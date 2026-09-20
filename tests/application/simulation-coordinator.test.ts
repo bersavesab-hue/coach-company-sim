@@ -340,3 +340,41 @@ test("running vehicle is queryable from spatial index before completion", () => 
   assert.equal(visible[0]?.tripId, f.tripId);
   assert.equal(visible[0]?.xM, 50);
 });
+
+
+test("mechanical failure disrupts a running trip instead of letting it continue", () => {
+  const f = fixture();
+  const vehicle = f.repositories.vehicles.getById(f.vehicleId);
+  assert.ok(vehicle);
+  if (!vehicle) return;
+
+  f.repositories.vehicles.save({
+    ...vehicle,
+    tireConditionPermille: units.permille(0)
+  });
+
+  const report = f.simulation.advanceTo(units.gameSecond(5));
+
+  assert.deepEqual(report.blockedTripIds, [f.tripId]);
+  assert.equal(
+    f.repositories.trips.getById(f.tripId)?.status,
+    "disrupted"
+  );
+  assert.equal(
+    f.repositories.vehicles.getById(f.vehicleId)?.status,
+    "broken"
+  );
+  assert.equal(
+    f.repositories.vehicles.getById(f.vehicleId)?.activeIncident?.kind,
+    "tire_failure"
+  );
+  assert.deepEqual(
+    f.index.query({
+      minXM: 0,
+      minYM: -10,
+      maxXM: 100,
+      maxYM: 10
+    }),
+    []
+  );
+});

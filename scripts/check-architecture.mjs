@@ -106,11 +106,42 @@ for (const file of sourceFiles) {
       "routeId:",
       "worldPosition:",
       "routeSegmentIndex:",
-      "offsetOnSegmentM:"
+      "offsetOnSegmentM:",
+      "conditionPermille:",
+      "fuelPermille:"
     ]) {
       if (text.includes(forbiddenField)) {
         failures.push(
           `Vehicle runtime ownership violation in ${rel}: ${forbiddenField}`
+        );
+      }
+    }
+
+    for (const requiredField of [
+      "energyUnits:",
+      "powertrainConditionPermille:",
+      "brakeConditionPermille:",
+      "tireConditionPermille:",
+      "insuranceValidUntilGameSecond:",
+      "inspectionValidUntilGameSecond:"
+    ]) {
+      if (!text.includes(requiredField)) {
+        failures.push(
+          `OwnedVehicle missing Stage 8 technical field in ${rel}: ${requiredField}`
+        );
+      }
+    }
+  }
+
+  if (rel.includes("/finance/FinancialProfiles.ts")) {
+    for (const forbiddenField of [
+      "energyKind:",
+      "drivingEnergyUnitsPer100Km:",
+      "idleEnergyUnitsPerHour:"
+    ]) {
+      if (text.includes(forbiddenField)) {
+        failures.push(
+          `Finance profile owns vehicle technical data in ${rel}: ${forbiddenField}`
         );
       }
     }
