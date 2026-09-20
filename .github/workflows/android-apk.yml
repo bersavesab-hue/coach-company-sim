@@ -45,7 +45,13 @@ jobs:
 
       - name: Install Android SDK 35
         run: |
-          SDKMANAGER="/usr/local/lib/android/sdk/cmdline-tools/16.0/bin/sdkmanager"
+          SDKMANAGER="$(find /usr/local/lib/android/sdk "$ANDROID_HOME" "$ANDROID_SDK_ROOT" -type f -name sdkmanager 2>/dev/null | head -n 1)"
+          if [ -z "$SDKMANAGER" ]; then
+            echo "sdkmanager not found" >&2
+            find /usr/local/lib/android/sdk -maxdepth 4 -type f 2>/dev/null | head -n 80
+            exit 1
+          fi
+          echo "Using $SDKMANAGER"
           yes | "$SDKMANAGER" --licenses >/dev/null || true
           "$SDKMANAGER" "platforms;android-35" "build-tools;35.0.0"
 
