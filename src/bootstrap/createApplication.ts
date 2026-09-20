@@ -3,6 +3,7 @@ import { QueryBus } from "../application/QueryBus.js";
 import { DomainEventBus } from "../application/events/DomainEventBus.js";
 import { FinanceCoordinator } from "../application/finance/FinanceCoordinator.js";
 import { registerFinanceQueries } from "../application/handlers/finance/registerFinanceQueries.js";
+import { registerFleetHandlers } from "../application/handlers/fleet/registerFleetHandlers.js";
 import { registerMapQueries } from "../application/handlers/map/registerMapQueries.js";
 import { registerPassengerQueries } from "../application/handlers/passenger/registerPassengerQueries.js";
 import { registerRouteHandlers } from "../application/handlers/route/registerRouteHandlers.js";
@@ -11,8 +12,10 @@ import { registerTripHandlers } from "../application/handlers/trip/registerTripH
 import { registerVehicleHandlers } from "../application/handlers/vehicle/registerVehicleHandlers.js";
 import { registerVehicleQueries } from "../application/handlers/vehicle/registerVehicleQueries.js";
 import type { RuntimeIdAllocator } from "../application/ids/RuntimeIdAllocator.js";
+import type { OperationsPolicy } from "../application/policies/OperationsPolicy.js";
 import type { VehicleLifecyclePolicy } from "../application/policies/VehicleLifecyclePolicy.js";
 import type { RepositoryBundle } from "../application/repositories/RepositoryBundle.js";
+import { FleetOperationsCoordinator } from "../application/operations/FleetOperationsCoordinator.js";
 import { SimulationCoordinator } from "../application/simulation/SimulationCoordinator.js";
 import { VehicleSpatialIndex } from "../application/spatial/VehicleSpatialIndex.js";
 import { VehicleLifecycleCoordinator } from "../application/vehicle/VehicleLifecycleCoordinator.js";
@@ -25,6 +28,7 @@ export interface ApplicationDependencies {
   readonly passengerDemandPolicy: PassengerDemandPolicy;
   readonly economicPolicy: EconomicPolicy;
   readonly vehicleLifecyclePolicy: VehicleLifecyclePolicy;
+  readonly operationsPolicy: OperationsPolicy;
 }
 
 export interface ApplicationRuntime {
@@ -34,6 +38,7 @@ export interface ApplicationRuntime {
   readonly repositories: RepositoryBundle;
   readonly finance: FinanceCoordinator;
   readonly vehicleLifecycle: VehicleLifecycleCoordinator;
+  readonly fleetOperations: FleetOperationsCoordinator;
   readonly simulation: SimulationCoordinator;
 }
 
@@ -57,12 +62,27 @@ export function createApplication(
     events
   );
 
+  const fleetOperations = new FleetOperationsCoordinator(
+    dependencies.repositories,
+    events,
+    dependencies.economicPolicy,
+    dependencies.vehicleLifecyclePolicy
+  );
+
   registerVehicleHandlers(commands, {
     repositories: dependencies.repositories,
     ids: dependencies.ids,
     events,
     lifecyclePolicy: dependencies.vehicleLifecyclePolicy,
-    economicPolicy: dependencies.economicPolicy
+    economicPolicy: dependencies.economicPolicy,
+    operationsPolicy: dependencies.operationsPolicy
+  });
+
+  registerFleetHandlers(commands, {
+    repositories: dependencies.repositories,
+    ids: dependencies.ids,
+    events,
+    operationsPolicy: dependencies.operationsPolicy
   });
 
   registerRouteHandlers(commands, {
@@ -80,7 +100,8 @@ export function createApplication(
   registerTripHandlers(commands, {
     repositories: dependencies.repositories,
     ids: dependencies.ids,
-    events
+    events,
+    operationsPolicy: dependencies.operationsPolicy
   });
 
   registerMapQueries(queries, vehicleIndex);
@@ -93,6 +114,8 @@ export function createApplication(
     events,
     dependencies.passengerDemandPolicy,
     finance,
+    fleetOperations,
+    dependencies.operationsPolicy,
     vehicleIndex
   );
   simulation.rebuildVehicleIndex();
@@ -104,6 +127,7 @@ export function createApplication(
     repositories: dependencies.repositories,
     finance,
     vehicleLifecycle,
+    fleetOperations,
     simulation
   };
 }
