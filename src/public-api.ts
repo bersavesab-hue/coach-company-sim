@@ -172,3 +172,8 @@ export * from "./content/vehicle/VehicleDealerContentValidator.js";
 export * from "./content/vehicle/VehicleContentSeed.js";
 export * from "./application/vehicle-market/NewVehicleStockGenerator.js";
 export * from "./application/vehicle-market/UsedVehicleStockGenerator.js";
+export * from "./content/vehicle/VehicleMarketDemandCatalog.js";
+export * from "./content/vehicle/VehicleMarketDemandContentValidator.js";
+export * from "./content/vehicle/VehicleStage15Validator.js";
+export * from "./application/services/VehicleMarketDemandService.js";
+export * from "./application/vehicle-market/VehicleVariantLifecycleRefresher.js";
