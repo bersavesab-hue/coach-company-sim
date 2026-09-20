@@ -1,7 +1,10 @@
 import type { VisibleVehicleDto } from "../../contracts/dto/MapDto.js";
 import type { TripId } from "../../contracts/ids/EntityIds.js";
 import type { DomainError } from "../../core/errors/DomainError.js";
-import type { GameSecond } from "../../core/units/Units.js";
+import {
+  units,
+  type GameSecond
+} from "../../core/units/Units.js";
 import type { TripInstance } from "../../domain/trip/TripInstance.js";
 import { releaseDriverFromTrip } from "../../domain/staff/DriverAssignmentRules.js";
 import { releaseVehicleFromTrip } from "../../domain/vehicle/VehicleAssignmentRules.js";
@@ -15,6 +18,7 @@ import {
 } from "../../simulation/tiering/SimulationTier.js";
 import type { DomainEventBus } from "../events/DomainEventBus.js";
 import { createSimulationDomainEvent } from "../events/createSimulationDomainEvent.js";
+import type { FinanceCoordinator } from "../finance/FinanceCoordinator.js";
 import type { RepositoryBundle } from "../repositories/RepositoryBundle.js";
 import { VehicleSpatialIndex } from "../spatial/VehicleSpatialIndex.js";
 import { PassengerDemandCoordinator } from "./PassengerDemandCoordinator.js";
@@ -41,7 +45,8 @@ export class SimulationCoordinator {
   constructor(
     private readonly repositories: RepositoryBundle,
     private readonly events: DomainEventBus,
-    private readonly passengerPolicy: PassengerDemandPolicy,
+    passengerPolicy: PassengerDemandPolicy,
+    private readonly finance: FinanceCoordinator,
     readonly vehicleIndex: VehicleSpatialIndex
   ) {
     this.passengerDemand = new PassengerDemandCoordinator(
@@ -107,6 +112,41 @@ export class SimulationCoordinator {
         continue;
       }
 
+      if (moved.value.distanceTraveledM > 0) {
+        this.repositories.vehicles.save({
+          ...vehicle,
+          mileageM: units.distanceM(
+            Number(vehicle.mileageM) +
+              moved.value.distanceTraveledM
+          )
+        });
+      }
+
+      if (
+        trip.vehicleId !== null &&
+        trip.driverId !== null &&
+        moved.value.movingSeconds + moved.value.idleSeconds > 0
+      ) {
+        this.events.publish(
+          createSimulationDomainEvent(
+            "trip.operatingInterval",
+            "trip",
+            trip.id,
+            moved.value.trip.position.lastUpdatedGameSecond,
+            {
+              tripId: trip.id,
+              routeId: route.id,
+              vehicleId: trip.vehicleId,
+              driverId: trip.driverId,
+              movingSeconds: moved.value.movingSeconds,
+              idleSeconds: moved.value.idleSeconds,
+              distanceTraveledM: moved.value.distanceTraveledM,
+              roadUsage: moved.value.roadUsage
+            }
+          )
+        );
+      }
+
       let processedTrip = moved.value.trip;
 
       for (const reached of moved.value.reachedBoundaries) {
@@ -149,7 +189,8 @@ export class SimulationCoordinator {
               {
                 tripId: processedTrip.id,
                 stationId: stop.stationId,
-                count: flow.alightedCount
+                count: flow.alightedCount,
+                alightedGroups: flow.alightedGroups
               }
             )
           );
@@ -166,6 +207,7 @@ export class SimulationCoordinator {
                 tripId: processedTrip.id,
                 stationId: stop.stationId,
                 count: flow.boardedCount,
+                boardedGroups: flow.boardedGroups,
                 leftWaitingCount: flow.leftWaitingCount
               }
             )
@@ -206,6 +248,8 @@ export class SimulationCoordinator {
         this.indexTrip(processedTrip);
       }
     }
+
+    this.finance.advanceTo(targetGameSecond);
 
     return {
       advancedTripIds,

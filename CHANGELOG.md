@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.8.0-stage7
+
+### Added
+- 建立平衡复式 LedgerEntry / LedgerPosting，会计现金与利润全部从账本推导。
+- 新增 FinanceAccount、FinanceEntryKind 与账户余额计算。
+- 新增 FarePolicy：起步价、里程价、最低/最高价、取整、OD精确覆盖。
+- 新增 VehicleEconomicProfile：能源类型、行驶能耗、怠速能耗、维修经济成本、经济折旧。
+- 新增 VehicleAssetProfile：购置成本、残值、寿命、保险、车辆税费。
+- 新增 DriverCompensationProfile：基础工资、运行补贴、雇主负担。
+- 新增 StationFinancialProfile / CompanyFinancialProfile。
+- 新增 EconomicPolicy，动态注入能源价格、路桥费、税费、站务费和监管费用。
+- TripMovement 输出实际 roadUsage、行驶距离、运行秒、怠速秒。
+- SimulationCoordinator 正式累计车辆里程并发布 trip.operatingInterval。
+- 新增 FinanceCoordinator，监听售票、发车、到站、运行区间事件并自动记账。
+- 新增税费应付、工资应付、供应商应付与现金有限结算。
+- 新增按日公司管理费、司机基础工资、保险、车辆税、站租与直线折旧计提。
+- 新增 Maintenance/Economic Depreciation 管理成本账，不污染法定会计利润。
+- 新增 finance.companySnapshot 与 finance.tripEconomics 查询。
+- PassengerFlow 返回明确 boardedGroups/alightedGroups，售票收入可按真实 OD 计价。
+- 所有分数能耗、人工、路桥和管理成本使用余数累计，保持不同 Simulation Tier 结果一致。
+
+### Removed
+- 不在 Company 里新增 cash 或 profit 第二套状态。
+- 不把预计未来维修伪装成已经付款的正式会计费用。
+- 清理 CHANGELOG 重复一级标题。
+
+### Architecture
+- 法定会计账与管理经济成本正式分层。
+- 现实价格/费率完全数据驱动，不写死地区、年份、油价或税率。
+- Trip 贡献利润与 Company 会计利润使用不同口径，避免管理决策和财务报表混淆。
+
+# Changelog
+
 ## 0.7.0-stage6
 
 ### Removed
@@ -28,7 +61,6 @@
 - Route 内唯一站序为 RouteStopPoint[]；Command 的 orderedStationIds 仅作为用户输入。
 - PassengerDemandPolicy 从 Application 注入，后续可直接接 balance content。
 
-# Changelog
 
 ## 0.6.0-stage5
 

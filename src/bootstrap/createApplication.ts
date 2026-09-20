@@ -1,6 +1,8 @@
 import { CommandBus } from "../application/CommandBus.js";
 import { QueryBus } from "../application/QueryBus.js";
 import { DomainEventBus } from "../application/events/DomainEventBus.js";
+import { FinanceCoordinator } from "../application/finance/FinanceCoordinator.js";
+import { registerFinanceQueries } from "../application/handlers/finance/registerFinanceQueries.js";
 import { registerMapQueries } from "../application/handlers/map/registerMapQueries.js";
 import { registerPassengerQueries } from "../application/handlers/passenger/registerPassengerQueries.js";
 import { registerRouteHandlers } from "../application/handlers/route/registerRouteHandlers.js";
@@ -10,12 +12,14 @@ import type { RuntimeIdAllocator } from "../application/ids/RuntimeIdAllocator.j
 import type { RepositoryBundle } from "../application/repositories/RepositoryBundle.js";
 import { SimulationCoordinator } from "../application/simulation/SimulationCoordinator.js";
 import { VehicleSpatialIndex } from "../application/spatial/VehicleSpatialIndex.js";
+import type { EconomicPolicy } from "../simulation/finance/EconomicPolicy.js";
 import type { PassengerDemandPolicy } from "../simulation/passenger/PassengerDemandPolicy.js";
 
 export interface ApplicationDependencies {
   readonly repositories: RepositoryBundle;
   readonly ids: RuntimeIdAllocator;
   readonly passengerDemandPolicy: PassengerDemandPolicy;
+  readonly economicPolicy: EconomicPolicy;
 }
 
 export interface ApplicationRuntime {
@@ -23,6 +27,7 @@ export interface ApplicationRuntime {
   readonly queries: QueryBus;
   readonly events: DomainEventBus;
   readonly repositories: RepositoryBundle;
+  readonly finance: FinanceCoordinator;
   readonly simulation: SimulationCoordinator;
 }
 
@@ -33,6 +38,13 @@ export function createApplication(
   const queries = new QueryBus();
   const events = new DomainEventBus();
   const vehicleIndex = new VehicleSpatialIndex();
+
+  const finance = new FinanceCoordinator(
+    dependencies.repositories,
+    events,
+    dependencies.economicPolicy
+  );
+  finance.initialize();
 
   registerRouteHandlers(commands, {
     repositories: dependencies.repositories,
@@ -54,11 +66,13 @@ export function createApplication(
 
   registerMapQueries(queries, vehicleIndex);
   registerPassengerQueries(queries, dependencies.repositories);
+  registerFinanceQueries(queries, dependencies.repositories);
 
   const simulation = new SimulationCoordinator(
     dependencies.repositories,
     events,
     dependencies.passengerDemandPolicy,
+    finance,
     vehicleIndex
   );
   simulation.rebuildVehicleIndex();
@@ -68,6 +82,7 @@ export function createApplication(
     queries,
     events,
     repositories: dependencies.repositories,
+    finance,
     simulation
   };
 }

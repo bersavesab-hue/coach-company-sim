@@ -8,6 +8,7 @@ export type Brand<T, TBrand extends string> = T & {
 
 export type CommandId = Brand<string, "CommandId">;
 export type EventId = Brand<string, "EventId">;
+export type FinanceEntryId = Brand<string, "FinanceEntryId">;
 export type CompanyId = Brand<string, "CompanyId">;
 export type RegionId = Brand<string, "RegionId">;
 export type RouteId = Brand<string, "RouteId">;
@@ -38,6 +39,12 @@ export const ids = {
     asId<"CommandId">(value, ID_PREFIX.command, "CommandId"),
   event: (value: string): EventId =>
     asId<"EventId">(value, ID_PREFIX.event, "EventId"),
+  financeEntry: (value: string): FinanceEntryId =>
+    asId<"FinanceEntryId">(
+      value,
+      ID_PREFIX.financeEntry,
+      "FinanceEntryId"
+    ),
   company: (value: string): CompanyId =>
     asId<"CompanyId">(value, ID_PREFIX.company, "CompanyId"),
   region: (value: string): RegionId =>

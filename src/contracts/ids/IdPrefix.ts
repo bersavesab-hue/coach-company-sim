@@ -13,7 +13,8 @@ export const ID_PREFIX = {
   worldNode: "location",
   roadSegment: "road",
   license: "license",
-  farePolicy: "fare_policy"
+  farePolicy: "fare_policy",
+  financeEntry: "finance_entry"
 } as const;
 
 export type IdPrefix = (typeof ID_PREFIX)[keyof typeof ID_PREFIX];

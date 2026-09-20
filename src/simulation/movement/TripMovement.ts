@@ -1,4 +1,6 @@
-import type { RoadSegmentId } from "../../contracts/ids/EntityIds.js";
+import type {
+  RoadSegmentId
+} from "../../contracts/ids/EntityIds.js";
 import { DomainError } from "../../core/errors/DomainError.js";
 import { err, ok, type Result } from "../../core/result/Result.js";
 import type { GameSecond } from "../../core/units/Units.js";
@@ -15,12 +17,21 @@ export interface ReachedPathBoundary {
   readonly gameSecond: GameSecond;
 }
 
+export interface RoadUsage {
+  readonly roadSegmentId: RoadSegmentId;
+  readonly distanceM: number;
+}
+
 export interface TripMovementResult {
   readonly trip: TripInstance;
   readonly completed: boolean;
   readonly completionGameSecond: GameSecond | null;
   readonly blockedRoadSegmentId: RoadSegmentId | null;
   readonly reachedBoundaries: readonly ReachedPathBoundary[];
+  readonly roadUsage: readonly RoadUsage[];
+  readonly distanceTraveledM: number;
+  readonly movingSeconds: number;
+  readonly idleSeconds: number;
 }
 
 export function effectiveRoadSpeedMps(
@@ -92,13 +103,23 @@ export function advanceRunningTrip(
   let legIndex = trip.position.activeRoadSegmentIndex;
   let offsetM = Number(trip.position.offsetOnSegmentM);
   const reachedBoundaries: ReachedPathBoundary[] = [];
+  const usage = new Map<RoadSegmentId, number>();
+  let movingSeconds = 0;
+  let idleSeconds = 0;
+  let distanceTraveledM = 0;
+
+  const addUsage = (roadSegmentId: RoadSegmentId, distanceM: number) => {
+    if (distanceM <= 0) return;
+    usage.set(
+      roadSegmentId,
+      (usage.get(roadSegmentId) ?? 0) + distanceM
+    );
+    distanceTraveledM += distanceM;
+  };
 
   while (currentTime < target) {
     const leg = route.pathLegs[legIndex];
-
-    if (!leg) {
-      break;
-    }
+    if (!leg) break;
 
     const road = graph.getRoad(leg.roadSegmentId);
     if (!road) {
@@ -129,13 +150,19 @@ export function advanceRunningTrip(
     const roadState = runtime.getRoadState(road.id);
 
     if (roadState.status === "closed") {
-      return ok({
-        trip: withPosition(trip, legIndex, offsetM, targetGameSecond),
-        completed: false,
-        completionGameSecond: null,
-        blockedRoadSegmentId: road.id,
-        reachedBoundaries
-      });
+      idleSeconds += target - currentTime;
+      currentTime = target;
+      return movementResult(
+        withPosition(trip, legIndex, offsetM, targetGameSecond),
+        false,
+        null,
+        road.id,
+        reachedBoundaries,
+        usage,
+        distanceTraveledM,
+        movingSeconds,
+        idleSeconds
+      );
     }
 
     const speedMps = effectiveRoadSpeedMps(
@@ -145,13 +172,19 @@ export function advanceRunningTrip(
     );
 
     if (speedMps <= 0) {
-      return ok({
-        trip: withPosition(trip, legIndex, offsetM, targetGameSecond),
-        completed: false,
-        completionGameSecond: null,
-        blockedRoadSegmentId: road.id,
-        reachedBoundaries
-      });
+      idleSeconds += target - currentTime;
+      currentTime = target;
+      return movementResult(
+        withPosition(trip, legIndex, offsetM, targetGameSecond),
+        false,
+        null,
+        road.id,
+        reachedBoundaries,
+        usage,
+        distanceTraveledM,
+        movingSeconds,
+        idleSeconds
+      );
     }
 
     const roadLengthM = Number(road.lengthM);
@@ -167,14 +200,20 @@ export function advanceRunningTrip(
     const secondsToFinish = Math.ceil(remainingM / speedMps);
 
     if (secondsToFinish > availableSeconds) {
-      offsetM += speedMps * availableSeconds;
+      const movedDistance = speedMps * availableSeconds;
+      offsetM += movedDistance;
+      addUsage(road.id, movedDistance);
+      movingSeconds += availableSeconds;
       currentTime = target;
       break;
     }
 
+    addUsage(road.id, remainingM);
+    movingSeconds += secondsToFinish;
     currentTime += secondsToFinish;
     legIndex += 1;
     offsetM = 0;
+
     reachedBoundaries.push({
       pathLegBoundaryIndex: legIndex,
       gameSecond: units.gameSecond(currentTime)
@@ -189,24 +228,62 @@ export function advanceRunningTrip(
       );
       if (!completed.ok) return completed;
 
-      return ok({
-        trip: completed.value,
-        completed: true,
-        completionGameSecond: units.gameSecond(currentTime),
-        blockedRoadSegmentId: null,
-        reachedBoundaries
-      });
+      return movementResult(
+        completed.value,
+        true,
+        units.gameSecond(currentTime),
+        null,
+        reachedBoundaries,
+        usage,
+        distanceTraveledM,
+        movingSeconds,
+        idleSeconds
+      );
     }
   }
 
-  return ok({
-    trip: withPosition(trip, legIndex, offsetM, targetGameSecond),
-    completed: false,
-    completionGameSecond: null,
-    blockedRoadSegmentId: null,
-    reachedBoundaries
-  });
+  return movementResult(
+    withPosition(trip, legIndex, offsetM, targetGameSecond),
+    false,
+    null,
+    null,
+    reachedBoundaries,
+    usage,
+    distanceTraveledM,
+    movingSeconds,
+    idleSeconds
+  );
 }
+
+function movementResult(
+  trip: TripInstance,
+  completed: boolean,
+  completionGameSecond: GameSecond | null,
+  blockedRoadSegmentId: RoadSegmentId | null,
+  reachedBoundaries: readonly ReachedPathBoundary[],
+  usage: ReadonlyMap<RoadSegmentId, number>,
+  distanceTraveledM: number,
+  movingSeconds: number,
+  idleSeconds: number
+): TripMovementResult {
+  return {
+    trip,
+    completed,
+    completionGameSecond,
+    blockedRoadSegmentId,
+    reachedBoundaries,
+    roadUsage: [...usage.entries()].map(
+      ([roadSegmentId, distanceM]) => ({
+        roadSegmentId,
+        distanceM
+      })
+    ),
+    distanceTraveledM,
+    movingSeconds,
+    idleSeconds
+  };
+}
+
 function withPosition(
   trip: TripInstance,
   activeRoadSegmentIndex: number,

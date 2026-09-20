@@ -18,6 +18,7 @@ export type DomainEventType =
   | "trip.driverAssigned"
   | "trip.boardingStarted"
   | "trip.departed"
+  | "trip.operatingInterval"
   | "trip.arrivedAtStop"
   | "trip.completed"
   | "trip.cancelled"

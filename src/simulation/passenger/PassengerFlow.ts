@@ -1,11 +1,15 @@
+import type { StationId } from "../../contracts/ids/EntityIds.js";
+import type { PassengerRuntimeState } from "../../domain/passenger/PassengerRuntimeState.js";
+import type { OnboardPassengerGroup } from "../../domain/passenger/OnboardPassengerGroup.js";
 import type { PassengerRoute } from "../../domain/route/PassengerRoute.js";
 import type { TripInstance } from "../../domain/trip/TripInstance.js";
-import type { PassengerRuntimeState } from "../../domain/passenger/PassengerRuntimeState.js";
 
 export interface PassengerStopFlowResult {
   readonly trip: TripInstance;
   readonly boardedCount: number;
   readonly alightedCount: number;
+  readonly boardedGroups: readonly OnboardPassengerGroup[];
+  readonly alightedGroups: readonly OnboardPassengerGroup[];
   readonly leftWaitingCount: number;
 }
 
@@ -32,18 +36,28 @@ export function serveRouteStop(
     throw new Error("Route stop index is out of range");
   }
 
-  const remainingGroups = trip.onboardPassengerGroups.filter(
-    (group) => group.destinationStationId !== stop.stationId
+  const alightedGroups = trip.onboardPassengerGroups.filter(
+    (group) => group.destinationStationId === stop.stationId
   );
-  const alightedCount =
-    totalOnboardPassengers(trip) -
-    remainingGroups.reduce((sum, group) => sum + group.count, 0);
+  const alightedCount = alightedGroups.reduce(
+    (sum, group) => sum + group.count,
+    0
+  );
+
+  const groupMap = new Map<StationId, number>();
+  for (const group of trip.onboardPassengerGroups) {
+    if (group.destinationStationId === stop.stationId) continue;
+    groupMap.set(
+      group.destinationStationId,
+      (groupMap.get(group.destinationStationId) ?? 0) + group.count
+    );
+  }
 
   let availableSeats =
     seatCapacity -
-    remainingGroups.reduce((sum, group) => sum + group.count, 0);
+    [...groupMap.values()].reduce((sum, count) => sum + count, 0);
 
-  const groups = [...remainingGroups];
+  const boardedGroups: OnboardPassengerGroup[] = [];
   let boardedCount = 0;
   let leftWaitingCount = 0;
 
@@ -54,7 +68,11 @@ export function serveRouteStop(
 
     if (boarding > 0) {
       runtime.takeWaiting(stop.stationId, destination, boarding);
-      groups.push({
+      groupMap.set(
+        destination,
+        (groupMap.get(destination) ?? 0) + boarding
+      );
+      boardedGroups.push({
         destinationStationId: destination,
         count: boarding
       });
@@ -68,6 +86,14 @@ export function serveRouteStop(
     );
   }
 
+  const groups = route.stopPoints
+    .slice(stopIndex + 1)
+    .map((point) => ({
+      destinationStationId: point.stationId,
+      count: groupMap.get(point.stationId) ?? 0
+    }))
+    .filter((group) => group.count > 0);
+
   return {
     trip: {
       ...trip,
@@ -75,6 +101,8 @@ export function serveRouteStop(
     },
     boardedCount,
     alightedCount,
+    boardedGroups,
+    alightedGroups,
     leftWaitingCount
   };
 }
