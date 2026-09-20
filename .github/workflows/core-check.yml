@@ -3,7 +3,15 @@ name: Core Check
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - "android-app/**"
+      - ".github/workflows/android-apk.yml"
+      - "scripts/build-apk-web.mts"
   pull_request:
+    paths-ignore:
+      - "android-app/**"
+      - ".github/workflows/android-apk.yml"
+      - "scripts/build-apk-web.mts"
 
 jobs:
   core:
