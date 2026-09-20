@@ -99,10 +99,22 @@ for (const file of sourceFiles) {
   }
 
   if (rel.includes("/route/PassengerRoute.ts")) {
-    for (const forbiddenField of ["vehicleId:", "driverId:", "passengerCount:", "worldPosition:"]) {
+    for (const forbiddenField of [
+      "vehicleId:",
+      "driverId:",
+      "passengerCount:",
+      "worldPosition:",
+      "roadPathSegmentIds:"
+    ]) {
       if (text.includes(forbiddenField)) {
-        failures.push(`Route runtime ownership violation in ${rel}: ${forbiddenField}`);
+        failures.push(`Route runtime/legacy ownership violation in ${rel}: ${forbiddenField}`);
       }
+    }
+
+    if (!text.includes("pathLegs:")) {
+      failures.push(
+        "PassengerRoute must use direction-aware pathLegs"
+      );
     }
   }
 }

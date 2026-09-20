@@ -19,14 +19,17 @@ export * from "./domain/world/WorldPoint.js";
 export * from "./domain/world/WorldNode.js";
 export * from "./domain/world/RoadSegment.js";
 export * from "./domain/world/RoadTraversal.js";
+export * from "./domain/world/RoadPath.js";
 export * from "./domain/world/RoadRuntimeState.js";
 export * from "./domain/world/WorldRuntimeState.js";
 export * from "./domain/world/WorldGraph.js";
 export * from "./domain/world/RoutingCost.js";
 export * from "./domain/world/PathFinder.js";
 
+export * from "./domain/station/Station.js";
 export * from "./domain/route/RouteType.js";
 export * from "./domain/route/PassengerRoute.js";
+export * from "./domain/route/RouteRules.js";
 export * from "./domain/schedule/ServiceCalendar.js";
 export * from "./domain/schedule/DeparturePattern.js";
 export * from "./domain/schedule/ServicePlan.js";
@@ -41,7 +44,12 @@ export * from "./domain/company/Company.js";
 
 export * from "./application/CommandBus.js";
 export * from "./application/QueryBus.js";
+export * from "./application/commands/route/RouteCommands.js";
+export * from "./application/events/DomainEventBus.js";
+export * from "./application/ids/RuntimeIdAllocator.js";
 export * from "./application/repositories/RepositoryBundle.js";
+export * from "./application/repositories/StationRepository.js";
+export * from "./application/services/RoutePathService.js";
 
 export * from "./save/schema/SaveEnvelope.js";
 export * from "./save/schema/SaveVersion.js";

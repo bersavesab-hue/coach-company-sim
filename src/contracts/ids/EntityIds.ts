@@ -77,3 +77,17 @@ export function formatRuntimeId(prefix: IdPrefix, sequence: number): string {
 
   return `${prefix}.${String(sequence).padStart(width, "0")}`;
 }
+
+export function deriveEventId(
+  commandId: CommandId,
+  ordinal = 1
+): EventId {
+  if (!Number.isSafeInteger(ordinal) || ordinal <= 0) {
+    throw new Error("Event ordinal must be a positive safe integer");
+  }
+
+  const commandSuffix = String(commandId).slice("command.".length);
+  return ids.event(
+    `event.${commandSuffix}.${String(ordinal).padStart(2, "0")}`
+  );
+}

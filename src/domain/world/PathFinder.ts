@@ -1,28 +1,11 @@
-import type {
-  RoadSegmentId,
-  WorldNodeId
-} from "../../contracts/ids/EntityIds.js";
+import type { WorldNodeId } from "../../contracts/ids/EntityIds.js";
 import { DomainError } from "../../core/errors/DomainError.js";
 import { err, ok, type Result } from "../../core/result/Result.js";
-import type { RoadTraversal, TraversalDirection } from "./RoadTraversal.js";
+import type { RoadTraversal } from "./RoadTraversal.js";
+import type { RoadPath, PathLeg } from "./RoadPath.js";
 import { routingCost, type RoutingPreference } from "./RoutingCost.js";
 import type { WorldGraph } from "./WorldGraph.js";
 import type { WorldRuntimeState } from "./WorldRuntimeState.js";
-
-export interface PathLeg {
-  readonly roadSegmentId: RoadSegmentId;
-  readonly direction: TraversalDirection;
-  readonly fromNodeId: WorldNodeId;
-  readonly toNodeId: WorldNodeId;
-}
-
-export interface RoadPath {
-  readonly fromNodeId: WorldNodeId;
-  readonly toNodeId: WorldNodeId;
-  readonly preference: RoutingPreference;
-  readonly totalCost: number;
-  readonly legs: readonly PathLeg[];
-}
 
 interface PreviousStep {
   readonly previousNodeId: WorldNodeId;
