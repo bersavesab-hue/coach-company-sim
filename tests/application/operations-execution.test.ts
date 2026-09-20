@@ -950,3 +950,186 @@ test("breakdown triggers recovery, spare vehicle substitution and schedule revis
     "completed"
   );
 });
+
+
+test("dispatch center read model exposes committed trips, fleet, drivers and live status", async () => {
+  const f = simpleFixture();
+
+  const committed = f.app.commands.dispatch(
+    command(
+      21,
+      "operations.commitDayPlan",
+      f.companyId,
+      0,
+      {
+        companyId: f.companyId,
+        gameDay: 1,
+        allowPartial: false
+      }
+    )
+  );
+  assert.equal(committed.ok, true);
+
+  const initial = await f.app.queries.execute({
+    type: "operations.dispatchCenter",
+    payload: {
+      companyId: f.companyId,
+      gameDay: 1,
+      currentGameSecond: units.gameSecond(0)
+    }
+  });
+  assert.equal(initial.ok, true);
+  if (!initial.ok) return;
+
+  const snapshot = initial.value as {
+    readonly schedule: {
+      readonly committed: boolean;
+      readonly revision: number | null;
+    };
+    readonly summary: {
+      readonly passengerTripsTotal: number;
+      readonly passengerTripsPlanned: number;
+      readonly fleetTotal: number;
+      readonly driversTotal: number;
+      readonly shortageTrips: number;
+    };
+    readonly trips: readonly {
+      readonly routeCode: string;
+      readonly tripStatus: string;
+    }[];
+    readonly vehicles: readonly {
+      readonly vehicleId: VehicleId;
+      readonly nextOperationKind: string | null;
+      readonly nextOperationGameSecond: number | null;
+    }[];
+    readonly drivers: readonly {
+      readonly driverId: StaffId;
+      readonly nextOperationKind: string | null;
+    }[];
+  };
+
+  assert.equal(snapshot.schedule.committed, true);
+  assert.equal(snapshot.schedule.revision, 1);
+  assert.equal(snapshot.summary.passengerTripsTotal, 1);
+  assert.equal(snapshot.summary.passengerTripsPlanned, 1);
+  assert.equal(snapshot.summary.fleetTotal, 1);
+  assert.equal(snapshot.summary.driversTotal, 1);
+  assert.equal(snapshot.summary.shortageTrips, 0);
+  assert.equal(snapshot.trips[0]?.routeCode, "A-B");
+  assert.equal(snapshot.trips[0]?.tripStatus, "planned");
+  assert.equal(snapshot.vehicles[0]?.vehicleId, f.vehicleId);
+  assert.equal(
+    snapshot.vehicles[0]?.nextOperationKind,
+    "passenger_trip"
+  );
+  assert.equal(
+    snapshot.vehicles[0]?.nextOperationGameSecond,
+    1000
+  );
+  assert.equal(snapshot.drivers[0]?.driverId, f.driverId);
+  assert.equal(
+    snapshot.drivers[0]?.nextOperationKind,
+    "passenger_trip"
+  );
+
+  f.app.simulation.advanceTo(units.gameSecond(1000));
+
+  const running = await f.app.queries.execute({
+    type: "operations.dispatchCenter",
+    payload: {
+      companyId: f.companyId,
+      gameDay: 1,
+      currentGameSecond: units.gameSecond(1000)
+    }
+  });
+  assert.equal(running.ok, true);
+  if (!running.ok) return;
+
+  const runningSnapshot = running.value as {
+    readonly summary: {
+      readonly passengerTripsRunning: number;
+      readonly fleetRunning: number;
+      readonly driversDriving: number;
+    };
+    readonly trips: readonly {
+      readonly actualDepartureGameSecond: number | null;
+      readonly tripStatus: string;
+    }[];
+  };
+
+  assert.equal(runningSnapshot.summary.passengerTripsRunning, 1);
+  assert.equal(runningSnapshot.summary.fleetRunning, 1);
+  assert.equal(runningSnapshot.summary.driversDriving, 1);
+  assert.equal(
+    runningSnapshot.trips[0]?.actualDepartureGameSecond,
+    1000
+  );
+  assert.equal(runningSnapshot.trips[0]?.tripStatus, "running");
+});
+
+test("dispatch center exposes automatic support actions and energy state", async () => {
+  const f = simpleFixture();
+  const vehicle = f.repositories.vehicles.getById(f.vehicleId);
+  assert.ok(vehicle);
+  if (!vehicle) return;
+
+  f.repositories.vehicles.save({
+    ...vehicle,
+    energyUnits: 5_000
+  });
+
+  const committed = f.app.commands.dispatch(
+    command(
+      22,
+      "operations.commitDayPlan",
+      f.companyId,
+      0,
+      {
+        companyId: f.companyId,
+        gameDay: 1,
+        allowPartial: false
+      }
+    )
+  );
+  assert.equal(committed.ok, true);
+
+  const result = await f.app.queries.execute({
+    type: "operations.dispatchCenter",
+    payload: {
+      companyId: f.companyId,
+      gameDay: 1,
+      currentGameSecond: units.gameSecond(0)
+    }
+  });
+  assert.equal(result.ok, true);
+  if (!result.ok) return;
+
+  const snapshot = result.value as {
+    readonly summary: {
+      readonly supportActionsTotal: number;
+    };
+    readonly support: readonly {
+      readonly kind: string;
+      readonly status: string;
+      readonly energyUnits: number;
+    }[];
+    readonly vehicles: readonly {
+      readonly energyUnits: number;
+      readonly energyPermille: number;
+      readonly nextOperationKind: string | null;
+    }[];
+  };
+
+  assert.ok(snapshot.summary.supportActionsTotal >= 1);
+  const refuel = snapshot.support.find(
+    (action) => action.kind === "refuel"
+  );
+  assert.ok(refuel);
+  assert.equal(refuel?.status, "planned");
+  assert.ok((refuel?.energyUnits ?? 0) > 0);
+  assert.equal(snapshot.vehicles[0]?.energyUnits, 5_000);
+  assert.equal(
+    snapshot.vehicles[0]?.nextOperationKind,
+    "refuel"
+  );
+});
