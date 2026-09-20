@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.1.3-stage1-blueprint
+
+### Added
+- 冻结 Stage 1 正式核心模型实施蓝图。
+- 明确 V0.1 临时源码的完整删除清单。
+- 固定 Contracts / Core / Domain / Application / Save / Bootstrap 正式目录。
+- 固定强类型永久 ID 与存档内单调运行 ID 方案。
+- 固定 Result / ErrorCode 错误协议。
+- 固定 CommandEnvelope / DomainEventEnvelope。
+- 固定 TripInstance 状态机与合法迁移。
+- 固定 Route / ServicePlan / Trip / Vehicle 字段归属。
+- 明确废除单体 GameState 与 PassengerTransportApp。
+- 规划 Repository 边界与架构 CI 守卫。
+- 固定 Stage 1 的 12 步实施顺序和验收清单。
+
+### No runtime changes
+- 本版本仅冻结编码施工图，不增加业务功能。
+
 ## 0.1.2-system-map
 
 ### Added
