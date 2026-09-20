@@ -26,6 +26,10 @@ import {
   createTestVehicleRuntimeRepository,
   zeroVehicleLifecyclePolicy
 } from "../helpers/TestVehicle.js";
+import {
+  createTestFleetTaskRepository,
+  zeroOperationsPolicy
+} from "../helpers/TestOperations.js";
 
 function buildFixture(companyLicenses = [ids.license("license.000001")]) {
   const regionId = ids.region("region.000001");
@@ -114,6 +118,7 @@ function buildFixture(companyLicenses = [ids.license("license.000001")]) {
       save: (value) => companies.set(value.id, value)
     },
     finance: createTestFinanceRepository(),
+    fleetTasks: createTestFleetTaskRepository(),
     passengerDemand: {
       all: () => []
     },
@@ -146,6 +151,8 @@ function buildFixture(companyLicenses = [ids.license("license.000001")]) {
     trips: {
       getById: (_id) => undefined as TripInstance | undefined,
       findByServicePlanAndDeparture: (_planId, _departure) => undefined,
+      findByVehicle: () => [],
+      findByDriver: () => [],
       findRunning: () => [],
       save: (_trip) => undefined
     },
@@ -179,6 +186,9 @@ function buildFixture(companyLicenses = [ids.license("license.000001")]) {
     nextTripId() {
       return ids.trip("trip.000000000001");
     },
+    nextFleetTaskId() {
+      return ids.fleetTask("fleet_task.00000001");
+    },
     nextVehicleId() {
       return ids.vehicle("vehicle.00000001");
     }
@@ -191,7 +201,8 @@ function buildFixture(companyLicenses = [ids.license("license.000001")]) {
       frequencyMultiplierPermille: () => units.permille(1000)
     },
     economicPolicy: zeroEconomicPolicy,
-    vehicleLifecyclePolicy: zeroVehicleLifecyclePolicy
+    vehicleLifecyclePolicy: zeroVehicleLifecyclePolicy,
+    operationsPolicy: zeroOperationsPolicy
   });
 
   return { app, company, s1, s2 };
