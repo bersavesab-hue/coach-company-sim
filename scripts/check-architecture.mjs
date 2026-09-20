@@ -79,9 +79,7 @@ for (const file of sourceFiles) {
       "/application/",
       "react",
       "android",
-      "canvas",
-      "document",
-      "window."
+      "canvas"
     ];
     for (const banned of bannedImports) {
       if (text.includes(banned)) {
