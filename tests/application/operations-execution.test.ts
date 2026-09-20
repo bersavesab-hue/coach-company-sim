@@ -699,7 +699,7 @@ function faultFixture() {
     id: ids.vehicleModel("vehicle_model.000011"),
     serviceClass: "county_midibus",
     maxSpeedMps: units.speedMps(20),
-    tireWearPermillePer1000Km: 500_000,
+    tireWearPermillePer1000Km: 1_250_000,
     minimumTireConditionPermille: 600
   });
 
