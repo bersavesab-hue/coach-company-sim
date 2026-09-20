@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.15.1-stage15-foundation
+
+### Added
+- 正式建立 Stage 15 Vehicle Content Contract。
+- 建立 10 个架空客车品牌：6 国产、4 进口。
+- 建立 32 个正式产品车系，并精确分配 100 个基础车型名额：国产 72、进口 28。
+- 品牌/车系命名采用现实商用车行业常见的字母数字产品层级逻辑，但不复用真实品牌与真实系列名称。
+- 新增 6 阶段车型解锁规则；开局仅开放 Tier 1，进口车型最早从 Tier 4 进入。
+- 解锁同时受游戏天数、公司声誉和有效车队规模约束。
+- 新增 VehicleContentAccessService，正式根据 Company + Fleet + GameTime 判定车型可购买性。
+- vehicleMarket.purchaseListing 现在在底层强制检查车型解锁；不能通过提前出现的 Listing 绕过成长限制。
+- VehicleMarketListingDto 新增 unlockTier / purchaseUnlocked / unlockMissing，供未来 UI 显示真实锁定原因。
+- 新增内容规模、国产/进口分布、解锁节奏专项测试。
+
+### Content
+- CONTENT_VERSION 从 1 升至 2。
+- 本阶段尚未填充 100 个 VehicleModel 的完整技术参数；下一步开始 Content Validator 与首批正式车型数据。
+
+
 ## 0.15.1-stage15-blueprint
 
 ### Added

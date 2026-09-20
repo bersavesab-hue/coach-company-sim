@@ -365,6 +365,27 @@ for (const file of sourceFiles) {
     }
   }
 
+  if (rel.includes("/services/VehicleMarketTradingService.ts") &&
+      !text.includes("VEHICLE_MODEL_LOCKED")) {
+    failures.push(
+      "Stage 15 market purchases must enforce vehicle content unlocks"
+    );
+  }
+
+  if (rel.includes("/services/VehicleContentAccessService.ts")) {
+    for (const requiredStage15Token of [
+      "VEHICLE_SERIES",
+      "vehicleUnlockRuleForTier",
+      "ownedVehicleCount"
+    ]) {
+      if (!text.includes(requiredStage15Token)) {
+        failures.push(
+          `VehicleContentAccessService missing Stage 15 progression rule: ${requiredStage15Token}`
+        );
+      }
+    }
+  }
+
   if (rel.includes("/finance/FinancialProfiles.ts")) {
     for (const forbiddenField of [
       "energyKind:",

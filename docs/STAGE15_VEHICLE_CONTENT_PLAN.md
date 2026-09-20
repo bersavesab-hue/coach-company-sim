@@ -1,6 +1,6 @@
 # Stage 15：车辆内容库与动态车商供给冻结
 
-状态：**Blueprint Freeze**
+状态：**Implementation in progress — content foundation complete**
 
 ## 1. 目标
 
