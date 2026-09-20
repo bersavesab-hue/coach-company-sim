@@ -61,6 +61,11 @@ export function createTestFinanceRepository(
     getFarePolicy: (id) => farePolicies.get(id),
     getVehicleEconomicProfile: (id) => vehicleEconomics.get(id),
     getVehicleAssetProfile: (id) => vehicleAssets.get(id),
+    saveVehicleAssetProfile: (profile) =>
+      vehicleAssets.set(profile.vehicleId, profile),
+    removeVehicleAssetProfile: (id) => {
+      vehicleAssets.delete(id);
+    },
     getDriverCompensationProfile: (id) => driverProfiles.get(id),
     companyFinancialProfiles: () => companyProfiles,
     vehicleAssetProfilesByCompany: (companyId: CompanyId) =>
@@ -80,6 +85,8 @@ export function createTestFinanceRepository(
       ledger.filter((entry) => entry.companyId === companyId),
     ledgerEntriesByTrip: (tripId: TripId) =>
       ledger.filter((entry) => entry.tripId === tripId),
+    ledgerEntriesByVehicle: (vehicleId: VehicleId) =>
+      ledger.filter((entry) => entry.vehicleId === vehicleId),
     hasManagementCostSourceRef: (sourceRef) =>
       management.some((entry) => entry.sourceRef === sourceRef),
     appendManagementCost: (entry) => management.push(entry),
