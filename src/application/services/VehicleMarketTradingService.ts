@@ -27,6 +27,7 @@ import type {
   ListOwnedVehiclePayload,
   NegotiateVehicleListingPayload,
   PlaceVehicleAuctionBidPayload,
+  SellVehicleToDealerPayload,
   PurchaseVehicleListingPayload,
   SettleVehicleAuctionPayload,
   StartVehicleAuctionPayload,
@@ -372,6 +373,172 @@ export class VehicleMarketTradingService {
           askingPriceCents: askingPrice,
           fairMarketValueCents:
             valuation.value.fairMarketValueCents
+        },
+        2
+      )
+    );
+
+    return ok(listing);
+  }
+
+  sellToDealer(
+    command: CommandEnvelope,
+    payload: SellVehicleToDealerPayload
+  ): Result<VehicleListing, DomainError> {
+    const companyCheck = this.requireActiveCompany(
+      command,
+      payload.companyId
+    );
+    if (!companyCheck.ok) return companyCheck;
+
+    const vehicle = this.dependencies.repositories.vehicles.getById(
+      payload.vehicleId
+    );
+    if (
+      !vehicle ||
+      vehicle.companyId !== payload.companyId ||
+      vehicle.status !== "available" ||
+      vehicle.activeTripId !== null ||
+      vehicle.activeFleetTaskId !== null ||
+      vehicle.currentStationId === null ||
+      vehicle.configurationId === null
+    ) {
+      return err(
+        new DomainError(
+          "VEHICLE_NOT_AVAILABLE",
+          "Vehicle is not eligible for dealer acquisition",
+          { vehicleId: payload.vehicleId }
+        )
+      );
+    }
+
+    if (
+      this.dependencies.repositories.trips
+        .findByVehicle(vehicle.id)
+        .some(
+          (trip) =>
+            trip.status !== "completed" &&
+            trip.status !== "cancelled"
+        )
+    ) {
+      return err(
+        new DomainError(
+          "FLEET_TASK_CONFLICT",
+          "Vehicle cannot be sold to a dealer while future trips reserve it"
+        )
+      );
+    }
+
+    const dealer =
+      this.dependencies.repositories.vehicleMarket.getDealer(
+        payload.dealerId
+      );
+    const configuration =
+      this.dependencies.repositories.vehicleMarket.getConfiguration(
+        vehicle.configurationId
+      );
+    const variant = configuration
+      ? this.dependencies.repositories.vehicleMarket.getVariant(
+          configuration.variantId
+        )
+      : undefined;
+    if (
+      !dealer ||
+      !dealer.active ||
+      dealer.kind === "auction_house" ||
+      !configuration ||
+      !variant
+    ) {
+      return err(
+        new DomainError(
+          "REFERENCE_NOT_FOUND",
+          "Dealer, configuration or variant is unavailable for acquisition"
+        )
+      );
+    }
+
+    const valuation =
+      this.dependencies.valuation.estimateOwnedVehicle(
+        vehicle.id,
+        dealer.id,
+        command.issuedAtGameSecond
+      );
+    if (!valuation.ok) return valuation;
+    if (Number(valuation.value.dealerBuyOfferCents) <= 0) {
+      return err(
+        new DomainError(
+          "INVALID_ARGUMENT",
+          "Dealer acquisition offer must be positive"
+        )
+      );
+    }
+
+    const listing: VehicleListing = {
+      id: listingIdFromCommand(command),
+      dealerId: dealer.id,
+      kind: "used",
+      modelId: vehicle.modelId,
+      variantId: variant.id,
+      configurationId: configuration.id,
+      sellerCompanyId: null,
+      sourceVehicleId: vehicle.id,
+      askingPriceCents:
+        valuation.value.suggestedAskingPriceCents,
+      sellerDisclosure: {
+        reportedMileageM: vehicle.mileageM,
+        reportedAccidentCount: vehicle.recordedAccidentCount,
+        reportedConditionPermille: units.permille(
+          Math.min(
+            Number(vehicle.powertrainConditionPermille),
+            Number(vehicle.brakeConditionPermille),
+            Number(vehicle.tireConditionPermille),
+            Number(vehicle.bodyConditionPermille)
+          )
+        )
+      },
+      reservation: null,
+      stockCount: 1,
+      usedSnapshot: snapshotForSale(vehicle),
+      listedAtGameSecond: command.issuedAtGameSecond,
+      availableFromGameSecond: command.issuedAtGameSecond,
+      expiresAtGameSecond: null,
+      status: "available"
+    };
+
+    this.dependencies.repositories.vehicleMarket.saveListing(listing);
+    this.dependencies.repositories.vehicles.save({
+      ...vehicle,
+      status: "sold"
+    });
+
+    this.dependencies.events.publish(
+      createDomainEvent(
+        command,
+        "vehicle.sold",
+        "vehicle",
+        vehicle.id,
+        {
+          vehicleId: vehicle.id,
+          companyId: payload.companyId,
+          proceedsCents: valuation.value.dealerBuyOfferCents
+        },
+        1
+      )
+    );
+    this.dependencies.events.publish(
+      createDomainEvent(
+        command,
+        "vehicleMarket.listingCreated",
+        "vehicleMarket",
+        listing.id,
+        {
+          listingId: listing.id,
+          vehicleId: vehicle.id,
+          sellerCompanyId: null,
+          dealerId: dealer.id,
+          acquisitionPriceCents:
+            valuation.value.dealerBuyOfferCents,
+          askingPriceCents: listing.askingPriceCents
         },
         2
       )
@@ -1161,7 +1328,7 @@ export class VehicleMarketTradingService {
       auction.highestBidCents,
       1
     );
-    if (!purchased.ok) return purchased;
+    if (!purchased.ok) return err(purchased.error);
 
     const sellerFee = units.moneyCents(
       Math.floor(
@@ -1330,10 +1497,17 @@ export class VehicleMarketTradingService {
     if (!configurationResult.ok) return configurationResult;
     const configuration = configurationResult.value;
 
+    const finalPurchasePriceCents = units.moneyCents(
+      Number(purchasePriceCents) +
+      (listing.kind === "new"
+        ? Number(configuration.priceAdjustmentCents)
+        : 0)
+    );
+
     const funds = requireCash(
       this.dependencies.repositories,
       buyerCompanyId,
-      purchasePriceCents
+      finalPurchasePriceCents
     );
     if (!funds.ok) return funds;
 
@@ -1361,7 +1535,7 @@ export class VehicleMarketTradingService {
 
     const vehicleResult =
       listing.sourceVehicleId !== null
-        ? this.transferCompanyVehicle(
+        ? this.transferSourceVehicle(
             listing,
             buyerCompanyId,
             depotStationId
@@ -1401,7 +1575,7 @@ export class VehicleMarketTradingService {
           {
             vehicleId: vehicle.id,
             companyId: listing.sellerCompanyId,
-            proceedsCents: purchasePriceCents
+            proceedsCents: finalPurchasePriceCents
           },
           ordinal++
         )
@@ -1422,7 +1596,7 @@ export class VehicleMarketTradingService {
           listingId: listing.id,
           dealerId: dealer.id,
           listingKind: listing.kind,
-          purchasePriceCents,
+          purchasePriceCents: finalPurchasePriceCents,
           residualValueCents: terms.residualValueCents,
           usefulLifeDays: terms.usefulLifeDays,
           dailyInsuranceCents: terms.dailyInsuranceCents,
@@ -1445,7 +1619,7 @@ export class VehicleMarketTradingService {
           listingId: listing.id,
           dealerId: dealer.id,
           listingKind: listing.kind,
-          purchasePriceCents
+          purchasePriceCents: finalPurchasePriceCents
         },
         ordinal
       )
@@ -1454,14 +1628,13 @@ export class VehicleMarketTradingService {
     return ok(vehicle);
   }
 
-  private transferCompanyVehicle(
+  private transferSourceVehicle(
     listing: VehicleListing,
     buyerCompanyId: CompanyId,
     depotStationId: PurchaseVehicleListingPayload["depotStationId"]
   ): Result<OwnedVehicle, DomainError> {
     if (
       listing.sourceVehicleId === null ||
-      listing.sellerCompanyId === null ||
       listing.usedSnapshot === null
     ) {
       return err(
@@ -1476,10 +1649,18 @@ export class VehicleMarketTradingService {
       this.dependencies.repositories.vehicles.getById(
         listing.sourceVehicleId
       );
+    const expectedStatus =
+      listing.sellerCompanyId === null
+        ? "sold"
+        : "listed_for_sale";
+
     if (
       !vehicle ||
-      vehicle.companyId !== listing.sellerCompanyId ||
-      vehicle.status !== "listed_for_sale"
+      (
+        listing.sellerCompanyId !== null &&
+        vehicle.companyId !== listing.sellerCompanyId
+      ) ||
+      vehicle.status !== expectedStatus
     ) {
       return err(
         new DomainError(

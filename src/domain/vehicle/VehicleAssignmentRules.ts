@@ -27,6 +27,7 @@ export function validateVehicleQualification(
 
   if (
     vehicle.status === "sold" ||
+    vehicle.status === "listed_for_sale" ||
     vehicle.status === "retired" ||
     vehicle.status === "maintenance"
   ) {

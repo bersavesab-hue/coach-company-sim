@@ -46,12 +46,6 @@ export interface VehicleLifecyclePolicy {
     gameSecond: GameSecond
   ): CoverageRenewalQuote;
 
-  quoteResale(
-    vehicle: OwnedVehicle,
-    model: VehicleModel,
-    gameSecond: GameSecond
-  ): MoneyCents;
-
   quoteScrap(
     vehicle: OwnedVehicle,
     model: VehicleModel,

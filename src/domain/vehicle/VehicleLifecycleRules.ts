@@ -167,6 +167,7 @@ function validateVehicleOperationalReadiness(
     vehicle.status === "maintenance" ||
     vehicle.status === "recovering" ||
     vehicle.status === "broken" ||
+    vehicle.status === "listed_for_sale" ||
     vehicle.status === "sold" ||
     vehicle.status === "retired"
   ) {

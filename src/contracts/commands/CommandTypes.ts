@@ -1,7 +1,6 @@
 export type CommandType =
   | "company.create"
   | "vehicle.refuel"
-  | "vehicle.sell"
   | "vehicle.retire"
   | "vehicle.sendToMaintenance"
   | "vehicle.renewInsurance"
@@ -9,6 +8,7 @@ export type CommandType =
   | "vehicleMarket.createConfiguration"
   | "vehicleMarket.purchaseListing"
   | "vehicleMarket.listOwnedVehicle"
+  | "vehicleMarket.sellToDealer"
   | "vehicleMarket.withdrawListing"
   | "vehicleMarket.inspectListing"
   | "vehicleMarket.negotiateListing"

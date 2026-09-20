@@ -51,9 +51,6 @@ export function registerVehicleHandlers(
   commands.register("vehicle.passInspection", (command) =>
     handleInspection(command, dependencies)
   );
-  commands.register("vehicle.sell", (command) =>
-    handleSell(command, dependencies)
-  );
   commands.register("vehicle.retire", (command) =>
     handleRetire(command, dependencies)
   );
@@ -347,24 +344,9 @@ function handleInspection(
   return ok(updated);
 }
 
-function handleSell(
-  command: CommandEnvelope,
-  dependencies: VehicleHandlerDependencies
-): Result<OwnedVehicle, DomainError> {
-  return disposeVehicle(command, dependencies, false);
-}
-
 function handleRetire(
   command: CommandEnvelope,
   dependencies: VehicleHandlerDependencies
-): Result<OwnedVehicle, DomainError> {
-  return disposeVehicle(command, dependencies, true);
-}
-
-function disposeVehicle(
-  command: CommandEnvelope,
-  dependencies: VehicleHandlerDependencies,
-  retired: boolean
 ): Result<OwnedVehicle, DomainError> {
   const payload = command.payload as VehicleByIdPayload;
   const context = requireVehicle(payload.vehicleId, command, dependencies);
@@ -391,21 +373,15 @@ function disposeVehicle(
     );
   }
 
-  const proceeds = retired
-    ? dependencies.lifecyclePolicy.quoteScrap(
-        vehicle,
-        model,
-        command.issuedAtGameSecond
-      )
-    : dependencies.lifecyclePolicy.quoteResale(
-        vehicle,
-        model,
-        command.issuedAtGameSecond
-      );
+  const proceeds = dependencies.lifecyclePolicy.quoteScrap(
+    vehicle,
+    model,
+    command.issuedAtGameSecond
+  );
 
   const updated: OwnedVehicle = {
     ...vehicle,
-    status: retired ? "retired" : "sold",
+    status: "retired",
     activeIncident: null
   };
   dependencies.repositories.vehicles.save(updated);
@@ -413,7 +389,7 @@ function disposeVehicle(
   dependencies.events.publish(
     createDomainEvent(
       command,
-      retired ? "vehicle.retired" : "vehicle.sold",
+      "vehicle.retired",
       "vehicle",
       vehicle.id,
       {

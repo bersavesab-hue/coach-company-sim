@@ -77,3 +77,9 @@ export interface SettleVehicleAuctionPayload {
 }
 
 export interface RefreshVehicleMarketPayload {}
+
+export interface SellVehicleToDealerPayload {
+  readonly companyId: CompanyId;
+  readonly vehicleId: VehicleId;
+  readonly dealerId: VehicleDealerId;
+}
