@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.15.6-stage15-dealers24
+
+### Added
+- 一次性完成 24 / 24 个正式 VehicleDealer。
+- 车商结构固定为：10 家品牌厂家网络、6 家地区综合车商、5 家二手车商、3 家拍卖行。
+- 10 个正式品牌各自恰好拥有 1 个 manufacturer_dealer。
+- 地区综合车商拥有不同品牌组合、市场区域、库存强度、二手供给权重和价格偏移。
+- 二手车商细分为低价、主流、认证高端、进口二手和车队置换渠道。
+- 拍卖行细分为综合拍卖、车队资产拍卖和精品客车拍卖。
+- 新增 VehicleDealerContentRecord，提供 marketZoneCode / inventoryProfile / newStockWeightPermille / usedSupplyWeightPermille / priceBiasPermille。
+- 正式区分 Stage 15 车辆市场区域与未来世界地图 Region；当前不伪造 canonical RegionId。
+- 新增 VehicleDealerContentValidator，校验 24 总量、10/6/5/3 分布、品牌引用、厂家唯一覆盖、区域要求和供给权重。
+- 新增 24 车商专项测试。
+
+### Content
+- CONTENT_VERSION 从 6 升至 7。
+- VehicleModel：100 / 100 complete。
+- VehicleVariant：180 / 180 complete。
+- VehicleOptionDefinition：48 / 48 complete。
+- VehicleDealer：24 / 24 complete。
+- 下一阶段：动态新车库存生成器。
+
+
 ## 0.15.5-stage15-options48
 
 ### Added

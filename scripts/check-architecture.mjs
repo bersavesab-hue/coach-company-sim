@@ -476,6 +476,42 @@ for (const file of sourceFiles) {
     }
   }
 
+  if (rel.includes("/content/vehicle/VehicleDealerCatalog.ts")) {
+    if (!text.includes("Vehicle dealer catalog must contain exactly 24 dealers")) {
+      failures.push(
+        "Stage 15 VehicleDealerCatalog must enforce exactly 24 dealers"
+      );
+    }
+    for (const requiredDealerField of [
+      "marketZoneCode",
+      "inventoryProfile",
+      "newStockWeightPermille",
+      "usedSupplyWeightPermille",
+      "priceBiasPermille"
+    ]) {
+      if (!text.includes(requiredDealerField)) {
+        failures.push(
+          `Stage 15 VehicleDealerCatalog missing dealer supply field: ${requiredDealerField}`
+        );
+      }
+    }
+  }
+
+  if (rel.includes("/content/vehicle/VehicleDealerContentValidator.ts")) {
+    for (const requiredDealerCheck of [
+      "DEALER_KIND_DISTRIBUTION_INVALID",
+      "MANUFACTURER_COVERAGE_INVALID",
+      "DEALER_BRAND_NOT_FOUND",
+      "DEALER_PREMATURE_REGION_BINDING"
+    ]) {
+      if (!text.includes(requiredDealerCheck)) {
+        failures.push(
+          `Stage 15 vehicle dealer validator missing check: ${requiredDealerCheck}`
+        );
+      }
+    }
+  }
+
   if (rel.includes("/finance/FinancialProfiles.ts")) {
     for (const forbiddenField of [
       "energyKind:",

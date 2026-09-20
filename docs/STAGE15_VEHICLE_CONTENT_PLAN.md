@@ -1,6 +1,6 @@
 # Stage 15：车辆内容库与动态车商供给冻结
 
-状态：**Implementation in progress — VehicleModel 100 / 100 + VehicleVariant 180 / 180 + VehicleOptionDefinition 48 / 48 complete**
+状态：**Implementation in progress — VehicleModel 100 / 100 + VehicleVariant 180 / 180 + VehicleOptionDefinition 48 / 48 + VehicleDealer 24 / 24 complete**
 
 ## 1. 目标
 
@@ -344,7 +344,7 @@ Stage 15 必须先做 validator，再批量填内容。
 6. 100 VehicleModel ✅ 已完成
 7. 180 Variant ✅ 已完成
 8. 48 Option ✅ 已完成
-9. 24 Dealer
+9. 24 Dealer ✅ 已完成
 10. 新车库存生成器
 11. 二手车动态生成器
 12. 地区需求配置
