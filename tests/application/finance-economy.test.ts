@@ -20,6 +20,8 @@ import { registerFinanceQueries } from "../../src/application/handlers/finance/r
 import { QueryBus } from "../../src/application/QueryBus.js";
 import type { RepositoryBundle } from "../../src/application/repositories/RepositoryBundle.js";
 import { createTestFinanceRepository } from "../helpers/TestFinance.js";
+import { createTestDriver } from "../helpers/TestDriver.js";
+import { createTestFleetTaskRepository } from "../helpers/TestOperations.js";
 import {
   createTestOwnedVehicle,
   createTestVehicleModel,
@@ -135,14 +137,14 @@ function fixture() {
     idleEnergyUnitsPerHour: 2_000
   });
 
-  const driver: Driver = {
+  const driver: Driver = createTestDriver({
     id: driverId,
     companyId,
-    name: "司机甲",
+    stationId: stationA,
     status: "driving",
-    qualifiedVehicleClasses: ["intercity_coach"],
-    activeTripId: tripId
-  };
+    activeTripId: tripId,
+    qualifiedVehicleClasses: ["intercity_coach"]
+  });
 
   const trip: TripInstance = {
     id: tripId,
@@ -162,6 +164,7 @@ function fixture() {
     onboardPassengerGroups: [
       { destinationStationId: stationB, count: 10 }
     ],
+    recoveryStationId: null,
     delaySeconds: units.gameSecond(0)
   };
 
@@ -225,6 +228,7 @@ function fixture() {
       save: (value) => companies.set(value.id, value)
     },
     finance,
+    fleetTasks: createTestFleetTaskRepository(),
     passengerDemand: { all: () => [] },
     passengerRuntime: {
       get: () => { throw new Error("not used"); },
@@ -249,6 +253,10 @@ function fixture() {
     trips: {
       getById: (id) => trips.get(id),
       findByServicePlanAndDeparture: () => undefined,
+      findByVehicle: (vehicleId) =>
+        [...trips.values()].filter((value) => value.vehicleId === vehicleId),
+      findByDriver: (driverId) =>
+        [...trips.values()].filter((value) => value.driverId === driverId),
       findRunning: () => [...trips.values()],
       save: (value) => trips.set(value.id, value)
     },
