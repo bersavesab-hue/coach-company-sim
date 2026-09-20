@@ -24,7 +24,8 @@ import {
 } from "../helpers/TestVehicle.js";
 import {
   createTestFleetTaskRepository,
-  zeroOperationsPolicy
+  zeroOperationsPolicy,
+  createTestOperationsScheduleRepository
 } from "../helpers/TestOperations.js";
 
 function fixture() {
@@ -90,6 +91,7 @@ function fixture() {
     },
     finance,
     fleetTasks: createTestFleetTaskRepository(),
+    operationsSchedules: createTestOperationsScheduleRepository(),
     passengerDemand: { all: () => [] },
     passengerRuntime: {
       get: () => new PassengerRuntimeState(),

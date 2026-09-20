@@ -21,7 +21,9 @@ import { QueryBus } from "../../src/application/QueryBus.js";
 import type { RepositoryBundle } from "../../src/application/repositories/RepositoryBundle.js";
 import { createTestFinanceRepository } from "../helpers/TestFinance.js";
 import { createTestDriver } from "../helpers/TestDriver.js";
-import { createTestFleetTaskRepository } from "../helpers/TestOperations.js";
+import { createTestFleetTaskRepository,
+  createTestOperationsScheduleRepository
+} from "../helpers/TestOperations.js";
 import {
   createTestOwnedVehicle,
   createTestVehicleModel,
@@ -229,6 +231,7 @@ function fixture() {
     },
     finance,
     fleetTasks: createTestFleetTaskRepository(),
+    operationsSchedules: createTestOperationsScheduleRepository(),
     passengerDemand: { all: () => [] },
     passengerRuntime: {
       get: () => { throw new Error("not used"); },

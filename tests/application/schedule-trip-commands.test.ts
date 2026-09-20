@@ -38,7 +38,8 @@ import {
 import { createTestDriver } from "../helpers/TestDriver.js";
 import {
   createTestFleetTaskRepository,
-  zeroOperationsPolicy
+  zeroOperationsPolicy,
+  createTestOperationsScheduleRepository
 } from "../helpers/TestOperations.js";
 
 function fixture() {
@@ -166,6 +167,7 @@ function fixture() {
     },
     finance: createTestFinanceRepository(),
     fleetTasks: createTestFleetTaskRepository(),
+    operationsSchedules: createTestOperationsScheduleRepository(),
     passengerDemand: { all: () => [] },
     passengerRuntime: {
       get: () => passengerRuntime,

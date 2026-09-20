@@ -31,9 +31,12 @@ import { createTestFinanceRepository, zeroEconomicPolicy } from "../helpers/Test
 import { createTestDriver } from "../helpers/TestDriver.js";
 import {
   createTestFleetTaskRepository,
-  zeroOperationsPolicy
+  zeroOperationsPolicy,
+  createTestOperationsScheduleRepository
 } from "../helpers/TestOperations.js";
 import { FleetOperationsCoordinator } from "../../src/application/operations/FleetOperationsCoordinator.js";
+import { OperationsExecutionCoordinator } from "../../src/application/operations/OperationsExecutionCoordinator.js";
+import { CommandBus } from "../../src/application/CommandBus.js";
 import { zeroVehicleLifecyclePolicy } from "../helpers/TestVehicle.js";
 import {
   createTestOwnedVehicle,
@@ -198,6 +201,7 @@ function fixture() {
     },
     finance: createTestFinanceRepository(),
     fleetTasks: createTestFleetTaskRepository(),
+    operationsSchedules: createTestOperationsScheduleRepository(),
     passengerDemand: { all: () => [] },
     passengerRuntime: {
       get: () => passengerRuntime,
@@ -281,6 +285,13 @@ function fixture() {
     zeroVehicleLifecyclePolicy
   );
 
+  const operationsExecution = new OperationsExecutionCoordinator(
+    repositories,
+    new CommandBus(),
+    events,
+    zeroOperationsPolicy
+  );
+
   const simulation = new SimulationCoordinator(
     repositories,
     events,
@@ -289,6 +300,7 @@ function fixture() {
     },
     finance,
     fleetOperations,
+    operationsExecution,
     zeroOperationsPolicy,
     index
   );

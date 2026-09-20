@@ -23,7 +23,9 @@ import type { RepositoryBundle } from "../../src/application/repositories/Reposi
 import { createApplication } from "../../src/bootstrap/createApplication.js";
 import { createTestDriver } from "../helpers/TestDriver.js";
 import { createTestFinanceRepository, zeroEconomicPolicy } from "../helpers/TestFinance.js";
-import { createTestFleetTaskRepository } from "../helpers/TestOperations.js";
+import { createTestFleetTaskRepository,
+  createTestOperationsScheduleRepository
+} from "../helpers/TestOperations.js";
 import {
   createTestOwnedVehicle,
   createTestVehicleModel,
@@ -243,6 +245,7 @@ function fixture(
     operationsPolicy: {
       vehicleTurnaroundSeconds: () => 60,
       driverTurnaroundSeconds: () => 60,
+    passengerBoardingLeadSeconds: () => 0,
       minimumDriverRestSeconds: () => 3600,
       maximumContinuousDrivingSeconds: () => 14_400,
       maximumDutySeconds: () => 36_000,

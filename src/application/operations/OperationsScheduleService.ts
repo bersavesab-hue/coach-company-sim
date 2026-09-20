@@ -1,5 +1,5 @@
 import type { CommandEnvelope } from "../../contracts/commands/CommandEnvelope.js";
-import { ids } from "../../contracts/ids/EntityIds.js";
+import { ids, type TripId } from "../../contracts/ids/EntityIds.js";
 import { DomainError } from "../../core/errors/DomainError.js";
 import { err, ok, type Result } from "../../core/result/Result.js";
 import type {
@@ -200,7 +200,7 @@ export class OperationsScheduleService {
     preserved: readonly ScheduledOperation[]
   ): Result<CommittedOperationsSchedule, DomainError> {
     const revision = previousRevision + 1;
-    const tripBySlot = new Map<string, string>();
+    const tripBySlot = new Map<string, TripId>();
 
     for (const assignment of plan.tripAssignments) {
       if (assignment.coverage !== "covered") continue;

@@ -23,7 +23,9 @@ import type { RepositoryBundle } from "../../src/application/repositories/Reposi
 import { DayOperationsPlanner } from "../../src/application/services/DayOperationsPlanner.js";
 import { createTestDriver } from "../helpers/TestDriver.js";
 import { createTestFinanceRepository } from "../helpers/TestFinance.js";
-import { createTestFleetTaskRepository } from "../helpers/TestOperations.js";
+import { createTestFleetTaskRepository,
+  createTestOperationsScheduleRepository
+} from "../helpers/TestOperations.js";
 import {
   createTestOwnedVehicle,
   createTestVehicleModel,
@@ -248,6 +250,7 @@ function fixture(options: FixtureOptions) {
     },
     finance: createTestFinanceRepository(),
     fleetTasks: createTestFleetTaskRepository(),
+    operationsSchedules: createTestOperationsScheduleRepository(),
     passengerDemand: { all: () => [] },
     passengerRuntime: {
       get: () => new PassengerRuntimeState(),
@@ -316,6 +319,7 @@ function fixture(options: FixtureOptions) {
   const planner = new DayOperationsPlanner(repositories, {
     vehicleTurnaroundSeconds: () => 60,
     driverTurnaroundSeconds: () => 60,
+    passengerBoardingLeadSeconds: () => 0,
     minimumDriverRestSeconds: () =>
       options.minimumDriverRestSeconds ?? 3600,
     maximumContinuousDrivingSeconds: () => 14_400,

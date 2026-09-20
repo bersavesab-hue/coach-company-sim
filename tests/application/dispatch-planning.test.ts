@@ -16,7 +16,9 @@ import type { RepositoryBundle } from "../../src/application/repositories/Reposi
 import { DispatchPlanningService } from "../../src/application/services/DispatchPlanningService.js";
 import { createTestDriver } from "../helpers/TestDriver.js";
 import { createTestFinanceRepository } from "../helpers/TestFinance.js";
-import { createTestFleetTaskRepository } from "../helpers/TestOperations.js";
+import { createTestFleetTaskRepository,
+  createTestOperationsScheduleRepository
+} from "../helpers/TestOperations.js";
 import {
   createTestOwnedVehicle,
   createTestVehicleModel,
@@ -173,6 +175,7 @@ function fixture() {
     },
     finance: createTestFinanceRepository(),
     fleetTasks: createTestFleetTaskRepository(),
+    operationsSchedules: createTestOperationsScheduleRepository(),
     passengerDemand: { all: () => [] },
     passengerRuntime: {
       get: () => new PassengerRuntimeState(),
@@ -231,6 +234,7 @@ function fixture() {
   const planner = new DispatchPlanningService(repositories, {
     vehicleTurnaroundSeconds: () => 60,
     driverTurnaroundSeconds: () => 60,
+    passengerBoardingLeadSeconds: () => 0,
     minimumDriverRestSeconds: () => 3600,
     maximumContinuousDrivingSeconds: () => 14_400,
     maximumDutySeconds: () => 36_000,

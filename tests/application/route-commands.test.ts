@@ -28,7 +28,8 @@ import {
 } from "../helpers/TestVehicle.js";
 import {
   createTestFleetTaskRepository,
-  zeroOperationsPolicy
+  zeroOperationsPolicy,
+  createTestOperationsScheduleRepository
 } from "../helpers/TestOperations.js";
 
 function buildFixture(companyLicenses = [ids.license("license.000001")]) {
@@ -119,6 +120,7 @@ function buildFixture(companyLicenses = [ids.license("license.000001")]) {
     },
     finance: createTestFinanceRepository(),
     fleetTasks: createTestFleetTaskRepository(),
+    operationsSchedules: createTestOperationsScheduleRepository(),
     passengerDemand: {
       all: () => []
     },
