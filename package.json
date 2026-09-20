@@ -1,6 +1,6 @@
 {
   "name": "coach-company-sim",
-  "version": "0.15.9",
+  "version": "0.16.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,7 +8,8 @@
     "test": "node --import tsx --test tests/**/*.test.ts",
     "check:architecture": "node scripts/check-architecture.mjs",
     "check": "npm run typecheck && npm test && npm run check:architecture",
-    "build": "tsc"
+    "build": "tsc",
+    "build:apk-web": "node --import tsx scripts/build-apk-web.mts"
   },
   "devDependencies": {
     "@types/node": "^22.13.0",

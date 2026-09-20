@@ -1,0 +1,75 @@
+name: Android APK
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "android-app/**"
+      - "scripts/build-apk-web.mts"
+      - "presentation/apk/**"
+      - "src/content/vehicle/**"
+      - "src/core/version/**"
+      - "package.json"
+      - ".github/workflows/android-apk.yml"
+  push:
+    branches: [main]
+    paths:
+      - "android-app/**"
+      - "scripts/build-apk-web.mts"
+      - "presentation/apk/**"
+      - "src/content/vehicle/**"
+      - "src/core/version/**"
+      - "package.json"
+      - ".github/workflows/android-apk.yml"
+
+jobs:
+  debug-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install web build dependencies
+        run: npm install
+
+      - name: Generate APK presentation assets
+        run: npm run build:apk-web
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install Android SDK 35
+        run: |
+          SDKMANAGER="$(find /usr/local/lib/android/sdk "$ANDROID_HOME" "$ANDROID_SDK_ROOT" -type f -name sdkmanager 2>/dev/null | head -n 1)"
+          if [ -z "$SDKMANAGER" ]; then
+            echo "sdkmanager not found" >&2
+            find /usr/local/lib/android/sdk -maxdepth 4 -type f 2>/dev/null | head -n 80
+            exit 1
+          fi
+          echo "Using $SDKMANAGER"
+          yes | "$SDKMANAGER" --licenses >/dev/null || true
+          "$SDKMANAGER" "platforms;android-35" "build-tools;35.0.0"
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.9"
+
+      - name: Build debug APK
+        run: gradle -p android-app assembleDebug --no-daemon
+
+      - name: Prepare APK artifact
+        run: |
+          mkdir -p artifacts
+          cp android-app/app/build/outputs/apk/debug/app-debug.apk artifacts/coach-company-sim-v0.16.0-debug.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: coach-company-sim-v0.16.0-debug
+          path: artifacts/coach-company-sim-v0.16.0-debug.apk
+          if-no-files-found: error
+          retention-days: 14
