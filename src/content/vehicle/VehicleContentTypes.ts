@@ -106,6 +106,17 @@ export interface VehicleDealerContentRecord {
   readonly priceBiasPermille: number;
 }
 
+export interface VehicleMarketZoneDemandProfile {
+  readonly zoneCode: VehicleMarketZoneCode;
+  readonly minibusDemandPermille: number;
+  readonly midibusDemandPermille: number;
+  readonly coachDemandPermille: number;
+  readonly premiumDemandPermille: number;
+  readonly tourismDemandPermille: number;
+  readonly newEnergyDemandPermille: number;
+  readonly priceSensitivityPermille: number;
+}
+
 export interface VehicleVariantLifecycleMetadata {
   readonly variantId: VehicleVariantId;
   readonly launchGameDay: number;
