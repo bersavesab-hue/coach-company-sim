@@ -9,3 +9,11 @@ export interface PlanDayOperationsQuery {
     readonly generatedAtGameSecond: GameSecond;
   };
 }
+
+export interface CommittedDayOperationsQuery {
+  readonly type: "operations.committedDay";
+  readonly payload: {
+    readonly companyId: CompanyId;
+    readonly gameDay: number;
+  };
+}

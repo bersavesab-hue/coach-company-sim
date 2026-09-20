@@ -143,7 +143,11 @@ export function createApplication(
   registerFinanceQueries(queries, dependencies.repositories);
   registerVehicleQueries(queries, dependencies.repositories);
 
-  registerOperationsQueries(queries, operationsPlanner);
+  registerOperationsQueries(
+    queries,
+    operationsPlanner,
+    dependencies.repositories
+  );
 
   const simulation = new SimulationCoordinator(
     dependencies.repositories,

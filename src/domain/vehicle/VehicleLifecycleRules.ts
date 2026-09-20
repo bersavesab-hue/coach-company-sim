@@ -14,9 +14,50 @@ export function estimateRouteEnergyUnits(
   graph: WorldGraph,
   model: VehicleModel
 ): Result<number, DomainError> {
+  return estimateRemainingRouteEnergyUnits(
+    route,
+    graph,
+    model,
+    0,
+    0
+  );
+}
+
+export function estimateRemainingRouteEnergyUnits(
+  route: PassengerRoute,
+  graph: WorldGraph,
+  model: VehicleModel,
+  activeRoadSegmentIndex: number,
+  offsetOnSegmentM: number
+): Result<number, DomainError> {
+  if (
+    !Number.isSafeInteger(activeRoadSegmentIndex) ||
+    activeRoadSegmentIndex < 0 ||
+    activeRoadSegmentIndex >= route.pathLegs.length ||
+    !Number.isSafeInteger(offsetOnSegmentM) ||
+    offsetOnSegmentM < 0
+  ) {
+    return err(
+      new DomainError(
+        "INVALID_ARGUMENT",
+        "Remaining-route position is invalid",
+        {
+          routeId: route.id,
+          activeRoadSegmentIndex,
+          offsetOnSegmentM
+        }
+      )
+    );
+  }
+
   let distanceM = 0;
 
-  for (const leg of route.pathLegs) {
+  for (
+    let index = activeRoadSegmentIndex;
+    index < route.pathLegs.length;
+    index += 1
+  ) {
+    const leg = route.pathLegs[index]!;
     const road = graph.getRoad(leg.roadSegmentId);
     if (!road) {
       return err(
@@ -27,7 +68,28 @@ export function estimateRouteEnergyUnits(
         )
       );
     }
-    distanceM += Number(road.lengthM);
+
+    const roadLengthM = Number(road.lengthM);
+    const remainingOnLeg =
+      index === activeRoadSegmentIndex
+        ? roadLengthM - offsetOnSegmentM
+        : roadLengthM;
+
+    if (remainingOnLeg < 0) {
+      return err(
+        new DomainError(
+          "INVALID_ARGUMENT",
+          "Trip offset exceeds active road length",
+          {
+            roadSegmentId: road.id,
+            roadLengthM,
+            offsetOnSegmentM
+          }
+        )
+      );
+    }
+
+    distanceM += remainingOnLeg;
   }
 
   return ok(
@@ -42,6 +104,60 @@ export function validateVehicleDispatchReadiness(
   model: VehicleModel,
   route: PassengerRoute,
   graph: WorldGraph,
+  gameSecond: GameSecond
+): Result<true, DomainError> {
+  const base = validateVehicleOperationalReadiness(
+    vehicle,
+    model,
+    gameSecond
+  );
+  if (!base.ok) return base;
+
+  const routeEnergy = estimateRouteEnergyUnits(route, graph, model);
+  if (!routeEnergy.ok) return routeEnergy;
+
+  return validateEnergyReserve(
+    vehicle,
+    model,
+    routeEnergy.value
+  );
+}
+
+export function validateVehicleResumeReadiness(
+  vehicle: OwnedVehicle,
+  model: VehicleModel,
+  route: PassengerRoute,
+  graph: WorldGraph,
+  gameSecond: GameSecond,
+  activeRoadSegmentIndex: number,
+  offsetOnSegmentM: number
+): Result<true, DomainError> {
+  const base = validateVehicleOperationalReadiness(
+    vehicle,
+    model,
+    gameSecond
+  );
+  if (!base.ok) return base;
+
+  const remainingEnergy = estimateRemainingRouteEnergyUnits(
+    route,
+    graph,
+    model,
+    activeRoadSegmentIndex,
+    offsetOnSegmentM
+  );
+  if (!remainingEnergy.ok) return remainingEnergy;
+
+  return validateEnergyReserve(
+    vehicle,
+    model,
+    remainingEnergy.value
+  );
+}
+
+function validateVehicleOperationalReadiness(
+  vehicle: OwnedVehicle,
+  model: VehicleModel,
   gameSecond: GameSecond
 ): Result<true, DomainError> {
   if (
@@ -119,17 +235,22 @@ export function validateVehicleDispatchReadiness(
     );
   }
 
-  const routeEnergy = estimateRouteEnergyUnits(route, graph, model);
-  if (!routeEnergy.ok) return routeEnergy;
+  return ok(true);
+}
 
+function validateEnergyReserve(
+  vehicle: OwnedVehicle,
+  model: VehicleModel,
+  routeEnergyUnits: number
+): Result<true, DomainError> {
   const requiredEnergy =
-    routeEnergy.value + model.minimumDispatchEnergyUnits;
+    routeEnergyUnits + model.minimumDispatchEnergyUnits;
 
   if (vehicle.energyUnits < requiredEnergy) {
     return err(
       new DomainError(
         "VEHICLE_ENERGY_INSUFFICIENT",
-        "Vehicle does not have enough energy for this route plus reserve",
+        "Vehicle does not have enough energy for the remaining route plus reserve",
         {
           vehicleId: vehicle.id,
           availableEnergyUnits: vehicle.energyUnits,

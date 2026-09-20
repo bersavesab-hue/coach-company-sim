@@ -28,7 +28,10 @@ import {
   startTripBoarding
 } from "../../../domain/trip/TripRules.js";
 import type { OwnedVehicle } from "../../../domain/vehicle/OwnedVehicle.js";
-import { validateVehicleDispatchReadiness } from "../../../domain/vehicle/VehicleLifecycleRules.js";
+import {
+  validateVehicleDispatchReadiness,
+  validateVehicleResumeReadiness
+} from "../../../domain/vehicle/VehicleLifecycleRules.js";
 import {
   beginVehicleBoarding,
   releaseVehicleFromTrip,
@@ -644,6 +647,17 @@ function handleResume(
       )
     );
   }
+
+  const readiness = validateVehicleResumeReadiness(
+    resources.value.vehicle,
+    model,
+    context.value.route,
+    dependencies.repositories.world.get(),
+    command.issuedAtGameSecond,
+    context.value.trip.position.activeRoadSegmentIndex,
+    Number(context.value.trip.position.offsetOnSegmentM)
+  );
+  if (!readiness.ok) return readiness;
 
   const station = context.value.trip.recoveryStationId;
   const vehicleLock = beginVehicleBoarding(
