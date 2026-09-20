@@ -44,11 +44,20 @@ export function validateVehicleDispatchReadiness(
   graph: WorldGraph,
   gameSecond: GameSecond
 ): Result<true, DomainError> {
-  if (vehicle.status !== "assigned") {
+  if (
+    vehicle.status === "running" ||
+    vehicle.status === "repositioning" ||
+    vehicle.status === "refueling" ||
+    vehicle.status === "maintenance" ||
+    vehicle.status === "recovering" ||
+    vehicle.status === "broken" ||
+    vehicle.status === "sold" ||
+    vehicle.status === "retired"
+  ) {
     return err(
       new DomainError(
         "VEHICLE_NOT_AVAILABLE",
-        "Vehicle must be assigned before dispatch readiness is checked",
+        "Vehicle is executing another operation or unavailable for dispatch",
         { vehicleId: vehicle.id, status: vehicle.status }
       )
     );
