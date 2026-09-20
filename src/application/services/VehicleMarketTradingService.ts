@@ -1431,7 +1431,8 @@ export class VehicleMarketTradingService {
         current.status === "available" &&
         current.sellerCompanyId === null &&
         current.reservation === null &&
-        current.supplySource !== "generated_new"
+        current.supplySource !== "generated_new" &&
+        current.supplySource !== "generated_used"
       ) {
         const valuation =
           this.dependencies.valuation.estimateListing(
