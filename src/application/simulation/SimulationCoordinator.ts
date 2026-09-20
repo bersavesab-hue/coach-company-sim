@@ -1,7 +1,7 @@
 import type { VisibleVehicleDto } from "../../contracts/dto/MapDto.js";
 import type { TripId } from "../../contracts/ids/EntityIds.js";
 import type { DomainError } from "../../core/errors/DomainError.js";
-import type { GameSecond } from "../../core/units/Units.js";
+import { units, type GameSecond } from "../../core/units/Units.js";
 import type { TripInstance } from "../../domain/trip/TripInstance.js";
 import { disruptTrip } from "../../domain/trip/TripRules.js";
 import { releaseDriverFromTrip } from "../../domain/staff/DriverAssignmentRules.js";
@@ -18,6 +18,7 @@ import type { DomainEventBus } from "../events/DomainEventBus.js";
 import { createSimulationDomainEvent } from "../events/createSimulationDomainEvent.js";
 import type { FinanceCoordinator } from "../finance/FinanceCoordinator.js";
 import type { FleetOperationsCoordinator } from "../operations/FleetOperationsCoordinator.js";
+import type { OperationsExecutionCoordinator } from "../operations/OperationsExecutionCoordinator.js";
 import type { OperationsPolicy } from "../policies/OperationsPolicy.js";
 import type { RepositoryBundle } from "../repositories/RepositoryBundle.js";
 import { VehicleSpatialIndex } from "../spatial/VehicleSpatialIndex.js";
@@ -41,6 +42,7 @@ export interface SimulationAdvanceReport {
 
 export class SimulationCoordinator {
   private readonly passengerDemand: PassengerDemandCoordinator;
+  private currentGameSecond: GameSecond = units.gameSecond(0);
 
   constructor(
     private readonly repositories: RepositoryBundle,
@@ -48,6 +50,7 @@ export class SimulationCoordinator {
     passengerPolicy: PassengerDemandPolicy,
     private readonly finance: FinanceCoordinator,
     private readonly fleetOperations: FleetOperationsCoordinator,
+    private readonly operationsExecution: OperationsExecutionCoordinator,
     private readonly operationsPolicy: OperationsPolicy,
     readonly vehicleIndex: VehicleSpatialIndex
   ) {
@@ -68,6 +71,62 @@ export class SimulationCoordinator {
   advanceTo(
     targetGameSecond: GameSecond,
     tierForTrip: SimulationTierResolver = () => "foreground"
+  ): SimulationAdvanceReport {
+    const target = Number(targetGameSecond);
+    const current = Number(this.currentGameSecond);
+
+    if (target < current) {
+      return {
+        advancedTripIds: [],
+        completedTripIds: [],
+        blockedTripIds: [],
+        issues: []
+      };
+    }
+
+    const advancedTripIds = new Set<TripId>();
+    const completedTripIds = new Set<TripId>();
+    const blockedTripIds = new Set<TripId>();
+    const issues: SimulationIssue[] = [];
+
+    this.operationsExecution.executeDueAt(this.currentGameSecond);
+
+    while (Number(this.currentGameSecond) < target) {
+      const nextBoundary =
+        this.operationsExecution.nextBoundaryAfter(
+          this.currentGameSecond,
+          targetGameSecond
+        ) ?? targetGameSecond;
+
+      const report = this.advanceCoreTo(
+        nextBoundary,
+        tierForTrip
+      );
+
+      for (const id of report.advancedTripIds) advancedTripIds.add(id);
+      for (const id of report.completedTripIds) completedTripIds.add(id);
+      for (const id of report.blockedTripIds) blockedTripIds.add(id);
+      issues.push(...report.issues);
+
+      this.currentGameSecond = nextBoundary;
+      this.operationsExecution.executeDueAt(this.currentGameSecond);
+    }
+
+    if (target === current) {
+      this.operationsExecution.executeDueAt(targetGameSecond);
+    }
+
+    return {
+      advancedTripIds: [...advancedTripIds],
+      completedTripIds: [...completedTripIds],
+      blockedTripIds: [...blockedTripIds],
+      issues
+    };
+  }
+
+  private advanceCoreTo(
+    targetGameSecond: GameSecond,
+    tierForTrip: SimulationTierResolver
   ): SimulationAdvanceReport {
     this.fleetOperations.advanceTo(targetGameSecond);
     this.passengerDemand.advanceTo(targetGameSecond);
