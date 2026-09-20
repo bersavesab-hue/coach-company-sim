@@ -332,6 +332,39 @@ for (const file of sourceFiles) {
     );
   }
 
+  if (rel.includes("/services/DayOperationsPlanner.ts") &&
+      !text.includes('"listed_for_sale"')) {
+    failures.push(
+      "Stage 14 listed_for_sale vehicles must be excluded from DayOperationsPlanner"
+    );
+  }
+
+  if (rel.includes("/vehicle/VehicleStatus.ts") &&
+      !text.includes('"listed_for_sale"')) {
+    failures.push(
+      "Stage 14 VehicleStatus must retain listed_for_sale"
+    );
+  }
+
+  if (rel.includes("/handlers/vehicle-market/registerVehicleMarketHandlers.ts")) {
+    for (const requiredStage14Command of [
+      '"vehicleMarket.listOwnedVehicle"',
+      '"vehicleMarket.sellToDealer"',
+      '"vehicleMarket.withdrawListing"',
+      '"vehicleMarket.inspectListing"',
+      '"vehicleMarket.negotiateListing"',
+      '"vehicleMarket.startAuction"',
+      '"vehicleMarket.placeAuctionBid"',
+      '"vehicleMarket.settleAuction"'
+    ]) {
+      if (!text.includes(requiredStage14Command)) {
+        failures.push(
+          `Stage 14 vehicle market handler missing command in ${rel}: ${requiredStage14Command}`
+        );
+      }
+    }
+  }
+
   if (rel.includes("/finance/FinancialProfiles.ts")) {
     for (const forbiddenField of [
       "energyKind:",

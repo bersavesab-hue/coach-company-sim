@@ -147,3 +147,11 @@ export * from "./save/schema/SaveEnvelope.js";
 export * from "./save/schema/SaveVersion.js";
 export * from "./save/migrations/Migration.js";
 export * from "./bootstrap/createApplication.js";
+
+export * from "./domain/vehicle-market/VehicleInspectionReport.js";
+export * from "./domain/vehicle-market/VehicleAuction.js";
+export * from "./domain/vehicle-market/VehicleNegotiation.js";
+export * from "./application/policies/VehicleMarketPolicy.js";
+export * from "./application/services/VehicleMarketValuationService.js";
+export * from "./application/services/VehicleMarketTradingService.js";
+export * from "./application/vehicle-market/VehicleMarketCoordinator.js";

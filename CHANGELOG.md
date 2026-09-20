@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.15.0-stage14
+
+### Added
+- 新增公司自有车辆正式二手挂牌流程，挂牌后车辆进入 `listed_for_sale` 并退出运营/自动排班候选。
+- 新增 `vehicleMarket.sellToDealer`，支持车商按估值直接收车并进入统一二手库存。
+- 新增二手车估值模型：车龄、里程、机械/车身状态、事故历史、地区需求、车商类型共同影响公平价、车商收购价和建议挂牌价。
+- 新增卖方披露、买方检测报告与披露不一致识别。
+- 新增 `vehicleMarket.inspectListing`，支持基础/完整检测并形成买方私有检测报告。
+- 新增 `vehicleMarket.negotiateListing`，议价成功后生成限时保留成交价。
+- 新增拍卖流程：开拍、最低加价、竞价、保留价、结算、流拍与卖方手续费。
+- 新增二手市场自动刷新：过期挂牌、预约释放、车商库存动态重估。
+- 新增 `vehicleMarket.valuation` / `vehicleMarket.inspections` / `vehicleMarket.auctions` 查询。
+- 公司挂牌车辆成交时保持同一个 VehicleId，仅变更所有权，不复制车辆实体。
+- 过户后保留真实里程、车况、保养、证件、事故和历史车主数据。
+- 二手市场服务费、检测费、挂牌费、拍卖卖方手续费进入正式财务账本。
+- 新增二手车流通专项测试，并修复挂牌车辆仍可能进入自动日排班的问题。
+
+### Architecture
+- 新车、车商二手库存、公司自售、议价和拍卖继续共用唯一 VehicleListing / VehicleMarketRepository。
+- 公司自售车辆只能通过真实过户改变 CompanyId；禁止创建第二个 VehicleId 伪造交易。
+- `listed_for_sale` 是正式不可运营状态，车辆分配、生命周期安全校验和 DayOperationsPlanner 都必须排除。
+- 卖方披露与真实 UsedVehicleSnapshot 分离；普通市场列表不得泄漏未检测出的隐藏缺陷。
+- VehicleMarketProjection 继续只读，所有交易状态变化必须通过 VehicleMarketTradingService / CommandBus。
+
+
 ## 0.14.0-stage13
 
 ### Removed
