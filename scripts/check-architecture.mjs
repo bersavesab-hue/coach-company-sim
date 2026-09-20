@@ -439,6 +439,43 @@ for (const file of sourceFiles) {
     );
   }
 
+  if (rel.includes("/content/vehicle/VehicleOptionCatalog.ts")) {
+    if (!text.includes("Vehicle option catalog must contain exactly 48 definitions")) {
+      failures.push(
+        "Stage 15 VehicleOptionCatalog must enforce exactly 48 formal definitions"
+      );
+    }
+    for (const requiredOptionField of [
+      "priceDeltaCents",
+      "seatCapacityDelta",
+      "energyCapacityUnitsDelta",
+      "luggageCapacityLDelta",
+      "comfortPermilleDelta",
+      "mutuallyExclusiveGroup"
+    ]) {
+      if (!text.includes(requiredOptionField)) {
+        failures.push(
+          `Stage 15 VehicleOptionCatalog missing formal option field: ${requiredOptionField}`
+        );
+      }
+    }
+  }
+
+  if (rel.includes("/content/vehicle/VehicleOptionContentValidator.ts")) {
+    for (const requiredOptionCheck of [
+      "OPTION_DEFINITION_MISSING",
+      "DUPLICATE_OPTION_CODE",
+      "OPTION_EXCLUSIVE_GROUP_UNKNOWN",
+      "OPTION_INVALID_FOR_VARIANT"
+    ]) {
+      if (!text.includes(requiredOptionCheck)) {
+        failures.push(
+          `Stage 15 vehicle option validator missing check: ${requiredOptionCheck}`
+        );
+      }
+    }
+  }
+
   if (rel.includes("/finance/FinancialProfiles.ts")) {
     for (const forbiddenField of [
       "energyKind:",

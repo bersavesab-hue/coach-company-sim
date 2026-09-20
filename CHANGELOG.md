@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.15.5-stage15-options48
+
+### Added
+- 一次性完成 48 / 48 个正式 VehicleOptionDefinition。
+- 8 大组选装全部落地：座椅、能源/续航、行李、空调/热管理、舒适、安全、车内服务、外观/运营。
+- 互斥组正式固定：seat_layout / energy_package / luggage_package / climate_package / paint_finish。
+- USB、Wi-Fi、安全辅助、冰箱、热水、卫生间、远程管理等设备允许合理叠加，不错误做成互斥。
+- 每个选装正式拥有价格、座位变化、能源容量变化、行李舱变化、舒适度变化和互斥组。
+- 180 个 VehicleVariant 的 allowedOptionCodes 现在全部可以解析到真实选装定义。
+- 新增 VehicleOptionContentValidator，检查 48 个冻结 code、重复定义、未知互斥组、非法 delta、Variant 引用缺失和选装后物理规格合法性。
+- 新增正式配置组合测试与互斥冲突测试。
+
+### Content
+- CONTENT_VERSION 从 5 升至 6。
+- VehicleModel：100 / 100 complete。
+- VehicleVariant：180 / 180 complete。
+- VehicleOptionDefinition：48 / 48 complete。
+- 下一阶段：24 个正式 VehicleDealer + 动态车商库存。
+
+
 ## 0.15.4-stage15-variants180
 
 ### Added
