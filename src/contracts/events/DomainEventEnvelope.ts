@@ -5,6 +5,7 @@ import type { DomainEventType } from "./EventTypes.js";
 export type AggregateType =
   | "company"
   | "vehicle"
+  | "vehicleMarket"
   | "route"
   | "servicePlan"
   | "trip"

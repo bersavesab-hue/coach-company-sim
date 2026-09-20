@@ -102,6 +102,12 @@ interface VehicleDisposalPayload {
   readonly proceedsCents: MoneyCents;
 }
 
+interface VehicleMarketServiceChargedPayload {
+  readonly companyId: CompanyId;
+  readonly costCents: MoneyCents;
+  readonly serviceKind: string;
+}
+
 export class FinanceCoordinator {
   constructor(
     private readonly repositories: RepositoryBundle,
@@ -220,6 +226,12 @@ export class FinanceCoordinator {
           "inspection",
           "inspection_expense",
           "Vehicle inspection"
+        );
+        break;
+      case "vehicleMarket.serviceCharged":
+        this.postVehicleMarketService(
+          event,
+          event.payload as VehicleMarketServiceChargedPayload
         );
         break;
       case "vehicle.sold":
@@ -599,6 +611,28 @@ export class FinanceCoordinator {
       payload.costCents,
       memo
     );
+  }
+
+  private postVehicleMarketService(
+    event: DomainEventEnvelope,
+    payload: VehicleMarketServiceChargedPayload
+  ): void {
+    if (Number(payload.costCents) <= 0) return;
+
+    this.postLedger({
+      companyId: payload.companyId,
+      gameSecond: event.gameSecond,
+      kind: "vehicle_market_service",
+      sourceRef: `${event.eventId}:vehicle_market_service`,
+      sourceEventId: event.eventId,
+      tripId: null,
+      vehicleId: null,
+      memo: `Vehicle market service: ${payload.serviceKind}`,
+      postings: [
+        debit("vehicle_market_service_expense", payload.costCents),
+        credit("cash", payload.costCents)
+      ]
+    });
   }
 
   private postVehicleDisposal(

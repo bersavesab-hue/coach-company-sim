@@ -16,6 +16,7 @@ export type FinanceAccount =
   | "employer_burden_expense"
   | "maintenance_expense"
   | "inspection_expense"
+  | "vehicle_market_service_expense"
   | "loss_on_vehicle_disposal"
   | "insurance_expense"
   | "vehicle_tax_expense"
@@ -41,6 +42,7 @@ export function normalSideForAccount(
     case "employer_burden_expense":
     case "maintenance_expense":
     case "inspection_expense":
+    case "vehicle_market_service_expense":
     case "loss_on_vehicle_disposal":
     case "insurance_expense":
     case "vehicle_tax_expense":

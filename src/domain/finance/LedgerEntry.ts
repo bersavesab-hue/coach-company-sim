@@ -28,6 +28,7 @@ export type FinanceEntryKind =
   | "maintenance"
   | "insurance_renewal"
   | "inspection"
+  | "vehicle_market_service"
   | "insurance"
   | "vehicle_tax"
   | "station_lease"
