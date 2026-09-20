@@ -6,6 +6,8 @@ import type {
 } from "../../contracts/ids/EntityIds.js";
 import type { VehicleBrand } from "../../domain/vehicle-market/VehicleBrand.js";
 import type { VehicleSeries } from "../../domain/vehicle-market/VehicleSeries.js";
+import type { VehicleModel } from "../../domain/vehicle/VehicleModel.js";
+import type { VehicleModelIdentity } from "../../domain/vehicle-market/VehicleModelIdentity.js";
 
 export type VehicleMarketOrigin = "domestic" | "imported";
 
@@ -62,6 +64,12 @@ export interface VehicleModelContentMetadata {
   readonly displayName: string;
   readonly role: VehicleProductRole;
   readonly unlock: VehicleUnlockRule;
+}
+
+export interface VehicleModelContentRecord {
+  readonly model: VehicleModel;
+  readonly identity: VehicleModelIdentity;
+  readonly metadata: VehicleModelContentMetadata;
 }
 
 export interface VehicleVariantLifecycleMetadata {
