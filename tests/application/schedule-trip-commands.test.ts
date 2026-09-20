@@ -29,6 +29,12 @@ import { createApplication } from "../../src/bootstrap/createApplication.js";
 import type { RepositoryBundle } from "../../src/application/repositories/RepositoryBundle.js";
 import type { RuntimeIdAllocator } from "../../src/application/ids/RuntimeIdAllocator.js";
 import { createTestFinanceRepository, zeroEconomicPolicy } from "../helpers/TestFinance.js";
+import {
+  createTestOwnedVehicle,
+  createTestVehicleModel,
+  createTestVehicleRuntimeRepository,
+  zeroVehicleLifecyclePolicy
+} from "../helpers/TestVehicle.js";
 
 function fixture() {
   const company: Company = {
@@ -114,25 +120,21 @@ function fixture() {
     status: "active"
   };
 
-  const model: VehicleModel = {
+  const model: VehicleModel = createTestVehicleModel({
     id: ids.vehicleModel("vehicle_model.000001"),
     serviceClass: "county_midibus",
     seatCapacity: 6,
-    maxSpeedMps: units.speedMps(25),
-    active: true
-  };
+    maxSpeedMps: units.speedMps(25)
+  });
 
-  const vehicle: OwnedVehicle = {
+  const vehicle: OwnedVehicle = createTestOwnedVehicle({
     id: ids.vehicle("vehicle.00000001"),
     companyId: company.id,
     modelId: model.id,
-    mileageM: units.distanceM(0),
-    conditionPermille: units.permille(900),
-    fuelPermille: units.permille(900),
-    status: "available",
     depotStationId: s1.id,
-    activeTripId: null
-  };
+    status: "available",
+    energyUnits: 100_000
+  });
 
   const driver: Driver = {
     id: ids.staff("staff.00000001"),
@@ -207,6 +209,7 @@ function fixture() {
       getById: (id) => vehicles.get(id),
       save: (value) => vehicles.set(value.id, value)
     },
+    vehicleRuntime: createTestVehicleRuntimeRepository(),
     world: {
       get: () => graphResult.value,
       replace: (_world) => undefined
@@ -232,6 +235,9 @@ function fixture() {
       return ids.trip(
         `trip.${String(tripSequence).padStart(12, "0")}`
       );
+    },
+    nextVehicleId() {
+      return ids.vehicle("vehicle.00000002");
     }
   };
 
@@ -241,7 +247,8 @@ function fixture() {
     passengerDemandPolicy: {
       frequencyMultiplierPermille: () => units.permille(1000)
     },
-    economicPolicy: zeroEconomicPolicy
+    economicPolicy: zeroEconomicPolicy,
+    vehicleLifecyclePolicy: zeroVehicleLifecyclePolicy
   });
 
   return {
