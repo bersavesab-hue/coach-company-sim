@@ -167,3 +167,5 @@ export * from "./content/vehicle/VehicleVariantCatalog.js";
 export * from "./content/vehicle/VehicleVariantContentValidator.js";
 export * from "./content/vehicle/VehicleOptionCatalog.js";
 export * from "./content/vehicle/VehicleOptionContentValidator.js";
+export * from "./content/vehicle/VehicleDealerCatalog.js";
+export * from "./content/vehicle/VehicleDealerContentValidator.js";

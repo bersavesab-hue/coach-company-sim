@@ -77,6 +77,35 @@ export interface VehicleVariantContentRecord {
   readonly lifecycle: VehicleVariantLifecycleMetadata;
 }
 
+export type VehicleMarketZoneCode =
+  | "north"
+  | "east"
+  | "south"
+  | "central"
+  | "west"
+  | "northeast";
+
+export type VehicleDealerInventoryProfile =
+  | "manufacturer_new"
+  | "regional_mixed"
+  | "used_budget"
+  | "used_mainstream"
+  | "used_premium"
+  | "used_import"
+  | "used_fleet"
+  | "auction_general"
+  | "auction_fleet"
+  | "auction_premium";
+
+export interface VehicleDealerContentRecord {
+  readonly dealer: import("../../domain/vehicle-market/VehicleDealer.js").VehicleDealer;
+  readonly marketZoneCode: VehicleMarketZoneCode | null;
+  readonly inventoryProfile: VehicleDealerInventoryProfile;
+  readonly newStockWeightPermille: number;
+  readonly usedSupplyWeightPermille: number;
+  readonly priceBiasPermille: number;
+}
+
 export interface VehicleVariantLifecycleMetadata {
   readonly variantId: VehicleVariantId;
   readonly launchGameDay: number;
