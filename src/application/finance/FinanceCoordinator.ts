@@ -54,7 +54,7 @@ interface ArrivedEventPayload {
 }
 
 interface OperatingIntervalPayload {
-  readonly tripId: TripId;
+  readonly tripId: TripId | null;
   readonly vehicleId: VehicleId;
   readonly driverId: StaffId;
   readonly movingSeconds: number;
@@ -86,7 +86,7 @@ interface VehicleEnergyPurchasedPayload {
 
 interface VehicleEnergyConsumedPayload {
   readonly vehicleId: VehicleId;
-  readonly tripId: TripId;
+  readonly tripId: TripId | null;
   readonly energyUnits: number;
 }
 
@@ -171,6 +171,7 @@ export class FinanceCoordinator {
         );
         break;
       case "trip.operatingInterval":
+      case "vehicle.operatingInterval":
         this.postOperatingInterval(
           event,
           event.payload as OperatingIntervalPayload
@@ -380,12 +381,17 @@ export class FinanceCoordinator {
     event: DomainEventEnvelope,
     payload: OperatingIntervalPayload
   ): void {
-    const trip = this.repositories.trips.getById(payload.tripId);
+    const trip =
+      payload.tripId === null
+        ? undefined
+        : this.repositories.trips.getById(payload.tripId);
     const vehicle = this.repositories.vehicles.getById(payload.vehicleId);
-    if (!trip || !vehicle) return;
+    if (!vehicle) return;
 
-    const route = this.repositories.routes.getById(trip.routeId);
-    if (!route) return;
+    const route = trip
+      ? this.repositories.routes.getById(trip.routeId)
+      : undefined;
+    const companyId = route?.companyId ?? vehicle.companyId;
 
     const runtime = this.repositories.finance.getRuntimeState();
     const vehicleEconomics =
@@ -394,8 +400,8 @@ export class FinanceCoordinator {
     if (vehicleEconomics) {
       this.postManagementDistanceCost(
         event,
-        route.companyId,
-        trip.id,
+        companyId,
+        trip?.id ?? null,
         vehicle.id,
         payload.distanceTraveledM,
         "maintenance_wear",
@@ -405,8 +411,8 @@ export class FinanceCoordinator {
 
       this.postManagementDistanceCost(
         event,
-        route.companyId,
-        trip.id,
+        companyId,
+        trip?.id ?? null,
         vehicle.id,
         payload.distanceTraveledM,
         "economic_depreciation",
@@ -433,12 +439,12 @@ export class FinanceCoordinator {
 
       if (tollCents > 0) {
         this.postExpensePayable(
-          route.companyId,
+          companyId,
           event.gameSecond,
           "road_toll",
           `${event.eventId}:toll:${road.id}`,
           event.eventId,
-          trip.id,
+          trip?.id ?? null,
           vehicle.id,
           "road_toll_expense",
           units.moneyCents(tollCents),
@@ -454,8 +460,8 @@ export class FinanceCoordinator {
     if (driverProfile) {
       this.postVariableDriverLabor(
         event,
-        route.companyId,
-        trip.id,
+        companyId,
+        trip?.id ?? null,
         vehicle.id,
         driverProfile,
         payload.movingSeconds + payload.idleSeconds,
@@ -704,7 +710,7 @@ export class FinanceCoordinator {
   private postVariableDriverLabor(
     event: DomainEventEnvelope,
     companyId: CompanyId,
-    tripId: TripId,
+    tripId: TripId | null,
     vehicleId: VehicleId,
     profile: DriverCompensationProfile,
     dutySeconds: number,
@@ -757,7 +763,7 @@ export class FinanceCoordinator {
   private postManagementDistanceCost(
     event: DomainEventEnvelope,
     companyId: CompanyId,
-    tripId: TripId,
+    tripId: TripId | null,
     vehicleId: VehicleId,
     distanceM: number,
     category: ManagementCostCategory,

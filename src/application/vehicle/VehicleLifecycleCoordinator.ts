@@ -11,7 +11,7 @@ import { createSimulationDomainEvent } from "../events/createSimulationDomainEve
 import type { RepositoryBundle } from "../repositories/RepositoryBundle.js";
 
 interface OperatingIntervalPayload {
-  readonly tripId: TripId;
+  readonly tripId: TripId | null;
   readonly vehicleId: VehicleId;
   readonly driverId: StaffId;
   readonly movingSeconds: number;
@@ -28,7 +28,10 @@ export class VehicleLifecycleCoordinator {
   }
 
   private handleEvent(event: DomainEventEnvelope): void {
-    if (event.type !== "trip.operatingInterval") return;
+    if (
+      event.type !== "trip.operatingInterval" &&
+      event.type !== "vehicle.operatingInterval"
+    ) return;
 
     this.applyOperatingInterval(
       event,
@@ -41,7 +44,11 @@ export class VehicleLifecycleCoordinator {
     payload: OperatingIntervalPayload
   ): void {
     const vehicle = this.repositories.vehicles.getById(payload.vehicleId);
-    if (!vehicle || vehicle.status !== "running") return;
+    if (
+      !vehicle ||
+      (vehicle.status !== "running" &&
+        vehicle.status !== "repositioning")
+    ) return;
 
     const model = this.repositories.vehicleModels.getById(vehicle.modelId);
     if (!model) return;

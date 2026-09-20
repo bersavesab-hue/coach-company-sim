@@ -16,7 +16,7 @@ export interface ManagementCostEntry {
   readonly sourceRef: string;
   readonly sourceEventId: EventId;
   readonly companyId: CompanyId;
-  readonly tripId: TripId;
+  readonly tripId: TripId | null;
   readonly gameSecond: GameSecond;
   readonly category: ManagementCostCategory;
   readonly amountCents: MoneyCents;

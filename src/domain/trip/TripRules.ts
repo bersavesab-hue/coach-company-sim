@@ -2,9 +2,11 @@ import type {
   RouteId,
   ServicePlanId,
   StaffId,
+  StationId,
   TripId,
   VehicleId
 } from "../../contracts/ids/EntityIds.js";
+import type { PassengerRoute } from "../route/PassengerRoute.js";
 import { DomainError } from "../../core/errors/DomainError.js";
 import { err, ok, type Result } from "../../core/result/Result.js";
 import type { GameSecond } from "../../core/units/Units.js";
@@ -59,11 +61,11 @@ export function assignVehicleToTrip(
   trip: TripInstance,
   vehicleId: VehicleId
 ): Result<TripInstance, DomainError> {
-  if (trip.status !== "planned") {
+  if (trip.status !== "planned" && trip.status !== "disrupted") {
     return err(
       new DomainError(
         "TRIP_NOT_PLANNED",
-        "Vehicle can only be assigned to a planned trip",
+        "Vehicle can only be assigned to a planned or disrupted trip",
         { tripId: trip.id, status: trip.status }
       )
     );
@@ -86,11 +88,11 @@ export function assignDriverToTrip(
   trip: TripInstance,
   driverId: StaffId
 ): Result<TripInstance, DomainError> {
-  if (trip.status !== "planned") {
+  if (trip.status !== "planned" && trip.status !== "disrupted") {
     return err(
       new DomainError(
         "TRIP_NOT_PLANNED",
-        "Driver can only be assigned to a planned trip",
+        "Driver can only be assigned to a planned or disrupted trip",
         { tripId: trip.id, status: trip.status }
       )
     );
@@ -203,6 +205,80 @@ export function disruptTrip(
   }
 
   return transitionTrip(trip, "disrupted");
+}
+
+export function recoverDisruptedTripToStop(
+  trip: TripInstance,
+  route: PassengerRoute,
+  stationId: StationId,
+  gameSecond: GameSecond
+): Result<TripInstance, DomainError> {
+  if (trip.status !== "disrupted") {
+    return err(
+      new DomainError(
+        "TRIP_NOT_DISRUPTED",
+        "Only a disrupted trip can be recovered",
+        { tripId: trip.id, status: trip.status }
+      )
+    );
+  }
+
+  const stop = route.stopPoints.find(
+    (item) => item.stationId === stationId
+  );
+  if (!stop) {
+    return err(
+      new DomainError(
+        "INVALID_ARGUMENT",
+        "Recovery station is not on the route",
+        { tripId: trip.id, stationId }
+      )
+    );
+  }
+
+  return ok({
+    ...trip,
+    vehicleId: null,
+    driverId: null,
+    position: {
+      activeRoadSegmentIndex: Math.min(
+        stop.pathLegBoundaryIndex,
+        Math.max(0, route.pathLegs.length - 1)
+      ),
+      offsetOnSegmentM: units.distanceM(0),
+      lastUpdatedGameSecond: gameSecond
+    }
+  });
+}
+
+export function resumeDisruptedTrip(
+  trip: TripInstance,
+  gameSecond: GameSecond
+): Result<TripInstance, DomainError> {
+  if (
+    trip.status !== "disrupted" ||
+    trip.vehicleId === null ||
+    trip.driverId === null
+  ) {
+    return err(
+      new DomainError(
+        "TRIP_NOT_DISRUPTED",
+        "Trip must be disrupted with replacement resources before resume",
+        { tripId: trip.id }
+      )
+    );
+  }
+
+  const transitioned = transitionTrip(trip, "running");
+  if (!transitioned.ok) return transitioned;
+
+  return ok({
+    ...transitioned.value,
+    position: {
+      ...transitioned.value.position,
+      lastUpdatedGameSecond: gameSecond
+    }
+  });
 }
 
 export function cancelTrip(
