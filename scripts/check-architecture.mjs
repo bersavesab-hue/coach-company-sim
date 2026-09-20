@@ -386,6 +386,27 @@ for (const file of sourceFiles) {
     }
   }
 
+  if (rel.includes("/content/vehicle/VehicleModelCatalog.ts")) {
+    const formalModelCount = (text.match(/\\bmodel\\(\\{/g) ?? []).length;
+    if (formalModelCount !== 100) {
+      failures.push(
+        `Stage 15 VehicleModelCatalog must contain exactly 100 formal models, found ${formalModelCount}`
+      );
+    }
+    if (!text.includes('"electric_wh"')) {
+      failures.push(
+        "Stage 15 VehicleModelCatalog must retain electric vehicle content"
+      );
+    }
+  }
+
+  if (rel.includes("/content/vehicle/VehicleContentValidator.ts") &&
+      !text.includes("SERIES_MODEL_COUNT_INCOMPLETE")) {
+    failures.push(
+      "Stage 15 validator must enforce complete per-series model counts"
+    );
+  }
+
   if (rel.includes("/finance/FinancialProfiles.ts")) {
     for (const forbiddenField of [
       "energyKind:",

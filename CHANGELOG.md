@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.15.3-stage15-models100
+
+### Added
+- 一次性补齐剩余 80 个正式基础车型，Stage 15 VehicleModel 达到 100 / 100。
+- 32 个车系全部精确命中 frozen plannedModelCount，不再存在未完成车系。
+- 100 个基础车型覆盖 6 个国产品牌与 4 个进口品牌，其中国产 72、进口 28。
+- 新增云驰 V / E / EX 共 11 个纯电基础车型，正式使用 electric_wh 能源单位。
+- 内容构建器能源字段改为 technology-neutral：energyKind + energyCapacityUnits / drivingEnergyUnitsPer100Km。
+- 补齐国产城际、高端、旅游、新能源，以及维尔曼、诺森、东岛、韩沃全部进口基础车型。
+- 全量车型继续使用 Tier 1–6 + 单车型 gameDay / reputation / fleet-size 逐步解锁。
+- VehicleContentValidator 新增 requireCompleteSeries 模式，正式内容必须逐车系数量精确相等。
+- 新增 100/100、28 辆进口、11 辆云驰纯电、32 车系完整性专项测试。
+- 新增 100 个基础车型总表文档。
+
+### Content
+- CONTENT_VERSION 从 3 升至 4。
+- VehicleModel 阶段正式完成 100 / 100。
+- 下一内容阶段转入 180 个 VehicleVariant、48 个选装定义和 24 个正式车商。
+
+
 ## 0.15.2-stage15-models20
 
 ### Added

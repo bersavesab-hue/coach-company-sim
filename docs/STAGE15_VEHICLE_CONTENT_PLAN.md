@@ -1,6 +1,6 @@
 # Stage 15：车辆内容库与动态车商供给冻结
 
-状态：**Implementation in progress — 当前进度：20 / 100 基础车型**
+状态：**Implementation in progress — VehicleModel 100 / 100 complete**
 
 ## 1. 目标
 
@@ -42,19 +42,21 @@ Stage 15 只解决一个问题：
 7. airport_shuttle：机场/商务接驳
 8. high_capacity_coach：高运力干线客车
 
-建议基础车型分布：
+最终基础车型分布（以 10 品牌 / 32 车系正式冻结后的实际产品结构为准）：
 
 | 类型 | VehicleModel |
 |---|---:|
-| rural_minibus | 12 |
+| rural_minibus | 7 |
 | county_midibus | 16 |
-| standard_coach | 22 |
-| intercity_coach | 18 |
-| premium_coach | 10 |
-| tourist_coach | 10 |
-| airport_shuttle | 6 |
-| high_capacity_coach | 6 |
+| standard_coach | 20 |
+| intercity_coach | 24 |
+| premium_coach | 13 |
+| tourist_coach | 12 |
+| airport_shuttle | 5 |
+| high_capacity_coach | 3 |
 | 合计 | 100 |
+
+早期预估分布已经由最终品牌/车系产品结构替代。
 
 ---
 
@@ -339,7 +341,7 @@ Stage 15 必须先做 validator，再批量填内容。
 3. Content Validator
 4. 10 品牌
 5. 32 车系
-6. 100 VehicleModel
+6. 100 VehicleModel ✅ 已完成
 7. 180 Variant
 8. 48 Option
 9. 24 Dealer
