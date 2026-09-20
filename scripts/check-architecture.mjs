@@ -597,6 +597,77 @@ for (const file of sourceFiles) {
     );
   }
 
+  if (rel.includes("/content/vehicle/VehicleMarketDemandCatalog.ts")) {
+    for (const requiredDemandToken of [
+      "minibusDemandPermille",
+      "midibusDemandPermille",
+      "coachDemandPermille",
+      "premiumDemandPermille",
+      "tourismDemandPermille",
+      "newEnergyDemandPermille",
+      "priceSensitivityPermille"
+    ]) {
+      if (!text.includes(requiredDemandToken)) {
+        failures.push(
+          `Stage 15 market demand catalog missing field: ${requiredDemandToken}`
+        );
+      }
+    }
+  }
+
+  if (rel.includes("/services/VehicleMarketDemandService.ts")) {
+    for (const requiredDemandRule of [
+      "quoteVehicleMarketDemand",
+      "vehicleMarketDemandPricePermille",
+      "combinedDemandPermille"
+    ]) {
+      if (!text.includes(requiredDemandRule)) {
+        failures.push(
+          `Stage 15 market demand service missing rule: ${requiredDemandRule}`
+        );
+      }
+    }
+  }
+
+  if (rel.includes("/vehicle-market/VehicleVariantLifecycleRefresher.ts")) {
+    for (const requiredLifecycleToken of [
+      "generated_new",
+      "productionEndGameDay",
+      "dealerClearanceEndGameDay",
+      "expiredPhaseChangedListings",
+      'status: "expired"'
+    ]) {
+      if (!text.includes(requiredLifecycleToken)) {
+        failures.push(
+          `Stage 15 lifecycle refresher missing rule: ${requiredLifecycleToken}`
+        );
+      }
+    }
+  }
+
+  if (rel.includes("/vehicle-market/VehicleMarketCoordinator.ts") &&
+      !text.includes("lifecycle.refresh(gameSecond)")) {
+    failures.push(
+      "Stage 15 lifecycle refresh must remain wired into VehicleMarketCoordinator"
+    );
+  }
+
+  if (rel.includes("/content/vehicle/VehicleStage15Validator.ts")) {
+    for (const requiredFinalGate of [
+      "validateVehicleContent",
+      "validateVehicleVariantContent",
+      "validateVehicleOptionContent",
+      "validateVehicleDealerContent",
+      "validateVehicleMarketDemandContent"
+    ]) {
+      if (!text.includes(requiredFinalGate)) {
+        failures.push(
+          `Stage 15 final validator missing gate: ${requiredFinalGate}`
+        );
+      }
+    }
+  }
+
   if (rel.includes("/finance/FinancialProfiles.ts")) {
     for (const forbiddenField of [
       "energyKind:",

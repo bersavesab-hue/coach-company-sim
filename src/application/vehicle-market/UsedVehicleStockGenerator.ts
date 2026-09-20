@@ -24,6 +24,13 @@ import type { VehicleConfiguration } from "../../domain/vehicle-market/VehicleCo
 import type { RepositoryBundle } from "../repositories/RepositoryBundle.js";
 import type { VehicleMarketValuationService } from "../services/VehicleMarketValuationService.js";
 import {
+  quoteVehicleMarketDemand,
+  vehicleMarketDemandPricePermille
+} from "../services/VehicleMarketDemandService.js";
+import type {
+  VehicleMarketZoneCode
+} from "../../content/vehicle/VehicleContentTypes.js";
+import {
   VEHICLE_DEALERS
 } from "../../content/vehicle/VehicleDealerCatalog.js";
 import {
@@ -56,6 +63,7 @@ interface UsedCandidate {
   readonly brandId: VehicleBrandId;
   readonly launchGameDay: number;
   readonly score: number;
+  readonly marketDemandPermille: number;
 }
 
 export interface UsedVehicleStockRefreshResult {
@@ -130,7 +138,8 @@ export class UsedVehicleStockGenerator {
         dealer.id,
         dealer.supportedBrandIds,
         gameDay,
-        cycleKey
+        cycleKey,
+        dealerRecord.marketZoneCode
       );
       skippedTooNew += candidateResult.skippedTooNew;
 
@@ -273,9 +282,12 @@ export class UsedVehicleStockGenerator {
               dealerRecord.priceBiasPermille *
               usedMarketNoisePermille(
                 candidate.score
+              ) *
+              vehicleMarketDemandPricePermille(
+                candidate.marketDemandPermille
               )
             ) /
-            1_000_000
+            1_000_000_000
           )
         );
 
@@ -309,7 +321,8 @@ export class UsedVehicleStockGenerator {
     dealerId: VehicleDealerId,
     supportedBrandIds: readonly VehicleBrandId[],
     gameDay: number,
-    cycleKey: number
+    cycleKey: number,
+    marketZoneCode: VehicleMarketZoneCode | null
   ): {
     readonly candidates: readonly UsedCandidate[];
     readonly skippedTooNew: number;
@@ -343,6 +356,15 @@ export class UsedVehicleStockGenerator {
         continue;
       }
 
+      const demand = quoteVehicleMarketDemand({
+        zoneCode: marketZoneCode,
+        role: model.metadata.role,
+        energyKind: model.model.energyKind,
+        basePriceCents: Number(
+          record.variant.basePriceCents
+        )
+      });
+
       candidates.push({
         dealerId,
         variantId: record.variant.id,
@@ -351,14 +373,17 @@ export class UsedVehicleStockGenerator {
         launchGameDay: record.lifecycle.launchGameDay,
         score: deterministicHash(
           `${cycleKey}|${dealerId}|${record.variant.id}|used`
-        )
+        ),
+        marketDemandPermille:
+          demand.combinedDemandPermille
       });
     }
 
     return {
       candidates: candidates.sort(
         (a, b) =>
-          b.score - a.score ||
+          b.score * b.marketDemandPermille -
+            a.score * a.marketDemandPermille ||
           String(a.variantId).localeCompare(
             String(b.variantId)
           )

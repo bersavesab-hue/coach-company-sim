@@ -1,6 +1,6 @@
 # Stage 15：车辆内容库与动态车商供给冻结
 
-状态：**Implementation in progress — formal content + dynamic new/used supply complete**
+状态：**Implemented — Stage 15 complete**
 
 ## 1. 目标
 
@@ -354,21 +354,20 @@ Stage 15 必须先做 validator，再批量填内容。
 9. 24 Dealer ✅ 已完成
 10. 新车库存生成器 ✅ 已完成
 11. 二手车动态生成器 ✅ 已完成
-12. 地区需求配置
-13. 生命周期刷新
-14. 全量验证 + CI
+12. 地区需求配置 ✅ 已完成
+13. 生命周期刷新 ✅ 已完成
+14. 全量验证 + CI ✅ 已完成
 
 ---
 
-## 16. 第一验收点
+## 16. 最终验收
 
-第一步只验收：
+Stage 15 最终验收内容：
 
-- SYSTEM_MAP 不再把 4S/二手拍卖写成“未来未实现”
-- Stage 10–15 与实际仓库一致
-- Stage 15 数量固定
-- 数据归属明确
-- 禁止事项明确
-- 后续实现顺序明确
-
-本步骤不新增 100 个 VehicleModel，不生成正式车源。
+- 10 Brand / 32 Series / 100 Model / 180 Variant / 48 Option / 24 Dealer 数量固定并通过统一校验。
+- 6 个 market zone 全部拥有地区需求配置。
+- 地区需求真实参与新车/二手车候选排序、库存规模与市场价格，不复制车型。
+- 新车 Listing 随 Variant 上市、停产、清库存、停售自动刷新；历史 Variant 不删除，仍可进入二手市场。
+- 新车和二手车继续使用唯一 VehicleMarketRepository / VehicleListing。
+- 全量 Stage 15 Validator 与专项测试进入 Core Check。
+- Stage 15 完成后才进入 Presentation / Android APK。

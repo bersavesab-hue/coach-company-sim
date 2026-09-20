@@ -472,7 +472,7 @@ Vehicle 分两层：
 
 车型运行差异继续由 VehicleModel + VehicleConfiguration 数据决定。
 
-Stage 15 开始补正式车辆内容库和动态市场供给，不再扩张新的车辆运行状态。
+Stage 15 已完成正式车辆内容库、动态新车/二手车供给、6 区域市场需求和车型生命周期刷新，不再扩张新的车辆运行状态。
 
 ---
 
@@ -858,6 +858,8 @@ UI 报表只读 Statistics/Query DTO，不自己扫所有业务对象计算。
 
 ## Stage 15：车辆内容库 + 动态车商供给
 
+状态：Implemented。
+
 目标不是增加第二套车辆逻辑，而是向 Stage 13–14 的正式接口提供足够丰富、可持续变化的 Content。
 
 固定第一版内容量：
@@ -941,4 +943,4 @@ Stage 15 不允许：
 → Presentation / UI
 ```
 
-Stage 15 完成前，不为车辆市场先写死最终 UI；先保证正式内容规模、动态库存和内容校验稳定。
+Stage 15 已完成并通过正式内容校验。下一主线进入 Presentation / Android APK；表现层仍只能通过正式 Command / Query / Projection 接口读写游戏。

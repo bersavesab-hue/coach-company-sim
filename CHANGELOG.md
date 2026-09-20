@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.15.9-stage15-complete
+
+### Added
+- 正式完成 6 个车辆市场区域需求配置：north / east / south / central / west / northeast。
+- 地区需求覆盖小型客运、中巴、普通/城际、高端、旅游、新能源与价格敏感度，并通过 VehicleMarketDemandService 统一计算。
+- 地区需求正式参与动态新车与动态二手车候选排序、库存规模和价格修正，不复制 VehicleModel / VehicleVariant。
+- 新增 VehicleVariantLifecycleRefresher，随 VehicleMarketCoordinator 和 Simulation 时间推进自动处理正常销售、清库存与停售切换。
+- 生命周期切换会使旧阶段 generated_new Listing 失效；历史 Variant 保留，可继续进入二手市场。
+- 新增 VehicleMarketDemandContentValidator 与 VehicleStage15Validator，形成 Stage 15 单一全量内容验收入口。
+- 新增地区需求、生命周期刷新和 Stage 15 全量验证专项测试。
+- 新增架构守卫，防止地区需求、生命周期刷新或最终 Validator 从正式市场链中脱落。
+
+### Changed
+- generated_new supplyCycleKey 现在同时记录 7 天库存周期与生命周期阶段，保证跨正常销售/清库存边界立即刷新。
+- CONTENT_VERSION 从 9 升至 10。
+- GAME_VERSION 更新为 0.15.9-stage15-complete。
+- README / SYSTEM_MAP / Stage 15 规划文档同步到当前真实进度。
+
+### Stage 15 Complete
+- 10 个架空品牌。
+- 32 个车系。
+- 100 个基础 VehicleModel。
+- 180 个 VehicleVariant。
+- 48 个 VehicleOptionDefinition。
+- 24 个 VehicleDealer。
+- 6 个车辆市场区域需求配置。
+- 动态新车与二手车供给。
+- 年款上市 / 停产 / 清库存 / 停售生命周期。
+- 全量内容校验与 CI 守卫。
+- 下一阶段：Presentation / Android APK。
+
+
 ## 0.15.8-stage15-usedstock
 
 ### Added
