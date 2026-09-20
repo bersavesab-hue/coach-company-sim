@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+import {
+  type VehicleDealerId,
+  type VehicleListingId
+} from "../../src/contracts/ids/EntityIds.js";
 import { SECONDS_PER_DAY } from "../../src/core/time/GameTime.js";
 import { units } from "../../src/core/units/Units.js";
 import { VEHICLE_VARIANTS } from "../../src/content/vehicle/VehicleVariantCatalog.js";
@@ -30,10 +34,10 @@ function generatedListing(
   return {
     id: (
       "vehicle_listing.lifecycle_test." + phase
-    ) as (typeof import("../../src/contracts/ids/EntityIds.js"))["VehicleListingId"],
+    ) as VehicleListingId,
     dealerId: (
       "vehicle_dealer.lifecycle_test"
-    ) as (typeof import("../../src/contracts/ids/EntityIds.js"))["VehicleDealerId"],
+    ) as VehicleDealerId,
     kind: "new" as const,
     modelId: record.variant.modelId,
     variantId: record.variant.id,
