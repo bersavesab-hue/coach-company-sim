@@ -1430,7 +1430,8 @@ export class VehicleMarketTradingService {
       if (
         current.status === "available" &&
         current.sellerCompanyId === null &&
-        current.reservation === null
+        current.reservation === null &&
+        current.supplySource !== "generated_new"
       ) {
         const valuation =
           this.dependencies.valuation.estimateListing(

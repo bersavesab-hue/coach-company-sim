@@ -15,6 +15,12 @@ import type {
 } from "../../core/units/Units.js";
 
 export type VehicleListingKind = "new" | "used";
+export type VehicleListingSupplySource =
+  | "manual"
+  | "generated_new"
+  | "generated_used"
+  | "dealer_acquisition"
+  | "company_consignment";
 export type VehicleListingStatus =
   | "available"
   | "reserved"
@@ -70,4 +76,6 @@ export interface VehicleListing {
   readonly availableFromGameSecond: GameSecond;
   readonly expiresAtGameSecond: GameSecond | null;
   readonly status: VehicleListingStatus;
+  readonly supplySource?: VehicleListingSupplySource;
+  readonly supplyCycleKey?: string | null;
 }

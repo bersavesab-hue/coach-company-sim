@@ -169,3 +169,5 @@ export * from "./content/vehicle/VehicleOptionCatalog.js";
 export * from "./content/vehicle/VehicleOptionContentValidator.js";
 export * from "./content/vehicle/VehicleDealerCatalog.js";
 export * from "./content/vehicle/VehicleDealerContentValidator.js";
+export * from "./content/vehicle/VehicleContentSeed.js";
+export * from "./application/vehicle-market/NewVehicleStockGenerator.js";
