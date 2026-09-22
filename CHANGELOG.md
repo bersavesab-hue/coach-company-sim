@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.19.4-stage17-terrain-base-map
+
+### Removed
+- 删除 SVG 中旧的程序山脉、丘陵、河流、湖泊和海岸占位图形。
+- 地图不再使用简单几何块模拟全国地形背景。
+- 最大地图放大不再允许缩到 14% world viewBox，避免背景纹理被过度拉伸。
+
+### Added
+- 新增正式本地地形底图 presentation/apk/assets/map/base-terrain.webp。
+- 底图资源使用 2896 × 2172 的 2×版本，作为道路/城市/线路下方的固定视觉底层。
+- SVG terrainLayer 改为正式 <image> 图层，和道路共享 1100 × 825 坐标系。
+- 新增轻量 terrainWash，控制底图饱和度与道路可读性。
+- build-apk-web 新增正式底图资源存在性校验与 assets 目录复制。
+- APK 中底图为本地资源，不依赖网络、临时 URL 或 ChatGPT 文件服务。
+
+### Changed
+- 地图最大放大限制调整为 world viewBox 的 25%，与 2×底图像素密度匹配。
+- Android / package 版本升级至 0.19.4。
+- GAME_VERSION 更新为 0.19.4-stage17-terrain-base-map。
+
+### Validation
+- 路网、城市解锁、运营线路、寻路和车辆运行逻辑保持不变。
+- 底图缺失时 APK 网页资源构建必须失败。
+- Core Check 与 APK 构建继续作为正式提交门禁。
+
+
 ## 0.19.3-stage17-route-city-labels
 
 ### Removed

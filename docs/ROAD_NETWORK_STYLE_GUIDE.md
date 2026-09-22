@@ -220,3 +220,14 @@ RoadNetworkStyleValidator` 会在 Core Check 和 APK 构建前阻止道路编号
 - 每条激活线路在首末站显示小型端点环。
 - 线路牌优先放在路径中部；若与城市标签碰撞，依次尝试上下、左右和斜向偏移。
 - 路线显示仍严格来源于 PassengerRoute.pathLegs → RoadSegment.polyline，不允许创建独立装饰路径。
+
+
+## 正式地形底图
+
+- 正式底图资源：presentation/apk/assets/map/base-terrain.webp。
+- 运行资源尺寸：2896 × 2172，4:3，与地图 1100 × 825 viewBox 同比例。
+- 底图通过 SVG <image> 放入地图坐标系，不使用 CSS 固定背景，因此拖动和缩放必须与道路、城市、线路完全同步。
+- 删除旧 terrainMountain / terrainHill / terrainRiver / terrainLake / terrainCoast 程序占位层。
+- 底图只承担地形背景；道路、城市、玩家线路仍由正式矢量数据绘制在其上。
+- 最大放大由 mapCamera.w >= 0.25 * world viewBox 限制。2×底图在该倍率下仍保留足够像素密度，禁止恢复无限放大导致明显像素化。
+- APK 构建必须检测 base-terrain.webp 存在，并复制 presentation/apk/assets 到 www/assets；资源缺失时构建直接失败。

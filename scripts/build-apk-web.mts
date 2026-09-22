@@ -38,6 +38,24 @@ fs.copyFileSync(
   path.join(outputDir, "index.html")
 );
 
+const apkAssetSourceDir = path.resolve(
+  "presentation/apk/assets"
+);
+const terrainAsset = path.join(
+  apkAssetSourceDir,
+  "map/base-terrain.webp"
+);
+if (!fs.existsSync(terrainAsset)) {
+  throw new Error(
+    "Formal base terrain asset is missing; refusing to build playable APK."
+  );
+}
+fs.cpSync(
+  apkAssetSourceDir,
+  path.join(outputDir, "assets"),
+  { recursive: true }
+);
+
 await build({
   entryPoints: [
     "src/presentation/android/PlayableClient.ts"
