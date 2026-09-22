@@ -29,7 +29,7 @@
 ### Validation
 - 起步区三个旧四向 ring 节点前缀禁止重新出现。
 - H02/H21/H12/H03/N102/N201/N202 等主要样板走廊必须保留多点几何。
-- Core Check 与 APK 构建继续作为正式提交门禁。
+- Core Check 与 APK 构建继续作为正式提交门禁。\n- 收紧 L953 匝道曲线，保持实际路段长度低于 100km 匝道上限。
 
 
 ## 0.18.6-stage17-interchange-sample

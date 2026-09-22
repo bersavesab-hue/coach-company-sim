@@ -8154,7 +8154,7 @@
       "regionId": "region.central",
       "fromNodeId": "location.junction.j.h21.s",
       "toNodeId": "location.junction.j.h02.w",
-      "lengthM": 108338,
+      "lengthM": 86189,
       "speedLimitMps": 14,
       "roadClass": "local",
       "direction": "both",
@@ -8164,12 +8164,16 @@
           "yM": 649000
         },
         {
-          "xM": 625000,
-          "yM": 652000
+          "xM": 645000,
+          "yM": 664000
         },
         {
-          "xM": 603000,
-          "yM": 680000
+          "xM": 628000,
+          "yM": 687000
+        },
+        {
+          "xM": 616000,
+          "yM": 706000
         },
         {
           "xM": 610000,
