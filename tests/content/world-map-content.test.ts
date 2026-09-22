@@ -11,6 +11,23 @@ test("formal world map content is valid and supports all five road classes", () 
     new Set(["local","county_road","provincial_road","national_road","expressway"])
   );
   assert.equal(FORMAL_WORLD_MAP_CONTENT.background.mode, "decorative_only");
+  const counts = FORMAL_WORLD_MAP_CONTENT.roads.reduce<Record<string, number>>(
+    (result, road) => {
+      result[road.roadClass] = (result[road.roadClass] ?? 0) + 1;
+      assert.ok(road.roadCode);
+      assert.ok(road.displayPriority);
+      return result;
+    },
+    {}
+  );
+  assert.deepEqual(counts, {
+    expressway: 27,
+    national_road: 44,
+    provincial_road: 46,
+    county_road: 12,
+    local: 16
+  });
+  assert.equal(FORMAL_WORLD_MAP_CONTENT.roads.length, 145);
 });
 
 test("formal world map builds the canonical runtime graph", () => {

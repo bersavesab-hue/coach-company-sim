@@ -19,6 +19,9 @@ export interface WorldMapRoadContent {
   readonly id: string; readonly regionId: string; readonly fromNodeId: string; readonly toNodeId: string;
   readonly lengthM: number; readonly speedLimitMps: number; readonly roadClass: RoadClass;
   readonly direction: RoadDirection; readonly polyline: readonly WorldMapPointContent[]; readonly active: boolean;
+  readonly roadCode?: string;
+  readonly displayPriority?: 1 | 2 | 3;
+  readonly showLabel?: boolean;
 }
 export interface WorldMapStationContent {
   readonly id: string; readonly name: string; readonly worldNodeId: string;

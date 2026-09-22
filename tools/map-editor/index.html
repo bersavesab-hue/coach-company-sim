@@ -59,7 +59,7 @@ footer{padding:6px 8px calc(6px + env(safe-area-inset-bottom));background:#151d2
 <div class="zoom"><button id="zoomIn">+</button><button id="zoomOut">−</button><button id="fit">□</button></div>
 <div id="status"></div>
 </div>
-<footer>道路：先点起点节点 → 点若干弯折位置 → 点终点节点 →“完成道路”。客运站和路口都可作为道路节点。</footer>
+<footer>道路按等级自动生成编号和显示优先级。高速只建议连接枢纽节点；县道、乡道只做局部短线，禁止画成长距离全国干线。</footer>
 <script>
 (function(){
 "use strict";
@@ -80,7 +80,13 @@ function pt(evt){var p=svg.createSVGPoint();p.x=evt.clientX;p.y=evt.clientY;var 
 function dist(a,b){return Math.hypot(a.xM-b.xM,a.yM-b.yM);}
 function nearestNode(p,limit){var best=null,bd=limit;data.nodes.forEach(function(n){var d=dist(p,n.position);if(d<bd){bd=d;best=n;}});return best;}
 function roadLength(points){var t=0;for(var i=1;i<points.length;i++)t+=dist(points[i-1],points[i]);return Math.max(1,Math.round(t));}
-function speed(cls){return cls==="expressway"?31:cls==="national_road"?25:cls==="provincial_road"?22:cls==="county_road"?18:15;}
+function speed(cls){return cls==="expressway"?31:cls==="national_road"?25:cls==="provincial_road"?22:cls==="county_road"?18:14;}
+function displayPriority(cls){return cls==="expressway"?1:(cls==="national_road"||cls==="provincial_road"?2:3);}
+function nextRoadCode(cls){
+ var cfg={expressway:["H",1,2],national_road:["N",101,3],provincial_road:["P",201,3],county_road:["C",301,3],local:["L",401,3]}[cls],used=new Set(data.roads.map(function(r){return r.roadCode;}).filter(Boolean)),n=cfg[1],code="";
+ do{code=cfg[0]+String(n++).padStart(cfg[2],"0");}while(used.has(code));
+ return code;
+}
 function roadLabel(cls){return {local:"乡道",county_road:"县道",provincial_road:"省道",national_road:"国道",expressway:"高速"}[cls]||cls;}
 function regionId(){return data.regions[0]?data.regions[0].id:"region.central";}
 function render(){
@@ -95,7 +101,7 @@ function renderPreview(){
  previewG.innerHTML='<polyline class="preview" points="'+activeRoad.points.map(function(p){return p.xM+','+p.yM;}).join(' ')+'"></polyline>';
 }
 function updateStatus(msg){
- statusEl.textContent=msg||("模式："+({pan:"移动",station:"客运站",junction:"路口",road:"画道路",delete:"删除"}[mode])+"　客运站 "+data.stations.length+"　节点 "+data.nodes.length+"　道路 "+data.roads.length+(activeRoad?"　正在画："+roadLabel(activeRoad.roadClass):""));
+ statusEl.textContent=msg||("模式："+({pan:"移动",station:"客运站",junction:"路口",road:"画道路",delete:"删除"}[mode])+"　客运站 "+data.stations.length+"　节点 "+data.nodes.length+"　道路 "+data.roads.length+(activeRoad?"　正在画："+roadLabel(activeRoad.roadClass)+" "+activeRoad.roadCode:""));
 }
 function setMode(v){
  mode=v;activeRoad=null;document.querySelectorAll("[data-mode]").forEach(function(b){b.classList.toggle("active",b.dataset.mode===mode);});render();
@@ -115,7 +121,8 @@ function roadTap(p){
  var snap=nearestNode(p,Math.max(view.w,view.h)*0.035);
  if(!activeRoad){
   if(!snap){updateStatus("画道路必须从客运站或路口开始");return;}
-  activeRoad={fromNodeId:snap.id,toNodeId:null,roadClass:document.getElementById("roadClass").value,points:[{xM:snap.position.xM,yM:snap.position.yM}]};
+  var cls=document.getElementById("roadClass").value;
+  activeRoad={fromNodeId:snap.id,toNodeId:null,roadClass:cls,roadCode:nextRoadCode(cls),displayPriority:displayPriority(cls),points:[{xM:snap.position.xM,yM:snap.position.yM}]};
  }else{
   if(snap && snap.id!==activeRoad.fromNodeId){
    activeRoad.points.push({xM:snap.position.xM,yM:snap.position.yM});activeRoad.toNodeId=snap.id;
@@ -128,7 +135,7 @@ function roadTap(p){
 function finishRoad(){
  if(!activeRoad||!activeRoad.toNodeId||activeRoad.points.length<2){updateStatus("请先点到另一个客运站或路口作为道路终点");return;}
  snapshot();
- data.roads.push({id:nextId("road.",data.roads),regionId:regionId(),fromNodeId:activeRoad.fromNodeId,toNodeId:activeRoad.toNodeId,lengthM:roadLength(activeRoad.points),speedLimitMps:speed(activeRoad.roadClass),roadClass:activeRoad.roadClass,direction:"both",polyline:activeRoad.points,active:true});
+ data.roads.push({id:nextId("road.",data.roads),regionId:regionId(),fromNodeId:activeRoad.fromNodeId,toNodeId:activeRoad.toNodeId,lengthM:roadLength(activeRoad.points),speedLimitMps:speed(activeRoad.roadClass),roadClass:activeRoad.roadClass,direction:"both",polyline:activeRoad.points,active:true,roadCode:activeRoad.roadCode,displayPriority:activeRoad.displayPriority,showLabel:true});
  activeRoad=null;render();
 }
 function pointSegDist(p,a,b){

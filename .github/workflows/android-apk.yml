@@ -73,11 +73,11 @@ jobs:
       - name: Prepare APK artifact
         run: |
           mkdir -p artifacts
-          cp android-app/app/build/outputs/apk/debug/app-debug.apk artifacts/coach-company-sim-v0.18.1-map-ui-rework.apk
+          cp android-app/app/build/outputs/apk/debug/app-debug.apk artifacts/coach-company-sim-v0.18.2-road-hierarchy.apk
 
       - uses: actions/upload-artifact@v4
         with:
-          name: coach-company-sim-v0.18.1-map-ui-rework
-          path: artifacts/coach-company-sim-v0.18.1-map-ui-rework.apk
+          name: coach-company-sim-v0.18.2-road-hierarchy
+          path: artifacts/coach-company-sim-v0.18.2-road-hierarchy.apk
           if-no-files-found: error
           retention-days: 14

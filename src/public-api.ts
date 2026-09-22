@@ -182,3 +182,4 @@ export * from "./content/map/WorldMapContent.js";
 export * from "./content/map/WorldMapContentValidator.js";
 export * from "./content/map/FormalWorldMapContent.js";
 export * from "./content/map/WorldMapSeed.js";
+export * from "./content/map/RoadNetworkStyleValidator.js";

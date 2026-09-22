@@ -93,7 +93,7 @@ class PlayableClient {
       this.runtime.repositories.allServicePlans();
 
     return {
-      version: "0.18.1-map-ui",
+      version: "0.18.2-road-hierarchy",
       company,
       currentGameSecond:
         Number(this.currentGameSecond),
@@ -124,14 +124,25 @@ class PlayableClient {
           };
         }
       ),
-      roads: world.allRoads().map((road) => ({
-        id: String(road.id),
-        roadClass: road.roadClass,
-        points: road.polyline.map((point) => ({
-          xM: point.xM,
-          yM: point.yM
-        }))
-      })),
+      roads: world.allRoads().map((road) => {
+        const mapRoad =
+          this.runtime.mapContent.roads.find(
+            (value) => value.id === String(road.id)
+          );
+        return {
+          id: String(road.id),
+          roadClass: road.roadClass,
+          roadCode: mapRoad?.roadCode ?? null,
+          displayPriority:
+            mapRoad?.displayPriority ?? 3,
+          showLabel:
+            mapRoad?.showLabel ?? false,
+          points: road.polyline.map((point) => ({
+            xM: point.xM,
+            yM: point.yM
+          }))
+        };
+      }),
       routes: routes.map((route) =>
         this.routeDto(route)
       ),
