@@ -33,6 +33,7 @@
 - map-view.v1.json 的最高瓦片层必须与正式底图源尺寸一致。
 - 所有瓦片层宽高必须能被行列数整除。
 - Core Check 与 APK 构建继续作为正式提交门禁。
+- 地图配置测试显式断言最高瓦片层存在，满足 TypeScript strict null checking。
 
 
 ## 0.19.4-stage17-terrain-base-map

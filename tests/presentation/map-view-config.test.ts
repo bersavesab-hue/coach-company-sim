@@ -117,6 +117,7 @@ test(
 
     const nativeLevel =
       levels[levels.length - 1];
+    assert.ok(nativeLevel);
     assert.equal(
       nativeLevel.width,
       config.terrain.source.width
