@@ -93,7 +93,7 @@ test("playable client completes buy-route-schedule-operate-finance loop", async 
       routeType: "intercity",
       orderedStationIds: [
         runtime.stations[0]!.id,
-        runtime.stations[2]!.id
+        runtime.stations[1]!.id
       ],
       routingPreference: "fastest_time",
       farePolicyId:
