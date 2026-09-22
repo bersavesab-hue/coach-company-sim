@@ -14,7 +14,7 @@
 - 新增 WorldMapContentValidator，校验 ID、引用、道路端点、长度、速度、背景边界与站点绑定。
 - 新增 WorldMapSeed，将正式地图内容转换为唯一 WorldGraph / Station / PassengerDemand 运行时。
 - APK 构建前强制验证正式地图内容；地图文件无效时拒绝打包。
-- 新增地图内容专项测试，覆盖五级道路、背景隔离和正式运行图构建。
+- 新增地图内容专项测试，覆盖五级道路、背景隔离和正式运行图构建。\n- 新增手机优先的 tools/map-editor 地图编辑器，可放置客运站/路口、绘制五级道路、多折点路网、导入/导出正式 world-map.v1.json。\n- 编辑器支持加载本地背景图作为山川河流视觉参照，但背景图不写入经营路网逻辑。
 
 ### Changed
 - GAME_VERSION 更新为 0.18.0-stage17-map-foundation。

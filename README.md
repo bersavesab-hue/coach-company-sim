@@ -37,7 +37,7 @@
 
 ## 下一阶段
 
-Stage 17 已开始：正式地图不再硬编码在启动器中，游戏现在从唯一 world-map.v1.json 构建 WorldGraph。下一步接入手机地图编辑器，编辑器导出的同格式文件可直接替换正式地图数据。
+Stage 17 已开始：正式地图不再硬编码在启动器中，游戏现在从唯一 world-map.v1.json 构建 WorldGraph。手机地图编辑器位于 tools/map-editor/index.html，导出的同格式文件可直接替换正式地图数据。
 
 ## 开发检查
 

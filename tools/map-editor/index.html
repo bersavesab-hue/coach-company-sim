@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>客运地图制作器</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;height:100%;font-family:system-ui,-apple-system,"Microsoft YaHei",sans-serif;background:#10151b;color:#edf2f6}
+body{display:flex;flex-direction:column;overflow:hidden}header{padding:10px 12px calc(8px + env(safe-area-inset-top));background:#151d25;border-bottom:1px solid #2d3944}
+h1{font-size:17px;margin:0 0 6px}.meta{font-size:11px;color:#9badbb}.toolbar,.row{display:flex;gap:6px;align-items:center;overflow:auto}
+.toolbar{padding:7px 8px;background:#111820;border-bottom:1px solid #29343e}.toolbar button,.toolbar select,.toolbar label{flex:0 0 auto;border:1px solid #34424e;border-radius:8px;background:#1b2630;color:#e9eff4;padding:8px 10px;font-size:12px}
+.toolbar button.active{background:#f1f5f8;color:#111820}.toolbar button.primary{background:#d8e7f2;color:#101820;font-weight:700}
+.toolbar input{display:none}#mapWrap{position:relative;flex:1;min-height:0;background:#d9dfd4;touch-action:none}
+svg{display:block;width:100%;height:100%;background:#d9dfd4}.road{fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.road.local{stroke:#9d8d72;stroke-width:2}.road.county_road{stroke:#7d8991;stroke-width:2.6}.road.provincial_road{stroke:#d59b45;stroke-width:3}.road.national_road{stroke:#cf6b42;stroke-width:3.8}.road.expressway{stroke:#477da9;stroke-width:5}
+.station{fill:#fff;stroke:#17212a;stroke-width:2;vector-effect:non-scaling-stroke}.junction{fill:#58646d;stroke:#fff;stroke-width:1.5;vector-effect:non-scaling-stroke}
+.label{font-size:12500px;paint-order:stroke;stroke:#eef1e8;stroke-width:3500px;stroke-linejoin:round;fill:#1c252c;pointer-events:none}
+.preview{fill:none;stroke:#1a75b9;stroke-width:4;stroke-dasharray:10 8;vector-effect:non-scaling-stroke}
+#status{position:absolute;left:8px;right:8px;bottom:8px;background:#0d141bdd;color:#e9eff4;border:1px solid #35434f;border-radius:9px;padding:7px 9px;font-size:11px;pointer-events:none}
+.zoom{position:absolute;right:8px;top:8px;display:flex;flex-direction:column;gap:5px}.zoom button{width:38px;height:38px;border:0;border-radius:9px;background:#111a22dd;color:#fff;font-size:19px}
+footer{padding:6px 8px calc(6px + env(safe-area-inset-bottom));background:#151d25;border-top:1px solid #29343e;font-size:11px;color:#96a8b6}
+</style>
+</head>
+<body>
+<header>
+<h1>客运地图制作器</h1>
+<div class="meta">导出文件可直接替换游戏中的 src/content/map/world-map.v1.json</div>
+</header>
+<div class="toolbar" id="tools">
+<button data-mode="pan" class="active">移动</button>
+<button data-mode="station">客运站</button>
+<button data-mode="junction">路口</button>
+<button data-mode="road">画道路</button>
+<button data-mode="delete">删除</button>
+<select id="roadClass">
+<option value="local">乡道</option>
+<option value="county_road">县道</option>
+<option value="provincial_road">省道</option>
+<option value="national_road">国道</option>
+<option value="expressway">高速</option>
+</select>
+<select id="stationClass">
+<option value="town">乡镇站</option>
+<option value="county" selected>县级站</option>
+<option value="city">市级站</option>
+<option value="hub">枢纽站</option>
+</select>
+<button id="finishRoad">完成道路</button>
+<button id="undo">撤销</button>
+<label>导入地图<input id="importJson" type="file" accept=".json,application/json"></label>
+<label>背景图<input id="backgroundImage" type="file" accept="image/*"></label>
+<button id="exportJson" class="primary">导出地图</button>
+</div>
+<div id="mapWrap">
+<svg id="map" viewBox="0 0 900000 600000">
+<image id="bg" x="0" y="0" width="900000" height="600000" preserveAspectRatio="none" opacity=".58"></image>
+<g id="roads"></g><g id="preview"></g><g id="nodes"></g><g id="labels"></g>
+</svg>
+<div class="zoom"><button id="zoomIn">+</button><button id="zoomOut">−</button><button id="fit">□</button></div>
+<div id="status"></div>
+</div>
+<footer>道路：先点起点节点 → 点若干弯折位置 → 点终点节点 →“完成道路”。客运站和路口都可作为道路节点。</footer>
+<script>
+(function(){
+"use strict";
+var svg=document.getElementById("map"), roadsG=document.getElementById("roads"), nodesG=document.getElementById("nodes"), labelsG=document.getElementById("labels"), previewG=document.getElementById("preview"), statusEl=document.getElementById("status");
+var WORLD_W=900000,WORLD_H=600000,mode="pan",history=[],activeRoad=null,panStart=null;
+var data=blankMap();
+var view={x:0,y:0,w:WORLD_W,h:WORLD_H};
+
+function blankMap(){
+ return {schemaVersion:1,mapId:"world.coachland",name:"客运架空全国地图",background:{mode:"decorative_only",assetPath:null},
+ regions:[{id:"region.central",name:"全国路网",level:"country",parentRegionId:null,bounds:{minXM:0,minYM:0,maxXM:WORLD_W,maxYM:WORLD_H},active:true}],
+ nodes:[],roads:[],stations:[]};
+}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[c];});}
+function snapshot(){history.push(JSON.stringify(data));if(history.length>40)history.shift();}
+function nextId(prefix,list){var n=1,set=new Set(list.map(function(x){return x.id;}));while(set.has(prefix+String(n).padStart(4,"0")))n++;return prefix+String(n).padStart(4,"0");}
+function pt(evt){var p=svg.createSVGPoint();p.x=evt.clientX;p.y=evt.clientY;var m=svg.getScreenCTM();if(!m)return{xM:0,yM:0};var q=p.matrixTransform(m.inverse());return{xM:Math.round(q.x),yM:Math.round(q.y)};}
+function dist(a,b){return Math.hypot(a.xM-b.xM,a.yM-b.yM);}
+function nearestNode(p,limit){var best=null,bd=limit;data.nodes.forEach(function(n){var d=dist(p,n.position);if(d<bd){bd=d;best=n;}});return best;}
+function roadLength(points){var t=0;for(var i=1;i<points.length;i++)t+=dist(points[i-1],points[i]);return Math.max(1,Math.round(t));}
+function speed(cls){return cls==="expressway"?31:cls==="national_road"?25:cls==="provincial_road"?22:cls==="county_road"?18:15;}
+function roadLabel(cls){return {local:"乡道",county_road:"县道",provincial_road:"省道",national_road:"国道",expressway:"高速"}[cls]||cls;}
+function regionId(){return data.regions[0]?data.regions[0].id:"region.central";}
+function render(){
+ roadsG.innerHTML=data.roads.map(function(r){return '<polyline class="road '+r.roadClass+'" points="'+r.polyline.map(function(p){return p.xM+','+p.yM;}).join(' ')+'"></polyline>';}).join("");
+ var stationNodeIds=new Set(data.stations.map(function(s){return s.worldNodeId;}));
+ nodesG.innerHTML=data.nodes.map(function(n){var isStation=stationNodeIds.has(n.id);return '<circle class="'+(isStation?'station':'junction')+'" cx="'+n.position.xM+'" cy="'+n.position.yM+'" r="'+(isStation?8500:5200)+'"></circle>';}).join("");
+ labelsG.innerHTML=data.stations.map(function(s){var n=data.nodes.find(function(x){return x.id===s.worldNodeId;});if(!n)return"";return '<text class="label" x="'+(n.position.xM+10500)+'" y="'+(n.position.yM-9500)+'">'+esc(s.name)+'</text>';}).join("");
+ renderPreview(); updateStatus();
+}
+function renderPreview(){
+ if(!activeRoad){previewG.innerHTML="";return;}
+ previewG.innerHTML='<polyline class="preview" points="'+activeRoad.points.map(function(p){return p.xM+','+p.yM;}).join(' ')+'"></polyline>';
+}
+function updateStatus(msg){
+ statusEl.textContent=msg||("模式："+({pan:"移动",station:"客运站",junction:"路口",road:"画道路",delete:"删除"}[mode])+"　客运站 "+data.stations.length+"　节点 "+data.nodes.length+"　道路 "+data.roads.length+(activeRoad?"　正在画："+roadLabel(activeRoad.roadClass):""));
+}
+function setMode(v){
+ mode=v;activeRoad=null;document.querySelectorAll("[data-mode]").forEach(function(b){b.classList.toggle("active",b.dataset.mode===mode);});render();
+}
+function addStation(p){
+ var name=prompt("客运站名称：","新客运站");if(!name)return;
+ snapshot();
+ var nodeId=nextId("location.station.",data.nodes), stationId=nextId("station.",data.stations);
+ data.nodes.push({id:nodeId,regionId:regionId(),type:"bus_station",name:name,position:p,active:true});
+ data.stations.push({id:stationId,name:name,worldNodeId:nodeId,stationClass:document.getElementById("stationClass").value,active:true});
+ render();
+}
+function addJunction(p){
+ snapshot();data.nodes.push({id:nextId("location.junction.",data.nodes),regionId:regionId(),type:"junction",name:"路口",position:p,active:true});render();
+}
+function roadTap(p){
+ var snap=nearestNode(p,Math.max(view.w,view.h)*0.035);
+ if(!activeRoad){
+  if(!snap){updateStatus("画道路必须从客运站或路口开始");return;}
+  activeRoad={fromNodeId:snap.id,toNodeId:null,roadClass:document.getElementById("roadClass").value,points:[{xM:snap.position.xM,yM:snap.position.yM}]};
+ }else{
+  if(snap && snap.id!==activeRoad.fromNodeId){
+   activeRoad.points.push({xM:snap.position.xM,yM:snap.position.yM});activeRoad.toNodeId=snap.id;
+  }else{
+   activeRoad.points.push(p);activeRoad.toNodeId=null;
+  }
+ }
+ renderPreview();updateStatus();
+}
+function finishRoad(){
+ if(!activeRoad||!activeRoad.toNodeId||activeRoad.points.length<2){updateStatus("请先点到另一个客运站或路口作为道路终点");return;}
+ snapshot();
+ data.roads.push({id:nextId("road.",data.roads),regionId:regionId(),fromNodeId:activeRoad.fromNodeId,toNodeId:activeRoad.toNodeId,lengthM:roadLength(activeRoad.points),speedLimitMps:speed(activeRoad.roadClass),roadClass:activeRoad.roadClass,direction:"both",polyline:activeRoad.points,active:true});
+ activeRoad=null;render();
+}
+function pointSegDist(p,a,b){
+ var dx=b.xM-a.xM,dy=b.yM-a.yM;if(dx===0&&dy===0)return dist(p,a);
+ var t=((p.xM-a.xM)*dx+(p.yM-a.yM)*dy)/(dx*dx+dy*dy);t=Math.max(0,Math.min(1,t));
+ return dist(p,{xM:a.xM+t*dx,yM:a.yM+t*dy});
+}
+function deleteAt(p){
+ var threshold=Math.max(view.w,view.h)*0.025,n=nearestNode(p,threshold);
+ if(n){
+  snapshot();data.roads=data.roads.filter(function(r){return r.fromNodeId!==n.id&&r.toNodeId!==n.id;});
+  data.stations=data.stations.filter(function(s){return s.worldNodeId!==n.id;});
+  data.nodes=data.nodes.filter(function(x){return x.id!==n.id;});render();return;
+ }
+ var hit=null,best=threshold;
+ data.roads.forEach(function(r){for(var i=1;i<r.polyline.length;i++){var d=pointSegDist(p,r.polyline[i-1],r.polyline[i]);if(d<best){best=d;hit=r;}}});
+ if(hit){snapshot();data.roads=data.roads.filter(function(r){return r.id!==hit.id;});render();}
+}
+function setView(){svg.setAttribute("viewBox",[view.x,view.y,view.w,view.h].join(" "));}
+function zoom(f){
+ var cx=view.x+view.w/2,cy=view.y+view.h/2;view.w=Math.max(90000,Math.min(WORLD_W*1.2,view.w*f));view.h=view.w*(svg.clientHeight/Math.max(1,svg.clientWidth));view.x=cx-view.w/2;view.y=cy-view.h/2;setView();
+}
+function fit(){view={x:0,y:0,w:WORLD_W,h:WORLD_H};setView();}
+document.getElementById("tools").addEventListener("click",function(e){var b=e.target.closest("[data-mode]");if(b)setMode(b.dataset.mode);});
+document.getElementById("finishRoad").onclick=finishRoad;
+document.getElementById("undo").onclick=function(){if(!history.length)return;data=JSON.parse(history.pop());activeRoad=null;render();};
+document.getElementById("zoomIn").onclick=function(){zoom(.72);};document.getElementById("zoomOut").onclick=function(){zoom(1.38);};document.getElementById("fit").onclick=fit;
+svg.addEventListener("pointerdown",function(e){
+ if(mode==="pan"){panStart={x:e.clientX,y:e.clientY,vx:view.x,vy:view.y};svg.setPointerCapture(e.pointerId);return;}
+ var p=pt(e); if(mode==="station")addStation(p);else if(mode==="junction")addJunction(p);else if(mode==="road")roadTap(p);else if(mode==="delete")deleteAt(p);
+});
+svg.addEventListener("pointermove",function(e){
+ if(mode!=="pan"||!panStart)return;var sx=view.w/Math.max(1,svg.clientWidth),sy=view.h/Math.max(1,svg.clientHeight);
+ view.x=panStart.vx-(e.clientX-panStart.x)*sx;view.y=panStart.vy-(e.clientY-panStart.y)*sy;setView();
+});
+svg.addEventListener("pointerup",function(){panStart=null;});svg.addEventListener("pointercancel",function(){panStart=null;});
+document.getElementById("backgroundImage").onchange=function(e){var f=e.target.files[0];if(!f)return;var u=URL.createObjectURL(f);document.getElementById("bg").setAttribute("href",u);};
+document.getElementById("importJson").onchange=function(e){
+ var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){
+  try{var incoming=JSON.parse(r.result);if(incoming.schemaVersion!==1||!Array.isArray(incoming.nodes)||!Array.isArray(incoming.roads)||!Array.isArray(incoming.stations))throw new Error("格式不正确");
+   snapshot();data=incoming;var b=data.regions&&data.regions[0]&&data.regions[0].bounds;if(b){WORLD_W=b.maxXM-b.minXM;WORLD_H=b.maxYM-b.minYM;}activeRoad=null;fit();render();updateStatus("地图已导入");}
+  catch(err){alert("导入失败："+err.message);}
+ };r.readAsText(f);
+};
+document.getElementById("exportJson").onclick=function(){
+ if(activeRoad){alert("还有一条道路未完成，请先点击“完成道路”");return;}
+ var out=JSON.stringify(data,null,2),blob=new Blob([out],{type:"application/json;charset=utf-8"}),a=document.createElement("a");
+ a.href=URL.createObjectURL(blob);a.download="world-map.v1.json";document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href);},1000);
+ updateStatus("已导出 world-map.v1.json");
+};
+render();setView();
+})();
+</script>
+</body>
+</html>
