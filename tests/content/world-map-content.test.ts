@@ -21,14 +21,24 @@ test("formal world map content is valid and supports all five road classes", () 
     {}
   );
   assert.deepEqual(counts, {
-    expressway: 24,
-    national_road: 36,
-    provincial_road: 38,
-    county_road: 12,
-    local: 10
+    expressway: 32,
+    national_road: 40,
+    provincial_road: 67,
+    county_road: 10,
+    local: 32
   });
-  assert.equal(FORMAL_WORLD_MAP_CONTENT.roads.length, 120);
-  assert.equal(FORMAL_WORLD_MAP_CONTENT.nodes.length, 72);
+  assert.equal(FORMAL_WORLD_MAP_CONTENT.roads.length, 181);
+  assert.equal(FORMAL_WORLD_MAP_CONTENT.nodes.length, 118);
+  assert.ok(
+    FORMAL_WORLD_MAP_CONTENT.nodes.filter(
+      (node) => node.id.includes(".ring.")
+    ).length >= 32
+  );
+  assert.ok(
+    FORMAL_WORLD_MAP_CONTENT.nodes.filter(
+      (node) => node.id.includes(".auto.")
+    ).length > 0
+  );
   assert.equal(
     FORMAL_WORLD_MAP_CONTENT.roads.filter(
       (road) => road.displayPriority === 1

@@ -93,7 +93,7 @@ class PlayableClient {
       this.runtime.repositories.allServicePlans();
 
     return {
-      version: "0.18.3-geographic-map",
+      version: "0.18.4-road-network",
       company,
       currentGameSecond:
         Number(this.currentGameSecond),
@@ -124,6 +124,32 @@ class PlayableClient {
           };
         }
       ),
+      junctions: world
+        .allNodes()
+        .filter((node) => node.type === "junction")
+        .map((node) => {
+          const connectedRoads =
+            this.runtime.mapContent.roads.filter(
+              (road) =>
+                road.fromNodeId === String(node.id) ||
+                road.toNodeId === String(node.id)
+            );
+          const displayPriority = connectedRoads.reduce(
+            (priority, road) =>
+              Math.min(
+                priority,
+                road.displayPriority ?? 4
+              ),
+            4
+          );
+          return {
+            id: String(node.id),
+            xM: node.position.xM,
+            yM: node.position.yM,
+            degree: connectedRoads.length,
+            displayPriority
+          };
+        }),
       roads: world.allRoads().map((road) => {
         const mapRoad =
           this.runtime.mapContent.roads.find(
