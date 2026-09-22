@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.18.5-stage17-navigation-road-style
+
+### Removed
+- 删除“每个 RoadSegment 各自渲染一条独立折线”的显示方式。
+- 删除交叉口黑色圆点式节点表现。
+- 删除高速/国道/省道依靠蓝红黄高饱和色区分的策略图式视觉。
+
+### Added
+- 新增 corridor stitching：相同 roadCode 的连续正式路段先拼接为连续道路走廊，再一次性平滑渲染。
+- PlayableClient 道路投影新增 fromNodeId / toNodeId，供展示层正确拼接道路。
+- junction 投影新增主道路等级，用于路口融合与 LOD。
+- 道路改为“分级绿色边缘 + 统一浅色路面”的双层道路带。
+- junction 改为共享路面补片：先绘制道路边缘，再融合路口路面，再绘制道路表面，避免接口像彩色线条硬碰。
+- roadCode 改为导航式盾牌标签。
+- 非共享节点的几何交叉不会生成 junction 补片，可自然表现跨线关系。
+- 默认地图视角改为起步枢纽附近的区域级视图；全图复位仍可查看全国骨架。
+
+### Changed
+- SVG 曲线仍使用正式 polyline 数据，但同一 corridor 会跨 RoadSegment 连续平滑，路段边界不再产生折角。
+- 图例同步改为统一绿色系道路层级。
+- Android / package 版本升级至 0.18.5。
+- GAME_VERSION 更新为 0.18.5-stage17-navigation-road-style。
+
+### Validation
+- Core Check 继续使用正式路网数据与层级校验。
+- APK 网页资源必须成功构建后才进入 Android Gradle 打包。
+
+
 ## 0.18.4-stage17-road-network
 
 ### Removed

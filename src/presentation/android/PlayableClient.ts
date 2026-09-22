@@ -93,7 +93,7 @@ class PlayableClient {
       this.runtime.repositories.allServicePlans();
 
     return {
-      version: "0.18.4-road-network",
+      version: "0.18.5-navigation-road-style",
       company,
       currentGameSecond:
         Number(this.currentGameSecond),
@@ -142,12 +142,19 @@ class PlayableClient {
               ),
             4
           );
+          const primaryRoad = [...connectedRoads].sort(
+            (left, right) =>
+              (left.displayPriority ?? 4) -
+              (right.displayPriority ?? 4)
+          )[0];
           return {
             id: String(node.id),
             xM: node.position.xM,
             yM: node.position.yM,
             degree: connectedRoads.length,
-            displayPriority
+            displayPriority,
+            roadClass:
+              primaryRoad?.roadClass ?? "local"
           };
         }),
       roads: world.allRoads().map((road) => {
