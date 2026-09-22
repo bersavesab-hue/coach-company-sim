@@ -94,7 +94,7 @@ class PlayableClient {
       this.runtime.repositories.allServicePlans();
 
     return {
-      version: "0.19.4-terrain-base-map",
+      version: "0.19.5-map-lod-tiles",
       company,
       currentGameSecond:
         Number(this.currentGameSecond),

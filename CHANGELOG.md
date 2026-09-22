@@ -1,5 +1,40 @@
 # Changelog
 
+## 0.19.5-stage17-map-lod-tiles
+
+### Removed
+- APK 运行时不再直接加载整张 base-terrain.webp 作为所有缩放层级的唯一底图。
+- 删除 HTML 与构建脚本分别维护地图缩放阈值的做法。
+- 修正近景 detail 3 在 25% 最大放大限制下实际上无法触发的问题。
+
+### Added
+- 新增 presentation/apk/map-view.v1.json，作为地图展示唯一配置源。
+- 新增四级正式 LOD：全国 / 区域 / 城市群 / 近景。
+- 新增三层地形瓦片金字塔：
+  - z0：1 张；
+  - z1：2 × 2；
+  - z2：4 × 3；
+  - 共 17 张。
+- build-apk-web 新增 sharp 构建依赖，APK 生成时从正式 base-terrain.webp 自动切出瓦片。
+- APK 只保留生成后的分级瓦片，构建完成后移除 www 中重复的整张底图。
+- 运行时新增可见瓦片裁剪：只渲染当前摄像机覆盖区域及一圈缓冲瓦片。
+- 新增瓦片轻微重叠，减少 WebView 缩放时的拼缝。
+- 新增 terrain calibration：offsetX / offsetY / scaleX / scaleY。
+- 新增地图配置专项测试，固定 4:3 比例、17 瓦片、LOD 阈值与 25% 最大放大参数。
+
+### Changed
+- 全国级使用 z0，区域级使用 z1，城市群与近景使用 z2。
+- mapBase / initialMapCamera / mapZoom / applyMapCamera 全部改读 map-view.v1.json。
+- Android / package 版本升级至 0.19.5。
+- GAME_VERSION 更新为 0.19.5-stage17-map-lod-tiles。
+
+### Validation
+- 正式底图源必须保持 2896 × 2172。
+- map-view.v1.json 的最高瓦片层必须与正式底图源尺寸一致。
+- 所有瓦片层宽高必须能被行列数整除。
+- Core Check 与 APK 构建继续作为正式提交门禁。
+
+
 ## 0.19.4-stage17-terrain-base-map
 
 ### Removed

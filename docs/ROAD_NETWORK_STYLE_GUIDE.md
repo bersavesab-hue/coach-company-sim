@@ -231,3 +231,31 @@ RoadNetworkStyleValidator` 会在 Core Check 和 APK 构建前阻止道路编号
 - 底图只承担地形背景；道路、城市、玩家线路仍由正式矢量数据绘制在其上。
 - 最大放大由 mapCamera.w >= 0.25 * world viewBox 限制。2×底图在该倍率下仍保留足够像素密度，禁止恢复无限放大导致明显像素化。
 - APK 构建必须检测 base-terrain.webp 存在，并复制 presentation/apk/assets 到 www/assets；资源缺失时构建直接失败。
+
+
+## 地图 LOD 与瓦片系统 V1
+
+- 唯一地图展示配置：presentation/apk/map-view.v1.json。
+- 该配置同时控制 viewBox、摄像机默认/最大放大、四级 LOD、底图校准和瓦片金字塔。
+- 禁止在 HTML 与构建脚本中分别维护另一套独立阈值。
+
+### 四级 LOD
+- Level 0 / detail 0：camera ratio >= 0.72，全国级，只保留高速和最高级城市。
+- Level 1 / detail 1：camera ratio >= 0.48，区域级，增加国道和普通城市。
+- Level 2 / detail 2：camera ratio >= 0.30，城市群级，增加省道和县城。
+- Level 3 / detail 3：camera ratio < 0.30，近景级，增加县乡道路、匝道、乡镇和 road-detail。
+
+### 底图瓦片金字塔
+- z0：1 × 1，724 × 543，总览使用。
+- z1：2 × 2，整体 1448 × 1086，区域级使用。
+- z2：4 × 3，整体 2896 × 2172，城市群与近景使用。
+- 总瓦片数固定为 17。
+- APK 构建时由正式 base-terrain.webp 自动生成瓦片，不在仓库维护第二套手工瓦片。
+- 运行时只挂载当前摄像机覆盖范围及一圈缓冲瓦片，拖动进入新格子时才替换 SVG image。
+- 瓦片边缘使用轻微 overlap，避免 WebView 亚像素采样产生白缝。
+
+### 对位与校准
+- terrain.calibration.offsetX / offsetY / scaleX / scaleY 是唯一底图对位参数。
+- 默认值为 0 / 0 / 1 / 1，表示底图完整覆盖 1100 × 825 viewBox。
+- 后续山脉、河流、海岸与路网需要微调时，只允许调整 calibration，不修改道路世界坐标来迁就背景。
+- 1100 × 825 viewBox 与 2896 × 2172 底图保持严格 4:3 比例。

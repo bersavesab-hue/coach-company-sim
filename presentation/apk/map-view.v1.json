@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "viewBox": {
+    "width": 1100,
+    "height": 825
+  },
+  "camera": {
+    "defaultRatio": 0.34,
+    "minRatio": 0.25
+  },
+  "lod": [
+    {
+      "detail": 0,
+      "minCameraRatio": 0.72
+    },
+    {
+      "detail": 1,
+      "minCameraRatio": 0.48
+    },
+    {
+      "detail": 2,
+      "minCameraRatio": 0.3
+    },
+    {
+      "detail": 3,
+      "minCameraRatio": 0
+    }
+  ],
+  "terrain": {
+    "source": {
+      "width": 2896,
+      "height": 2172
+    },
+    "calibration": {
+      "offsetX": 0,
+      "offsetY": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    "levels": [
+      {
+        "level": 0,
+        "cols": 1,
+        "rows": 1,
+        "width": 724,
+        "height": 543,
+        "maxDetail": 0
+      },
+      {
+        "level": 1,
+        "cols": 2,
+        "rows": 2,
+        "width": 1448,
+        "height": 1086,
+        "maxDetail": 1
+      },
+      {
+        "level": 2,
+        "cols": 4,
+        "rows": 3,
+        "width": 2896,
+        "height": 2172,
+        "maxDetail": 3
+      }
+    ]
+  }
+}
