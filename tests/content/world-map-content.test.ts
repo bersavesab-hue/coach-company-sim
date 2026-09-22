@@ -29,7 +29,7 @@ test("formal world map content is valid and supports all five road classes", () 
     local: 39
   });
   assert.equal(FORMAL_WORLD_MAP_CONTENT.roads.length, 200);
-  assert.equal(FORMAL_WORLD_MAP_CONTENT.nodes.length, 130);
+  assert.equal(FORMAL_WORLD_MAP_CONTENT.nodes.length, 136);
   assert.equal(
     FORMAL_WORLD_MAP_CONTENT.stations.every(
       (station) =>
@@ -71,6 +71,36 @@ test("formal world map content is valid and supports all five road classes", () 
     ).every((road) => road.roadClass === "expressway"),
     true
   );
+  const expresswayCorridors = FORMAL_WORLD_MAP_CONTENT.roads
+    .filter((road) => road.roadClass === "expressway")
+    .reduce<Record<string, number>>((result, road) => {
+      result[road.roadCode!] =
+        (result[road.roadCode!] ?? 0) + 1;
+      assert.ok(
+        road.polyline.length >= 4,
+        `${road.id} expressway must use natural multi-point geometry`
+      );
+      return result;
+    }, {});
+  assert.deepEqual(expresswayCorridors, {
+    H01: 7,
+    H02: 8,
+    H03: 7,
+    H11: 4,
+    H13: 4,
+    H21: 4
+  });
+  for (const removedCode of ["H12", "H14", "H22"]) {
+    assert.equal(
+      FORMAL_WORLD_MAP_CONTENT.roads.some(
+        (road) =>
+          road.roadClass === "expressway" &&
+          road.roadCode === removedCode
+      ),
+      false
+    );
+  }
+
   assert.equal(
     FORMAL_WORLD_MAP_CONTENT.roads.filter(
       (road) => road.roadRole === "ramp"
