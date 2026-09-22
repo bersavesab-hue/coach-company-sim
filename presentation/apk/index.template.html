@@ -8,14 +8,14 @@
 <style>
 :root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;color:#edf2f6;background:#0b1117}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#0b1117;color:#edf2f6}button,input,select{font:inherit}
-body{padding-bottom:116px}
-header{position:sticky;top:0;z-index:30;background:rgba(12,18,24,.96);backdrop-filter:blur(12px);border-bottom:1px solid #26323d;padding:calc(9px + env(safe-area-inset-top)) 12px 9px}
-.top{display:flex;align-items:center;justify-content:space-between;gap:10px}.brandline{display:flex;align-items:center;gap:9px}.logo{width:34px;height:34px;border-radius:10px;background:#e9eef1;color:#101820;display:grid;place-items:center;font-weight:900;font-size:14px}
-.title{font-weight:850;font-size:16px;line-height:1.1}.clock{font-size:11px;color:#9fb0bd;text-align:right;line-height:1.5}.headerCash{font-size:13px;color:#f5f8fa;font-weight:750}
-nav{position:fixed;left:0;right:0;bottom:0;z-index:40;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:6px 8px calc(6px + env(safe-area-inset-bottom));background:rgba(12,18,24,.97);border-top:1px solid #293640}
-nav button{border:0;background:transparent;color:#8295a5;padding:8px 3px 7px;border-radius:10px;font-size:11px;white-space:nowrap}
-nav button::before{content:"";display:block;width:18px;height:3px;border-radius:4px;margin:0 auto 5px;background:transparent}
-nav button.active{color:#f3f6f8;background:#18232c}nav button.active::before{background:#e8b85e}
+body{padding-bottom:116px}body.map-active{padding-bottom:calc(58px + env(safe-area-inset-bottom));overflow:hidden}
+header{position:sticky;top:0;z-index:30;background:rgba(10,16,22,.97);backdrop-filter:blur(14px);border-bottom:1px solid #25313a;padding:calc(8px + env(safe-area-inset-top)) 12px 8px;box-shadow:0 6px 18px #0002}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px}.brandline{display:flex;align-items:center;gap:10px;min-width:0}.logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(145deg,#f3f5f4,#dfe6e7);color:#101820;display:grid;place-items:center;font-weight:950;font-size:16px;box-shadow:0 4px 12px #0003}
+.title{font-weight:900;font-size:17px;line-height:1.05;letter-spacing:.1px}.clock{font-size:10px;color:#93a5b2;text-align:right;line-height:1.45;white-space:nowrap}.headerCash{font-size:15px;color:#f7f9fa;font-weight:850;letter-spacing:.2px}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:40;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:6px 8px calc(6px + env(safe-area-inset-bottom));background:rgba(10,16,22,.975);border-top:1px solid #27343e;box-shadow:0 -8px 22px #0003}
+nav button{border:0;background:transparent;color:#8395a2;padding:8px 3px 7px;border-radius:12px;font-size:11px;white-space:nowrap;font-weight:650}
+nav button::before{content:"";display:block;width:20px;height:3px;border-radius:5px;margin:0 auto 5px;background:transparent}
+nav button.active{color:#f5f7f8;background:#17242e}nav button.active::before{background:#e9b454}
 main{max-width:1180px;margin:0 auto;padding:10px 10px 8px}.page{display:none}.page.active{display:block}
 #map.page.active{margin:-10px -10px 0}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.metric,.card,.panel{background:#121b23;border:1px solid #293640;border-radius:13px;padding:11px}
@@ -28,14 +28,16 @@ main{max-width:1180px;margin:0 auto;padding:10px 10px 8px}.page{display:none}.pa
 .notice{position:fixed;left:10px;right:10px;bottom:118px;z-index:60;padding:10px 11px;border-radius:10px;background:#eef2f4;color:#101820;font-size:12px;display:none;box-shadow:0 10px 35px #0009}.notice.error{background:#5b292d;color:#fff}
 footer{position:fixed;left:8px;right:8px;bottom:59px;z-index:39;background:rgba(17,25,33,.94);border:1px solid #2b3944;border-radius:12px;padding:6px;display:grid;grid-template-columns:repeat(4,1fr);gap:5px;box-shadow:0 6px 20px #0006}
 footer button{border:0;border-radius:8px;padding:8px 4px;background:#1d2a34;color:#d9e2e8;font-size:11px}
-.mapShell{position:relative;background:#cad0c0;overflow:hidden;border-bottom:1px solid #34434b;height:calc(100dvh - 176px);min-height:460px}
+body.map-active footer{display:none}
+.mapShell{position:relative;background:#cad0c0;overflow:hidden;height:calc(100dvh - 128px);min-height:430px}
 .mapwrap{width:100%;height:100%;min-height:0;position:relative;overflow:hidden;touch-action:none;background:
 linear-gradient(160deg,#e9ebdf,#dde3d8 52%,#e2e0d4)}
 .mapwrap svg{width:100%;height:100%;display:block}
-.mapHud{position:absolute;left:9px;top:9px;z-index:5;display:flex;gap:6px;align-items:center;max-width:calc(100% - 105px)}
-.mapChip{background:rgba(15,23,29,.90);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:7px 9px;color:#eef3f5;box-shadow:0 4px 14px #0003}.mapChip b{font-size:12px;display:block}.mapChip span{font-size:9px;color:#99abb8}
-.mapControls{position:absolute;right:8px;top:8px;z-index:6;display:flex;flex-direction:column;gap:5px}.mapControls button{width:38px;height:38px;border:1px solid rgba(255,255,255,.14);border-radius:10px;background:rgba(15,23,29,.92);color:#fff;font-size:17px}
-.mapLegend{position:absolute;left:8px;bottom:8px;z-index:5;background:rgba(15,23,29,.86);border:1px solid rgba(255,255,255,.09);border-radius:9px;padding:6px 8px;display:flex;gap:9px;flex-wrap:wrap;font-size:9px;color:#cbd5db;max-width:calc(100% - 16px)}
+.mapHud{position:absolute;left:10px;top:10px;z-index:7;display:flex;gap:7px;align-items:center;max-width:calc(100% - 76px)}
+.mapChip{min-width:164px;background:linear-gradient(145deg,rgba(12,21,27,.94),rgba(20,31,38,.91));border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:9px 11px;color:#f2f5f6;box-shadow:0 8px 22px #0004}.mapChip b{font-size:13px;display:block;font-weight:900;letter-spacing:.15px}.mapChip span{font-size:9.5px;color:#9fb0ba;display:block;margin-top:3px}
+.mapControls{position:absolute;right:10px;top:10px;z-index:8;display:flex;flex-direction:column;gap:7px}.mapControls button{width:42px;height:42px;border:1px solid rgba(255,255,255,.18);border-radius:13px;background:rgba(12,21,27,.94);color:#fff;font-size:18px;font-weight:800;box-shadow:0 6px 18px #0003}
+.mapControls button:active{transform:scale(.96)}
+.mapLegend{position:absolute;left:10px;bottom:12px;z-index:7;background:rgba(12,21,27,.88);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:7px 9px;display:flex;gap:9px;flex-wrap:wrap;font-size:9px;color:#cbd5db;max-width:calc(100% - 150px);box-shadow:0 5px 16px #0003}
 .leg{display:flex;align-items:center;gap:4px}.leg i{display:block;width:20px;border-top-style:solid;border-radius:3px;box-shadow:0 1px 0 rgba(0,0,0,.14)}.leg.exp i{border-top-width:6px;border-color:#0b927b}.leg.nat i{border-top-width:5px;border-color:#46a987}.leg.pro i{border-top-width:4px;border-color:#78b39b}.leg.cty i{border-top-width:3px;border-color:#9fb4aa}
 .road-shadow,.road-casing,.road{fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
 .road-shadow{stroke:#65766c;opacity:.16}
@@ -72,7 +74,9 @@ linear-gradient(160deg,#e9ebdf,#dde3d8 52%,#e2e0d4)}
 #mapSvg[data-detail="0"] .station.city,#mapSvg[data-detail="0"] .station.county,#mapSvg[data-detail="0"] .station.town,#mapSvg[data-detail="0"] .stationLabel.city,#mapSvg[data-detail="0"] .stationLabel.county,#mapSvg[data-detail="0"] .stationLabel.town{display:none}
 #mapSvg[data-detail="1"] .station.county,#mapSvg[data-detail="1"] .station.town,#mapSvg[data-detail="1"] .stationLabel.county,#mapSvg[data-detail="1"] .stationLabel.town{display:none}
 #mapSvg[data-detail="2"] .station.town,#mapSvg[data-detail="2"] .stationLabel.town{display:none}
-.mapFoot{display:none}.mapRouteBtn{position:absolute;right:10px;bottom:52px;z-index:7;border:0;border-radius:12px;padding:10px 13px;background:#f4f6f4;color:#111820;font-weight:850;font-size:12px;box-shadow:0 5px 18px #0004}
+.mapFoot{display:none}.mapRouteBtn{position:absolute;right:10px;bottom:12px;z-index:8;border:1px solid rgba(255,255,255,.4);border-radius:13px;padding:10px 13px;background:#f2f5f4;color:#111820;font-weight:900;font-size:12px;box-shadow:0 7px 20px #0004}
+.mapTimeDock{position:absolute;left:50%;bottom:52px;z-index:8;transform:translateX(-50%);display:flex;gap:4px;padding:4px;background:rgba(12,21,27,.88);border:1px solid rgba(255,255,255,.10);border-radius:12px;box-shadow:0 5px 16px #0003}
+.mapTimeDock button{border:0;border-radius:9px;padding:7px 9px;min-width:44px;background:#1a2a34;color:#dce5ea;font-size:9.5px;font-weight:750}.mapTimeDock button.primary{background:#e8b257;color:#172028}
 .empty{padding:22px;text-align:center;color:#8295a5}.money.pos{color:#8cd9a4}.money.neg{color:#ff9999}
 @media(min-width:700px){.grid{grid-template-columns:repeat(4,1fr)}.form{grid-template-columns:repeat(4,1fr)}main{padding-left:14px;padding-right:14px}#map.page.active{margin-left:-14px;margin-right:-14px}}
 </style>
@@ -89,7 +93,7 @@ linear-gradient(160deg,#e9ebdf,#dde3d8 52%,#e2e0d4)}
 <main>
 <section class="page" id="home"><div class="grid" id="homeMetrics"></div><h2 class="section">快捷经营</h2><div class="toolbar"><button class="btn" onclick="advance(60)">推进1小时</button><button class="btn" onclick="advance(360)">推进6小时</button><button class="btn secondary" onclick="commitToday()">提交今日排班</button><button class="btn secondary" onclick="replanToday()">重排今日运营</button></div><h2 class="section">运营状态</h2><div id="homeStatus"></div><h2 class="section">管理中心</h2><div class="toolbar"><button class="btn secondary" onclick="openPage('dispatch')">调度中心</button><button class="btn secondary" onclick="openPage('finance')">财务报表</button></div></section>
 <section class="page active" id="map">
-<div class="mapShell">
+<div class="mapShell" id="mapShell">
   <div class="mapwrap" id="mapWrap">
     <svg id="mapSvg" viewBox="0 0 1000 650" data-detail="0"></svg>
     <div class="mapHud">
@@ -107,7 +111,12 @@ linear-gradient(160deg,#e9ebdf,#dde3d8 52%,#e2e0d4)}
       <span class="leg cty"><i></i>县乡道</span>
     </div>
   </div>
-  <button class="mapRouteBtn" onclick="openPage('routes')">新建线路</button>
+  <div class="mapTimeDock">
+    <button onclick="advance(15)">+15分</button>
+    <button class="primary" onclick="advance(60)">+1小时</button>
+    <button onclick="advance(360)">+6小时</button>
+  </div>
+  <button class="mapRouteBtn" onclick="openPage('routes')">＋ 新建线路</button>
 </div>
 </section>
 <section class="page" id="routes"><div class="panel"><div class="name">新建线路</div><div class="form" style="margin-top:9px"><input id="routeCode" value="K01" placeholder="线路编号"><select id="origin"></select><select id="destination"></select><button class="btn" onclick="createRoute()">创建并开通</button></div></div><h2 class="section">已有线路</h2><div class="list" id="routeList"></div></section>
@@ -124,12 +133,13 @@ let state=null,marketFilter="all",mapCamera=null,mapDrag=null;
 const q=id=>document.getElementById(id),esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const money=c=>"¥"+(Number(c||0)/100).toLocaleString("zh-CN",{maximumFractionDigits:0});
 const time=s=>{s=Number(s||0);const d=Math.floor(s/86400)+1,h=Math.floor((s%86400)/3600),m=Math.floor((s%3600)/60);return "第"+d+"天 "+String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")};
-function openPage(id){document.querySelectorAll("#nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===id));document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));q(id).classList.add("active")}
-document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>openPage(b.dataset.page));
+function fitMapShell(){const shell=q("mapShell"),header=document.querySelector("header"),nav=q("nav");if(!shell||!header||!nav)return;const height=window.innerHeight-header.getBoundingClientRect().height-nav.getBoundingClientRect().height;shell.style.height=Math.max(430,height)+"px"}
+function openPage(id){document.querySelectorAll("#nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===id));document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));q(id).classList.add("active");document.body.classList.toggle("map-active",id==="map");if(id==="map")requestAnimationFrame(fitMapShell)}
+document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>openPage(b.dataset.page));document.body.classList.add("map-active");window.addEventListener("resize",()=>{if(document.body.classList.contains("map-active"))fitMapShell()});
 async function call(fn,...args){try{const r=await CoachGame[fn](...args);toast(r.message,!r.ok);await refresh()}catch(e){toast(String(e),true)}}
 function toast(msg,error=false){const n=q("notice");n.textContent=msg;n.className="notice"+(error?" error":"");n.style.display="block";clearTimeout(window.__toast);window.__toast=setTimeout(()=>n.style.display="none",2600)}
 async function refresh(){state=await CoachGame.snapshot();render()}
-function render(){q("companyName").textContent="声誉 "+state.company.reputationPermille+"/1000";q("headerCash").textContent=money(state.finance?.cashBalanceCents||0);q("clock").innerHTML=time(state.currentGameSecond)+" · V"+state.version;renderHome();renderMap();renderRoutes();renderMarket();renderDispatch();renderFleet();renderFinance();fillStations()}
+function render(){if(document.body.classList.contains("map-active"))requestAnimationFrame(fitMapShell);q("companyName").textContent="声誉 "+state.company.reputationPermille+"/1000";q("headerCash").textContent=money(state.finance?.cashBalanceCents||0);q("clock").innerHTML=time(state.currentGameSecond)+" · V"+state.version;renderHome();renderMap();renderRoutes();renderMarket();renderDispatch();renderFleet();renderFinance();fillStations()}
 function renderHome(){const f=state.finance||{},d=state.dispatch?.summary||{};q("homeMetrics").innerHTML=metric("现金",money(f.cashBalanceCents))+metric("今日班次",d.passengerTripsTotal||0)+metric("运营车辆",d.fleetRunning||0)+metric("候补缺口",d.shortageTrips||0)+metric("客运收入",money(f.passengerRevenueCents))+metric("总费用",money(f.totalExpenseCents))+metric("利润",money(f.accountingProfitCents))+metric("车队",d.fleetTotal||0);q("homeStatus").innerHTML='<div class="card detail">完成闭环：买车 → 补能 → 开线路 → 建班次 → 提交排班 → 推进时间。调度中心会自动上客、发车、运行、结算和处理支持任务。</div>'}
 function metric(k,v){return '<div class="metric"><b>'+esc(v)+'</b><span>'+esc(k)+'</span></div>'}
 function fillStations(){const available=state.stations.filter(s=>s.unlocked);const html=available.map(s=>'<option value="'+esc(s.id)+'">'+esc(s.name)+'</option>').join("");const currentOrigin=q("origin").value,currentDestination=q("destination").value;q("origin").innerHTML=html;q("destination").innerHTML=html;if(currentOrigin&&available.some(s=>s.id===currentOrigin))q("origin").value=currentOrigin;if(currentDestination&&available.some(s=>s.id===currentDestination))q("destination").value=currentDestination;else if(q("destination").options.length>1)q("destination").selectedIndex=1}

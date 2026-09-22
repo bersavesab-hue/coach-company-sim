@@ -94,7 +94,7 @@ class PlayableClient {
       this.runtime.repositories.allServicePlans();
 
     return {
-      version: "0.19.0-final-map-ui",
+      version: "0.19.1-map-master-shell",
       company,
       currentGameSecond:
         Number(this.currentGameSecond),
