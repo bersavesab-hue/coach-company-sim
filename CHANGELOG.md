@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.18.0-stage17-map-foundation
+
+### Removed
+- 删除 createPlayableGame 内部硬编码的 8 城市 / 10 道路测试地图构造器，不保留第二套地图种子入口。
+
+### Added
+- 新增正式 World Map Content V1 数据契约，地图源数据与运行时 WorldGraph 解耦。
+- 新增唯一正式地图文件 src/content/map/world-map.v1.json。
+- 正式地图数据支持客运站与乡道(local)、县道、省道、国道、高速五级道路。
+- 道路支持多折点 polyline，可直接承接后续地图编辑器绘制的弯曲路网。
+- 山川、河流、湖泊与海岸固定为 decorative_only 背景资源，不参与寻路、里程、收费或车辆运行状态。
+- 新增 WorldMapContentValidator，校验 ID、引用、道路端点、长度、速度、背景边界与站点绑定。
+- 新增 WorldMapSeed，将正式地图内容转换为唯一 WorldGraph / Station / PassengerDemand 运行时。
+- APK 构建前强制验证正式地图内容；地图文件无效时拒绝打包。
+- 新增地图内容专项测试，覆盖五级道路、背景隔离和正式运行图构建。
+
+### Changed
+- GAME_VERSION 更新为 0.18.0-stage17-map-foundation。
+- Android 版本更新至 0.18.0。
+- 当前 8 站路网只作为 world-map.v1.json 的首批正式可替换内容，不再写死在启动器中。
+
+### Validation
+- Core Check 将验证正式地图数据契约与运行时构建。
+- Android APK 工作流现在监听 src/content/map/** 并在打包前执行地图校验。
+
+
 ## 0.17.0-stage16-playable-client
 
 ### Added

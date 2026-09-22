@@ -4,14 +4,9 @@ import {
   units,
   type GameSecond
 } from "../core/units/Units.js";
-import { WorldGraph } from "../domain/world/WorldGraph.js";
-import type { Region } from "../domain/world/Region.js";
-import type { WorldNode } from "../domain/world/WorldNode.js";
-import type { RoadSegment } from "../domain/world/RoadSegment.js";
 import type { Station } from "../domain/station/Station.js";
 import type { Company } from "../domain/company/Company.js";
 import type { Driver } from "../domain/staff/Driver.js";
-import type { PassengerDemandProfile } from "../domain/passenger/PassengerDemandProfile.js";
 import type { FarePolicy } from "../domain/finance/FarePolicy.js";
 import type {
   CompanyFinancialProfile,
@@ -25,6 +20,7 @@ import type { VehicleLifecyclePolicy } from "../application/policies/VehicleLife
 import type { VehicleMarketPolicy } from "../application/policies/VehicleMarketPolicy.js";
 import type { OperationsPolicy } from "../application/policies/OperationsPolicy.js";
 import { FORMAL_VEHICLE_CONTENT } from "../content/vehicle/VehicleContentSeed.js";
+import { createPlayableWorldSeed } from "../content/map/WorldMapSeed.js";
 import { InMemoryRepositoryBundle } from "../infrastructure/memory/InMemoryRepositoryBundle.js";
 import { SequentialRuntimeIdAllocator } from "../infrastructure/runtime/SequentialRuntimeIdAllocator.js";
 
@@ -36,13 +32,8 @@ export const PLAYABLE_FARE_POLICY_ID =
 export const PLAYABLE_START_GAME_SECOND =
   units.gameSecond(5 * 3600 + 30 * 60);
 
-export interface PlayableWorldSeed {
-  readonly stations: readonly Station[];
-  readonly stationNames: Readonly<Record<string, string>>;
-}
-
 export function createPlayableGame() {
-  const worldSeed = createWorldSeed();
+  const worldSeed = createPlayableWorldSeed();
   const company: Company = {
     id: PLAYABLE_COMPANY_ID,
     name: "星河客运",
@@ -147,136 +138,6 @@ export function createPlayableGame() {
     company,
     stations: worldSeed.stations,
     startGameSecond: PLAYABLE_START_GAME_SECOND
-  };
-}
-
-function createWorldSeed(): PlayableWorldSeed & {
-  readonly world: WorldGraph;
-  readonly passengerDemand: readonly PassengerDemandProfile[];
-} {
-  const regionId = ids.region("region.central");
-  const region: Region = {
-    id: regionId,
-    name: "中原区",
-    level: "province_like",
-    parentRegionId: null,
-    bounds: {
-      minXM: 0,
-      minYM: 0,
-      maxXM: 900_000,
-      maxYM: 600_000
-    },
-    active: true
-  };
-
-  const nodes: WorldNode[] = [
-    node("linzhou", "林州市", 90_000, 290_000, regionId),
-    node("heyuan", "河源县", 210_000, 210_000, regionId),
-    node("jinghai", "景海市", 350_000, 320_000, regionId),
-    node("yongan", "永安市", 500_000, 250_000, regionId),
-    node("qingyuan", "清源县", 640_000, 350_000, regionId),
-    node("dongling", "东陵市", 790_000, 280_000, regionId),
-    node("beichuan", "北川市", 420_000, 500_000, regionId),
-    node("nanhe", "南河市", 430_000, 90_000, regionId)
-  ];
-
-  const roads: RoadSegment[] = [
-    road("r01", nodes[0]!, nodes[1]!, 145_000, regionId, "national_road"),
-    road("r02", nodes[1]!, nodes[2]!, 158_000, regionId, "national_road"),
-    road("r03", nodes[2]!, nodes[3]!, 168_000, regionId, "expressway"),
-    road("r04", nodes[3]!, nodes[4]!, 154_000, regionId, "expressway"),
-    road("r05", nodes[4]!, nodes[5]!, 162_000, regionId, "national_road"),
-    road("r06", nodes[2]!, nodes[6]!, 190_000, regionId, "provincial_road"),
-    road("r07", nodes[6]!, nodes[4]!, 245_000, regionId, "national_road"),
-    road("r08", nodes[2]!, nodes[7]!, 235_000, regionId, "provincial_road"),
-    road("r09", nodes[7]!, nodes[3]!, 170_000, regionId, "national_road"),
-    road("r10", nodes[1]!, nodes[7]!, 260_000, regionId, "county_road")
-  ];
-
-  const graph = WorldGraph.create([region], nodes, roads);
-  if (!graph.ok) {
-    throw graph.error;
-  }
-
-  const stations: Station[] = nodes.map((value, index) => ({
-    id: ids.station(
-      `station.${String(index + 1).padStart(2, "0")}`
-    ),
-    name: `${value.name}客运中心`,
-    worldNodeId: value.id,
-    ownerCompanyId: null,
-    status: "active"
-  }));
-
-  const passengerDemand: PassengerDemandProfile[] = [];
-  for (let i = 0; i < stations.length; i += 1) {
-    for (let j = 0; j < stations.length; j += 1) {
-      if (i === j) continue;
-      const distance = Math.abs(i - j);
-      passengerDemand.push({
-        originStationId: stations[i]!.id,
-        destinationStationId: stations[j]!.id,
-        basePassengersPerHour:
-          distance <= 1 ? 18 : distance <= 3 ? 10 : 5
-      });
-    }
-  }
-
-  return {
-    world: graph.value,
-    stations,
-    passengerDemand,
-    stationNames: Object.fromEntries(
-      stations.map((value) => [
-        String(value.id),
-        value.name
-      ])
-    )
-  };
-}
-
-function node(
-  key: string,
-  name: string,
-  xM: number,
-  yM: number,
-  regionId: Region["id"]
-): WorldNode {
-  return {
-    id: ids.worldNode(`location.${key}`),
-    regionId,
-    type: "city",
-    name,
-    position: { xM, yM },
-    active: true
-  };
-}
-
-function road(
-  key: string,
-  from: WorldNode,
-  to: WorldNode,
-  lengthM: number,
-  regionId: Region["id"],
-  roadClass: RoadSegment["roadClass"]
-): RoadSegment {
-  return {
-    id: ids.roadSegment(`road.${key}`),
-    regionId,
-    fromNodeId: from.id,
-    toNodeId: to.id,
-    lengthM: units.distanceM(lengthM),
-    speedLimitMps: units.speedMps(
-      roadClass === "expressway"
-        ? 30
-        : roadClass === "national_road"
-          ? 24
-          : 20
-    ),
-    roadClass,
-    direction: "both",
-    polyline: [from.position, to.position],
-    active: true
   };
 }
 

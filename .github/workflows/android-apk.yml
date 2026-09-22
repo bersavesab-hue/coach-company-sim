@@ -8,6 +8,7 @@ on:
       - "scripts/build-apk-web.mts"
       - "presentation/apk/**"
       - "src/content/vehicle/**"
+      - "src/content/map/**"
       - "src/core/version/**"
       - "src/presentation/android/**"
       - "src/bootstrap/createPlayableGame.ts"
@@ -21,6 +22,7 @@ on:
       - "scripts/build-apk-web.mts"
       - "presentation/apk/**"
       - "src/content/vehicle/**"
+      - "src/content/map/**"
       - "src/core/version/**"
       - "src/presentation/android/**"
       - "src/bootstrap/createPlayableGame.ts"
@@ -71,11 +73,11 @@ jobs:
       - name: Prepare APK artifact
         run: |
           mkdir -p artifacts
-          cp android-app/app/build/outputs/apk/debug/app-debug.apk artifacts/coach-company-sim-v0.17.0-playable.apk
+          cp android-app/app/build/outputs/apk/debug/app-debug.apk artifacts/coach-company-sim-v0.18.0-map-foundation.apk
 
       - uses: actions/upload-artifact@v4
         with:
-          name: coach-company-sim-v0.17.0-playable
-          path: artifacts/coach-company-sim-v0.17.0-playable.apk
+          name: coach-company-sim-v0.18.0-map-foundation
+          path: artifacts/coach-company-sim-v0.18.0-map-foundation.apk
           if-no-files-found: error
           retention-days: 14

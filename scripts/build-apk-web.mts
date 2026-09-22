@@ -4,6 +4,16 @@ import { build } from "esbuild";
 import {
   validateStage15VehicleContent
 } from "../src/content/vehicle/VehicleStage15Validator.js";
+import {
+  validateFormalWorldMapContent
+} from "../src/content/map/FormalWorldMapContent.js";
+
+const mapValidation = validateFormalWorldMapContent();
+if (!mapValidation.valid) {
+  throw new Error(
+    `Formal world map content is invalid; refusing to build playable APK.\n${mapValidation.issues.join("\n")}`
+  );
+}
 
 const validation = validateStage15VehicleContent();
 if (!validation.valid) {

@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "mapId": "world.coachland",
+  "name": "客运架空全国地图",
+  "background": {"mode":"decorative_only","assetPath":null},
+  "regions": [{"id":"region.central","name":"全国路网","level":"country","parentRegionId":null,"bounds":{"minXM":0,"minYM":0,"maxXM":900000,"maxYM":600000},"active":true}],
+  "nodes": [
+    {"id":"location.linzhou","regionId":"region.central","type":"bus_station","name":"林州客运中心","position":{"xM":90000,"yM":290000},"active":true},
+    {"id":"location.heyuan","regionId":"region.central","type":"bus_station","name":"河源客运中心","position":{"xM":210000,"yM":210000},"active":true},
+    {"id":"location.jinghai","regionId":"region.central","type":"bus_station","name":"景海客运中心","position":{"xM":350000,"yM":320000},"active":true},
+    {"id":"location.yongan","regionId":"region.central","type":"bus_station","name":"永安客运中心","position":{"xM":500000,"yM":250000},"active":true},
+    {"id":"location.qingyuan","regionId":"region.central","type":"bus_station","name":"清源客运中心","position":{"xM":640000,"yM":350000},"active":true},
+    {"id":"location.dongling","regionId":"region.central","type":"bus_station","name":"东陵客运中心","position":{"xM":790000,"yM":280000},"active":true},
+    {"id":"location.beichuan","regionId":"region.central","type":"bus_station","name":"北川客运中心","position":{"xM":420000,"yM":500000},"active":true},
+    {"id":"location.nanhe","regionId":"region.central","type":"bus_station","name":"南河客运中心","position":{"xM":430000,"yM":90000},"active":true}
+  ],
+  "roads": [
+    {"id":"road.r01","regionId":"region.central","fromNodeId":"location.linzhou","toNodeId":"location.heyuan","lengthM":145000,"speedLimitMps":25,"roadClass":"national_road","direction":"both","polyline":[{"xM":90000,"yM":290000},{"xM":128000,"yM":270000},{"xM":164000,"yM":238000},{"xM":210000,"yM":210000}],"active":true},
+    {"id":"road.r02","regionId":"region.central","fromNodeId":"location.heyuan","toNodeId":"location.jinghai","lengthM":158000,"speedLimitMps":25,"roadClass":"national_road","direction":"both","polyline":[{"xM":210000,"yM":210000},{"xM":252000,"yM":226000},{"xM":302000,"yM":281000},{"xM":350000,"yM":320000}],"active":true},
+    {"id":"road.r03","regionId":"region.central","fromNodeId":"location.jinghai","toNodeId":"location.yongan","lengthM":168000,"speedLimitMps":31,"roadClass":"expressway","direction":"both","polyline":[{"xM":350000,"yM":320000},{"xM":397000,"yM":308000},{"xM":451000,"yM":275000},{"xM":500000,"yM":250000}],"active":true},
+    {"id":"road.r04","regionId":"region.central","fromNodeId":"location.yongan","toNodeId":"location.qingyuan","lengthM":154000,"speedLimitMps":31,"roadClass":"expressway","direction":"both","polyline":[{"xM":500000,"yM":250000},{"xM":548000,"yM":266000},{"xM":596000,"yM":314000},{"xM":640000,"yM":350000}],"active":true},
+    {"id":"road.r05","regionId":"region.central","fromNodeId":"location.qingyuan","toNodeId":"location.dongling","lengthM":162000,"speedLimitMps":25,"roadClass":"national_road","direction":"both","polyline":[{"xM":640000,"yM":350000},{"xM":689000,"yM":332000},{"xM":738000,"yM":298000},{"xM":790000,"yM":280000}],"active":true},
+    {"id":"road.r06","regionId":"region.central","fromNodeId":"location.jinghai","toNodeId":"location.beichuan","lengthM":190000,"speedLimitMps":22,"roadClass":"provincial_road","direction":"both","polyline":[{"xM":350000,"yM":320000},{"xM":365000,"yM":374000},{"xM":392000,"yM":435000},{"xM":420000,"yM":500000}],"active":true},
+    {"id":"road.r07","regionId":"region.central","fromNodeId":"location.beichuan","toNodeId":"location.qingyuan","lengthM":245000,"speedLimitMps":25,"roadClass":"national_road","direction":"both","polyline":[{"xM":420000,"yM":500000},{"xM":493000,"yM":470000},{"xM":565000,"yM":405000},{"xM":640000,"yM":350000}],"active":true},
+    {"id":"road.r08","regionId":"region.central","fromNodeId":"location.jinghai","toNodeId":"location.nanhe","lengthM":235000,"speedLimitMps":22,"roadClass":"provincial_road","direction":"both","polyline":[{"xM":350000,"yM":320000},{"xM":365000,"yM":252000},{"xM":397000,"yM":165000},{"xM":430000,"yM":90000}],"active":true},
+    {"id":"road.r09","regionId":"region.central","fromNodeId":"location.nanhe","toNodeId":"location.yongan","lengthM":170000,"speedLimitMps":18,"roadClass":"county_road","direction":"both","polyline":[{"xM":430000,"yM":90000},{"xM":456000,"yM":138000},{"xM":478000,"yM":198000},{"xM":500000,"yM":250000}],"active":true},
+    {"id":"road.r10","regionId":"region.central","fromNodeId":"location.heyuan","toNodeId":"location.nanhe","lengthM":260000,"speedLimitMps":15,"roadClass":"local","direction":"both","polyline":[{"xM":210000,"yM":210000},{"xM":276000,"yM":188000},{"xM":348000,"yM":142000},{"xM":430000,"yM":90000}],"active":true}
+  ],
+  "stations": [
+    {"id":"station.01","name":"林州客运中心","worldNodeId":"location.linzhou","stationClass":"county","active":true},
+    {"id":"station.02","name":"河源客运中心","worldNodeId":"location.heyuan","stationClass":"county","active":true},
+    {"id":"station.03","name":"景海客运中心","worldNodeId":"location.jinghai","stationClass":"hub","active":true},
+    {"id":"station.04","name":"永安客运中心","worldNodeId":"location.yongan","stationClass":"city","active":true},
+    {"id":"station.05","name":"清源客运中心","worldNodeId":"location.qingyuan","stationClass":"county","active":true},
+    {"id":"station.06","name":"东陵客运中心","worldNodeId":"location.dongling","stationClass":"city","active":true},
+    {"id":"station.07","name":"北川客运中心","worldNodeId":"location.beichuan","stationClass":"city","active":true},
+    {"id":"station.08","name":"南河客运中心","worldNodeId":"location.nanhe","stationClass":"town","active":true}
+  ]
+}
