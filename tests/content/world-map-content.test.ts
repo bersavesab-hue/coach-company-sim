@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { FORMAL_WORLD_MAP_CONTENT, validateFormalWorldMapContent } from "../../src/content/map/FormalWorldMapContent.js";
 import { createPlayableWorldSeed } from "../../src/content/map/WorldMapSeed.js";
+import { isMapStationUnlocked } from "../../src/content/map/MapStationUnlockPolicy.js";
 
 test("formal world map content is valid and supports all five road classes", () => {
   const validation = validateFormalWorldMapContent();
@@ -29,6 +30,29 @@ test("formal world map content is valid and supports all five road classes", () 
   });
   assert.equal(FORMAL_WORLD_MAP_CONTENT.roads.length, 200);
   assert.equal(FORMAL_WORLD_MAP_CONTENT.nodes.length, 130);
+  assert.equal(
+    FORMAL_WORLD_MAP_CONTENT.stations.every(
+      (station) =>
+        Number.isSafeInteger(station.unlockReputationPermille) &&
+        station.unlockReputationPermille >= 0 &&
+        station.unlockReputationPermille <= 1000
+    ),
+    true
+  );
+  assert.equal(
+    FORMAL_WORLD_MAP_CONTENT.stations.filter(
+      (station) => isMapStationUnlocked(station, 180)
+    ).length,
+    12
+  );
+  assert.equal(
+    FORMAL_WORLD_MAP_CONTENT.stations
+      .slice(0, 3)
+      .every(
+        (station) => station.unlockReputationPermille === 0
+      ),
+    true
+  );
   assert.ok(
     FORMAL_WORLD_MAP_CONTENT.nodes.filter(
       (node) =>

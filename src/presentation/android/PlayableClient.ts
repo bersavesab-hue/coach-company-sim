@@ -20,6 +20,7 @@ import type { CommandType } from "../../contracts/commands/CommandTypes.js";
 import type { CommandEnvelope } from "../../contracts/commands/CommandEnvelope.js";
 import type { PassengerRoute } from "../../domain/route/PassengerRoute.js";
 import type { ServicePlan } from "../../domain/schedule/ServicePlan.js";
+import { isMapStationUnlocked } from "../../content/map/MapStationUnlockPolicy.js";
 import {
   createPlayableGame,
   PLAYABLE_COMPANY_ID,
@@ -93,7 +94,7 @@ class PlayableClient {
       this.runtime.repositories.allServicePlans();
 
     return {
-      version: "0.18.7-domestic-road-morphology",
+      version: "0.18.8-map-presentation",
       company,
       currentGameSecond:
         Number(this.currentGameSecond),
@@ -114,11 +115,21 @@ class PlayableClient {
             this.runtime.mapContent.stations.find(
               (value) => value.id === String(station.id)
             );
+          const unlockReputationPermille =
+            mapStation?.unlockReputationPermille ?? 0;
+          const unlocked = mapStation
+            ? isMapStationUnlocked(
+                mapStation,
+                Number(company.reputationPermille)
+              )
+            : true;
           return {
             id: String(station.id),
             name: station.name,
             stationClass:
               mapStation?.stationClass ?? "county",
+            unlockReputationPermille,
+            unlocked,
             xM: node?.position.xM ?? 0,
             yM: node?.position.yM ?? 0
           };
@@ -164,6 +175,8 @@ class PlayableClient {
           );
         return {
           id: String(road.id),
+          fromNodeId: String(road.fromNodeId),
+          toNodeId: String(road.toNodeId),
           roadClass: road.roadClass,
           roadCode: mapRoad?.roadCode ?? null,
           displayPriority:
@@ -250,6 +263,32 @@ class PlayableClient {
     readonly originStationId: string;
     readonly destinationStationId: string;
   }): Promise<UiActionResult> {
+    const reputationPermille = Number(
+      this.runtime.company.reputationPermille
+    );
+    for (const stationId of [
+      input.originStationId,
+      input.destinationStationId
+    ]) {
+      const mapStation =
+        this.runtime.mapContent.stations.find(
+          (station) => station.id === stationId
+        );
+      if (
+        mapStation &&
+        !isMapStationUnlocked(
+          mapStation,
+          reputationPermille
+        )
+      ) {
+        return {
+          ok: false,
+          message:
+            `${mapStation.name} 尚未解锁，需要声誉 ${mapStation.unlockReputationPermille}/1000。`
+        };
+      }
+    }
+
     if (
       input.originStationId ===
       input.destinationStationId
@@ -562,11 +601,31 @@ class PlayableClient {
   }
 
   private routeDto(route: PassengerRoute) {
+    const world =
+      this.runtime.repositories.world.get();
+    const pathPoints = route.pathLegs.flatMap(
+      (leg, legIndex) => {
+        const road = world.getRoad(
+          leg.roadSegmentId
+        );
+        if (!road) return [];
+        const points =
+          leg.direction === "forward"
+            ? [...road.polyline]
+            : [...road.polyline].reverse();
+        if (legIndex > 0) points.shift();
+        return points.map((point) => ({
+          xM: point.xM,
+          yM: point.yM
+        }));
+      }
+    );
     return {
       id: String(route.id),
       code: route.code,
       status: route.status,
       routeType: route.type,
+      pathPoints,
       stations: route.stopPoints.map(
         (stop) => ({
           id: String(stop.stationId),

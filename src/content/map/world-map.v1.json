@@ -9145,336 +9145,384 @@
       "name": "河源客运中心",
       "worldNodeId": "location.heyuan",
       "stationClass": "hub",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 0
     },
     {
       "id": "station.002",
       "name": "永安客运中心",
       "worldNodeId": "location.yongan",
       "stationClass": "hub",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 0
     },
     {
       "id": "station.003",
       "name": "云州客运中心",
       "worldNodeId": "location.yunzhou",
       "stationClass": "hub",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 0
     },
     {
       "id": "station.004",
       "name": "苍原客运中心",
       "worldNodeId": "location.cangyuan",
       "stationClass": "county",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 400
     },
     {
       "id": "station.005",
       "name": "北辰客运中心",
       "worldNodeId": "location.beichen",
       "stationClass": "city",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 280
     },
     {
       "id": "station.006",
       "name": "曜川客运中心",
       "worldNodeId": "location.yaochuan",
       "stationClass": "town",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 240
     },
     {
       "id": "station.007",
       "name": "云岭客运中心",
       "worldNodeId": "location.yunling",
       "stationClass": "city",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 180
     },
     {
       "id": "station.008",
       "name": "鸣沙客运中心",
       "worldNodeId": "location.mingsha",
       "stationClass": "town",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 240
     },
     {
       "id": "station.009",
       "name": "星峡客运中心",
       "worldNodeId": "location.xingxia",
       "stationClass": "county",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 160
     },
     {
       "id": "station.010",
       "name": "凌川客运中心",
       "worldNodeId": "location.lingchuan",
       "stationClass": "city",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 180
     },
     {
       "id": "station.011",
       "name": "澄州客运中心",
       "worldNodeId": "location.chengzhou",
       "stationClass": "hub",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 300
     },
     {
       "id": "station.012",
       "name": "岚泉客运中心",
       "worldNodeId": "location.lanquan",
       "stationClass": "county",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 400
     },
     {
       "id": "station.013",
       "name": "玄河客运中心",
       "worldNodeId": "location.xuanhe",
       "stationClass": "city",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 120
     },
     {
       "id": "station.014",
       "name": "安岳客运中心",
       "worldNodeId": "location.anyue",
       "stationClass": "city",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 180
     },
     {
       "id": "station.015",
       "name": "景海客运中心",
       "worldNodeId": "location.jinghai",
       "stationClass": "hub",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 300
     },
     {
       "id": "station.016",
       "name": "雪原客运中心",
       "worldNodeId": "location.xueyuan",
       "stationClass": "city",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 580
     },
     {
       "id": "station.017",
       "name": "东岚客运中心",
       "worldNodeId": "location.donglan",
       "stationClass": "city",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 740
     },
     {
       "id": "station.018",
       "name": "镜海客运中心",
       "worldNodeId": "location.jinghai_n",
       "stationClass": "county",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 720
     },
     {
       "id": "station.019",
       "name": "松岭客运中心",
       "worldNodeId": "location.songling",
       "stationClass": "city",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 420
     },
     {
       "id": "station.020",
       "name": "霜河客运中心",
       "worldNodeId": "location.shuanghe",
       "stationClass": "city",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 580
     },
     {
       "id": "station.021",
       "name": "海陵客运中心",
       "worldNodeId": "location.hailing",
       "stationClass": "county",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 720
     },
     {
       "id": "station.022",
       "name": "西澜客运中心",
       "worldNodeId": "location.xilan",
       "stationClass": "county",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 260
     },
     {
       "id": "station.023",
       "name": "临岳客运中心",
       "worldNodeId": "location.linyue",
       "stationClass": "city",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 180
     },
     {
       "id": "station.024",
       "name": "青崖客运中心",
       "worldNodeId": "location.qingya",
       "stationClass": "town",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 240
     },
     {
       "id": "station.025",
       "name": "云川客运中心",
       "worldNodeId": "location.yunchuan",
       "stationClass": "county",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 160
     },
     {
       "id": "station.026",
       "name": "南河客运中心",
       "worldNodeId": "location.nanhe",
       "stationClass": "city",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 120
     },
     {
       "id": "station.027",
       "name": "澄岳客运中心",
       "worldNodeId": "location.chengyue",
       "stationClass": "city",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 180
     },
     {
       "id": "station.028",
       "name": "苍岳客运中心",
       "worldNodeId": "location.cangyue",
       "stationClass": "city",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 280
     },
     {
       "id": "station.029",
       "name": "锦岚客运中心",
       "worldNodeId": "location.jinlan",
       "stationClass": "hub",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 300
     },
     {
       "id": "station.030",
       "name": "临江客运中心",
       "worldNodeId": "location.linjiang",
       "stationClass": "hub",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 440
     },
     {
       "id": "station.031",
       "name": "清源客运中心",
       "worldNodeId": "location.qingyuan",
       "stationClass": "city",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 420
     },
     {
       "id": "station.032",
       "name": "东港客运中心",
       "worldNodeId": "location.donggang",
       "stationClass": "hub",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 760
     },
     {
       "id": "station.033",
       "name": "宁湾客运中心",
       "worldNodeId": "location.ningwan",
       "stationClass": "city",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 740
     },
     {
       "id": "station.034",
       "name": "海川客运中心",
       "worldNodeId": "location.haichuan",
       "stationClass": "city",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 580
     },
     {
       "id": "station.035",
       "name": "瑞州客运中心",
       "worldNodeId": "location.ruizhou",
       "stationClass": "city",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 740
     },
     {
       "id": "station.036",
       "name": "青浦客运中心",
       "worldNodeId": "location.qingpu",
       "stationClass": "county",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 720
     },
     {
       "id": "station.037",
       "name": "望原客运中心",
       "worldNodeId": "location.wangyuan",
       "stationClass": "town",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 380
     },
     {
       "id": "station.038",
       "name": "星川客运中心",
       "worldNodeId": "location.xingchuan",
       "stationClass": "county",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 400
     },
     {
       "id": "station.039",
       "name": "青岩客运中心",
       "worldNodeId": "location.qingyan",
       "stationClass": "county",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 400
     },
     {
       "id": "station.040",
       "name": "澜山客运中心",
       "worldNodeId": "location.lanshan",
       "stationClass": "city",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 420
     },
     {
       "id": "station.041",
       "name": "南澜客运中心",
       "worldNodeId": "location.nanlan",
       "stationClass": "city",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 420
     },
     {
       "id": "station.042",
       "name": "川宁客运中心",
       "worldNodeId": "location.chuanning",
       "stationClass": "county",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 560
     },
     {
       "id": "station.043",
       "name": "岭川客运中心",
       "worldNodeId": "location.lingchuan_s",
       "stationClass": "city",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 580
     },
     {
       "id": "station.044",
       "name": "澄江客运中心",
       "worldNodeId": "location.chengjiang",
       "stationClass": "city",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 740
     },
     {
       "id": "station.045",
       "name": "榕海客运中心",
       "worldNodeId": "location.ronghai",
       "stationClass": "city",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 740
     },
     {
       "id": "station.046",
       "name": "海宁客运中心",
       "worldNodeId": "location.haining",
       "stationClass": "county",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 720
     },
     {
       "id": "station.047",
       "name": "云港客运中心",
       "worldNodeId": "location.yungang",
       "stationClass": "county",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 720
     },
     {
       "id": "station.048",
       "name": "南港客运中心",
       "worldNodeId": "location.nangang",
       "stationClass": "town",
-      "active": true
+      "active": true,
+      "unlockReputationPermille": 700
     }
   ]
 }

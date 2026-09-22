@@ -125,3 +125,18 @@ RoadNetworkStyleValidator` 会在 Core Check 和 APK 构建前阻止道路编号
 - H21：斜向高速，不再垂直穿过 H02。
 - H12：纵向高速采用偏移和弧形过城，不形成直线格子。
 - N102 / N201 / N202：按城市与河谷方向自然串联。
+
+
+## 地图城市与运营线路表现
+
+- 道路底图统一使用绿色系道路边缘 + 浅色路面，禁止恢复高饱和蓝色高速。
+- 城市/客运站按 stationClass 四级显示：
+  - hub：最大标记 + 外圈；
+  - city：中大型；
+  - county：小型；
+  - town：最小。
+- WorldMapStationContent.unlockReputationPermille 是正式地图解锁门槛。
+- 未解锁城市仍出现在地图上，但灰显并带锁；线路创建下拉框只列出已解锁城市。
+- 当前 180/1000 声誉下固定应有 12 个城市/站点解锁。
+- 地图页画布应尽量占满 header 与底部时间控制条之间的可用高度，不再保留大面积纯黑空白。
+- 玩家自建 PassengerRoute 必须沿 route.pathLegs 的正式道路几何渲染，使用暖色 route overlay，不允许另画一条与寻路无关的装饰直线。

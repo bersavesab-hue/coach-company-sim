@@ -56,6 +56,15 @@ export function validateWorldMapContent(content: WorldMapContentV1): WorldMapVal
   const stationNodeIds = new Set<string>();
   for (const station of content.stations) {
     if (!nodeIds.has(station.worldNodeId)) issues.push(`station ${station.id} references missing node ${station.worldNodeId}`);
+    if (
+      !Number.isSafeInteger(station.unlockReputationPermille) ||
+      station.unlockReputationPermille < 0 ||
+      station.unlockReputationPermille > 1000
+    ) {
+      issues.push(
+        `station ${station.id} has invalid unlockReputationPermille`
+      );
+    }
     if (stationNodeIds.has(station.worldNodeId)) issues.push(`multiple stations share node ${station.worldNodeId}`);
     stationNodeIds.add(station.worldNodeId);
   }

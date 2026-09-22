@@ -33,6 +33,7 @@ export interface WorldMapRoadContent {
 export interface WorldMapStationContent {
   readonly id: string; readonly name: string; readonly worldNodeId: string;
   readonly stationClass: StationClass; readonly active: boolean;
+  readonly unlockReputationPermille: number;
 }
 export interface WorldMapBackgroundContent { readonly mode: "decorative_only"; readonly assetPath: string | null; }
 export interface WorldMapContentV1 {

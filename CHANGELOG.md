@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.18.8-stage17-map-presentation
+
+### Removed
+- 删除地图道路中的蓝色高速视觉，五级道路统一改为绿色系导航图风格。
+- 删除地图页下半屏大面积纯黑空白布局。
+- 删除所有城市使用近似同一尺寸圆点的表现方式。
+- 运营线路不再只存在于列表中，也不使用独立装饰直线。
+
+### Added
+- WorldMapStationContent 新增 unlockReputationPermille。
+- 新增 MapStationUnlockPolicy：城市解锁正式由公司声誉驱动。
+- 当前 48 个站点全部配置声誉解锁门槛；起步三站为 0，声誉 180 时共有 12 个站点解锁。
+- 地图未解锁城市灰显并显示锁图标；线路创建下拉框只展示已解锁城市。
+- 城市标记按 hub / city / county / town 四级调整半径、字号和视觉权重。
+- hub 城市增加外圈，和普通城市/县城/乡镇形成明显层级差。
+- PlayableClient roads 恢复 fromNodeId / toNodeId 投影，保证 corridor stitching 使用真实拓扑。
+- PassengerRoute DTO 新增 pathPoints，由正式 pathLegs + RoadSegment polyline 派生。
+- 地图新增玩家运营线路暖色双层高亮，并显示线路编号牌。
+- 地图画布改为占满可用主界面高度，“新建线路”改为地图内悬浮按钮。
+
+### Changed
+- 地图 HUD 改为显示“已解锁城市/总城市 + 当前声誉”。
+- 地图线路选择和地图锁定状态共用同一 MapStationUnlockPolicy。
+- Android / package 版本升级至 0.18.8。
+- GAME_VERSION 更新为 0.18.8-stage17-map-presentation。
+
+### Validation
+- 所有站点必须有 0–1000 的整数 unlockReputationPermille。
+- 声誉 180/1000 时正式地图必须恰好解锁 12 个站点。
+- 起步三站必须从 0 声誉开始可用。
+- Core Check 与 APK 构建继续作为提交门禁。
+
+
 ## 0.18.7-stage17-domestic-road-morphology
 
 ### Removed
