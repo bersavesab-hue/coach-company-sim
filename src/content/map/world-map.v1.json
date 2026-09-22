@@ -650,17 +650,6 @@
       "active": true
     },
     {
-      "id": "location.junction.j",
-      "regionId": "region.central",
-      "type": "junction",
-      "name": "高速互通",
-      "position": {
-        "xM": 640000,
-        "yM": 700000
-      },
-      "active": true
-    },
-    {
       "id": "location.junction.k",
       "regionId": "region.central",
       "type": "junction",
@@ -1319,6 +1308,72 @@
         "yM": 175600
       },
       "active": true
+    },
+    {
+      "id": "location.junction.j.h02.w",
+      "regionId": "region.central",
+      "type": "junction",
+      "name": "河源西高速主线",
+      "position": {
+        "xM": 615000,
+        "yM": 704000
+      },
+      "active": true
+    },
+    {
+      "id": "location.junction.j.h02.e",
+      "regionId": "region.central",
+      "type": "junction",
+      "name": "河源东高速主线",
+      "position": {
+        "xM": 665000,
+        "yM": 694000
+      },
+      "active": true
+    },
+    {
+      "id": "location.junction.j.h21.n",
+      "regionId": "region.central",
+      "type": "junction",
+      "name": "河源北高速主线",
+      "position": {
+        "xM": 628000,
+        "yM": 738000
+      },
+      "active": true
+    },
+    {
+      "id": "location.junction.j.h21.s",
+      "regionId": "region.central",
+      "type": "junction",
+      "name": "河源南高速主线",
+      "position": {
+        "xM": 652000,
+        "yM": 662000
+      },
+      "active": true
+    },
+    {
+      "id": "location.junction.j.loop.nw",
+      "regionId": "region.central",
+      "type": "junction",
+      "name": "河源西北匝道",
+      "position": {
+        "xM": 598000,
+        "yM": 732000
+      },
+      "active": true
+    },
+    {
+      "id": "location.junction.j.loop.se",
+      "regionId": "region.central",
+      "type": "junction",
+      "name": "河源东南匝道",
+      "position": {
+        "xM": 682000,
+        "yM": 666000
+      },
+      "active": true
     }
   ],
   "roads": [
@@ -1360,7 +1415,8 @@
       "active": true,
       "roadCode": "H01",
       "displayPriority": 1,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r002",
@@ -1400,7 +1456,8 @@
       "active": true,
       "roadCode": "H01",
       "displayPriority": 1,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r003",
@@ -1440,7 +1497,8 @@
       "active": true,
       "roadCode": "H01",
       "displayPriority": 1,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r004",
@@ -1480,7 +1538,8 @@
       "active": true,
       "roadCode": "H01",
       "displayPriority": 1,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r005",
@@ -1520,7 +1579,8 @@
       "active": true,
       "roadCode": "H01",
       "displayPriority": 1,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r006",
@@ -1560,7 +1620,8 @@
       "active": true,
       "roadCode": "H01",
       "displayPriority": 1,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r007",
@@ -1600,14 +1661,15 @@
       "active": true,
       "roadCode": "H02",
       "displayPriority": 1,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r008",
       "regionId": "region.central",
       "fromNodeId": "location.junction.i",
-      "toNodeId": "location.junction.j",
-      "lengthM": 258300,
+      "toNodeId": "location.junction.j.h02.w",
+      "lengthM": 234630,
       "speedLimitMps": 31,
       "roadClass": "expressway",
       "direction": "both",
@@ -1617,60 +1679,45 @@
           "yM": 640000
         },
         {
-          "xM": 444076,
-          "yM": 657050
+          "xM": 455189,
+          "yM": 650225
         },
         {
-          "xM": 500470,
-          "yM": 664440
+          "xM": 531076,
+          "yM": 674140
         },
         {
-          "xM": 553958,
-          "yM": 683940
-        },
-        {
-          "xM": 600302,
-          "yM": 689140
-        },
-        {
-          "xM": 640000,
-          "yM": 700000
+          "xM": 615000,
+          "yM": 704000
         }
       ],
       "active": true,
       "roadCode": "H02",
       "displayPriority": 1,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r009",
       "regionId": "region.central",
-      "fromNodeId": "location.junction.j",
+      "fromNodeId": "location.junction.j.h02.e",
       "toNodeId": "location.junction.k",
-      "lengthM": 268079,
+      "lengthM": 241510,
       "speedLimitMps": 31,
       "roadClass": "expressway",
       "direction": "both",
       "polyline": [
         {
-          "xM": 640000,
-          "yM": 700000
+          "xM": 665000,
+          "yM": 694000
         },
         {
-          "xM": 696276,
-          "yM": 682796
+          "xM": 732144,
+          "yM": 684728
         },
         {
-          "xM": 754870,
-          "yM": 675638
-        },
-        {
-          "xM": 810558,
-          "yM": 655886
-        },
-        {
-          "xM": 858702,
-          "yM": 650910
+          "xM": 811667,
+          "yM": 664730
         },
         {
           "xM": 900000,
@@ -1680,7 +1727,8 @@
       "active": true,
       "roadCode": "H02",
       "displayPriority": 1,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r010",
@@ -1720,7 +1768,8 @@
       "active": true,
       "roadCode": "H02",
       "displayPriority": 1,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r011",
@@ -1760,7 +1809,8 @@
       "active": true,
       "roadCode": "H02",
       "displayPriority": 1,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r012",
@@ -1800,7 +1850,8 @@
       "active": true,
       "roadCode": "H02",
       "displayPriority": 1,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r013",
@@ -1840,7 +1891,8 @@
       "active": true,
       "roadCode": "H03",
       "displayPriority": 1,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r014",
@@ -1880,7 +1932,8 @@
       "active": true,
       "roadCode": "H03",
       "displayPriority": 1,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r015",
@@ -1920,7 +1973,8 @@
       "active": true,
       "roadCode": "H03",
       "displayPriority": 1,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r016",
@@ -1960,7 +2014,8 @@
       "active": true,
       "roadCode": "H03",
       "displayPriority": 1,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r017",
@@ -2000,7 +2055,8 @@
       "active": true,
       "roadCode": "H03",
       "displayPriority": 1,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r018",
@@ -2040,7 +2096,8 @@
       "active": true,
       "roadCode": "H03",
       "displayPriority": 1,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r019",
@@ -2080,7 +2137,8 @@
       "active": true,
       "roadCode": "H11",
       "displayPriority": 1,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r020",
@@ -2120,7 +2178,8 @@
       "active": true,
       "roadCode": "H11",
       "displayPriority": 1,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r021",
@@ -2160,7 +2219,8 @@
       "active": true,
       "roadCode": "H12",
       "displayPriority": 1,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r022",
@@ -2200,7 +2260,8 @@
       "active": true,
       "roadCode": "H12",
       "displayPriority": 1,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r023",
@@ -2240,7 +2301,8 @@
       "active": true,
       "roadCode": "H13",
       "displayPriority": 1,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r024",
@@ -2280,7 +2342,8 @@
       "active": true,
       "roadCode": "H13",
       "displayPriority": 1,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r025",
@@ -2320,7 +2383,8 @@
       "active": true,
       "roadCode": "H14",
       "displayPriority": 1,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r026",
@@ -2360,14 +2424,15 @@
       "active": true,
       "roadCode": "H14",
       "displayPriority": 1,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r027",
       "regionId": "region.central",
       "fromNodeId": "location.junction.c",
-      "toNodeId": "location.junction.j",
-      "lengthM": 241956,
+      "toNodeId": "location.junction.j.h21.n",
+      "lengthM": 203188,
       "speedLimitMps": 31,
       "roadClass": "expressway",
       "direction": "both",
@@ -2377,60 +2442,45 @@
           "yM": 940000
         },
         {
-          "xM": 620704,
-          "yM": 886892
+          "xM": 631233,
+          "yM": 883796
         },
         {
-          "xM": 630682,
-          "yM": 834557
+          "xM": 631435,
+          "yM": 815016
         },
         {
-          "xM": 629034,
-          "yM": 781253
-        },
-        {
-          "xM": 638010,
-          "yM": 738501
-        },
-        {
-          "xM": 640000,
-          "yM": 700000
+          "xM": 628000,
+          "yM": 738000
         }
       ],
       "active": true,
       "roadCode": "H21",
       "displayPriority": 1,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r028",
       "regionId": "region.central",
-      "fromNodeId": "location.junction.j",
+      "fromNodeId": "location.junction.j.h21.s",
       "toNodeId": "location.junction.auto.H21.1.1",
-      "lengthM": 257453,
+      "lengthM": 222895,
       "speedLimitMps": 31,
       "roadClass": "expressway",
       "direction": "both",
       "polyline": [
         {
-          "xM": 640000,
-          "yM": 700000
+          "xM": 652000,
+          "yM": 662000
         },
         {
-          "xM": 682777,
-          "yM": 663068
+          "xM": 693113,
+          "yM": 614414
         },
         {
-          "xM": 718576,
-          "yM": 619111
-        },
-        {
-          "xM": 763123,
-          "yM": 583960
-        },
-        {
-          "xM": 791802,
-          "yM": 547380
+          "xM": 752646,
+          "yM": 568074
         },
         {
           "xM": 821800,
@@ -2440,7 +2490,8 @@
       "active": true,
       "roadCode": "H21",
       "displayPriority": 1,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r029",
@@ -2480,7 +2531,8 @@
       "active": true,
       "roadCode": "H21",
       "displayPriority": 1,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r030",
@@ -2520,7 +2572,8 @@
       "active": true,
       "roadCode": "H22",
       "displayPriority": 1,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r031",
@@ -2560,7 +2613,8 @@
       "active": true,
       "roadCode": "H22",
       "displayPriority": 1,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r032",
@@ -2600,7 +2654,8 @@
       "active": true,
       "roadCode": "H22",
       "displayPriority": 1,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r033",
@@ -2640,7 +2695,8 @@
       "active": true,
       "roadCode": "N101",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r034",
@@ -2680,7 +2736,8 @@
       "active": true,
       "roadCode": "N101",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r035",
@@ -2720,7 +2777,8 @@
       "active": true,
       "roadCode": "N101",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r036",
@@ -2760,7 +2818,8 @@
       "active": true,
       "roadCode": "N101",
       "displayPriority": 2,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r037",
@@ -2800,7 +2859,8 @@
       "active": true,
       "roadCode": "N101",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r038",
@@ -2840,7 +2900,8 @@
       "active": true,
       "roadCode": "N101",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r039",
@@ -2880,7 +2941,8 @@
       "active": true,
       "roadCode": "N101",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r040",
@@ -2920,7 +2982,8 @@
       "active": true,
       "roadCode": "N102",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r041",
@@ -2960,7 +3023,8 @@
       "active": true,
       "roadCode": "N102",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r042",
@@ -3000,7 +3064,8 @@
       "active": true,
       "roadCode": "N102",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r043",
@@ -3040,7 +3105,8 @@
       "active": true,
       "roadCode": "N102",
       "displayPriority": 2,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r044",
@@ -3080,7 +3146,8 @@
       "active": true,
       "roadCode": "N102",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r045",
@@ -3120,7 +3187,8 @@
       "active": true,
       "roadCode": "N102",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r046",
@@ -3160,7 +3228,8 @@
       "active": true,
       "roadCode": "N102",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r047",
@@ -3200,7 +3269,8 @@
       "active": true,
       "roadCode": "N103",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r048",
@@ -3240,7 +3310,8 @@
       "active": true,
       "roadCode": "N103",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r049",
@@ -3280,7 +3351,8 @@
       "active": true,
       "roadCode": "N103",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r050",
@@ -3320,7 +3392,8 @@
       "active": true,
       "roadCode": "N103",
       "displayPriority": 2,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r051",
@@ -3360,7 +3433,8 @@
       "active": true,
       "roadCode": "N103",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r052",
@@ -3400,7 +3474,8 @@
       "active": true,
       "roadCode": "N103",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r053",
@@ -3440,7 +3515,8 @@
       "active": true,
       "roadCode": "N103",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r054",
@@ -3480,7 +3556,8 @@
       "active": true,
       "roadCode": "N104",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r055",
@@ -3520,7 +3597,8 @@
       "active": true,
       "roadCode": "N104",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r056",
@@ -3560,7 +3638,8 @@
       "active": true,
       "roadCode": "N104",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r057",
@@ -3600,7 +3679,8 @@
       "active": true,
       "roadCode": "N104",
       "displayPriority": 2,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r058",
@@ -3640,7 +3720,8 @@
       "active": true,
       "roadCode": "N104",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r059",
@@ -3680,7 +3761,8 @@
       "active": true,
       "roadCode": "N104",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r060",
@@ -3720,7 +3802,8 @@
       "active": true,
       "roadCode": "N104",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r061",
@@ -3760,7 +3843,8 @@
       "active": true,
       "roadCode": "N104",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r062",
@@ -3800,7 +3884,8 @@
       "active": true,
       "roadCode": "N201",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r063",
@@ -3840,7 +3925,8 @@
       "active": true,
       "roadCode": "N201",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r064",
@@ -3880,7 +3966,8 @@
       "active": true,
       "roadCode": "N201",
       "displayPriority": 2,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r065",
@@ -3920,7 +4007,8 @@
       "active": true,
       "roadCode": "N201",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r066",
@@ -3960,7 +4048,8 @@
       "active": true,
       "roadCode": "N201",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r067",
@@ -4000,7 +4089,8 @@
       "active": true,
       "roadCode": "N202",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r068",
@@ -4040,7 +4130,8 @@
       "active": true,
       "roadCode": "N202",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r069",
@@ -4080,7 +4171,8 @@
       "active": true,
       "roadCode": "N202",
       "displayPriority": 2,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r070",
@@ -4120,7 +4212,8 @@
       "active": true,
       "roadCode": "N202",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r071",
@@ -4160,7 +4253,8 @@
       "active": true,
       "roadCode": "N202",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r072",
@@ -4200,7 +4294,8 @@
       "active": true,
       "roadCode": "N202",
       "displayPriority": 2,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r073",
@@ -4240,7 +4335,8 @@
       "active": true,
       "roadCode": "P201",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r074",
@@ -4280,7 +4376,8 @@
       "active": true,
       "roadCode": "P201",
       "displayPriority": 3,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r075",
@@ -4320,7 +4417,8 @@
       "active": true,
       "roadCode": "P201",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r076",
@@ -4360,7 +4458,8 @@
       "active": true,
       "roadCode": "P202",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r077",
@@ -4400,7 +4499,8 @@
       "active": true,
       "roadCode": "P202",
       "displayPriority": 3,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r078",
@@ -4440,7 +4540,8 @@
       "active": true,
       "roadCode": "P202",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r079",
@@ -4480,7 +4581,8 @@
       "active": true,
       "roadCode": "P203",
       "displayPriority": 3,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r080",
@@ -4520,7 +4622,8 @@
       "active": true,
       "roadCode": "P204",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r081",
@@ -4560,7 +4663,8 @@
       "active": true,
       "roadCode": "P204",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r082",
@@ -4600,7 +4704,8 @@
       "active": true,
       "roadCode": "P205",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r083",
@@ -4640,7 +4745,8 @@
       "active": true,
       "roadCode": "P205",
       "displayPriority": 3,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r084",
@@ -4680,7 +4786,8 @@
       "active": true,
       "roadCode": "P205",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r085",
@@ -4720,7 +4827,8 @@
       "active": true,
       "roadCode": "P206",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r086",
@@ -4760,7 +4868,8 @@
       "active": true,
       "roadCode": "P206",
       "displayPriority": 3,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r087",
@@ -4800,7 +4909,8 @@
       "active": true,
       "roadCode": "P206",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r088",
@@ -4840,7 +4950,8 @@
       "active": true,
       "roadCode": "P206",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r089",
@@ -4880,7 +4991,8 @@
       "active": true,
       "roadCode": "P207",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r090",
@@ -4920,7 +5032,8 @@
       "active": true,
       "roadCode": "P207",
       "displayPriority": 3,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r091",
@@ -4960,7 +5073,8 @@
       "active": true,
       "roadCode": "P207",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r092",
@@ -5000,7 +5114,8 @@
       "active": true,
       "roadCode": "P208",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r093",
@@ -5040,7 +5155,8 @@
       "active": true,
       "roadCode": "P208",
       "displayPriority": 3,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r094",
@@ -5080,7 +5196,8 @@
       "active": true,
       "roadCode": "P208",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r095",
@@ -5120,7 +5237,8 @@
       "active": true,
       "roadCode": "P209",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r096",
@@ -5160,7 +5278,8 @@
       "active": true,
       "roadCode": "P209",
       "displayPriority": 3,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r097",
@@ -5200,7 +5319,8 @@
       "active": true,
       "roadCode": "P209",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r098",
@@ -5240,7 +5360,8 @@
       "active": true,
       "roadCode": "P209",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r099",
@@ -5280,7 +5401,8 @@
       "active": true,
       "roadCode": "P210",
       "displayPriority": 3,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r100",
@@ -5320,7 +5442,8 @@
       "active": true,
       "roadCode": "P820",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r101",
@@ -5360,7 +5483,8 @@
       "active": true,
       "roadCode": "P820",
       "displayPriority": 3,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r102",
@@ -5400,7 +5524,8 @@
       "active": true,
       "roadCode": "P820",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r103",
@@ -5440,7 +5565,8 @@
       "active": true,
       "roadCode": "P820",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r104",
@@ -5480,7 +5606,8 @@
       "active": true,
       "roadCode": "L801",
       "displayPriority": 4,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "connector"
     },
     {
       "id": "road.r105",
@@ -5520,14 +5647,15 @@
       "active": true,
       "roadCode": "L802",
       "displayPriority": 4,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "connector"
     },
     {
       "id": "road.r106",
       "regionId": "region.central",
       "fromNodeId": "location.junction.ring.heyuan.e",
-      "toNodeId": "location.junction.j",
-      "lengthM": 46255,
+      "toNodeId": "location.junction.j.h02.w",
+      "lengthM": 34906,
       "speedLimitMps": 22,
       "roadClass": "provincial_road",
       "direction": "both",
@@ -5537,30 +5665,23 @@
           "yM": 680000
         },
         {
-          "xM": 609079,
-          "yM": 686834
+          "xM": 596847,
+          "yM": 691483
         },
         {
-          "xM": 619372,
-          "yM": 687561
+          "xM": 603729,
+          "yM": 698309
         },
         {
-          "xM": 625636,
-          "yM": 695943
-        },
-        {
-          "xM": 634339,
-          "yM": 696004
-        },
-        {
-          "xM": 640000,
-          "yM": 700000
+          "xM": 615000,
+          "yM": 704000
         }
       ],
       "active": true,
       "roadCode": "P701",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "connector"
     },
     {
       "id": "road.r107",
@@ -5600,7 +5721,8 @@
       "active": true,
       "roadCode": "P821",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r108",
@@ -5640,7 +5762,8 @@
       "active": true,
       "roadCode": "P821",
       "displayPriority": 3,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r109",
@@ -5680,7 +5803,8 @@
       "active": true,
       "roadCode": "P821",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r110",
@@ -5720,7 +5844,8 @@
       "active": true,
       "roadCode": "P821",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r111",
@@ -5760,7 +5885,8 @@
       "active": true,
       "roadCode": "L803",
       "displayPriority": 4,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "connector"
     },
     {
       "id": "road.r112",
@@ -5800,14 +5926,15 @@
       "active": true,
       "roadCode": "L804",
       "displayPriority": 4,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "connector"
     },
     {
       "id": "road.r113",
       "regionId": "region.central",
       "fromNodeId": "location.junction.ring.yongan.w",
-      "toNodeId": "location.junction.j",
-      "lengthM": 90766,
+      "toNodeId": "location.junction.j.h02.e",
+      "lengthM": 70322,
       "speedLimitMps": 22,
       "roadClass": "provincial_road",
       "direction": "both",
@@ -5817,30 +5944,23 @@
           "yM": 710000
         },
         {
-          "xM": 708283,
-          "yM": 710946
+          "xM": 707406,
+          "yM": 717151
         },
         {
-          "xM": 689462,
-          "yM": 703998
+          "xM": 686813,
+          "yM": 708454
         },
         {
-          "xM": 669517,
-          "yM": 706946
-        },
-        {
-          "xM": 654197,
-          "yM": 700570
-        },
-        {
-          "xM": 640000,
-          "yM": 700000
+          "xM": 665000,
+          "yM": 694000
         }
       ],
       "active": true,
       "roadCode": "P702",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "connector"
     },
     {
       "id": "road.r114",
@@ -5880,7 +6000,8 @@
       "active": true,
       "roadCode": "P822",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r115",
@@ -5920,7 +6041,8 @@
       "active": true,
       "roadCode": "P822",
       "displayPriority": 3,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r116",
@@ -5960,7 +6082,8 @@
       "active": true,
       "roadCode": "P822",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r117",
@@ -6000,7 +6123,8 @@
       "active": true,
       "roadCode": "P822",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r118",
@@ -6040,7 +6164,8 @@
       "active": true,
       "roadCode": "L805",
       "displayPriority": 4,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "connector"
     },
     {
       "id": "road.r119",
@@ -6080,7 +6205,8 @@
       "active": true,
       "roadCode": "L806",
       "displayPriority": 4,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "connector"
     },
     {
       "id": "road.r120",
@@ -6120,7 +6246,8 @@
       "active": true,
       "roadCode": "P703",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "connector"
     },
     {
       "id": "road.r121",
@@ -6160,7 +6287,8 @@
       "active": true,
       "roadCode": "P823",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r122",
@@ -6200,7 +6328,8 @@
       "active": true,
       "roadCode": "P823",
       "displayPriority": 3,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r123",
@@ -6240,7 +6369,8 @@
       "active": true,
       "roadCode": "P823",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r124",
@@ -6280,7 +6410,8 @@
       "active": true,
       "roadCode": "P823",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r125",
@@ -6320,7 +6451,8 @@
       "active": true,
       "roadCode": "L807",
       "displayPriority": 4,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "connector"
     },
     {
       "id": "road.r126",
@@ -6360,7 +6492,8 @@
       "active": true,
       "roadCode": "L808",
       "displayPriority": 4,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "connector"
     },
     {
       "id": "road.r127",
@@ -6400,7 +6533,8 @@
       "active": true,
       "roadCode": "P704",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "connector"
     },
     {
       "id": "road.r128",
@@ -6440,7 +6574,8 @@
       "active": true,
       "roadCode": "P824",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r129",
@@ -6480,7 +6615,8 @@
       "active": true,
       "roadCode": "P824",
       "displayPriority": 3,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r130",
@@ -6520,7 +6656,8 @@
       "active": true,
       "roadCode": "P824",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r131",
@@ -6560,7 +6697,8 @@
       "active": true,
       "roadCode": "P824",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r132",
@@ -6600,7 +6738,8 @@
       "active": true,
       "roadCode": "L809",
       "displayPriority": 4,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "connector"
     },
     {
       "id": "road.r133",
@@ -6640,7 +6779,8 @@
       "active": true,
       "roadCode": "L810",
       "displayPriority": 4,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "local_access"
     },
     {
       "id": "road.r134",
@@ -6680,7 +6820,8 @@
       "active": true,
       "roadCode": "P705",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "connector"
     },
     {
       "id": "road.r135",
@@ -6720,7 +6861,8 @@
       "active": true,
       "roadCode": "P825",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r136",
@@ -6760,7 +6902,8 @@
       "active": true,
       "roadCode": "P825",
       "displayPriority": 3,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r137",
@@ -6800,7 +6943,8 @@
       "active": true,
       "roadCode": "P825",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r138",
@@ -6840,7 +6984,8 @@
       "active": true,
       "roadCode": "P825",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r139",
@@ -6880,7 +7025,8 @@
       "active": true,
       "roadCode": "L811",
       "displayPriority": 4,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "local_access"
     },
     {
       "id": "road.r140",
@@ -6920,7 +7066,8 @@
       "active": true,
       "roadCode": "L812",
       "displayPriority": 4,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "local_access"
     },
     {
       "id": "road.r141",
@@ -6960,7 +7107,8 @@
       "active": true,
       "roadCode": "P706",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "connector"
     },
     {
       "id": "road.r142",
@@ -7000,7 +7148,8 @@
       "active": true,
       "roadCode": "P826",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r143",
@@ -7040,7 +7189,8 @@
       "active": true,
       "roadCode": "P826",
       "displayPriority": 3,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r144",
@@ -7080,7 +7230,8 @@
       "active": true,
       "roadCode": "P826",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r145",
@@ -7120,7 +7271,8 @@
       "active": true,
       "roadCode": "P826",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r146",
@@ -7160,7 +7312,8 @@
       "active": true,
       "roadCode": "L813",
       "displayPriority": 4,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "local_access"
     },
     {
       "id": "road.r147",
@@ -7200,7 +7353,8 @@
       "active": true,
       "roadCode": "L814",
       "displayPriority": 4,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "local_access"
     },
     {
       "id": "road.r148",
@@ -7240,7 +7394,8 @@
       "active": true,
       "roadCode": "P707",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "connector"
     },
     {
       "id": "road.r149",
@@ -7280,7 +7435,8 @@
       "active": true,
       "roadCode": "P827",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r150",
@@ -7320,7 +7476,8 @@
       "active": true,
       "roadCode": "P827",
       "displayPriority": 3,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r151",
@@ -7360,7 +7517,8 @@
       "active": true,
       "roadCode": "P827",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r152",
@@ -7400,7 +7558,8 @@
       "active": true,
       "roadCode": "P827",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "urban_ring"
     },
     {
       "id": "road.r153",
@@ -7440,7 +7599,8 @@
       "active": true,
       "roadCode": "L815",
       "displayPriority": 4,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "local_access"
     },
     {
       "id": "road.r154",
@@ -7480,7 +7640,8 @@
       "active": true,
       "roadCode": "L816",
       "displayPriority": 4,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "local_access"
     },
     {
       "id": "road.r155",
@@ -7520,7 +7681,8 @@
       "active": true,
       "roadCode": "P708",
       "displayPriority": 3,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "connector"
     },
     {
       "id": "road.r156",
@@ -7560,7 +7722,8 @@
       "active": true,
       "roadCode": "C301",
       "displayPriority": 4,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r157",
@@ -7600,7 +7763,8 @@
       "active": true,
       "roadCode": "C303",
       "displayPriority": 4,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r158",
@@ -7640,7 +7804,8 @@
       "active": true,
       "roadCode": "C303",
       "displayPriority": 4,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r159",
@@ -7680,7 +7845,8 @@
       "active": true,
       "roadCode": "C305",
       "displayPriority": 4,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r160",
@@ -7720,7 +7886,8 @@
       "active": true,
       "roadCode": "C306",
       "displayPriority": 4,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r161",
@@ -7760,7 +7927,8 @@
       "active": true,
       "roadCode": "C307",
       "displayPriority": 4,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r162",
@@ -7800,7 +7968,8 @@
       "active": true,
       "roadCode": "C310",
       "displayPriority": 4,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r163",
@@ -7840,7 +8009,8 @@
       "active": true,
       "roadCode": "C311",
       "displayPriority": 4,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r164",
@@ -7880,7 +8050,8 @@
       "active": true,
       "roadCode": "C312",
       "displayPriority": 4,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r165",
@@ -7920,7 +8091,8 @@
       "active": true,
       "roadCode": "C312",
       "displayPriority": 4,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "mainline"
     },
     {
       "id": "road.r166",
@@ -7960,7 +8132,8 @@
       "active": true,
       "roadCode": "L901",
       "displayPriority": 4,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "local_access"
     },
     {
       "id": "road.r167",
@@ -8000,7 +8173,8 @@
       "active": true,
       "roadCode": "L901",
       "displayPriority": 4,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "local_access"
     },
     {
       "id": "road.r168",
@@ -8040,7 +8214,8 @@
       "active": true,
       "roadCode": "L902",
       "displayPriority": 4,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "local_access"
     },
     {
       "id": "road.r169",
@@ -8080,7 +8255,8 @@
       "active": true,
       "roadCode": "L902",
       "displayPriority": 4,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "local_access"
     },
     {
       "id": "road.r170",
@@ -8120,7 +8296,8 @@
       "active": true,
       "roadCode": "L902",
       "displayPriority": 4,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "local_access"
     },
     {
       "id": "road.r171",
@@ -8160,7 +8337,8 @@
       "active": true,
       "roadCode": "L903",
       "displayPriority": 4,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "local_access"
     },
     {
       "id": "road.r172",
@@ -8200,7 +8378,8 @@
       "active": true,
       "roadCode": "L903",
       "displayPriority": 4,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "local_access"
     },
     {
       "id": "road.r173",
@@ -8240,7 +8419,8 @@
       "active": true,
       "roadCode": "L903",
       "displayPriority": 4,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "local_access"
     },
     {
       "id": "road.r174",
@@ -8280,7 +8460,8 @@
       "active": true,
       "roadCode": "L904",
       "displayPriority": 4,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "local_access"
     },
     {
       "id": "road.r175",
@@ -8320,7 +8501,8 @@
       "active": true,
       "roadCode": "L904",
       "displayPriority": 4,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "local_access"
     },
     {
       "id": "road.r176",
@@ -8360,7 +8542,8 @@
       "active": true,
       "roadCode": "L905",
       "displayPriority": 4,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "local_access"
     },
     {
       "id": "road.r177",
@@ -8400,7 +8583,8 @@
       "active": true,
       "roadCode": "L905",
       "displayPriority": 4,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "local_access"
     },
     {
       "id": "road.r178",
@@ -8440,7 +8624,8 @@
       "active": true,
       "roadCode": "L905",
       "displayPriority": 4,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "local_access"
     },
     {
       "id": "road.r179",
@@ -8480,7 +8665,8 @@
       "active": true,
       "roadCode": "L906",
       "displayPriority": 4,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "local_access"
     },
     {
       "id": "road.r180",
@@ -8520,7 +8706,8 @@
       "active": true,
       "roadCode": "L906",
       "displayPriority": 4,
-      "showLabel": true
+      "showLabel": true,
+      "roadRole": "local_access"
     },
     {
       "id": "road.r181",
@@ -8560,7 +8747,272 @@
       "active": true,
       "roadCode": "L906",
       "displayPriority": 4,
-      "showLabel": false
+      "showLabel": false,
+      "roadRole": "local_access"
+    },
+    {
+      "id": "road.r182",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.j.h02.w",
+      "toNodeId": "location.junction.j.h02.e",
+      "lengthM": 51305,
+      "speedLimitMps": 31,
+      "roadClass": "expressway",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 615000,
+          "yM": 704000
+        },
+        {
+          "xM": 628510,
+          "yM": 698749
+        },
+        {
+          "xM": 645647,
+          "yM": 696035
+        },
+        {
+          "xM": 665000,
+          "yM": 694000
+        }
+      ],
+      "active": true,
+      "roadCode": "H02",
+      "displayPriority": 1,
+      "showLabel": false,
+      "roadRole": "mainline"
+    },
+    {
+      "id": "road.r183",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.j.h21.n",
+      "toNodeId": "location.junction.j.h21.s",
+      "lengthM": 80095,
+      "speedLimitMps": 31,
+      "roadClass": "expressway",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 628000,
+          "yM": 738000
+        },
+        {
+          "xM": 638058,
+          "yM": 717774
+        },
+        {
+          "xM": 645283,
+          "yM": 691639
+        },
+        {
+          "xM": 652000,
+          "yM": 662000
+        }
+      ],
+      "active": true,
+      "roadCode": "H21",
+      "displayPriority": 1,
+      "showLabel": false,
+      "roadRole": "mainline"
+    },
+    {
+      "id": "road.r184",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.j.h02.w",
+      "toNodeId": "location.junction.j.loop.nw",
+      "lengthM": 38302,
+      "speedLimitMps": 14,
+      "roadClass": "local",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 615000,
+          "yM": 704000
+        },
+        {
+          "xM": 602547,
+          "yM": 707169
+        },
+        {
+          "xM": 598921,
+          "yM": 717997
+        },
+        {
+          "xM": 598000,
+          "yM": 732000
+        }
+      ],
+      "active": true,
+      "roadCode": "L950",
+      "displayPriority": 4,
+      "showLabel": false,
+      "roadRole": "ramp"
+    },
+    {
+      "id": "road.r185",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.j.loop.nw",
+      "toNodeId": "location.junction.j.h21.n",
+      "lengthM": 36437,
+      "speedLimitMps": 14,
+      "roadClass": "local",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 598000,
+          "yM": 732000
+        },
+        {
+          "xM": 604635,
+          "yM": 742505
+        },
+        {
+          "xM": 615329,
+          "yM": 742074
+        },
+        {
+          "xM": 628000,
+          "yM": 738000
+        }
+      ],
+      "active": true,
+      "roadCode": "L950",
+      "displayPriority": 4,
+      "showLabel": false,
+      "roadRole": "ramp"
+    },
+    {
+      "id": "road.r186",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.j.h21.n",
+      "toNodeId": "location.junction.j.h02.e",
+      "lengthM": 69053,
+      "speedLimitMps": 14,
+      "roadClass": "local",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 628000,
+          "yM": 738000
+        },
+        {
+          "xM": 648000,
+          "yM": 728000
+        },
+        {
+          "xM": 670000,
+          "yM": 714000
+        },
+        {
+          "xM": 665000,
+          "yM": 694000
+        }
+      ],
+      "active": true,
+      "roadCode": "L951",
+      "displayPriority": 4,
+      "showLabel": false,
+      "roadRole": "ramp"
+    },
+    {
+      "id": "road.r187",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.j.h02.e",
+      "toNodeId": "location.junction.j.loop.se",
+      "lengthM": 38302,
+      "speedLimitMps": 14,
+      "roadClass": "local",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 665000,
+          "yM": 694000
+        },
+        {
+          "xM": 662067,
+          "yM": 681489
+        },
+        {
+          "xM": 670001,
+          "yM": 673277
+        },
+        {
+          "xM": 682000,
+          "yM": 666000
+        }
+      ],
+      "active": true,
+      "roadCode": "L952",
+      "displayPriority": 4,
+      "showLabel": false,
+      "roadRole": "ramp"
+    },
+    {
+      "id": "road.r188",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.j.loop.se",
+      "toNodeId": "location.junction.j.h21.s",
+      "lengthM": 36157,
+      "speedLimitMps": 14,
+      "roadClass": "local",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 682000,
+          "yM": 666000
+        },
+        {
+          "xM": 672411,
+          "yM": 673801
+        },
+        {
+          "xM": 662544,
+          "yM": 669943
+        },
+        {
+          "xM": 652000,
+          "yM": 662000
+        }
+      ],
+      "active": true,
+      "roadCode": "L952",
+      "displayPriority": 4,
+      "showLabel": false,
+      "roadRole": "ramp"
+    },
+    {
+      "id": "road.r189",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.j.h21.s",
+      "toNodeId": "location.junction.j.h02.w",
+      "lengthM": 66717,
+      "speedLimitMps": 14,
+      "roadClass": "local",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 652000,
+          "yM": 662000
+        },
+        {
+          "xM": 632000,
+          "yM": 668000
+        },
+        {
+          "xM": 612000,
+          "yM": 684000
+        },
+        {
+          "xM": 615000,
+          "yM": 704000
+        }
+      ],
+      "active": true,
+      "roadCode": "L953",
+      "displayPriority": 4,
+      "showLabel": false,
+      "roadRole": "ramp"
     }
   ],
   "stations": [

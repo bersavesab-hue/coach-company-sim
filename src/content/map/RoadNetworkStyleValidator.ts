@@ -76,6 +76,46 @@ export function validateFormalRoadNetworkStyle(
       );
     }
 
+    if (!road.roadRole) {
+      issues.push(`${road.id} is missing roadRole`);
+    }
+
+    if (road.roadRole === "ramp") {
+      if (
+        road.roadClass !== "local" ||
+        road.displayPriority !== 4
+      ) {
+        issues.push(
+          `${road.id} ramp must be local/displayPriority 4`
+        );
+      }
+      if (road.lengthM > 100_000) {
+        issues.push(
+          `${road.id} ramp is too long: ${road.lengthM}m`
+        );
+      }
+    }
+
+    if (road.roadRole === "urban_ring") {
+      if (
+        road.roadClass !== "provincial_road" ||
+        road.displayPriority !== 3
+      ) {
+        issues.push(
+          `${road.id} urban ring must be provincial/displayPriority 3`
+        );
+      }
+    }
+
+    if (
+      road.roadRole === "connector" &&
+      road.roadClass === "expressway"
+    ) {
+      issues.push(
+        `${road.id} connector cannot be expressway`
+      );
+    }
+
     if (road.roadClass === "expressway") {
       if (
         from?.type !== "junction" ||

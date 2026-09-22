@@ -4,6 +4,12 @@ import type { WorldNodeType } from "../../domain/world/WorldNode.js";
 
 export const WORLD_MAP_SCHEMA_VERSION = 1 as const;
 export type StationClass = "town" | "county" | "city" | "hub";
+export type RoadRole =
+  | "mainline"
+  | "urban_ring"
+  | "connector"
+  | "ramp"
+  | "local_access";
 
 export interface WorldMapPointContent { readonly xM: number; readonly yM: number; }
 export interface WorldMapBoundsContent { readonly minXM: number; readonly minYM: number; readonly maxXM: number; readonly maxYM: number; }
@@ -22,6 +28,7 @@ export interface WorldMapRoadContent {
   readonly roadCode?: string;
   readonly displayPriority?: 1 | 2 | 3 | 4;
   readonly showLabel?: boolean;
+  readonly roadRole?: RoadRole;
 }
 export interface WorldMapStationContent {
   readonly id: string; readonly name: string; readonly worldNodeId: string;

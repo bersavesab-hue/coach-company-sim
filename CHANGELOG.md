@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.18.6-stage17-interchange-sample
+
+### Removed
+- 删除起步区 H02 / H21 共用单一十字 junction 的假互通结构。
+- 删除河源、永安进城接驳线直接戳入同一高速交叉点的结构。
+
+### Added
+- 起步区域建立第一套正式“真实互通样板”：H02 与 H21 分别拥有独立主线节点。
+- 新增 6 段弧形匝道，主线之间通过匝道转换，不再用硬 X 型交叉表示互通。
+- 河源、永安进城连接改接互通外围节点。
+- WorldMapRoadContent 新增 roadRole：mainline / urban_ring / connector / ramp / local_access。
+- RoadNetworkStyleValidator 新增 roadRole 守卫：匝道必须为 local + displayPriority 4，单段最长 100km；城市环线必须为 provincial + displayPriority 3。
+- PlayableClient 正式透出 roadRole。
+- 地图近景按 roadRole 区分主线、环线、接驳和匝道的道路带宽度。
+- 默认地图视角进一步拉近到起步枢纽近景，用于直接观察城市环线和互通结构。
+- 手机地图编辑器新增道路结构角色选择并写入 world-map.v1.json。
+
+### Changed
+- 正式地图更新为 48 个客运站、123 个道路节点、189 个道路段。
+- 五级道路规模更新为：高速 34、国道 40、省道 67、县道 10、乡道 38。
+- Android / package 版本升级至 0.18.6。
+- GAME_VERSION 更新为 0.18.6-stage17-interchange-sample。
+
+### Validation
+- 地图测试强制检查 6 段 ramp、32+ 城市环线路段以及 H02/H21 分离主线节点。
+- 旧 location.junction.j 不允许重新出现。
+- Core Check 与 APK 构建必须通过后才接受本版。
+
+
 ## 0.18.5-stage17-navigation-road-style
 
 ### Removed

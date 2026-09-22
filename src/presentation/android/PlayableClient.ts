@@ -93,7 +93,7 @@ class PlayableClient {
       this.runtime.repositories.allServicePlans();
 
     return {
-      version: "0.18.5-navigation-road-style",
+      version: "0.18.6-interchange-sample",
       company,
       currentGameSecond:
         Number(this.currentGameSecond),
@@ -170,6 +170,8 @@ class PlayableClient {
             mapRoad?.displayPriority ?? 4,
           showLabel:
             mapRoad?.showLabel ?? false,
+          roadRole:
+            mapRoad?.roadRole ?? "mainline",
           points: road.polyline.map((point) => ({
             xM: point.xM,
             yM: point.yM

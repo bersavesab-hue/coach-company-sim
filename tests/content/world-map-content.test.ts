@@ -21,14 +21,14 @@ test("formal world map content is valid and supports all five road classes", () 
     {}
   );
   assert.deepEqual(counts, {
-    expressway: 32,
+    expressway: 34,
     national_road: 40,
     provincial_road: 67,
     county_road: 10,
-    local: 32
+    local: 38
   });
-  assert.equal(FORMAL_WORLD_MAP_CONTENT.roads.length, 181);
-  assert.equal(FORMAL_WORLD_MAP_CONTENT.nodes.length, 118);
+  assert.equal(FORMAL_WORLD_MAP_CONTENT.roads.length, 189);
+  assert.equal(FORMAL_WORLD_MAP_CONTENT.nodes.length, 123);
   assert.ok(
     FORMAL_WORLD_MAP_CONTENT.nodes.filter(
       (node) => node.id.includes(".ring.")
@@ -45,6 +45,36 @@ test("formal world map content is valid and supports all five road classes", () 
     ).every((road) => road.roadClass === "expressway"),
     true
   );
+  assert.equal(
+    FORMAL_WORLD_MAP_CONTENT.roads.filter(
+      (road) => road.roadRole === "ramp"
+    ).length,
+    6
+  );
+  assert.ok(
+    FORMAL_WORLD_MAP_CONTENT.roads.filter(
+      (road) => road.roadRole === "urban_ring"
+    ).length >= 32
+  );
+  assert.equal(
+    FORMAL_WORLD_MAP_CONTENT.nodes.some(
+      (node) => node.id === "location.junction.j"
+    ),
+    false
+  );
+  for (const id of [
+    "location.junction.j.h02.w",
+    "location.junction.j.h02.e",
+    "location.junction.j.h21.n",
+    "location.junction.j.h21.s"
+  ]) {
+    assert.equal(
+      FORMAL_WORLD_MAP_CONTENT.nodes.some(
+        (node) => node.id === id
+      ),
+      true
+    );
+  }
 });
 
 test("formal world map builds the canonical runtime graph", () => {
