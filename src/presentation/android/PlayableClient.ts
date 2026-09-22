@@ -94,7 +94,7 @@ class PlayableClient {
       this.runtime.repositories.allServicePlans();
 
     return {
-      version: "0.19.2-road-visual-master",
+      version: "0.19.3-route-city-labels",
       company,
       currentGameSecond:
         Number(this.currentGameSecond),
