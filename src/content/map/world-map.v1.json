@@ -28,8 +28,8 @@
       "type": "bus_station",
       "name": "河源客运中心",
       "position": {
-        "xM": 580000,
-        "yM": 610000
+        "xM": 590000,
+        "yM": 650000
       },
       "active": true
     },
@@ -39,8 +39,8 @@
       "type": "bus_station",
       "name": "永安客运中心",
       "position": {
-        "xM": 800000,
-        "yM": 660000
+        "xM": 790000,
+        "yM": 700000
       },
       "active": true
     },
@@ -50,8 +50,8 @@
       "type": "bus_station",
       "name": "云州客运中心",
       "position": {
-        "xM": 1020000,
-        "yM": 620000
+        "xM": 1010000,
+        "yM": 650000
       },
       "active": true
     },
@@ -61,8 +61,8 @@
       "type": "bus_station",
       "name": "苍原客运中心",
       "position": {
-        "xM": 160000,
-        "yM": 980000
+        "xM": 140000,
+        "yM": 970000
       },
       "active": true
     },
@@ -72,8 +72,52 @@
       "type": "bus_station",
       "name": "北辰客运中心",
       "position": {
+        "xM": 330000,
+        "yM": 1040000
+      },
+      "active": true
+    },
+    {
+      "id": "location.yaochuan",
+      "regionId": "region.central",
+      "type": "bus_station",
+      "name": "曜川客运中心",
+      "position": {
+        "xM": 210000,
+        "yM": 820000
+      },
+      "active": true
+    },
+    {
+      "id": "location.yunling",
+      "regionId": "region.central",
+      "type": "bus_station",
+      "name": "云岭客运中心",
+      "position": {
+        "xM": 410000,
+        "yM": 860000
+      },
+      "active": true
+    },
+    {
+      "id": "location.mingsha",
+      "regionId": "region.central",
+      "type": "bus_station",
+      "name": "鸣沙客运中心",
+      "position": {
+        "xM": 120000,
+        "yM": 650000
+      },
+      "active": true
+    },
+    {
+      "id": "location.xingxia",
+      "regionId": "region.central",
+      "type": "bus_station",
+      "name": "星峡客运中心",
+      "position": {
         "xM": 360000,
-        "yM": 1060000
+        "yM": 690000
       },
       "active": true
     },
@@ -83,8 +127,8 @@
       "type": "bus_station",
       "name": "凌川客运中心",
       "position": {
-        "xM": 580000,
-        "yM": 1010000
+        "xM": 600000,
+        "yM": 1030000
       },
       "active": true
     },
@@ -94,7 +138,7 @@
       "type": "bus_station",
       "name": "澄州客运中心",
       "position": {
-        "xM": 800000,
+        "xM": 820000,
         "yM": 1080000
       },
       "active": true
@@ -105,63 +149,8 @@
       "type": "bus_station",
       "name": "岚泉客运中心",
       "position": {
-        "xM": 1040000,
+        "xM": 1030000,
         "yM": 1010000
-      },
-      "active": true
-    },
-    {
-      "id": "location.xueyuan",
-      "regionId": "region.central",
-      "type": "bus_station",
-      "name": "雪原客运中心",
-      "position": {
-        "xM": 1260000,
-        "yM": 1100000
-      },
-      "active": true
-    },
-    {
-      "id": "location.donglan",
-      "regionId": "region.central",
-      "type": "bus_station",
-      "name": "东岚客运中心",
-      "position": {
-        "xM": 1480000,
-        "yM": 1020000
-      },
-      "active": true
-    },
-    {
-      "id": "location.jinghai_n",
-      "regionId": "region.central",
-      "type": "bus_station",
-      "name": "镜海客运中心",
-      "position": {
-        "xM": 1650000,
-        "yM": 940000
-      },
-      "active": true
-    },
-    {
-      "id": "location.yaochuan",
-      "regionId": "region.central",
-      "type": "bus_station",
-      "name": "曜川客运中心",
-      "position": {
-        "xM": 100000,
-        "yM": 810000
-      },
-      "active": true
-    },
-    {
-      "id": "location.yunling",
-      "regionId": "region.central",
-      "type": "bus_station",
-      "name": "云岭客运中心",
-      "position": {
-        "xM": 320000,
-        "yM": 860000
       },
       "active": true
     },
@@ -171,8 +160,8 @@
       "type": "bus_station",
       "name": "玄河客运中心",
       "position": {
-        "xM": 540000,
-        "yM": 820000
+        "xM": 580000,
+        "yM": 850000
       },
       "active": true
     },
@@ -182,8 +171,8 @@
       "type": "bus_station",
       "name": "安岳客运中心",
       "position": {
-        "xM": 760000,
-        "yM": 870000
+        "xM": 780000,
+        "yM": 880000
       },
       "active": true
     },
@@ -194,7 +183,40 @@
       "name": "景海客运中心",
       "position": {
         "xM": 980000,
-        "yM": 820000
+        "yM": 830000
+      },
+      "active": true
+    },
+    {
+      "id": "location.xueyuan",
+      "regionId": "region.central",
+      "type": "bus_station",
+      "name": "雪原客运中心",
+      "position": {
+        "xM": 1260000,
+        "yM": 1080000
+      },
+      "active": true
+    },
+    {
+      "id": "location.donglan",
+      "regionId": "region.central",
+      "type": "bus_station",
+      "name": "东岚客运中心",
+      "position": {
+        "xM": 1480000,
+        "yM": 1010000
+      },
+      "active": true
+    },
+    {
+      "id": "location.jinghai_n",
+      "regionId": "region.central",
+      "type": "bus_station",
+      "name": "镜海客运中心",
+      "position": {
+        "xM": 1660000,
+        "yM": 930000
       },
       "active": true
     },
@@ -205,7 +227,7 @@
       "name": "松岭客运中心",
       "position": {
         "xM": 1200000,
-        "yM": 860000
+        "yM": 870000
       },
       "active": true
     },
@@ -226,63 +248,8 @@
       "type": "bus_station",
       "name": "海陵客运中心",
       "position": {
-        "xM": 1630000,
-        "yM": 790000
-      },
-      "active": true
-    },
-    {
-      "id": "location.mingsha",
-      "regionId": "region.central",
-      "type": "bus_station",
-      "name": "鸣沙客运中心",
-      "position": {
-        "xM": 140000,
-        "yM": 600000
-      },
-      "active": true
-    },
-    {
-      "id": "location.xingxia",
-      "regionId": "region.central",
-      "type": "bus_station",
-      "name": "星峡客运中心",
-      "position": {
-        "xM": 360000,
-        "yM": 650000
-      },
-      "active": true
-    },
-    {
-      "id": "location.qingyuan",
-      "regionId": "region.central",
-      "type": "bus_station",
-      "name": "清源客运中心",
-      "position": {
-        "xM": 1240000,
-        "yM": 650000
-      },
-      "active": true
-    },
-    {
-      "id": "location.donggang",
-      "regionId": "region.central",
-      "type": "bus_station",
-      "name": "东港客运中心",
-      "position": {
-        "xM": 1460000,
-        "yM": 610000
-      },
-      "active": true
-    },
-    {
-      "id": "location.ningwan",
-      "regionId": "region.central",
-      "type": "bus_station",
-      "name": "宁湾客运中心",
-      "position": {
-        "xM": 1660000,
-        "yM": 590000
+        "xM": 1640000,
+        "yM": 760000
       },
       "active": true
     },
@@ -292,8 +259,8 @@
       "type": "bus_station",
       "name": "西澜客运中心",
       "position": {
-        "xM": 180000,
-        "yM": 420000
+        "xM": 170000,
+        "yM": 470000
       },
       "active": true
     },
@@ -303,8 +270,30 @@
       "type": "bus_station",
       "name": "临岳客运中心",
       "position": {
-        "xM": 400000,
-        "yM": 450000
+        "xM": 390000,
+        "yM": 500000
+      },
+      "active": true
+    },
+    {
+      "id": "location.qingya",
+      "regionId": "region.central",
+      "type": "bus_station",
+      "name": "青崖客运中心",
+      "position": {
+        "xM": 220000,
+        "yM": 300000
+      },
+      "active": true
+    },
+    {
+      "id": "location.yunchuan",
+      "regionId": "region.central",
+      "type": "bus_station",
+      "name": "云川客运中心",
+      "position": {
+        "xM": 450000,
+        "yM": 330000
       },
       "active": true
     },
@@ -315,7 +304,7 @@
       "name": "南河客运中心",
       "position": {
         "xM": 620000,
-        "yM": 410000
+        "yM": 430000
       },
       "active": true
     },
@@ -325,8 +314,30 @@
       "type": "bus_station",
       "name": "澄岳客运中心",
       "position": {
-        "xM": 840000,
-        "yM": 460000
+        "xM": 850000,
+        "yM": 470000
+      },
+      "active": true
+    },
+    {
+      "id": "location.cangyue",
+      "regionId": "region.central",
+      "type": "bus_station",
+      "name": "苍岳客运中心",
+      "position": {
+        "xM": 680000,
+        "yM": 250000
+      },
+      "active": true
+    },
+    {
+      "id": "location.jinlan",
+      "regionId": "region.central",
+      "type": "bus_station",
+      "name": "锦岚客运中心",
+      "position": {
+        "xM": 920000,
+        "yM": 310000
       },
       "active": true
     },
@@ -336,8 +347,41 @@
       "type": "bus_station",
       "name": "临江客运中心",
       "position": {
-        "xM": 1060000,
-        "yM": 420000
+        "xM": 1080000,
+        "yM": 430000
+      },
+      "active": true
+    },
+    {
+      "id": "location.qingyuan",
+      "regionId": "region.central",
+      "type": "bus_station",
+      "name": "清源客运中心",
+      "position": {
+        "xM": 1240000,
+        "yM": 660000
+      },
+      "active": true
+    },
+    {
+      "id": "location.donggang",
+      "regionId": "region.central",
+      "type": "bus_station",
+      "name": "东港客运中心",
+      "position": {
+        "xM": 1470000,
+        "yM": 610000
+      },
+      "active": true
+    },
+    {
+      "id": "location.ningwan",
+      "regionId": "region.central",
+      "type": "bus_station",
+      "name": "宁湾客运中心",
+      "position": {
+        "xM": 1670000,
+        "yM": 570000
       },
       "active": true
     },
@@ -347,8 +391,8 @@
       "type": "bus_station",
       "name": "海川客运中心",
       "position": {
-        "xM": 1280000,
-        "yM": 450000
+        "xM": 1310000,
+        "yM": 470000
       },
       "active": true
     },
@@ -358,7 +402,7 @@
       "type": "bus_station",
       "name": "瑞州客运中心",
       "position": {
-        "xM": 1490000,
+        "xM": 1510000,
         "yM": 410000
       },
       "active": true
@@ -369,96 +413,8 @@
       "type": "bus_station",
       "name": "青浦客运中心",
       "position": {
-        "xM": 1680000,
-        "yM": 390000
-      },
-      "active": true
-    },
-    {
-      "id": "location.qingya",
-      "regionId": "region.central",
-      "type": "bus_station",
-      "name": "青崖客运中心",
-      "position": {
-        "xM": 200000,
-        "yM": 250000
-      },
-      "active": true
-    },
-    {
-      "id": "location.yunchuan",
-      "regionId": "region.central",
-      "type": "bus_station",
-      "name": "云川客运中心",
-      "position": {
-        "xM": 420000,
-        "yM": 290000
-      },
-      "active": true
-    },
-    {
-      "id": "location.cangyue",
-      "regionId": "region.central",
-      "type": "bus_station",
-      "name": "苍岳客运中心",
-      "position": {
-        "xM": 650000,
-        "yM": 240000
-      },
-      "active": true
-    },
-    {
-      "id": "location.jinlan",
-      "regionId": "region.central",
-      "type": "bus_station",
-      "name": "锦岚客运中心",
-      "position": {
-        "xM": 880000,
-        "yM": 300000
-      },
-      "active": true
-    },
-    {
-      "id": "location.nanlan",
-      "regionId": "region.central",
-      "type": "bus_station",
-      "name": "南澜客运中心",
-      "position": {
-        "xM": 1110000,
-        "yM": 250000
-      },
-      "active": true
-    },
-    {
-      "id": "location.lingchuan_s",
-      "regionId": "region.central",
-      "type": "bus_station",
-      "name": "岭川客运中心",
-      "position": {
-        "xM": 1330000,
-        "yM": 290000
-      },
-      "active": true
-    },
-    {
-      "id": "location.ronghai",
-      "regionId": "region.central",
-      "type": "bus_station",
-      "name": "榕海客运中心",
-      "position": {
-        "xM": 1530000,
-        "yM": 240000
-      },
-      "active": true
-    },
-    {
-      "id": "location.yungang",
-      "regionId": "region.central",
-      "type": "bus_station",
-      "name": "云港客运中心",
-      "position": {
-        "xM": 1700000,
-        "yM": 210000
+        "xM": 1690000,
+        "yM": 380000
       },
       "active": true
     },
@@ -469,7 +425,7 @@
       "name": "望原客运中心",
       "position": {
         "xM": 250000,
-        "yM": 90000
+        "yM": 110000
       },
       "active": true
     },
@@ -479,8 +435,8 @@
       "type": "bus_station",
       "name": "星川客运中心",
       "position": {
-        "xM": 480000,
-        "yM": 120000
+        "xM": 490000,
+        "yM": 150000
       },
       "active": true
     },
@@ -490,8 +446,8 @@
       "type": "bus_station",
       "name": "青岩客运中心",
       "position": {
-        "xM": 720000,
-        "yM": 80000
+        "xM": 730000,
+        "yM": 100000
       },
       "active": true
     },
@@ -501,8 +457,19 @@
       "type": "bus_station",
       "name": "澜山客运中心",
       "position": {
-        "xM": 960000,
-        "yM": 130000
+        "xM": 980000,
+        "yM": 140000
+      },
+      "active": true
+    },
+    {
+      "id": "location.nanlan",
+      "regionId": "region.central",
+      "type": "bus_station",
+      "name": "南澜客运中心",
+      "position": {
+        "xM": 1120000,
+        "yM": 280000
       },
       "active": true
     },
@@ -512,8 +479,19 @@
       "type": "bus_station",
       "name": "川宁客运中心",
       "position": {
-        "xM": 1180000,
-        "yM": 90000
+        "xM": 1190000,
+        "yM": 100000
+      },
+      "active": true
+    },
+    {
+      "id": "location.lingchuan_s",
+      "regionId": "region.central",
+      "type": "bus_station",
+      "name": "岭川客运中心",
+      "position": {
+        "xM": 1340000,
+        "yM": 300000
       },
       "active": true
     },
@@ -523,8 +501,19 @@
       "type": "bus_station",
       "name": "澄江客运中心",
       "position": {
-        "xM": 1390000,
-        "yM": 120000
+        "xM": 1410000,
+        "yM": 150000
+      },
+      "active": true
+    },
+    {
+      "id": "location.ronghai",
+      "regionId": "region.central",
+      "type": "bus_station",
+      "name": "榕海客运中心",
+      "position": {
+        "xM": 1550000,
+        "yM": 260000
       },
       "active": true
     },
@@ -534,8 +523,19 @@
       "type": "bus_station",
       "name": "海宁客运中心",
       "position": {
-        "xM": 1580000,
-        "yM": 80000
+        "xM": 1590000,
+        "yM": 100000
+      },
+      "active": true
+    },
+    {
+      "id": "location.yungang",
+      "regionId": "region.central",
+      "type": "bus_station",
+      "name": "云港客运中心",
+      "position": {
+        "xM": 1720000,
+        "yM": 220000
       },
       "active": true
     },
@@ -545,2022 +545,2114 @@
       "type": "bus_station",
       "name": "南港客运中心",
       "position": {
-        "xM": 1720000,
-        "yM": 110000
+        "xM": 1750000,
+        "yM": 90000
+      },
+      "active": true
+    },
+    {
+      "id": "location.junction.nw1",
+      "regionId": "region.central",
+      "type": "junction",
+      "name": "道路枢纽",
+      "position": {
+        "xM": 280000,
+        "yM": 920000
+      },
+      "active": true
+    },
+    {
+      "id": "location.junction.n1",
+      "regionId": "region.central",
+      "type": "junction",
+      "name": "道路枢纽",
+      "position": {
+        "xM": 560000,
+        "yM": 930000
+      },
+      "active": true
+    },
+    {
+      "id": "location.junction.n2",
+      "regionId": "region.central",
+      "type": "junction",
+      "name": "道路枢纽",
+      "position": {
+        "xM": 860000,
+        "yM": 950000
+      },
+      "active": true
+    },
+    {
+      "id": "location.junction.n3",
+      "regionId": "region.central",
+      "type": "junction",
+      "name": "道路枢纽",
+      "position": {
+        "xM": 1160000,
+        "yM": 930000
+      },
+      "active": true
+    },
+    {
+      "id": "location.junction.ne1",
+      "regionId": "region.central",
+      "type": "junction",
+      "name": "道路枢纽",
+      "position": {
+        "xM": 1480000,
+        "yM": 890000
+      },
+      "active": true
+    },
+    {
+      "id": "location.junction.w1",
+      "regionId": "region.central",
+      "type": "junction",
+      "name": "道路枢纽",
+      "position": {
+        "xM": 260000,
+        "yM": 620000
+      },
+      "active": true
+    },
+    {
+      "id": "location.junction.c1",
+      "regionId": "region.central",
+      "type": "junction",
+      "name": "道路枢纽",
+      "position": {
+        "xM": 540000,
+        "yM": 620000
+      },
+      "active": true
+    },
+    {
+      "id": "location.junction.c2",
+      "regionId": "region.central",
+      "type": "junction",
+      "name": "道路枢纽",
+      "position": {
+        "xM": 820000,
+        "yM": 630000
+      },
+      "active": true
+    },
+    {
+      "id": "location.junction.c3",
+      "regionId": "region.central",
+      "type": "junction",
+      "name": "道路枢纽",
+      "position": {
+        "xM": 1080000,
+        "yM": 620000
+      },
+      "active": true
+    },
+    {
+      "id": "location.junction.e1",
+      "regionId": "region.central",
+      "type": "junction",
+      "name": "道路枢纽",
+      "position": {
+        "xM": 1350000,
+        "yM": 600000
+      },
+      "active": true
+    },
+    {
+      "id": "location.junction.e2",
+      "regionId": "region.central",
+      "type": "junction",
+      "name": "道路枢纽",
+      "position": {
+        "xM": 1580000,
+        "yM": 560000
+      },
+      "active": true
+    },
+    {
+      "id": "location.junction.sw1",
+      "regionId": "region.central",
+      "type": "junction",
+      "name": "道路枢纽",
+      "position": {
+        "xM": 330000,
+        "yM": 260000
+      },
+      "active": true
+    },
+    {
+      "id": "location.junction.s1",
+      "regionId": "region.central",
+      "type": "junction",
+      "name": "道路枢纽",
+      "position": {
+        "xM": 610000,
+        "yM": 270000
+      },
+      "active": true
+    },
+    {
+      "id": "location.junction.s2",
+      "regionId": "region.central",
+      "type": "junction",
+      "name": "道路枢纽",
+      "position": {
+        "xM": 900000,
+        "yM": 260000
+      },
+      "active": true
+    },
+    {
+      "id": "location.junction.s3",
+      "regionId": "region.central",
+      "type": "junction",
+      "name": "道路枢纽",
+      "position": {
+        "xM": 1180000,
+        "yM": 250000
+      },
+      "active": true
+    },
+    {
+      "id": "location.junction.se1",
+      "regionId": "region.central",
+      "type": "junction",
+      "name": "道路枢纽",
+      "position": {
+        "xM": 1450000,
+        "yM": 240000
+      },
+      "active": true
+    },
+    {
+      "id": "location.junction.se2",
+      "regionId": "region.central",
+      "type": "junction",
+      "name": "道路枢纽",
+      "position": {
+        "xM": 1660000,
+        "yM": 200000
+      },
+      "active": true
+    },
+    {
+      "id": "location.junction.ne2",
+      "regionId": "region.central",
+      "type": "junction",
+      "name": "道路枢纽",
+      "position": {
+        "xM": 1540000,
+        "yM": 740000
+      },
+      "active": true
+    },
+    {
+      "id": "location.junction.e3",
+      "regionId": "region.central",
+      "type": "junction",
+      "name": "道路枢纽",
+      "position": {
+        "xM": 1600000,
+        "yM": 390000
+      },
+      "active": true
+    },
+    {
+      "id": "location.junction.wc",
+      "regionId": "region.central",
+      "type": "junction",
+      "name": "道路枢纽",
+      "position": {
+        "xM": 420000,
+        "yM": 470000
+      },
+      "active": true
+    },
+    {
+      "id": "location.junction.mc",
+      "regionId": "region.central",
+      "type": "junction",
+      "name": "道路枢纽",
+      "position": {
+        "xM": 760000,
+        "yM": 470000
+      },
+      "active": true
+    },
+    {
+      "id": "location.junction.ec",
+      "regionId": "region.central",
+      "type": "junction",
+      "name": "道路枢纽",
+      "position": {
+        "xM": 1180000,
+        "yM": 450000
       },
       "active": true
     }
   ],
   "roads": [
     {
-      "id": "road.g001",
+      "id": "road.n001",
       "regionId": "region.central",
-      "fromNodeId": "location.cangyuan",
-      "toNodeId": "location.beichen",
-      "lengthM": 223196,
-      "speedLimitMps": 22,
-      "roadClass": "provincial_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 160000,
-          "yM": 980000
-        },
-        {
-          "xM": 221600,
-          "yM": 1023200
-        },
-        {
-          "xM": 299840,
-          "yM": 1024800
-        },
-        {
-          "xM": 360000,
-          "yM": 1060000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g002",
-      "regionId": "region.central",
-      "fromNodeId": "location.beichen",
-      "toNodeId": "location.lingchuan",
-      "lengthM": 233769,
-      "speedLimitMps": 22,
-      "roadClass": "provincial_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 360000,
-          "yM": 1060000
-        },
-        {
-          "xM": 430800,
-          "yM": 1025400
-        },
-        {
-          "xM": 512000,
-          "yM": 1036560
-        },
-        {
-          "xM": 580000,
-          "yM": 1010000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g003",
-      "regionId": "region.central",
-      "fromNodeId": "location.lingchuan",
-      "toNodeId": "location.chengzhou",
-      "lengthM": 239216,
-      "speedLimitMps": 25,
-      "roadClass": "national_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 580000,
-          "yM": 1010000
-        },
-        {
-          "xM": 649200,
-          "yM": 1051400
-        },
-        {
-          "xM": 732960,
-          "yM": 1047040
-        },
-        {
-          "xM": 800000,
-          "yM": 1080000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g004",
-      "regionId": "region.central",
-      "fromNodeId": "location.chengzhou",
-      "toNodeId": "location.lanquan",
-      "lengthM": 259040,
-      "speedLimitMps": 22,
-      "roadClass": "provincial_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 800000,
-          "yM": 1080000
-        },
-        {
-          "xM": 876000,
-          "yM": 1037000
-        },
-        {
-          "xM": 966560,
-          "yM": 1043920
-        },
-        {
-          "xM": 1040000,
-          "yM": 1010000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g005",
-      "regionId": "region.central",
-      "fromNodeId": "location.lanquan",
-      "toNodeId": "location.xueyuan",
-      "lengthM": 246293,
-      "speedLimitMps": 25,
-      "roadClass": "national_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 1040000,
-          "yM": 1010000
-        },
-        {
-          "xM": 1107600,
-          "yM": 1058200
-        },
-        {
-          "xM": 1193920,
-          "yM": 1060640
-        },
-        {
-          "xM": 1260000,
-          "yM": 1100000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g006",
-      "regionId": "region.central",
-      "fromNodeId": "location.xueyuan",
-      "toNodeId": "location.donglan",
-      "lengthM": 242559,
-      "speedLimitMps": 22,
-      "roadClass": "provincial_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 1260000,
-          "yM": 1100000
-        },
-        {
-          "xM": 1328400,
-          "yM": 1055200
-        },
-        {
-          "xM": 1413440,
-          "yM": 1056160
-        },
-        {
-          "xM": 1480000,
-          "yM": 1020000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g007",
-      "regionId": "region.central",
-      "fromNodeId": "location.donglan",
-      "toNodeId": "location.jinghai_n",
-      "lengthM": 194677,
-      "speedLimitMps": 22,
-      "roadClass": "provincial_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 1480000,
-          "yM": 1020000
-        },
-        {
-          "xM": 1544200,
-          "yM": 1006400
-        },
-        {
-          "xM": 1591760,
-          "yM": 957440
-        },
-        {
-          "xM": 1650000,
-          "yM": 940000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g008",
-      "regionId": "region.central",
-      "fromNodeId": "location.yaochuan",
-      "toNodeId": "location.yunling",
-      "lengthM": 233769,
-      "speedLimitMps": 25,
-      "roadClass": "national_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 100000,
-          "yM": 810000
-        },
-        {
-          "xM": 178800,
-          "yM": 809400
-        },
-        {
-          "xM": 247200,
-          "yM": 854560
-        },
-        {
-          "xM": 320000,
-          "yM": 860000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g009",
-      "regionId": "region.central",
-      "fromNodeId": "location.yunling",
-      "toNodeId": "location.xuanhe",
-      "lengthM": 231693,
+      "fromNodeId": "location.junction.nw1",
+      "toNodeId": "location.junction.n1",
+      "lengthM": 281990,
       "speedLimitMps": 31,
       "roadClass": "expressway",
       "direction": "both",
       "polyline": [
         {
-          "xM": 320000,
-          "yM": 860000
+          "xM": 280000,
+          "yM": 920000
         },
         {
-          "xM": 398000,
-          "yM": 864000
+          "xM": 363650,
+          "yM": 932800
         },
         {
-          "xM": 467680,
-          "yM": 822240
+          "xM": 470593,
+          "yM": 921410
         },
         {
-          "xM": 540000,
-          "yM": 820000
+          "xM": 560000,
+          "yM": 930000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g010",
+      "id": "road.n002",
       "regionId": "region.central",
-      "fromNodeId": "location.xuanhe",
-      "toNodeId": "location.anyue",
-      "lengthM": 233769,
-      "speedLimitMps": 25,
-      "roadClass": "national_road",
+      "fromNodeId": "location.junction.n1",
+      "toNodeId": "location.junction.n2",
+      "lengthM": 302610,
+      "speedLimitMps": 31,
+      "roadClass": "expressway",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 560000,
+          "yM": 930000
+        },
+        {
+          "xM": 650700,
+          "yM": 925500
+        },
+        {
+          "xM": 763615,
+          "yM": 949375
+        },
+        {
+          "xM": 860000,
+          "yM": 950000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n003",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.n2",
+      "toNodeId": "location.junction.n3",
+      "lengthM": 302610,
+      "speedLimitMps": 31,
+      "roadClass": "expressway",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 860000,
+          "yM": 950000
+        },
+        {
+          "xM": 950700,
+          "yM": 954500
+        },
+        {
+          "xM": 1063615,
+          "yM": 930625
+        },
+        {
+          "xM": 1160000,
+          "yM": 930000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n004",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.n3",
+      "toNodeId": "location.junction.ne1",
+      "lengthM": 324576,
+      "speedLimitMps": 31,
+      "roadClass": "expressway",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1160000,
+          "yM": 930000
+        },
+        {
+          "xM": 1254600,
+          "yM": 906800
+        },
+        {
+          "xM": 1378370,
+          "yM": 908960
+        },
+        {
+          "xM": 1480000,
+          "yM": 890000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n005",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.w1",
+      "toNodeId": "location.junction.c1",
+      "lengthM": 281811,
+      "speedLimitMps": 31,
+      "roadClass": "expressway",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 260000,
+          "yM": 620000
+        },
+        {
+          "xM": 344000,
+          "yM": 629800
+        },
+        {
+          "xM": 450400,
+          "yM": 614610
+        },
+        {
+          "xM": 540000,
+          "yM": 620000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n006",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.c1",
+      "toNodeId": "location.junction.c2",
+      "lengthM": 281990,
+      "speedLimitMps": 31,
+      "roadClass": "expressway",
       "direction": "both",
       "polyline": [
         {
           "xM": 540000,
-          "yM": 820000
+          "yM": 620000
         },
         {
-          "xM": 618800,
-          "yM": 819400
+          "xM": 624350,
+          "yM": 613200
         },
         {
-          "xM": 687200,
-          "yM": 864560
+          "xM": 730208,
+          "yM": 632190
         },
         {
-          "xM": 760000,
-          "yM": 870000
+          "xM": 820000,
+          "yM": 630000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g011",
+      "id": "road.n007",
       "regionId": "region.central",
-      "fromNodeId": "location.anyue",
-      "toNodeId": "location.jinghai",
-      "lengthM": 233769,
+      "fromNodeId": "location.junction.c2",
+      "toNodeId": "location.junction.c3",
+      "lengthM": 261875,
       "speedLimitMps": 31,
       "roadClass": "expressway",
       "direction": "both",
       "polyline": [
         {
-          "xM": 760000,
-          "yM": 870000
+          "xM": 820000,
+          "yM": 630000
         },
         {
-          "xM": 838800,
-          "yM": 870600
+          "xM": 898350,
+          "yM": 636100
         },
         {
-          "xM": 907200,
-          "yM": 825440
+          "xM": 996608,
+          "yM": 618195
         },
         {
-          "xM": 980000,
-          "yM": 820000
+          "xM": 1080000,
+          "yM": 620000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g012",
+      "id": "road.n008",
       "regionId": "region.central",
-      "fromNodeId": "location.jinghai",
-      "toNodeId": "location.songling",
-      "lengthM": 231693,
-      "speedLimitMps": 25,
-      "roadClass": "national_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 980000,
-          "yM": 820000
-        },
-        {
-          "xM": 1058000,
-          "yM": 816000
-        },
-        {
-          "xM": 1127680,
-          "yM": 857760
-        },
-        {
-          "xM": 1200000,
-          "yM": 860000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g013",
-      "regionId": "region.central",
-      "fromNodeId": "location.songling",
-      "toNodeId": "location.shuanghe",
-      "lengthM": 231693,
+      "fromNodeId": "location.junction.c3",
+      "toNodeId": "location.junction.e1",
+      "lengthM": 272490,
       "speedLimitMps": 31,
       "roadClass": "expressway",
       "direction": "both",
       "polyline": [
         {
-          "xM": 1200000,
-          "yM": 860000
+          "xM": 1080000,
+          "yM": 620000
         },
         {
-          "xM": 1278000,
-          "yM": 864000
+          "xM": 1160300,
+          "yM": 604550
         },
         {
-          "xM": 1347680,
-          "yM": 822240
+          "xM": 1263985,
+          "yM": 611598
         },
         {
-          "xM": 1420000,
-          "yM": 820000
+          "xM": 1350000,
+          "yM": 600000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g014",
+      "id": "road.n009",
       "regionId": "region.central",
-      "fromNodeId": "location.shuanghe",
-      "toNodeId": "location.hailing",
-      "lengthM": 219803,
-      "speedLimitMps": 25,
-      "roadClass": "national_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 1420000,
-          "yM": 820000
-        },
-        {
-          "xM": 1489000,
-          "yM": 793000
-        },
-        {
-          "xM": 1564240,
-          "yM": 809680
-        },
-        {
-          "xM": 1630000,
-          "yM": 790000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g015",
-      "regionId": "region.central",
-      "fromNodeId": "location.mingsha",
-      "toNodeId": "location.xingxia",
-      "lengthM": 233769,
+      "fromNodeId": "location.junction.e1",
+      "toNodeId": "location.junction.e2",
+      "lengthM": 234962,
       "speedLimitMps": 31,
       "roadClass": "expressway",
       "direction": "both",
       "polyline": [
         {
-          "xM": 140000,
+          "xM": 1350000,
           "yM": 600000
         },
         {
-          "xM": 210800,
-          "yM": 634600
+          "xM": 1420400,
+          "yM": 596050
         },
         {
-          "xM": 292000,
-          "yM": 623440
+          "xM": 1505630,
+          "yM": 568373
         },
         {
-          "xM": 360000,
-          "yM": 650000
+          "xM": 1580000,
+          "yM": 560000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g016",
+      "id": "road.n010",
       "regionId": "region.central",
-      "fromNodeId": "location.xingxia",
-      "toNodeId": "location.heyuan",
-      "lengthM": 231693,
+      "fromNodeId": "location.junction.sw1",
+      "toNodeId": "location.junction.s1",
+      "lengthM": 281990,
       "speedLimitMps": 31,
       "roadClass": "expressway",
       "direction": "both",
       "polyline": [
         {
-          "xM": 360000,
-          "yM": 650000
+          "xM": 330000,
+          "yM": 260000
         },
         {
-          "xM": 431600,
-          "yM": 618800
+          "xM": 414350,
+          "yM": 253200
         },
         {
-          "xM": 511520,
-          "yM": 633360
+          "xM": 520208,
+          "yM": 272190
         },
         {
-          "xM": 580000,
-          "yM": 610000
+          "xM": 610000,
+          "yM": 270000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g017",
+      "id": "road.n011",
       "regionId": "region.central",
-      "fromNodeId": "location.heyuan",
-      "toNodeId": "location.yongan",
-      "lengthM": 233769,
+      "fromNodeId": "location.junction.s1",
+      "toNodeId": "location.junction.s2",
+      "lengthM": 292049,
       "speedLimitMps": 31,
       "roadClass": "expressway",
       "direction": "both",
       "polyline": [
         {
-          "xM": 580000,
-          "yM": 610000
+          "xM": 610000,
+          "yM": 270000
         },
         {
-          "xM": 650800,
-          "yM": 644600
+          "xM": 697350,
+          "yM": 277150
         },
         {
-          "xM": 732000,
-          "yM": 633440
+          "xM": 807008,
+          "yM": 257618
         },
         {
-          "xM": 800000,
-          "yM": 660000
+          "xM": 900000,
+          "yM": 260000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g018",
+      "id": "road.n012",
       "regionId": "region.central",
-      "fromNodeId": "location.yongan",
-      "toNodeId": "location.yunzhou",
-      "lengthM": 231693,
+      "fromNodeId": "location.junction.s2",
+      "toNodeId": "location.junction.s3",
+      "lengthM": 281990,
       "speedLimitMps": 31,
       "roadClass": "expressway",
       "direction": "both",
       "polyline": [
         {
-          "xM": 800000,
-          "yM": 660000
+          "xM": 900000,
+          "yM": 260000
         },
         {
-          "xM": 871600,
-          "yM": 628800
+          "xM": 983650,
+          "yM": 247200
         },
         {
-          "xM": 951520,
-          "yM": 643360
+          "xM": 1090593,
+          "yM": 258590
         },
         {
-          "xM": 1020000,
-          "yM": 620000
+          "xM": 1180000,
+          "yM": 250000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g019",
+      "id": "road.n013",
       "regionId": "region.central",
-      "fromNodeId": "location.yunzhou",
-      "toNodeId": "location.qingyuan",
-      "lengthM": 230065,
+      "fromNodeId": "location.junction.s3",
+      "toNodeId": "location.junction.se1",
+      "lengthM": 271932,
       "speedLimitMps": 31,
       "roadClass": "expressway",
       "direction": "both",
       "polyline": [
         {
-          "xM": 1020000,
-          "yM": 620000
+          "xM": 1180000,
+          "yM": 250000
         },
         {
-          "xM": 1092400,
-          "yM": 647800
+          "xM": 1261350,
+          "yM": 256450
         },
         {
-          "xM": 1171040,
-          "yM": 629840
+          "xM": 1363408,
+          "yM": 238003
         },
         {
-          "xM": 1240000,
-          "yM": 650000
+          "xM": 1450000,
+          "yM": 240000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g020",
+      "id": "road.n014",
       "regionId": "region.central",
-      "fromNodeId": "location.qingyuan",
-      "toNodeId": "location.donggang",
-      "lengthM": 231693,
+      "fromNodeId": "location.junction.se1",
+      "toNodeId": "location.junction.se2",
+      "lengthM": 215158,
       "speedLimitMps": 31,
       "roadClass": "expressway",
       "direction": "both",
       "polyline": [
         {
-          "xM": 1240000,
-          "yM": 650000
+          "xM": 1450000,
+          "yM": 240000
         },
         {
-          "xM": 1311600,
-          "yM": 618800
+          "xM": 1511600,
+          "yM": 220650
         },
         {
-          "xM": 1391520,
-          "yM": 633360
-        },
-        {
-          "xM": 1460000,
-          "yM": 610000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g021",
-      "regionId": "region.central",
-      "fromNodeId": "location.donggang",
-      "toNodeId": "location.ningwan",
-      "lengthM": 208266,
-      "speedLimitMps": 31,
-      "roadClass": "expressway",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 1460000,
-          "yM": 610000
-        },
-        {
-          "xM": 1529600,
-          "yM": 619200
-        },
-        {
-          "xM": 1595040,
-          "yM": 586800
+          "xM": 1593570,
+          "yM": 216843
         },
         {
           "xM": 1660000,
-          "yM": 590000
+          "yM": 200000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g022",
+      "id": "road.n015",
       "regionId": "region.central",
-      "fromNodeId": "location.xilan",
-      "toNodeId": "location.linyue",
-      "lengthM": 230065,
-      "speedLimitMps": 25,
-      "roadClass": "national_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 180000,
-          "yM": 420000
-        },
-        {
-          "xM": 257200,
-          "yM": 412600
-        },
-        {
-          "xM": 328160,
-          "yM": 450960
-        },
-        {
-          "xM": 400000,
-          "yM": 450000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g023",
-      "regionId": "region.central",
-      "fromNodeId": "location.linyue",
-      "toNodeId": "location.nanhe",
-      "lengthM": 231693,
-      "speedLimitMps": 25,
-      "roadClass": "national_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 400000,
-          "yM": 450000
-        },
-        {
-          "xM": 478000,
-          "yM": 454000
-        },
-        {
-          "xM": 547680,
-          "yM": 412240
-        },
-        {
-          "xM": 620000,
-          "yM": 410000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g024",
-      "regionId": "region.central",
-      "fromNodeId": "location.nanhe",
-      "toNodeId": "location.chengyue",
-      "lengthM": 233769,
+      "fromNodeId": "location.junction.n1",
+      "toNodeId": "location.junction.c1",
+      "lengthM": 312653,
       "speedLimitMps": 31,
       "roadClass": "expressway",
       "direction": "both",
       "polyline": [
         {
-          "xM": 620000,
-          "yM": 410000
+          "xM": 560000,
+          "yM": 930000
         },
         {
-          "xM": 698800,
-          "yM": 409400
+          "xM": 564850,
+          "yM": 836300
         },
         {
-          "xM": 767200,
-          "yM": 454560
+          "xM": 540433,
+          "yM": 719585
         },
         {
-          "xM": 840000,
-          "yM": 460000
+          "xM": 540000,
+          "yM": 620000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g025",
+      "id": "road.n016",
       "regionId": "region.central",
-      "fromNodeId": "location.chengyue",
-      "toNodeId": "location.linjiang",
-      "lengthM": 231693,
-      "speedLimitMps": 25,
-      "roadClass": "national_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 840000,
-          "yM": 460000
-        },
-        {
-          "xM": 918000,
-          "yM": 464000
-        },
-        {
-          "xM": 987680,
-          "yM": 422240
-        },
-        {
-          "xM": 1060000,
-          "yM": 420000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g026",
-      "regionId": "region.central",
-      "fromNodeId": "location.linjiang",
-      "toNodeId": "location.haichuan",
-      "lengthM": 230065,
+      "fromNodeId": "location.junction.c1",
+      "toNodeId": "location.junction.s1",
+      "lengthM": 359239,
       "speedLimitMps": 31,
       "roadClass": "expressway",
       "direction": "both",
       "polyline": [
         {
-          "xM": 1060000,
-          "yM": 420000
+          "xM": 540000,
+          "yM": 620000
         },
         {
-          "xM": 1137200,
-          "yM": 412600
+          "xM": 548750,
+          "yM": 512550
         },
         {
-          "xM": 1208160,
-          "yM": 450960
+          "xM": 594338,
+          "yM": 383348
         },
         {
-          "xM": 1280000,
-          "yM": 450000
+          "xM": 610000,
+          "yM": 270000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g027",
+      "id": "road.n017",
       "regionId": "region.central",
-      "fromNodeId": "location.haichuan",
-      "toNodeId": "location.ruizhou",
-      "lengthM": 221506,
-      "speedLimitMps": 25,
-      "roadClass": "national_road",
+      "fromNodeId": "location.junction.n2",
+      "toNodeId": "location.junction.c2",
+      "lengthM": 324576,
+      "speedLimitMps": 31,
+      "roadClass": "expressway",
       "direction": "both",
       "polyline": [
         {
-          "xM": 1280000,
-          "yM": 450000
+          "xM": 860000,
+          "yM": 950000
         },
         {
-          "xM": 1354600,
-          "yM": 453200
+          "xM": 859200,
+          "yM": 852600
         },
         {
-          "xM": 1420880,
-          "yM": 412720
+          "xM": 826640,
+          "yM": 733170
         },
         {
-          "xM": 1490000,
-          "yM": 410000
+          "xM": 820000,
+          "yM": 630000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g028",
+      "id": "road.n018",
       "regionId": "region.central",
-      "fromNodeId": "location.ruizhou",
-      "toNodeId": "location.qingpu",
-      "lengthM": 197958,
-      "speedLimitMps": 25,
-      "roadClass": "national_road",
+      "fromNodeId": "location.junction.c2",
+      "toNodeId": "location.junction.s2",
+      "lengthM": 380998,
+      "speedLimitMps": 31,
+      "roadClass": "expressway",
       "direction": "both",
       "polyline": [
         {
-          "xM": 1490000,
-          "yM": 410000
+          "xM": 820000,
+          "yM": 630000
         },
         {
-          "xM": 1553000,
-          "yM": 388000
+          "xM": 831050,
+          "yM": 516200
         },
         {
-          "xM": 1620160,
-          "yM": 405520
+          "xM": 881523,
+          "yM": 379940
         },
         {
-          "xM": 1680000,
+          "xM": 900000,
+          "yM": 260000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n019",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.n3",
+      "toNodeId": "location.junction.c3",
+      "lengthM": 322226,
+      "speedLimitMps": 31,
+      "roadClass": "expressway",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1160000,
+          "yM": 930000
+        },
+        {
+          "xM": 1146850,
+          "yM": 834200
+        },
+        {
+          "xM": 1099633,
+          "yM": 720740
+        },
+        {
+          "xM": 1080000,
+          "yM": 620000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n020",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.c3",
+      "toNodeId": "location.junction.s3",
+      "lengthM": 385754,
+      "speedLimitMps": 31,
+      "roadClass": "expressway",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1080000,
+          "yM": 620000
+        },
+        {
+          "xM": 1097050,
+          "yM": 505500
+        },
+        {
+          "xM": 1155123,
+          "yM": 370325
+        },
+        {
+          "xM": 1180000,
+          "yM": 250000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n021",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.ne1",
+      "toNodeId": "location.junction.ne2",
+      "lengthM": 163152,
+      "speedLimitMps": 31,
+      "roadClass": "expressway",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1480000,
+          "yM": 890000
+        },
+        {
+          "xM": 1504499,
+          "yM": 847600
+        },
+        {
+          "xM": 1517225,
+          "yM": 786570
+        },
+        {
+          "xM": 1540000,
+          "yM": 740000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n022",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.ne2",
+      "toNodeId": "location.junction.e2",
+      "lengthM": 185792,
+      "speedLimitMps": 31,
+      "roadClass": "expressway",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1540000,
+          "yM": 740000
+        },
+        {
+          "xM": 1545167,
+          "yM": 684481
+        },
+        {
+          "xM": 1570958,
+          "yM": 618435
+        },
+        {
+          "xM": 1580000,
+          "yM": 560000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n023",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.e2",
+      "toNodeId": "location.junction.e3",
+      "lengthM": 172681,
+      "speedLimitMps": 31,
+      "roadClass": "expressway",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1580000,
+          "yM": 560000
+        },
+        {
+          "xM": 1592952,
+          "yM": 509818
+        },
+        {
+          "xM": 1589776,
+          "yM": 443950
+        },
+        {
+          "xM": 1600000,
           "yM": 390000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g029",
+      "id": "road.n024",
       "regionId": "region.central",
-      "fromNodeId": "location.qingya",
-      "toNodeId": "location.yunchuan",
-      "lengthM": 231693,
-      "speedLimitMps": 22,
-      "roadClass": "provincial_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 200000,
-          "yM": 250000
-        },
-        {
-          "xM": 271600,
-          "yM": 281200
-        },
-        {
-          "xM": 351520,
-          "yM": 266640
-        },
-        {
-          "xM": 420000,
-          "yM": 290000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g030",
-      "regionId": "region.central",
-      "fromNodeId": "location.yunchuan",
-      "toNodeId": "location.cangyue",
-      "lengthM": 243883,
-      "speedLimitMps": 22,
-      "roadClass": "provincial_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 420000,
-          "yM": 290000
-        },
-        {
-          "xM": 494200,
-          "yM": 254600
-        },
-        {
-          "xM": 578800,
-          "yM": 267040
-        },
-        {
-          "xM": 650000,
-          "yM": 240000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g031",
-      "regionId": "region.central",
-      "fromNodeId": "location.cangyue",
-      "toNodeId": "location.jinlan",
-      "lengthM": 246293,
-      "speedLimitMps": 25,
-      "roadClass": "national_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 650000,
-          "yM": 240000
-        },
-        {
-          "xM": 723400,
-          "yM": 278800
-        },
-        {
-          "xM": 809280,
-          "yM": 269760
-        },
-        {
-          "xM": 880000,
-          "yM": 300000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g032",
-      "regionId": "region.central",
-      "fromNodeId": "location.jinlan",
-      "toNodeId": "location.nanlan",
-      "lengthM": 243883,
-      "speedLimitMps": 22,
-      "roadClass": "provincial_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 880000,
-          "yM": 300000
-        },
-        {
-          "xM": 954200,
-          "yM": 264600
-        },
-        {
-          "xM": 1038800,
-          "yM": 277040
-        },
-        {
-          "xM": 1110000,
-          "yM": 250000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g033",
-      "regionId": "region.central",
-      "fromNodeId": "location.nanlan",
-      "toNodeId": "location.lingchuan_s",
-      "lengthM": 231693,
-      "speedLimitMps": 25,
-      "roadClass": "national_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 1110000,
-          "yM": 250000
-        },
-        {
-          "xM": 1181600,
-          "yM": 281200
-        },
-        {
-          "xM": 1261520,
-          "yM": 266640
-        },
-        {
-          "xM": 1330000,
-          "yM": 290000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g034",
-      "regionId": "region.central",
-      "fromNodeId": "location.lingchuan_s",
-      "toNodeId": "location.ronghai",
-      "lengthM": 213610,
-      "speedLimitMps": 22,
-      "roadClass": "provincial_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 1330000,
-          "yM": 290000
-        },
-        {
-          "xM": 1394000,
-          "yM": 257000
-        },
-        {
-          "xM": 1468400,
-          "yM": 265600
-        },
-        {
-          "xM": 1530000,
-          "yM": 240000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g035",
-      "regionId": "region.central",
-      "fromNodeId": "location.ronghai",
-      "toNodeId": "location.yungang",
-      "lengthM": 178869,
-      "speedLimitMps": 22,
-      "roadClass": "provincial_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 1530000,
-          "yM": 240000
-        },
-        {
-          "xM": 1590200,
-          "yM": 243400
-        },
-        {
-          "xM": 1644160,
-          "yM": 211440
-        },
-        {
-          "xM": 1700000,
-          "yM": 210000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g036",
-      "regionId": "region.central",
-      "fromNodeId": "location.wangyuan",
-      "toNodeId": "location.xingchuan",
-      "lengthM": 240336,
-      "speedLimitMps": 18,
-      "roadClass": "county_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 250000,
-          "yM": 90000
-        },
-        {
-          "xM": 330600,
-          "yM": 81800
-        },
-        {
-          "xM": 404960,
-          "yM": 121440
-        },
-        {
-          "xM": 480000,
-          "yM": 120000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g037",
-      "regionId": "region.central",
-      "fromNodeId": "location.xingchuan",
-      "toNodeId": "location.qingyan",
-      "lengthM": 252109,
-      "speedLimitMps": 22,
-      "roadClass": "provincial_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 480000,
-          "yM": 120000
-        },
-        {
-          "xM": 564800,
-          "yM": 125600
-        },
-        {
-          "xM": 641280,
-          "yM": 81280
-        },
-        {
-          "xM": 720000,
-          "yM": 80000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g038",
-      "regionId": "region.central",
-      "fromNodeId": "location.qingyan",
-      "toNodeId": "location.lanshan",
-      "lengthM": 254018,
-      "speedLimitMps": 25,
-      "roadClass": "national_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 720000,
-          "yM": 80000
-        },
-        {
-          "xM": 805600,
-          "yM": 77800
-        },
-        {
-          "xM": 880800,
-          "yM": 125520
-        },
-        {
-          "xM": 960000,
-          "yM": 130000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g039",
-      "regionId": "region.central",
-      "fromNodeId": "location.lanshan",
-      "toNodeId": "location.chuanning",
-      "lengthM": 231693,
-      "speedLimitMps": 22,
-      "roadClass": "provincial_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 960000,
-          "yM": 130000
-        },
-        {
-          "xM": 1038000,
-          "yM": 134000
-        },
-        {
-          "xM": 1107680,
-          "yM": 92240
-        },
-        {
-          "xM": 1180000,
-          "yM": 90000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g040",
-      "regionId": "region.central",
-      "fromNodeId": "location.chuanning",
-      "toNodeId": "location.chengjiang",
-      "lengthM": 219803,
-      "speedLimitMps": 25,
-      "roadClass": "national_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 1180000,
-          "yM": 90000
-        },
-        {
-          "xM": 1253800,
-          "yM": 83400
-        },
-        {
-          "xM": 1321360,
-          "yM": 120480
-        },
-        {
-          "xM": 1390000,
-          "yM": 120000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g041",
-      "regionId": "region.central",
-      "fromNodeId": "location.chengjiang",
-      "toNodeId": "location.haining",
-      "lengthM": 201186,
-      "speedLimitMps": 22,
-      "roadClass": "provincial_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 1390000,
-          "yM": 120000
-        },
-        {
-          "xM": 1457800,
-          "yM": 121600
-        },
-        {
-          "xM": 1517280,
-          "yM": 83680
-        },
-        {
-          "xM": 1580000,
-          "yM": 80000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g042",
-      "regionId": "region.central",
-      "fromNodeId": "location.haining",
-      "toNodeId": "location.nangang",
-      "lengthM": 148356,
-      "speedLimitMps": 18,
-      "roadClass": "county_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 1580000,
-          "yM": 80000
-        },
-        {
-          "xM": 1630000,
-          "yM": 79000
-        },
-        {
-          "xM": 1673760,
-          "yM": 107120
-        },
-        {
-          "xM": 1720000,
-          "yM": 110000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g043",
-      "regionId": "region.central",
-      "fromNodeId": "location.cangyuan",
-      "toNodeId": "location.yaochuan",
-      "lengthM": 186797,
-      "speedLimitMps": 22,
-      "roadClass": "provincial_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 160000,
-          "yM": 980000
-        },
-        {
-          "xM": 153200,
-          "yM": 917400
-        },
-        {
-          "xM": 111040,
-          "yM": 867280
-        },
-        {
-          "xM": 100000,
-          "yM": 810000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g044",
-      "regionId": "region.central",
-      "fromNodeId": "location.yaochuan",
-      "toNodeId": "location.mingsha",
-      "lengthM": 221506,
-      "speedLimitMps": 22,
-      "roadClass": "provincial_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 100000,
-          "yM": 810000
-        },
-        {
-          "xM": 96800,
-          "yM": 735400
-        },
-        {
-          "xM": 137280,
-          "yM": 669120
-        },
-        {
-          "xM": 140000,
-          "yM": 600000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g045",
-      "regionId": "region.central",
-      "fromNodeId": "location.mingsha",
-      "toNodeId": "location.xilan",
-      "lengthM": 191059,
-      "speedLimitMps": 25,
-      "roadClass": "national_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 140000,
-          "yM": 600000
-        },
-        {
-          "xM": 168000,
-          "yM": 542000
-        },
-        {
-          "xM": 158560,
-          "yM": 475680
-        },
-        {
-          "xM": 180000,
-          "yM": 420000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g046",
-      "regionId": "region.central",
-      "fromNodeId": "location.xilan",
-      "toNodeId": "location.qingya",
-      "lengthM": 177362,
-      "speedLimitMps": 22,
-      "roadClass": "provincial_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 180000,
-          "yM": 420000
-        },
-        {
-          "xM": 173200,
-          "yM": 360600
-        },
-        {
-          "xM": 201760,
-          "yM": 305360
-        },
-        {
-          "xM": 200000,
-          "yM": 250000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g047",
-      "regionId": "region.central",
-      "fromNodeId": "location.qingya",
-      "toNodeId": "location.wangyuan",
-      "lengthM": 173692,
-      "speedLimitMps": 22,
-      "roadClass": "provincial_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 200000,
-          "yM": 250000
-        },
-        {
-          "xM": 229800,
-          "yM": 199600
-        },
-        {
-          "xM": 226320,
-          "yM": 138800
-        },
-        {
-          "xM": 250000,
-          "yM": 90000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g048",
-      "regionId": "region.central",
-      "fromNodeId": "location.lingchuan",
-      "toNodeId": "location.xuanhe",
-      "lengthM": 201186,
-      "speedLimitMps": 25,
-      "roadClass": "national_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 580000,
-          "yM": 1010000
-        },
-        {
-          "xM": 551200,
-          "yM": 948600
-        },
-        {
-          "xM": 561920,
-          "yM": 878880
-        },
-        {
-          "xM": 540000,
-          "yM": 820000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g049",
-      "regionId": "region.central",
-      "fromNodeId": "location.xuanhe",
-      "toNodeId": "location.heyuan",
-      "lengthM": 221506,
-      "speedLimitMps": 25,
-      "roadClass": "national_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 540000,
-          "yM": 820000
-        },
-        {
-          "xM": 570400,
-          "yM": 751800
-        },
-        {
-          "xM": 557120,
-          "yM": 675280
-        },
-        {
-          "xM": 580000,
-          "yM": 610000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g050",
-      "regionId": "region.central",
-      "fromNodeId": "location.heyuan",
-      "toNodeId": "location.nanhe",
-      "lengthM": 211336,
-      "speedLimitMps": 25,
-      "roadClass": "national_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 580000,
-          "yM": 610000
-        },
-        {
-          "xM": 577600,
-          "yM": 538800
-        },
-        {
-          "xM": 616800,
-          "yM": 475920
-        },
-        {
-          "xM": 620000,
-          "yM": 410000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g051",
-      "regionId": "region.central",
-      "fromNodeId": "location.nanhe",
-      "toNodeId": "location.cangyue",
-      "lengthM": 178869,
-      "speedLimitMps": 25,
-      "roadClass": "national_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 620000,
-          "yM": 410000
-        },
-        {
-          "xM": 643800,
-          "yM": 354600
-        },
-        {
-          "xM": 632240,
-          "yM": 292960
-        },
-        {
-          "xM": 650000,
-          "yM": 240000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g052",
-      "regionId": "region.central",
-      "fromNodeId": "location.cangyue",
-      "toNodeId": "location.qingyan",
-      "lengthM": 180958,
-      "speedLimitMps": 25,
-      "roadClass": "national_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 650000,
-          "yM": 240000
-        },
-        {
-          "xM": 661000,
-          "yM": 180000
-        },
-        {
-          "xM": 705280,
-          "yM": 134560
-        },
-        {
-          "xM": 720000,
-          "yM": 80000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g053",
-      "regionId": "region.central",
-      "fromNodeId": "location.lanquan",
-      "toNodeId": "location.jinghai",
-      "lengthM": 206454,
+      "fromNodeId": "location.junction.e3",
+      "toNodeId": "location.junction.se2",
+      "lengthM": 200547,
       "speedLimitMps": 31,
       "roadClass": "expressway",
       "direction": "both",
       "polyline": [
         {
-          "xM": 1040000,
-          "yM": 1010000
+          "xM": 1600000,
+          "yM": 390000
         },
         {
-          "xM": 1034800,
-          "yM": 940600
+          "xM": 1611325,
+          "yM": 330892
         },
         {
-          "xM": 990080,
-          "yM": 883680
+          "xM": 1644471,
+          "yM": 261959
         },
         {
-          "xM": 980000,
-          "yM": 820000
+          "xM": 1660000,
+          "yM": 200000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g054",
+      "id": "road.n025",
       "regionId": "region.central",
-      "fromNodeId": "location.jinghai",
-      "toNodeId": "location.yunzhou",
-      "lengthM": 211336,
-      "speedLimitMps": 31,
-      "roadClass": "expressway",
+      "fromNodeId": "location.junction.nw1",
+      "toNodeId": "location.junction.w1",
+      "lengthM": 305438,
+      "speedLimitMps": 25,
+      "roadClass": "national_road",
       "direction": "both",
       "polyline": [
         {
-          "xM": 980000,
-          "yM": 820000
+          "xM": 280000,
+          "yM": 920000
         },
         {
-          "xM": 977600,
-          "yM": 748800
+          "xM": 290500,
+          "yM": 828900
         },
         {
-          "xM": 1016800,
-          "yM": 685920
+          "xM": 257325,
+          "yM": 716605
         },
         {
-          "xM": 1020000,
+          "xM": 260000,
           "yM": 620000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g055",
+      "id": "road.n026",
       "regionId": "region.central",
-      "fromNodeId": "location.yunzhou",
-      "toNodeId": "location.linjiang",
-      "lengthM": 211336,
-      "speedLimitMps": 31,
-      "roadClass": "expressway",
+      "fromNodeId": "location.junction.w1",
+      "toNodeId": "location.junction.sw1",
+      "lengthM": 372563,
+      "speedLimitMps": 25,
+      "roadClass": "national_road",
       "direction": "both",
       "polyline": [
         {
-          "xM": 1020000,
+          "xM": 260000,
           "yM": 620000
         },
         {
-          "xM": 1049600,
-          "yM": 555200
+          "xM": 261200,
+          "yM": 508150
         },
         {
-          "xM": 1037600,
-          "yM": 482080
+          "xM": 318490,
+          "yM": 377318
         },
         {
-          "xM": 1060000,
-          "yM": 420000
+          "xM": 330000,
+          "yM": 260000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g056",
+      "id": "road.n027",
       "regionId": "region.central",
-      "fromNodeId": "location.linjiang",
-      "toNodeId": "location.nanlan",
-      "lengthM": 183608,
-      "speedLimitMps": 31,
-      "roadClass": "expressway",
+      "fromNodeId": "location.junction.n1",
+      "toNodeId": "location.junction.c2",
+      "lengthM": 403290,
+      "speedLimitMps": 25,
+      "roadClass": "national_road",
       "direction": "both",
       "polyline": [
         {
-          "xM": 1060000,
-          "yM": 420000
+          "xM": 560000,
+          "yM": 930000
         },
         {
-          "xM": 1063400,
-          "yM": 358200
+          "xM": 654500,
+          "yM": 854300
         },
         {
-          "xM": 1102160,
-          "yM": 306800
+          "xM": 727725,
+          "yM": 718135
         },
         {
-          "xM": 1110000,
-          "yM": 250000
+          "xM": 820000,
+          "yM": 630000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g057",
+      "id": "road.n028",
       "regionId": "region.central",
-      "fromNodeId": "location.nanlan",
-      "toNodeId": "location.chuanning",
-      "lengthM": 180958,
-      "speedLimitMps": 31,
-      "roadClass": "expressway",
+      "fromNodeId": "location.junction.n2",
+      "toNodeId": "location.junction.c3",
+      "lengthM": 402906,
+      "speedLimitMps": 25,
+      "roadClass": "national_road",
       "direction": "both",
       "polyline": [
         {
-          "xM": 1110000,
-          "yM": 250000
+          "xM": 860000,
+          "yM": 950000
         },
         {
-          "xM": 1146600,
-          "yM": 201200
+          "xM": 907850,
+          "yM": 838900
         },
         {
-          "xM": 1149920,
-          "yM": 137840
+          "xM": 1019583,
+          "yM": 732255
+        },
+        {
+          "xM": 1080000,
+          "yM": 620000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n029",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.c1",
+      "toNodeId": "location.junction.mc",
+      "lengthM": 270497,
+      "speedLimitMps": 25,
+      "roadClass": "national_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 540000,
+          "yM": 620000
+        },
+        {
+          "xM": 614250,
+          "yM": 587100
+        },
+        {
+          "xM": 685063,
+          "yM": 511345
+        },
+        {
+          "xM": 760000,
+          "yM": 470000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n030",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.mc",
+      "toNodeId": "location.junction.s2",
+      "lengthM": 256395,
+      "speedLimitMps": 25,
+      "roadClass": "national_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 760000,
+          "yM": 470000
+        },
+        {
+          "xM": 790450,
+          "yM": 399300
+        },
+        {
+          "xM": 861553,
+          "yM": 331435
+        },
+        {
+          "xM": 900000,
+          "yM": 260000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n031",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.n3",
+      "toNodeId": "location.junction.e1",
+      "lengthM": 386832,
+      "speedLimitMps": 25,
+      "roadClass": "national_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1160000,
+          "yM": 930000
+        },
+        {
+          "xM": 1235150,
+          "yM": 841450
+        },
+        {
+          "xM": 1279218,
+          "yM": 699853
+        },
+        {
+          "xM": 1350000,
+          "yM": 600000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n032",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.e1",
+      "toNodeId": "location.junction.ec",
+      "lengthM": 230314,
+      "speedLimitMps": 25,
+      "roadClass": "national_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1350000,
+          "yM": 600000
+        },
+        {
+          "xM": 1290750,
+          "yM": 564350
+        },
+        {
+          "xM": 1238938,
+          "yM": 492858
         },
         {
           "xM": 1180000,
-          "yM": 90000
+          "yM": 450000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g058",
+      "id": "road.n033",
       "regionId": "region.central",
-      "fromNodeId": "location.donglan",
-      "toNodeId": "location.shuanghe",
-      "lengthM": 216357,
+      "fromNodeId": "location.junction.ec",
+      "toNodeId": "location.junction.se1",
+      "lengthM": 347481,
+      "speedLimitMps": 25,
+      "roadClass": "national_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1180000,
+          "yM": 450000
+        },
+        {
+          "xM": 1272550,
+          "yM": 401850
+        },
+        {
+          "xM": 1357248,
+          "yM": 299033
+        },
+        {
+          "xM": 1450000,
+          "yM": 240000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n034",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.ne1",
+      "toNodeId": "location.junction.e1",
+      "lengthM": 327106,
       "speedLimitMps": 22,
       "roadClass": "provincial_road",
       "direction": "both",
       "polyline": [
         {
           "xM": 1480000,
-          "yM": 1020000
+          "yM": 890000
         },
         {
-          "xM": 1443600,
-          "yM": 956800
+          "xM": 1419250,
+          "yM": 812750
         },
         {
-          "xM": 1448800,
-          "yM": 881120
+          "xM": 1403563,
+          "yM": 687438
         },
         {
-          "xM": 1420000,
-          "yM": 820000
+          "xM": 1350000,
+          "yM": 600000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g059",
+      "id": "road.n035",
       "regionId": "region.central",
-      "fromNodeId": "location.shuanghe",
-      "toNodeId": "location.donggang",
-      "lengthM": 221506,
-      "speedLimitMps": 22,
-      "roadClass": "provincial_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 1420000,
-          "yM": 820000
-        },
-        {
-          "xM": 1450400,
-          "yM": 751800
-        },
-        {
-          "xM": 1437120,
-          "yM": 675280
-        },
-        {
-          "xM": 1460000,
-          "yM": 610000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g060",
-      "regionId": "region.central",
-      "fromNodeId": "location.donggang",
-      "toNodeId": "location.ruizhou",
-      "lengthM": 209551,
+      "fromNodeId": "location.junction.ne2",
+      "toNodeId": "location.junction.e1",
+      "lengthM": 239754,
       "speedLimitMps": 25,
       "roadClass": "national_road",
       "direction": "both",
       "polyline": [
         {
-          "xM": 1460000,
-          "yM": 610000
+          "xM": 1540000,
+          "yM": 740000
         },
         {
-          "xM": 1454200,
-          "yM": 539600
+          "xM": 1490700,
+          "yM": 687550
         },
         {
-          "xM": 1490000,
-          "yM": 475440
+          "xM": 1406565,
+          "yM": 650548
         },
         {
-          "xM": 1490000,
-          "yM": 410000
+          "xM": 1350000,
+          "yM": 600000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g061",
+      "id": "road.n036",
       "regionId": "region.central",
-      "fromNodeId": "location.ruizhou",
-      "toNodeId": "location.ronghai",
-      "lengthM": 180958,
+      "fromNodeId": "location.junction.e3",
+      "toNodeId": "location.junction.ec",
+      "lengthM": 436680,
       "speedLimitMps": 22,
       "roadClass": "provincial_road",
       "direction": "both",
       "polyline": [
         {
-          "xM": 1490000,
-          "yM": 410000
+          "xM": 1600000,
+          "yM": 390000
         },
         {
-          "xM": 1517200,
-          "yM": 355400
+          "xM": 1478500,
+          "yM": 439500
         },
         {
-          "xM": 1509040,
-          "yM": 292480
+          "xM": 1311925,
+          "yM": 413475
         },
         {
-          "xM": 1530000,
-          "yM": 240000
+          "xM": 1180000,
+          "yM": 450000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g062",
+      "id": "road.n037",
       "regionId": "region.central",
-      "fromNodeId": "location.ronghai",
-      "toNodeId": "location.haining",
-      "lengthM": 173692,
+      "fromNodeId": "location.junction.wc",
+      "toNodeId": "location.junction.c1",
+      "lengthM": 197715,
       "speedLimitMps": 22,
       "roadClass": "provincial_road",
       "direction": "both",
       "polyline": [
         {
-          "xM": 1530000,
-          "yM": 240000
+          "xM": 420000,
+          "yM": 470000
         },
         {
-          "xM": 1534200,
-          "yM": 181600
+          "xM": 444750,
+          "yM": 524000
         },
         {
-          "xM": 1571680,
-          "yM": 133600
+          "xM": 507788,
+          "yM": 567050
         },
         {
-          "xM": 1580000,
-          "yM": 80000
+          "xM": 540000,
+          "yM": 620000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g063",
+      "id": "road.n038",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.wc",
+      "toNodeId": "location.junction.sw1",
+      "lengthM": 235160,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 420000,
+          "yM": 470000
+        },
+        {
+          "xM": 377250,
+          "yM": 413750
+        },
+        {
+          "xM": 367463,
+          "yM": 323488
+        },
+        {
+          "xM": 330000,
+          "yM": 260000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n039",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.mc",
+      "toNodeId": "location.junction.c2",
+      "lengthM": 175881,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 760000,
+          "yM": 470000
+        },
+        {
+          "xM": 766000,
+          "yM": 522500
+        },
+        {
+          "xM": 807400,
+          "yM": 576325
+        },
+        {
+          "xM": 820000,
+          "yM": 630000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n040",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.mc",
+      "toNodeId": "location.junction.s1",
+      "lengthM": 257316,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 760000,
+          "yM": 470000
+        },
+        {
+          "xM": 700000,
+          "yM": 421250
+        },
+        {
+          "xM": 666250,
+          "yM": 327813
+        },
+        {
+          "xM": 610000,
+          "yM": 270000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n041",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.ec",
+      "toNodeId": "location.junction.c3",
+      "lengthM": 203003,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1180000,
+          "yM": 450000
+        },
+        {
+          "xM": 1137250,
+          "yM": 493500
+        },
+        {
+          "xM": 1119013,
+          "yM": 569725
+        },
+        {
+          "xM": 1080000,
+          "yM": 620000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n042",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.ec",
+      "toNodeId": "location.junction.s3",
+      "lengthM": 205853,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1180000,
+          "yM": 450000
+        },
+        {
+          "xM": 1165000,
+          "yM": 390000
+        },
+        {
+          "xM": 1188250,
+          "yM": 314000
+        },
+        {
+          "xM": 1180000,
+          "yM": 250000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n043",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.w1",
+      "toNodeId": "location.junction.wc",
+      "lengthM": 225735,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 260000,
+          "yM": 620000
+        },
+        {
+          "xM": 319250,
+          "yM": 587000
+        },
+        {
+          "xM": 362613,
+          "yM": 511400
+        },
+        {
+          "xM": 420000,
+          "yM": 470000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n044",
+      "regionId": "region.central",
+      "fromNodeId": "location.junction.c2",
+      "toNodeId": "location.junction.mc",
+      "lengthM": 173592,
+      "speedLimitMps": 25,
+      "roadClass": "national_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 820000,
+          "yM": 630000
+        },
+        {
+          "xM": 793200,
+          "yM": 585300
+        },
+        {
+          "xM": 784040,
+          "yM": 519385
+        },
+        {
+          "xM": 760000,
+          "yM": 470000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n045",
+      "regionId": "region.central",
+      "fromNodeId": "location.heyuan",
+      "toNodeId": "location.junction.c1",
+      "lengthM": 62564,
+      "speedLimitMps": 25,
+      "roadClass": "national_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 590000,
+          "yM": 650000
+        },
+        {
+          "xM": 578601,
+          "yM": 634998
+        },
+        {
+          "xM": 554019,
+          "yM": 632901
+        },
+        {
+          "xM": 540000,
+          "yM": 620000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n046",
+      "regionId": "region.central",
+      "fromNodeId": "location.yongan",
+      "toNodeId": "location.junction.c2",
+      "lengthM": 79475,
+      "speedLimitMps": 25,
+      "roadClass": "national_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 790000,
+          "yM": 700000
+        },
+        {
+          "xM": 792566,
+          "yM": 676243
+        },
+        {
+          "xM": 813939,
+          "yM": 653917
+        },
+        {
+          "xM": 820000,
+          "yM": 630000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n047",
+      "regionId": "region.central",
+      "fromNodeId": "location.yunzhou",
+      "toNodeId": "location.junction.c3",
+      "lengthM": 79475,
+      "speedLimitMps": 25,
+      "roadClass": "national_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1010000,
+          "yM": 650000
+        },
+        {
+          "xM": 1033757,
+          "yM": 647434
+        },
+        {
+          "xM": 1056083,
+          "yM": 626061
+        },
+        {
+          "xM": 1080000,
+          "yM": 620000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n048",
+      "regionId": "region.central",
+      "fromNodeId": "location.cangyuan",
+      "toNodeId": "location.junction.nw1",
+      "lengthM": 155591,
+      "speedLimitMps": 18,
+      "roadClass": "county_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 140000,
+          "yM": 970000
+        },
+        {
+          "xM": 177250,
+          "yM": 941700
+        },
+        {
+          "xM": 208813,
+          "yM": 941675
+        },
+        {
+          "xM": 237813,
+          "yM": 943315
+        },
+        {
+          "xM": 280000,
+          "yM": 920000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n049",
       "regionId": "region.central",
       "fromNodeId": "location.beichen",
-      "toNodeId": "location.yunling",
-      "lengthM": 211336,
+      "toNodeId": "location.junction.nw1",
+      "lengthM": 133805,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 330000,
+          "yM": 1040000
+        },
+        {
+          "xM": 324000,
+          "yM": 1000250
+        },
+        {
+          "xM": 291050,
+          "yM": 960463
+        },
+        {
+          "xM": 280000,
+          "yM": 920000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n050",
+      "regionId": "region.central",
+      "fromNodeId": "location.yaochuan",
+      "toNodeId": "location.junction.nw1",
+      "lengthM": 127756,
+      "speedLimitMps": 18,
+      "roadClass": "county_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 210000,
+          "yM": 820000
+        },
+        {
+          "xM": 240500,
+          "yM": 843350
+        },
+        {
+          "xM": 247375,
+          "yM": 868338
+        },
+        {
+          "xM": 252375,
+          "yM": 891658
+        },
+        {
+          "xM": 280000,
+          "yM": 920000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n051",
+      "regionId": "region.central",
+      "fromNodeId": "location.yunling",
+      "toNodeId": "location.junction.n1",
+      "lengthM": 170373,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 410000,
+          "yM": 860000
+        },
+        {
+          "xM": 449750,
+          "yM": 892250
+        },
+        {
+          "xM": 514888,
+          "yM": 901413
+        },
+        {
+          "xM": 560000,
+          "yM": 930000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n052",
+      "regionId": "region.central",
+      "fromNodeId": "location.mingsha",
+      "toNodeId": "location.junction.w1",
+      "lengthM": 149853,
+      "speedLimitMps": 14,
+      "roadClass": "local",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 120000,
+          "yM": 650000
+        },
+        {
+          "xM": 159150,
+          "yM": 627700
+        },
+        {
+          "xM": 189288,
+          "yM": 631675
+        },
+        {
+          "xM": 216768,
+          "yM": 636915
+        },
+        {
+          "xM": 260000,
+          "yM": 620000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n053",
+      "regionId": "region.central",
+      "fromNodeId": "location.xingxia",
+      "toNodeId": "location.junction.w1",
+      "lengthM": 127756,
       "speedLimitMps": 18,
       "roadClass": "county_road",
       "direction": "both",
       "polyline": [
         {
           "xM": 360000,
-          "yM": 1060000
+          "yM": 690000
         },
         {
-          "xM": 362400,
-          "yM": 988800
+          "xM": 336650,
+          "yM": 659500
         },
         {
-          "xM": 323200,
-          "yM": 925920
+          "xM": 311663,
+          "yM": 652625
         },
         {
-          "xM": 320000,
-          "yM": 860000
+          "xM": 288343,
+          "yM": 647625
+        },
+        {
+          "xM": 260000,
+          "yM": 620000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g064",
+      "id": "road.n054",
       "regionId": "region.central",
-      "fromNodeId": "location.chengzhou",
-      "toNodeId": "location.anyue",
-      "lengthM": 221506,
+      "fromNodeId": "location.lingchuan",
+      "toNodeId": "location.junction.n1",
+      "lengthM": 110855,
       "speedLimitMps": 22,
       "roadClass": "provincial_road",
       "direction": "both",
       "polyline": [
         {
-          "xM": 800000,
-          "yM": 1080000
+          "xM": 600000,
+          "yM": 1030000
         },
         {
-          "xM": 769600,
-          "yM": 1011800
+          "xM": 580500,
+          "yM": 1003000
         },
         {
-          "xM": 782880,
-          "yM": 935280
+          "xM": 576925,
+          "yM": 960350
         },
         {
-          "xM": 760000,
-          "yM": 870000
+          "xM": 560000,
+          "yM": 930000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g065",
+      "id": "road.n055",
       "regionId": "region.central",
-      "fromNodeId": "location.xueyuan",
-      "toNodeId": "location.songling",
-      "lengthM": 256332,
+      "fromNodeId": "location.chengzhou",
+      "toNodeId": "location.junction.n2",
+      "lengthM": 138173,
+      "speedLimitMps": 25,
+      "roadClass": "national_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 820000,
+          "yM": 1080000
+        },
+        {
+          "xM": 839150,
+          "yM": 1043200
+        },
+        {
+          "xM": 843268,
+          "yM": 990390
+        },
+        {
+          "xM": 860000,
+          "yM": 950000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n056",
+      "regionId": "region.central",
+      "fromNodeId": "location.lanquan",
+      "toNodeId": "location.junction.n3",
+      "lengthM": 159760,
       "speedLimitMps": 18,
       "roadClass": "county_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1030000,
+          "yM": 1010000
+        },
+        {
+          "xM": 1061400,
+          "yM": 973650
+        },
+        {
+          "xM": 1093100,
+          "yM": 966913
+        },
+        {
+          "xM": 1122580,
+          "yM": 962393
+        },
+        {
+          "xM": 1160000,
+          "yM": 930000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n057",
+      "regionId": "region.central",
+      "fromNodeId": "location.xuanhe",
+      "toNodeId": "location.junction.n1",
+      "lengthM": 85538,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 580000,
+          "yM": 850000
+        },
+        {
+          "xM": 567209,
+          "yM": 872302
+        },
+        {
+          "xM": 570135,
+          "yM": 905334
+        },
+        {
+          "xM": 560000,
+          "yM": 930000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n058",
+      "regionId": "region.central",
+      "fromNodeId": "location.anyue",
+      "toNodeId": "location.junction.n2",
+      "lengthM": 109412,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 780000,
+          "yM": 880000
+        },
+        {
+          "xM": 809250,
+          "yM": 895000
+        },
+        {
+          "xM": 831513,
+          "yM": 930900
+        },
+        {
+          "xM": 860000,
+          "yM": 950000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n059",
+      "regionId": "region.central",
+      "fromNodeId": "location.jinghai",
+      "toNodeId": "location.junction.n2",
+      "lengthM": 172399,
+      "speedLimitMps": 25,
+      "roadClass": "national_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 980000,
+          "yM": 830000
+        },
+        {
+          "xM": 937400,
+          "yM": 859400
+        },
+        {
+          "xM": 902030,
+          "yM": 915230
+        },
+        {
+          "xM": 860000,
+          "yM": 950000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n060",
+      "regionId": "region.central",
+      "fromNodeId": "location.xueyuan",
+      "toNodeId": "location.junction.n3",
+      "lengthM": 185554,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
       "direction": "both",
       "polyline": [
         {
           "xM": 1260000,
-          "yM": 1100000
+          "yM": 1080000
         },
         {
-          "xM": 1258800,
-          "yM": 1013600
+          "xM": 1218750,
+          "yM": 1042500
         },
         {
-          "xM": 1207680,
-          "yM": 939680
+          "xM": 1198188,
+          "yM": 973875
         },
         {
-          "xM": 1200000,
-          "yM": 860000
+          "xM": 1160000,
+          "yM": 930000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g066",
+      "id": "road.n061",
       "regionId": "region.central",
       "fromNodeId": "location.donglan",
-      "toNodeId": "location.hailing",
-      "lengthM": 284520,
-      "speedLimitMps": 25,
-      "roadClass": "national_road",
+      "toNodeId": "location.junction.ne1",
+      "lengthM": 123512,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
       "direction": "both",
       "polyline": [
         {
           "xM": 1480000,
-          "yM": 1020000
+          "yM": 1010000
         },
         {
-          "xM": 1512600,
-          "yM": 929800
+          "xM": 1489000,
+          "yM": 974000
         },
         {
-          "xM": 1593040,
-          "yM": 870800
+          "xM": 1475050,
+          "yM": 928400
         },
         {
-          "xM": 1630000,
-          "yM": 790000
+          "xM": 1480000,
+          "yM": 890000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g067",
+      "id": "road.n062",
       "regionId": "region.central",
-      "fromNodeId": "location.yunling",
-      "toNodeId": "location.xingxia",
-      "lengthM": 221506,
-      "speedLimitMps": 15,
-      "roadClass": "local",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 320000,
-          "yM": 860000
-        },
-        {
-          "xM": 350400,
-          "yM": 791800
-        },
-        {
-          "xM": 337120,
-          "yM": 715280
-        },
-        {
-          "xM": 360000,
-          "yM": 650000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g068",
-      "regionId": "region.central",
-      "fromNodeId": "location.anyue",
-      "toNodeId": "location.yongan",
-      "lengthM": 221506,
+      "fromNodeId": "location.jinghai_n",
+      "toNodeId": "location.junction.ne1",
+      "lengthM": 192987,
       "speedLimitMps": 18,
       "roadClass": "county_road",
       "direction": "both",
       "polyline": [
         {
-          "xM": 760000,
-          "yM": 870000
+          "xM": 1660000,
+          "yM": 930000
         },
         {
-          "xM": 756800,
-          "yM": 795400
+          "xM": 1602200,
+          "yM": 935100
         },
         {
-          "xM": 797280,
-          "yM": 729120
+          "xM": 1569050,
+          "yM": 914275
         },
         {
-          "xM": 800000,
-          "yM": 660000
+          "xM": 1539690,
+          "yM": 893395
+        },
+        {
+          "xM": 1480000,
+          "yM": 890000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g069",
+      "id": "road.n063",
       "regionId": "region.central",
       "fromNodeId": "location.songling",
-      "toNodeId": "location.qingyuan",
-      "lengthM": 221506,
+      "toNodeId": "location.junction.n3",
+      "lengthM": 75604,
       "speedLimitMps": 22,
       "roadClass": "provincial_road",
       "direction": "both",
       "polyline": [
         {
           "xM": 1200000,
-          "yM": 860000
+          "yM": 870000
         },
         {
-          "xM": 1230400,
-          "yM": 791800
+          "xM": 1182176,
+          "yM": 884117
         },
         {
-          "xM": 1217120,
-          "yM": 715280
+          "xM": 1176003,
+          "yM": 912936
         },
         {
-          "xM": 1240000,
-          "yM": 650000
+          "xM": 1160000,
+          "yM": 930000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g070",
+      "id": "road.n064",
       "regionId": "region.central",
       "fromNodeId": "location.shuanghe",
-      "toNodeId": "location.donggang",
-      "lengthM": 221506,
-      "speedLimitMps": 18,
-      "roadClass": "county_road",
+      "toNodeId": "location.junction.ne2",
+      "lengthM": 148443,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
       "direction": "both",
       "polyline": [
         {
@@ -2568,364 +2660,1228 @@
           "yM": 820000
         },
         {
-          "xM": 1416800,
-          "yM": 745400
+          "xM": 1450000,
+          "yM": 787000
         },
         {
-          "xM": 1457280,
-          "yM": 679120
+          "xM": 1504900,
+          "yM": 770550
         },
         {
-          "xM": 1460000,
-          "yM": 610000
+          "xM": 1540000,
+          "yM": 740000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g071",
+      "id": "road.n065",
       "regionId": "region.central",
-      "fromNodeId": "location.xingxia",
-      "toNodeId": "location.linyue",
-      "lengthM": 211336,
-      "speedLimitMps": 15,
-      "roadClass": "local",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 360000,
-          "yM": 650000
-        },
-        {
-          "xM": 389600,
-          "yM": 585200
-        },
-        {
-          "xM": 377600,
-          "yM": 512080
-        },
-        {
-          "xM": 400000,
-          "yM": 450000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g072",
-      "regionId": "region.central",
-      "fromNodeId": "location.yongan",
-      "toNodeId": "location.chengyue",
-      "lengthM": 211336,
-      "speedLimitMps": 25,
-      "roadClass": "national_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 800000,
-          "yM": 660000
-        },
-        {
-          "xM": 797600,
-          "yM": 588800
-        },
-        {
-          "xM": 836800,
-          "yM": 525920
-        },
-        {
-          "xM": 840000,
-          "yM": 460000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g073",
-      "regionId": "region.central",
-      "fromNodeId": "location.qingyuan",
-      "toNodeId": "location.haichuan",
-      "lengthM": 211336,
+      "fromNodeId": "location.hailing",
+      "toNodeId": "location.junction.ne2",
+      "lengthM": 106735,
       "speedLimitMps": 18,
       "roadClass": "county_road",
       "direction": "both",
       "polyline": [
         {
-          "xM": 1240000,
-          "yM": 650000
+          "xM": 1640000,
+          "yM": 760000
         },
         {
-          "xM": 1269600,
-          "yM": 585200
+          "xM": 1611900,
+          "yM": 744500
         },
         {
-          "xM": 1257600,
-          "yM": 512080
+          "xM": 1590475,
+          "yM": 747625
         },
         {
-          "xM": 1280000,
-          "yM": 450000
+          "xM": 1570955,
+          "yM": 751625
+        },
+        {
+          "xM": 1540000,
+          "yM": 740000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g074",
+      "id": "road.n066",
       "regionId": "region.central",
-      "fromNodeId": "location.donggang",
-      "toNodeId": "location.ruizhou",
-      "lengthM": 209551,
-      "speedLimitMps": 25,
-      "roadClass": "national_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 1460000,
-          "yM": 610000
-        },
-        {
-          "xM": 1454200,
-          "yM": 539600
-        },
-        {
-          "xM": 1490000,
-          "yM": 475440
-        },
-        {
-          "xM": 1490000,
-          "yM": 410000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g075",
-      "regionId": "region.central",
-      "fromNodeId": "location.linyue",
-      "toNodeId": "location.yunchuan",
-      "lengthM": 167076,
+      "fromNodeId": "location.xilan",
+      "toNodeId": "location.junction.wc",
+      "lengthM": 261655,
       "speedLimitMps": 18,
       "roadClass": "county_road",
       "direction": "both",
       "polyline": [
         {
-          "xM": 400000,
-          "yM": 450000
+          "xM": 170000,
+          "yM": 470000
         },
         {
-          "xM": 419600,
-          "yM": 397200
+          "xM": 245000,
+          "yM": 446250
         },
         {
-          "xM": 405920,
-          "yM": 340240
+          "xM": 295000,
+          "yM": 464063
+        },
+        {
+          "xM": 340000,
+          "yM": 483063
         },
         {
           "xM": 420000,
-          "yM": 290000
+          "yM": 470000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g076",
+      "id": "road.n067",
       "regionId": "region.central",
-      "fromNodeId": "location.chengyue",
-      "toNodeId": "location.jinlan",
-      "lengthM": 170888,
-      "speedLimitMps": 15,
-      "roadClass": "local",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 840000,
-          "yM": 460000
-        },
-        {
-          "xM": 840800,
-          "yM": 402400
-        },
-        {
-          "xM": 874880,
-          "yM": 353120
-        },
-        {
-          "xM": 880000,
-          "yM": 300000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g077",
-      "regionId": "region.central",
-      "fromNodeId": "location.haichuan",
-      "toNodeId": "location.lingchuan_s",
-      "lengthM": 173692,
+      "fromNodeId": "location.linyue",
+      "toNodeId": "location.junction.wc",
+      "lengthM": 48071,
       "speedLimitMps": 22,
       "roadClass": "provincial_road",
       "direction": "both",
       "polyline": [
         {
-          "xM": 1280000,
-          "yM": 450000
+          "xM": 390000,
+          "yM": 500000
         },
         {
-          "xM": 1309800,
-          "yM": 399600
+          "xM": 403950,
+          "yM": 495950
         },
         {
-          "xM": 1306320,
-          "yM": 338800
+          "xM": 407678,
+          "yM": 476878
         },
         {
-          "xM": 1330000,
-          "yM": 290000
+          "xM": 420000,
+          "yM": 470000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g078",
+      "id": "road.n068",
       "regionId": "region.central",
-      "fromNodeId": "location.ruizhou",
-      "toNodeId": "location.ronghai",
-      "lengthM": 180958,
-      "speedLimitMps": 18,
-      "roadClass": "county_road",
-      "direction": "both",
-      "polyline": [
-        {
-          "xM": 1490000,
-          "yM": 410000
-        },
-        {
-          "xM": 1490000,
-          "yM": 349000
-        },
-        {
-          "xM": 1525360,
-          "yM": 296320
-        },
-        {
-          "xM": 1530000,
-          "yM": 240000
-        }
-      ],
-      "active": true
-    },
-    {
-      "id": "road.g079",
-      "regionId": "region.central",
-      "fromNodeId": "location.yunchuan",
-      "toNodeId": "location.xingchuan",
-      "lengthM": 186797,
-      "speedLimitMps": 15,
+      "fromNodeId": "location.qingya",
+      "toNodeId": "location.junction.sw1",
+      "lengthM": 122504,
+      "speedLimitMps": 14,
       "roadClass": "local",
       "direction": "both",
       "polyline": [
         {
-          "xM": 420000,
-          "yM": 290000
+          "xM": 220000,
+          "yM": 300000
         },
         {
-          "xM": 454000,
-          "yM": 237000
+          "xM": 249200,
+          "yM": 277550
         },
         {
-          "xM": 452640,
-          "yM": 171520
+          "xM": 274050,
+          "yM": 277388
         },
         {
-          "xM": 480000,
-          "yM": 120000
+          "xM": 296890,
+          "yM": 278548
+        },
+        {
+          "xM": 330000,
+          "yM": 260000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g080",
+      "id": "road.n069",
       "regionId": "region.central",
-      "fromNodeId": "location.jinlan",
-      "toNodeId": "location.lanshan",
-      "lengthM": 194677,
+      "fromNodeId": "location.yunchuan",
+      "toNodeId": "location.junction.sw1",
+      "lengthM": 145401,
       "speedLimitMps": 18,
       "roadClass": "county_road",
       "direction": "both",
       "polyline": [
         {
-          "xM": 880000,
-          "yM": 300000
+          "xM": 450000,
+          "yM": 330000
         },
         {
-          "xM": 893600,
-          "yM": 235800
+          "xM": 420650,
+          "yM": 297600
         },
         {
-          "xM": 942560,
-          "yM": 188240
+          "xM": 391663,
+          "yM": 292150
         },
         {
-          "xM": 960000,
-          "yM": 130000
+          "xM": 364743,
+          "yM": 288670
+        },
+        {
+          "xM": 330000,
+          "yM": 260000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g081",
+      "id": "road.n070",
       "regionId": "region.central",
-      "fromNodeId": "location.lingchuan_s",
-      "toNodeId": "location.chengjiang",
-      "lengthM": 186797,
+      "fromNodeId": "location.nanhe",
+      "toNodeId": "location.junction.mc",
+      "lengthM": 149863,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 620000,
+          "yM": 430000
+        },
+        {
+          "xM": 665000,
+          "yM": 431500
+        },
+        {
+          "xM": 713550,
+          "yM": 462975
+        },
+        {
+          "xM": 760000,
+          "yM": 470000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n071",
+      "regionId": "region.central",
+      "fromNodeId": "location.chengyue",
+      "toNodeId": "location.junction.mc",
+      "lengthM": 92829,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 850000,
+          "yM": 470000
+        },
+        {
+          "xM": 823000,
+          "yM": 463000
+        },
+        {
+          "xM": 788800,
+          "yM": 473850
+        },
+        {
+          "xM": 760000,
+          "yM": 470000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n072",
+      "regionId": "region.central",
+      "fromNodeId": "location.cangyue",
+      "toNodeId": "location.junction.s1",
+      "lengthM": 76263,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 680000,
+          "yM": 250000
+        },
+        {
+          "xM": 660923,
+          "yM": 262731
+        },
+        {
+          "xM": 631342,
+          "yM": 259898
+        },
+        {
+          "xM": 610000,
+          "yM": 270000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n073",
+      "regionId": "region.central",
+      "fromNodeId": "location.jinlan",
+      "toNodeId": "location.junction.s2",
+      "lengthM": 58426,
       "speedLimitMps": 25,
       "roadClass": "national_road",
       "direction": "both",
       "polyline": [
         {
-          "xM": 1330000,
-          "yM": 290000
+          "xM": 920000,
+          "yM": 310000
         },
         {
-          "xM": 1364000,
-          "yM": 237000
+          "xM": 920499,
+          "yM": 292400
         },
         {
-          "xM": 1362640,
-          "yM": 171520
+          "xM": 902825,
+          "yM": 277430
         },
         {
-          "xM": 1390000,
-          "yM": 120000
+          "xM": 900000,
+          "yM": 260000
         }
       ],
       "active": true
     },
     {
-      "id": "road.g082",
+      "id": "road.n074",
       "regionId": "region.central",
-      "fromNodeId": "location.ronghai",
-      "toNodeId": "location.haining",
-      "lengthM": 173692,
-      "speedLimitMps": 15,
+      "fromNodeId": "location.linjiang",
+      "toNodeId": "location.junction.ec",
+      "lengthM": 104487,
+      "speedLimitMps": 25,
+      "roadClass": "national_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1080000,
+          "yM": 430000
+        },
+        {
+          "xM": 1111373,
+          "yM": 429136
+        },
+        {
+          "xM": 1147245,
+          "yM": 447375
+        },
+        {
+          "xM": 1180000,
+          "yM": 450000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n075",
+      "regionId": "region.central",
+      "fromNodeId": "location.qingyuan",
+      "toNodeId": "location.junction.e1",
+      "lengthM": 128966,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1240000,
+          "yM": 660000
+        },
+        {
+          "xM": 1277500,
+          "yM": 650250
+        },
+        {
+          "xM": 1312325,
+          "yM": 614663
+        },
+        {
+          "xM": 1350000,
+          "yM": 600000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n076",
+      "regionId": "region.central",
+      "fromNodeId": "location.donggang",
+      "toNodeId": "location.junction.e2",
+      "lengthM": 122956,
+      "speedLimitMps": 25,
+      "roadClass": "national_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1470000,
+          "yM": 610000
+        },
+        {
+          "xM": 1500103,
+          "yM": 588627
+        },
+        {
+          "xM": 1546393,
+          "yM": 579505
+        },
+        {
+          "xM": 1580000,
+          "yM": 560000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n077",
+      "regionId": "region.central",
+      "fromNodeId": "location.ningwan",
+      "toNodeId": "location.junction.e2",
+      "lengthM": 93366,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1670000,
+          "yM": 570000
+        },
+        {
+          "xM": 1643773,
+          "yM": 560043
+        },
+        {
+          "xM": 1608375,
+          "yM": 567026
+        },
+        {
+          "xM": 1580000,
+          "yM": 560000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n078",
+      "regionId": "region.central",
+      "fromNodeId": "location.haichuan",
+      "toNodeId": "location.junction.ec",
+      "lengthM": 135378,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1310000,
+          "yM": 470000
+        },
+        {
+          "xM": 1269500,
+          "yM": 473750
+        },
+        {
+          "xM": 1222425,
+          "yM": 451038
+        },
+        {
+          "xM": 1180000,
+          "yM": 450000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n079",
+      "regionId": "region.central",
+      "fromNodeId": "location.ruizhou",
+      "toNodeId": "location.junction.e3",
+      "lengthM": 94959,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1510000,
+          "yM": 410000
+        },
+        {
+          "xM": 1538519,
+          "yM": 410833
+        },
+        {
+          "xM": 1570365,
+          "yM": 392642
+        },
+        {
+          "xM": 1600000,
+          "yM": 390000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n080",
+      "regionId": "region.central",
+      "fromNodeId": "location.qingpu",
+      "toNodeId": "location.junction.e3",
+      "lengthM": 94775,
+      "speedLimitMps": 18,
+      "roadClass": "county_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1690000,
+          "yM": 380000
+        },
+        {
+          "xM": 1663950,
+          "yM": 391550
+        },
+        {
+          "xM": 1645238,
+          "yM": 387138
+        },
+        {
+          "xM": 1628278,
+          "yM": 382098
+        },
+        {
+          "xM": 1600000,
+          "yM": 390000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n081",
+      "regionId": "region.central",
+      "fromNodeId": "location.wangyuan",
+      "toNodeId": "location.junction.sw1",
+      "lengthM": 177925,
+      "speedLimitMps": 14,
       "roadClass": "local",
       "direction": "both",
       "polyline": [
         {
-          "xM": 1530000,
+          "xM": 250000,
+          "yM": 110000
+        },
+        {
+          "xM": 259750,
+          "yM": 162600
+        },
+        {
+          "xM": 286438,
+          "yM": 186900
+        },
+        {
+          "xM": 312238,
+          "yM": 207820
+        },
+        {
+          "xM": 330000,
+          "yM": 260000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n082",
+      "regionId": "region.central",
+      "fromNodeId": "location.xingchuan",
+      "toNodeId": "location.junction.s1",
+      "lengthM": 177617,
+      "speedLimitMps": 18,
+      "roadClass": "county_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 490000,
+          "yM": 150000
+        },
+        {
+          "xM": 537400,
+          "yM": 174600
+        },
+        {
+          "xM": 552850,
+          "yM": 207150
+        },
+        {
+          "xM": 565330,
+          "yM": 237870
+        },
+        {
+          "xM": 610000,
+          "yM": 270000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n083",
+      "regionId": "region.central",
+      "fromNodeId": "location.qingyan",
+      "toNodeId": "location.junction.s1",
+      "lengthM": 217788,
+      "speedLimitMps": 18,
+      "roadClass": "county_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 730000,
+          "yM": 100000
+        },
+        {
+          "xM": 677850,
+          "yM": 139600
+        },
+        {
+          "xM": 665963,
+          "yM": 182150
+        },
+        {
+          "xM": 657283,
+          "yM": 221870
+        },
+        {
+          "xM": 610000,
+          "yM": 270000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n084",
+      "regionId": "region.central",
+      "fromNodeId": "location.lanshan",
+      "toNodeId": "location.junction.s2",
+      "lengthM": 148443,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 980000,
+          "yM": 140000
+        },
+        {
+          "xM": 965000,
+          "yM": 182000
+        },
+        {
+          "xM": 920650,
+          "yM": 218300
+        },
+        {
+          "xM": 900000,
+          "yM": 260000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n085",
+      "regionId": "region.central",
+      "fromNodeId": "location.nanlan",
+      "toNodeId": "location.junction.s3",
+      "lengthM": 70820,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1120000,
+          "yM": 280000
+        },
+        {
+          "xM": 1141130,
+          "yM": 277261
+        },
+        {
+          "xM": 1159078,
+          "yM": 256156
+        },
+        {
+          "xM": 1180000,
+          "yM": 250000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n086",
+      "regionId": "region.central",
+      "fromNodeId": "location.chuanning",
+      "toNodeId": "location.junction.s3",
+      "lengthM": 157341,
+      "speedLimitMps": 18,
+      "roadClass": "county_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1190000,
+          "yM": 100000
+        },
+        {
+          "xM": 1201250,
+          "yM": 145950
+        },
+        {
+          "xM": 1188563,
+          "yM": 175238
+        },
+        {
+          "xM": 1175363,
+          "yM": 201478
+        },
+        {
+          "xM": 1180000,
+          "yM": 250000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n087",
+      "regionId": "region.central",
+      "fromNodeId": "location.lingchuan_s",
+      "toNodeId": "location.junction.se1",
+      "lengthM": 128966,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1340000,
+          "yM": 300000
+        },
+        {
+          "xM": 1377500,
+          "yM": 290250
+        },
+        {
+          "xM": 1412325,
+          "yM": 254663
+        },
+        {
+          "xM": 1450000,
           "yM": 240000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n088",
+      "regionId": "region.central",
+      "fromNodeId": "location.chengjiang",
+      "toNodeId": "location.junction.se1",
+      "lengthM": 101371,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1410000,
+          "yM": 150000
         },
         {
-          "xM": 1534200,
-          "yM": 181600
+          "xM": 1428750,
+          "yM": 174000
         },
         {
-          "xM": 1571680,
-          "yM": 133600
+          "xM": 1433488,
+          "yM": 212850
         },
         {
-          "xM": 1580000,
-          "yM": 80000
+          "xM": 1450000,
+          "yM": 240000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n089",
+      "regionId": "region.central",
+      "fromNodeId": "location.ronghai",
+      "toNodeId": "location.junction.se1",
+      "lengthM": 104965,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1550000,
+          "yM": 260000
+        },
+        {
+          "xM": 1521500,
+          "yM": 246500
+        },
+        {
+          "xM": 1481175,
+          "yM": 250525
+        },
+        {
+          "xM": 1450000,
+          "yM": 240000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n090",
+      "regionId": "region.central",
+      "fromNodeId": "location.haining",
+      "toNodeId": "location.junction.se2",
+      "lengthM": 127756,
+      "speedLimitMps": 18,
+      "roadClass": "county_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1590000,
+          "yM": 100000
+        },
+        {
+          "xM": 1620500,
+          "yM": 123350
+        },
+        {
+          "xM": 1627375,
+          "yM": 148338
+        },
+        {
+          "xM": 1632375,
+          "yM": 171658
+        },
+        {
+          "xM": 1660000,
+          "yM": 200000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n091",
+      "regionId": "region.central",
+      "fromNodeId": "location.yungang",
+      "toNodeId": "location.junction.se2",
+      "lengthM": 67208,
+      "speedLimitMps": 18,
+      "roadClass": "county_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1720000,
+          "yM": 220000
+        },
+        {
+          "xM": 1704214,
+          "yM": 207359
+        },
+        {
+          "xM": 1690553,
+          "yM": 208340
+        },
+        {
+          "xM": 1677983,
+          "yM": 210052
+        },
+        {
+          "xM": 1660000,
+          "yM": 200000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n092",
+      "regionId": "region.central",
+      "fromNodeId": "location.nangang",
+      "toNodeId": "location.junction.se2",
+      "lengthM": 148752,
+      "speedLimitMps": 14,
+      "roadClass": "local",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1750000,
+          "yM": 90000
+        },
+        {
+          "xM": 1733450,
+          "yM": 131550
+        },
+        {
+          "xM": 1707613,
+          "yM": 147138
+        },
+        {
+          "xM": 1683053,
+          "yM": 160098
+        },
+        {
+          "xM": 1660000,
+          "yM": 200000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n093",
+      "regionId": "region.central",
+      "fromNodeId": "location.heyuan",
+      "toNodeId": "location.yongan",
+      "lengthM": 212188,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 590000,
+          "yM": 650000
+        },
+        {
+          "xM": 646250,
+          "yM": 680000
+        },
+        {
+          "xM": 728063,
+          "yM": 675750
+        },
+        {
+          "xM": 790000,
+          "yM": 700000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n094",
+      "regionId": "region.central",
+      "fromNodeId": "location.yongan",
+      "toNodeId": "location.yunzhou",
+      "lengthM": 229191,
+      "speedLimitMps": 25,
+      "roadClass": "national_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 790000,
+          "yM": 700000
+        },
+        {
+          "xM": 853250,
+          "yM": 672900
+        },
+        {
+          "xM": 941113,
+          "yM": 672655
+        },
+        {
+          "xM": 1010000,
+          "yM": 650000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n095",
+      "regionId": "region.central",
+      "fromNodeId": "location.xuanhe",
+      "toNodeId": "location.anyue",
+      "lengthM": 208156,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 580000,
+          "yM": 850000
+        },
+        {
+          "xM": 637750,
+          "yM": 874000
+        },
+        {
+          "xM": 717238,
+          "yM": 862150
+        },
+        {
+          "xM": 780000,
+          "yM": 880000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n096",
+      "regionId": "region.central",
+      "fromNodeId": "location.anyue",
+      "toNodeId": "location.jinghai",
+      "lengthM": 209427,
+      "speedLimitMps": 25,
+      "roadClass": "national_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 780000,
+          "yM": 880000
+        },
+        {
+          "xM": 837250,
+          "yM": 854000
+        },
+        {
+          "xM": 917513,
+          "yM": 852050
+        },
+        {
+          "xM": 980000,
+          "yM": 830000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n097",
+      "regionId": "region.central",
+      "fromNodeId": "location.qingyuan",
+      "toNodeId": "location.donggang",
+      "lengthM": 239108,
+      "speedLimitMps": 25,
+      "roadClass": "national_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1240000,
+          "yM": 660000
+        },
+        {
+          "xM": 1311750,
+          "yM": 657650
+        },
+        {
+          "xM": 1394888,
+          "yM": 619043
+        },
+        {
+          "xM": 1470000,
+          "yM": 610000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n098",
+      "regionId": "region.central",
+      "fromNodeId": "location.haichuan",
+      "toNodeId": "location.ruizhou",
+      "lengthM": 214917,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1310000,
+          "yM": 470000
+        },
+        {
+          "xM": 1365500,
+          "yM": 437000
+        },
+        {
+          "xM": 1448475,
+          "yM": 437450
+        },
+        {
+          "xM": 1510000,
+          "yM": 410000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n099",
+      "regionId": "region.central",
+      "fromNodeId": "location.linyue",
+      "toNodeId": "location.nanhe",
+      "lengthM": 247452,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 390000,
+          "yM": 500000
+        },
+        {
+          "xM": 464250,
+          "yM": 496250
+        },
+        {
+          "xM": 543513,
+          "yM": 442913
+        },
+        {
+          "xM": 620000,
+          "yM": 430000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n100",
+      "regionId": "region.central",
+      "fromNodeId": "location.nanhe",
+      "toNodeId": "location.chengyue",
+      "lengthM": 237158,
+      "speedLimitMps": 25,
+      "roadClass": "national_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 620000,
+          "yM": 430000
+        },
+        {
+          "xM": 691200,
+          "yM": 429350
+        },
+        {
+          "xM": 775190,
+          "yM": 464158
+        },
+        {
+          "xM": 850000,
+          "yM": 470000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n101",
+      "regionId": "region.central",
+      "fromNodeId": "location.cangyue",
+      "toNodeId": "location.jinlan",
+      "lengthM": 254626,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 680000,
+          "yM": 250000
+        },
+        {
+          "xM": 747500,
+          "yM": 286000
+        },
+        {
+          "xM": 845675,
+          "yM": 280900
+        },
+        {
+          "xM": 920000,
+          "yM": 310000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n102",
+      "regionId": "region.central",
+      "fromNodeId": "location.jinlan",
+      "toNodeId": "location.nanlan",
+      "lengthM": 205447,
+      "speedLimitMps": 25,
+      "roadClass": "national_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 920000,
+          "yM": 310000
+        },
+        {
+          "xM": 978350,
+          "yM": 290000
+        },
+        {
+          "xM": 1056908,
+          "yM": 295650
+        },
+        {
+          "xM": 1120000,
+          "yM": 280000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n103",
+      "regionId": "region.central",
+      "fromNodeId": "location.lingchuan_s",
+      "toNodeId": "location.ronghai",
+      "lengthM": 220031,
+      "speedLimitMps": 22,
+      "roadClass": "provincial_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1340000,
+          "yM": 300000
+        },
+        {
+          "xM": 1406000,
+          "yM": 303750
+        },
+        {
+          "xM": 1481150,
+          "yM": 264138
+        },
+        {
+          "xM": 1550000,
+          "yM": 260000
+        }
+      ],
+      "active": true
+    },
+    {
+      "id": "road.n104",
+      "regionId": "region.central",
+      "fromNodeId": "location.ronghai",
+      "toNodeId": "location.yungang",
+      "lengthM": 182784,
+      "speedLimitMps": 18,
+      "roadClass": "county_road",
+      "direction": "both",
+      "polyline": [
+        {
+          "xM": 1550000,
+          "yM": 260000
+        },
+        {
+          "xM": 1597200,
+          "yM": 231850
+        },
+        {
+          "xM": 1634050,
+          "yM": 235963
+        },
+        {
+          "xM": 1667690,
+          "yM": 241683
+        },
+        {
+          "xM": 1720000,
+          "yM": 220000
         }
       ],
       "active": true
@@ -2969,295 +3925,295 @@
     },
     {
       "id": "station.006",
-      "name": "凌川客运中心",
-      "worldNodeId": "location.lingchuan",
-      "stationClass": "city",
+      "name": "曜川客运中心",
+      "worldNodeId": "location.yaochuan",
+      "stationClass": "town",
       "active": true
     },
     {
       "id": "station.007",
-      "name": "澄州客运中心",
-      "worldNodeId": "location.chengzhou",
-      "stationClass": "city",
-      "active": true
-    },
-    {
-      "id": "station.008",
-      "name": "岚泉客运中心",
-      "worldNodeId": "location.lanquan",
-      "stationClass": "county",
-      "active": true
-    },
-    {
-      "id": "station.009",
-      "name": "雪原客运中心",
-      "worldNodeId": "location.xueyuan",
-      "stationClass": "city",
-      "active": true
-    },
-    {
-      "id": "station.010",
-      "name": "东岚客运中心",
-      "worldNodeId": "location.donglan",
-      "stationClass": "city",
-      "active": true
-    },
-    {
-      "id": "station.011",
-      "name": "镜海客运中心",
-      "worldNodeId": "location.jinghai_n",
-      "stationClass": "county",
-      "active": true
-    },
-    {
-      "id": "station.012",
-      "name": "曜川客运中心",
-      "worldNodeId": "location.yaochuan",
-      "stationClass": "county",
-      "active": true
-    },
-    {
-      "id": "station.013",
       "name": "云岭客运中心",
       "worldNodeId": "location.yunling",
       "stationClass": "city",
       "active": true
     },
     {
-      "id": "station.014",
-      "name": "玄河客运中心",
-      "worldNodeId": "location.xuanhe",
-      "stationClass": "city",
-      "active": true
-    },
-    {
-      "id": "station.015",
-      "name": "安岳客运中心",
-      "worldNodeId": "location.anyue",
-      "stationClass": "city",
-      "active": true
-    },
-    {
-      "id": "station.016",
-      "name": "景海客运中心",
-      "worldNodeId": "location.jinghai",
-      "stationClass": "hub",
-      "active": true
-    },
-    {
-      "id": "station.017",
-      "name": "松岭客运中心",
-      "worldNodeId": "location.songling",
-      "stationClass": "city",
-      "active": true
-    },
-    {
-      "id": "station.018",
-      "name": "霜河客运中心",
-      "worldNodeId": "location.shuanghe",
-      "stationClass": "city",
-      "active": true
-    },
-    {
-      "id": "station.019",
-      "name": "海陵客运中心",
-      "worldNodeId": "location.hailing",
-      "stationClass": "county",
-      "active": true
-    },
-    {
-      "id": "station.020",
+      "id": "station.008",
       "name": "鸣沙客运中心",
       "worldNodeId": "location.mingsha",
       "stationClass": "town",
       "active": true
     },
     {
-      "id": "station.021",
+      "id": "station.009",
       "name": "星峡客运中心",
       "worldNodeId": "location.xingxia",
       "stationClass": "county",
       "active": true
     },
     {
-      "id": "station.022",
-      "name": "清源客运中心",
-      "worldNodeId": "location.qingyuan",
+      "id": "station.010",
+      "name": "凌川客运中心",
+      "worldNodeId": "location.lingchuan",
       "stationClass": "city",
       "active": true
     },
     {
-      "id": "station.023",
-      "name": "东港客运中心",
-      "worldNodeId": "location.donggang",
+      "id": "station.011",
+      "name": "澄州客运中心",
+      "worldNodeId": "location.chengzhou",
       "stationClass": "hub",
       "active": true
     },
     {
-      "id": "station.024",
-      "name": "宁湾客运中心",
-      "worldNodeId": "location.ningwan",
+      "id": "station.012",
+      "name": "岚泉客运中心",
+      "worldNodeId": "location.lanquan",
+      "stationClass": "county",
+      "active": true
+    },
+    {
+      "id": "station.013",
+      "name": "玄河客运中心",
+      "worldNodeId": "location.xuanhe",
       "stationClass": "city",
       "active": true
     },
     {
-      "id": "station.025",
+      "id": "station.014",
+      "name": "安岳客运中心",
+      "worldNodeId": "location.anyue",
+      "stationClass": "city",
+      "active": true
+    },
+    {
+      "id": "station.015",
+      "name": "景海客运中心",
+      "worldNodeId": "location.jinghai",
+      "stationClass": "hub",
+      "active": true
+    },
+    {
+      "id": "station.016",
+      "name": "雪原客运中心",
+      "worldNodeId": "location.xueyuan",
+      "stationClass": "city",
+      "active": true
+    },
+    {
+      "id": "station.017",
+      "name": "东岚客运中心",
+      "worldNodeId": "location.donglan",
+      "stationClass": "city",
+      "active": true
+    },
+    {
+      "id": "station.018",
+      "name": "镜海客运中心",
+      "worldNodeId": "location.jinghai_n",
+      "stationClass": "county",
+      "active": true
+    },
+    {
+      "id": "station.019",
+      "name": "松岭客运中心",
+      "worldNodeId": "location.songling",
+      "stationClass": "city",
+      "active": true
+    },
+    {
+      "id": "station.020",
+      "name": "霜河客运中心",
+      "worldNodeId": "location.shuanghe",
+      "stationClass": "city",
+      "active": true
+    },
+    {
+      "id": "station.021",
+      "name": "海陵客运中心",
+      "worldNodeId": "location.hailing",
+      "stationClass": "county",
+      "active": true
+    },
+    {
+      "id": "station.022",
       "name": "西澜客运中心",
       "worldNodeId": "location.xilan",
       "stationClass": "county",
       "active": true
     },
     {
-      "id": "station.026",
+      "id": "station.023",
       "name": "临岳客运中心",
       "worldNodeId": "location.linyue",
       "stationClass": "city",
       "active": true
     },
     {
-      "id": "station.027",
-      "name": "南河客运中心",
-      "worldNodeId": "location.nanhe",
-      "stationClass": "hub",
-      "active": true
-    },
-    {
-      "id": "station.028",
-      "name": "澄岳客运中心",
-      "worldNodeId": "location.chengyue",
-      "stationClass": "city",
-      "active": true
-    },
-    {
-      "id": "station.029",
-      "name": "临江客运中心",
-      "worldNodeId": "location.linjiang",
-      "stationClass": "hub",
-      "active": true
-    },
-    {
-      "id": "station.030",
-      "name": "海川客运中心",
-      "worldNodeId": "location.haichuan",
-      "stationClass": "city",
-      "active": true
-    },
-    {
-      "id": "station.031",
-      "name": "瑞州客运中心",
-      "worldNodeId": "location.ruizhou",
-      "stationClass": "city",
-      "active": true
-    },
-    {
-      "id": "station.032",
-      "name": "青浦客运中心",
-      "worldNodeId": "location.qingpu",
-      "stationClass": "county",
-      "active": true
-    },
-    {
-      "id": "station.033",
+      "id": "station.024",
       "name": "青崖客运中心",
       "worldNodeId": "location.qingya",
       "stationClass": "town",
       "active": true
     },
     {
-      "id": "station.034",
+      "id": "station.025",
       "name": "云川客运中心",
       "worldNodeId": "location.yunchuan",
       "stationClass": "county",
       "active": true
     },
     {
-      "id": "station.035",
+      "id": "station.026",
+      "name": "南河客运中心",
+      "worldNodeId": "location.nanhe",
+      "stationClass": "city",
+      "active": true
+    },
+    {
+      "id": "station.027",
+      "name": "澄岳客运中心",
+      "worldNodeId": "location.chengyue",
+      "stationClass": "city",
+      "active": true
+    },
+    {
+      "id": "station.028",
       "name": "苍岳客运中心",
       "worldNodeId": "location.cangyue",
       "stationClass": "city",
       "active": true
     },
     {
-      "id": "station.036",
+      "id": "station.029",
       "name": "锦岚客运中心",
       "worldNodeId": "location.jinlan",
       "stationClass": "hub",
       "active": true
     },
     {
-      "id": "station.037",
-      "name": "南澜客运中心",
-      "worldNodeId": "location.nanlan",
+      "id": "station.030",
+      "name": "临江客运中心",
+      "worldNodeId": "location.linjiang",
+      "stationClass": "hub",
+      "active": true
+    },
+    {
+      "id": "station.031",
+      "name": "清源客运中心",
+      "worldNodeId": "location.qingyuan",
       "stationClass": "city",
       "active": true
     },
     {
-      "id": "station.038",
-      "name": "岭川客运中心",
-      "worldNodeId": "location.lingchuan_s",
+      "id": "station.032",
+      "name": "东港客运中心",
+      "worldNodeId": "location.donggang",
+      "stationClass": "hub",
+      "active": true
+    },
+    {
+      "id": "station.033",
+      "name": "宁湾客运中心",
+      "worldNodeId": "location.ningwan",
       "stationClass": "city",
       "active": true
     },
     {
-      "id": "station.039",
-      "name": "榕海客运中心",
-      "worldNodeId": "location.ronghai",
+      "id": "station.034",
+      "name": "海川客运中心",
+      "worldNodeId": "location.haichuan",
       "stationClass": "city",
       "active": true
     },
     {
-      "id": "station.040",
-      "name": "云港客运中心",
-      "worldNodeId": "location.yungang",
+      "id": "station.035",
+      "name": "瑞州客运中心",
+      "worldNodeId": "location.ruizhou",
+      "stationClass": "city",
+      "active": true
+    },
+    {
+      "id": "station.036",
+      "name": "青浦客运中心",
+      "worldNodeId": "location.qingpu",
       "stationClass": "county",
       "active": true
     },
     {
-      "id": "station.041",
+      "id": "station.037",
       "name": "望原客运中心",
       "worldNodeId": "location.wangyuan",
       "stationClass": "town",
       "active": true
     },
     {
-      "id": "station.042",
+      "id": "station.038",
       "name": "星川客运中心",
       "worldNodeId": "location.xingchuan",
       "stationClass": "county",
       "active": true
     },
     {
-      "id": "station.043",
+      "id": "station.039",
       "name": "青岩客运中心",
       "worldNodeId": "location.qingyan",
       "stationClass": "county",
       "active": true
     },
     {
-      "id": "station.044",
+      "id": "station.040",
       "name": "澜山客运中心",
       "worldNodeId": "location.lanshan",
       "stationClass": "city",
       "active": true
     },
     {
-      "id": "station.045",
+      "id": "station.041",
+      "name": "南澜客运中心",
+      "worldNodeId": "location.nanlan",
+      "stationClass": "city",
+      "active": true
+    },
+    {
+      "id": "station.042",
       "name": "川宁客运中心",
       "worldNodeId": "location.chuanning",
       "stationClass": "county",
       "active": true
     },
     {
-      "id": "station.046",
+      "id": "station.043",
+      "name": "岭川客运中心",
+      "worldNodeId": "location.lingchuan_s",
+      "stationClass": "city",
+      "active": true
+    },
+    {
+      "id": "station.044",
       "name": "澄江客运中心",
       "worldNodeId": "location.chengjiang",
       "stationClass": "city",
       "active": true
     },
     {
-      "id": "station.047",
+      "id": "station.045",
+      "name": "榕海客运中心",
+      "worldNodeId": "location.ronghai",
+      "stationClass": "city",
+      "active": true
+    },
+    {
+      "id": "station.046",
       "name": "海宁客运中心",
       "worldNodeId": "location.haining",
+      "stationClass": "county",
+      "active": true
+    },
+    {
+      "id": "station.047",
+      "name": "云港客运中心",
+      "worldNodeId": "location.yungang",
       "stationClass": "county",
       "active": true
     },

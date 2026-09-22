@@ -93,7 +93,7 @@ class PlayableClient {
       this.runtime.repositories.allServicePlans();
 
     return {
-      version: "0.18.0-map",
+      version: "0.18.1-map-ui",
       company,
       currentGameSecond:
         Number(this.currentGameSecond),
@@ -110,9 +110,15 @@ class PlayableClient {
           const node = world.getNode(
             station.worldNodeId
           );
+          const mapStation =
+            this.runtime.mapContent.stations.find(
+              (value) => value.id === String(station.id)
+            );
           return {
             id: String(station.id),
             name: station.name,
+            stationClass:
+              mapStation?.stationClass ?? "county",
             xM: node?.position.xM ?? 0,
             yM: node?.position.yM ?? 0
           };

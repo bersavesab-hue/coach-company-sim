@@ -21,6 +21,7 @@ import type { VehicleMarketPolicy } from "../application/policies/VehicleMarketP
 import type { OperationsPolicy } from "../application/policies/OperationsPolicy.js";
 import { FORMAL_VEHICLE_CONTENT } from "../content/vehicle/VehicleContentSeed.js";
 import { createPlayableWorldSeed } from "../content/map/WorldMapSeed.js";
+import { FORMAL_WORLD_MAP_CONTENT } from "../content/map/FormalWorldMapContent.js";
 import { InMemoryRepositoryBundle } from "../infrastructure/memory/InMemoryRepositoryBundle.js";
 import { SequentialRuntimeIdAllocator } from "../infrastructure/runtime/SequentialRuntimeIdAllocator.js";
 
@@ -137,6 +138,7 @@ export function createPlayableGame() {
     repositories,
     company,
     stations: worldSeed.stations,
+    mapContent: FORMAL_WORLD_MAP_CONTENT,
     startGameSecond: PLAYABLE_START_GAME_SECOND
   };
 }
