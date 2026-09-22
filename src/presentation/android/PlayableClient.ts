@@ -93,7 +93,7 @@ class PlayableClient {
       this.runtime.repositories.allServicePlans();
 
     return {
-      version: "0.18.2-road-hierarchy",
+      version: "0.18.3-geographic-map",
       company,
       currentGameSecond:
         Number(this.currentGameSecond),
@@ -134,7 +134,7 @@ class PlayableClient {
           roadClass: road.roadClass,
           roadCode: mapRoad?.roadCode ?? null,
           displayPriority:
-            mapRoad?.displayPriority ?? 3,
+            mapRoad?.displayPriority ?? 4,
           showLabel:
             mapRoad?.showLabel ?? false,
           points: road.polyline.map((point) => ({

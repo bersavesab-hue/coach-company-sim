@@ -20,7 +20,7 @@ export interface WorldMapRoadContent {
   readonly lengthM: number; readonly speedLimitMps: number; readonly roadClass: RoadClass;
   readonly direction: RoadDirection; readonly polyline: readonly WorldMapPointContent[]; readonly active: boolean;
   readonly roadCode?: string;
-  readonly displayPriority?: 1 | 2 | 3;
+  readonly displayPriority?: 1 | 2 | 3 | 4;
   readonly showLabel?: boolean;
 }
 export interface WorldMapStationContent {

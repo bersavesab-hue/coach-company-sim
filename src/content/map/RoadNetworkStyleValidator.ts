@@ -93,21 +93,30 @@ export function validateFormalRoadNetworkStyle(
     }
 
     if (
-      road.roadClass === "provincial_road" &&
+      road.roadClass === "national_road" &&
       road.displayPriority !== 2
     ) {
       issues.push(
-        `${road.id} provincial road must use displayPriority 2`
+        `${road.id} national road must use displayPriority 2`
+      );
+    }
+
+    if (
+      road.roadClass === "provincial_road" &&
+      road.displayPriority !== 3
+    ) {
+      issues.push(
+        `${road.id} provincial road must use displayPriority 3`
       );
     }
 
     if (
       (road.roadClass === "county_road" ||
         road.roadClass === "local") &&
-      road.displayPriority !== 3
+      road.displayPriority !== 4
     ) {
       issues.push(
-        `${road.id} county/local road must use displayPriority 3`
+        `${road.id} county/local road must use displayPriority 4`
       );
     }
   }

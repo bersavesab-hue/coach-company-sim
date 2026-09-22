@@ -21,13 +21,20 @@ test("formal world map content is valid and supports all five road classes", () 
     {}
   );
   assert.deepEqual(counts, {
-    expressway: 27,
-    national_road: 44,
-    provincial_road: 46,
+    expressway: 24,
+    national_road: 36,
+    provincial_road: 38,
     county_road: 12,
-    local: 16
+    local: 10
   });
-  assert.equal(FORMAL_WORLD_MAP_CONTENT.roads.length, 145);
+  assert.equal(FORMAL_WORLD_MAP_CONTENT.roads.length, 120);
+  assert.equal(FORMAL_WORLD_MAP_CONTENT.nodes.length, 72);
+  assert.equal(
+    FORMAL_WORLD_MAP_CONTENT.roads.filter(
+      (road) => road.displayPriority === 1
+    ).every((road) => road.roadClass === "expressway"),
+    true
+  );
 });
 
 test("formal world map builds the canonical runtime graph", () => {

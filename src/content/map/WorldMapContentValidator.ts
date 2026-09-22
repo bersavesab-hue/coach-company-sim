@@ -35,7 +35,7 @@ export function validateWorldMapContent(content: WorldMapContentV1): WorldMapVal
     if (!nodeIds.has(road.toNodeId)) issues.push(`road ${road.id} references missing to node ${road.toNodeId}`);
     if (!ROAD_CLASSES.has(road.roadClass)) issues.push(`road ${road.id} has unsupported class ${road.roadClass}`);
     if (road.roadCode !== undefined && !/^[A-Z][0-9]{2,3}$/.test(road.roadCode)) issues.push(`road ${road.id} has invalid roadCode ${road.roadCode}`);
-    if (road.displayPriority !== undefined && ![1, 2, 3].includes(road.displayPriority)) issues.push(`road ${road.id} has invalid displayPriority`);
+    if (road.displayPriority !== undefined && ![1, 2, 3, 4].includes(road.displayPriority)) issues.push(`road ${road.id} has invalid displayPriority`);
     if (!Number.isSafeInteger(road.lengthM) || road.lengthM <= 0) issues.push(`road ${road.id} has invalid lengthM`);
     if (!Number.isSafeInteger(road.speedLimitMps) || road.speedLimitMps <= 0) issues.push(`road ${road.id} has invalid speedLimitMps`);
     if (road.polyline.length < 2) { issues.push(`road ${road.id} needs at least two polyline points`); continue; }

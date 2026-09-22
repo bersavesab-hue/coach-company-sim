@@ -81,7 +81,7 @@ function dist(a,b){return Math.hypot(a.xM-b.xM,a.yM-b.yM);}
 function nearestNode(p,limit){var best=null,bd=limit;data.nodes.forEach(function(n){var d=dist(p,n.position);if(d<bd){bd=d;best=n;}});return best;}
 function roadLength(points){var t=0;for(var i=1;i<points.length;i++)t+=dist(points[i-1],points[i]);return Math.max(1,Math.round(t));}
 function speed(cls){return cls==="expressway"?31:cls==="national_road"?25:cls==="provincial_road"?22:cls==="county_road"?18:14;}
-function displayPriority(cls){return cls==="expressway"?1:(cls==="national_road"||cls==="provincial_road"?2:3);}
+function displayPriority(cls){return cls==="expressway"?1:cls==="national_road"?2:cls==="provincial_road"?3:4;}
 function nextRoadCode(cls){
  var cfg={expressway:["H",1,2],national_road:["N",101,3],provincial_road:["P",201,3],county_road:["C",301,3],local:["L",401,3]}[cls],used=new Set(data.roads.map(function(r){return r.roadCode;}).filter(Boolean)),n=cfg[1],code="";
  do{code=cfg[0]+String(n++).padStart(cfg[2],"0");}while(used.has(code));
