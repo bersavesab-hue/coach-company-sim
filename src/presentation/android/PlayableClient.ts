@@ -94,7 +94,7 @@ class PlayableClient {
       this.runtime.repositories.allServicePlans();
 
     return {
-      version: "0.18.8-map-presentation",
+      version: "0.18.9-road-render-polish",
       company,
       currentGameSecond:
         Number(this.currentGameSecond),

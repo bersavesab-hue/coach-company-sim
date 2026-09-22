@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.18.9-stage17-road-render-polish
+
+### Removed
+- 删除单纯“绿色边缘 + 白色路面”两层道路的扁平显示。
+- 删除明显可见的 junction halo 圆环，交叉口不再呈现节点圆点感。
+- 全图视角不再保留与近景相同的高速粗度和道路编号密度。
+
+### Added
+- 新增 road-shadow：所有道路增加低透明度柔和外轮廓，使道路从背景中自然抬起。
+- 道路正式改为四层渲染：shadow → casing → surface → detail。
+- 高速与国道近景新增细节线，区域/全国视角自动隐藏。
+- 高速、国道、省道、县道、乡道重新调整宽度比例与绿色明度，层级更接近导航地图。
+- 匝道、城市环线、接驳线和地方接入分别调整独立线宽。
+- 全图 LOD 新增高速自动减薄与路牌隐藏，降低拥挤感。
+- 路牌圆角、描边和颜色同步优化。
+
+### Changed
+- junction patch 仅用于路面接口融合，不再额外绘制 halo。
+- 道路 surface 统一使用更柔和的米白色，降低纯白线条的生硬感。
+- Android / package 版本升级至 0.18.9。
+- GAME_VERSION 更新为 0.18.9-stage17-road-render-polish。
+
+### Validation
+- 本版不修改正式路网拓扑、寻路与车辆运行数据。
+- Core Check 与 APK 构建继续作为提交门禁。
+
+
 ## 0.18.8-stage17-map-presentation
 
 ### Removed

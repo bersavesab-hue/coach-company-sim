@@ -36,21 +36,35 @@ linear-gradient(160deg,#dce2d3,#cfd8cb 52%,#d8d6c5)}
 .mapChip{background:rgba(15,23,29,.90);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:7px 9px;color:#eef3f5;box-shadow:0 4px 14px #0003}.mapChip b{font-size:12px;display:block}.mapChip span{font-size:9px;color:#99abb8}
 .mapControls{position:absolute;right:8px;top:8px;z-index:6;display:flex;flex-direction:column;gap:5px}.mapControls button{width:38px;height:38px;border:1px solid rgba(255,255,255,.14);border-radius:10px;background:rgba(15,23,29,.92);color:#fff;font-size:17px}
 .mapLegend{position:absolute;left:8px;bottom:8px;z-index:5;background:rgba(15,23,29,.86);border:1px solid rgba(255,255,255,.09);border-radius:9px;padding:6px 8px;display:flex;gap:9px;flex-wrap:wrap;font-size:9px;color:#cbd5db;max-width:calc(100% - 16px)}
-.leg{display:flex;align-items:center;gap:4px}.leg i{display:block;width:18px;border-top-style:solid;border-radius:2px}.leg.exp i{border-top-width:5px;border-color:#079f86}.leg.nat i{border-top-width:4px;border-color:#1fb28c}.leg.pro i{border-top-width:3px;border-color:#48b792}.leg.cty i{border-top-width:2px;border-color:#7eb59f}
-.road-casing{fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
-.road{fill:none;stroke:#f8f6ef;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
-.road-casing.local{stroke:#aebbb1;stroke-width:2.7}.road.local{stroke-width:1.45}
-.road-casing.county_road{stroke:#7eb59f;stroke-width:3.4}.road.county_road{stroke-width:1.9}
-.road-casing.provincial_road{stroke:#48b792;stroke-width:4.2}.road.provincial_road{stroke-width:2.5}
-.road-casing.national_road{stroke:#1fb28c;stroke-width:5.5}.road.national_road{stroke-width:3.2}
-.road-casing.expressway{stroke:#079f86;stroke-width:7.2}.road.expressway{stroke-width:4.2}
-.road-casing.role-urban_ring{stroke:#159b7f;stroke-width:4.8}.road.role-urban_ring{stroke-width:2.8}
-.road-casing.role-connector{stroke:#3fac8d}.road.role-connector{stroke-width:2.2}
-.road-casing.role-ramp{stroke:#28a88e;stroke-width:3.0}.road.role-ramp{stroke-width:1.55}
-.road-casing.role-local_access{stroke:#91aa9d}.road.role-local_access{stroke-width:1.35}
-.junctionPatch{fill:#f8f6ef;stroke:none;vector-effect:non-scaling-stroke}
-.junctionHalo{fill:none;stroke:#bfc8bd;stroke-width:.8;opacity:.45;vector-effect:non-scaling-stroke}
-.roadShield rect{rx:3;ry:3;stroke:#fff;stroke-width:1;vector-effect:non-scaling-stroke}.roadShield text{font-size:8px;font-weight:850;text-anchor:middle;fill:#fff;pointer-events:none}.roadShield.expressway rect{fill:#14957f}.roadShield.national_road rect{fill:#df654e}.roadShield.provincial_road rect{fill:#4f9c7d}.roadShield.county_road rect{fill:#6f8b81}.roadShield.local rect{fill:#858983}
+.leg{display:flex;align-items:center;gap:4px}.leg i{display:block;width:18px;border-top-style:solid;border-radius:3px;box-shadow:inset 0 0 0 1px #faf9f2}.leg.exp i{border-top-width:6px;border-color:#078e78}.leg.nat i{border-top-width:5px;border-color:#20a482}.leg.pro i{border-top-width:4px;border-color:#47ad8d}.leg.cty i{border-top-width:3px;border-color:#7fae9b}
+.road-shadow,.road-casing,.road,.road-detail{fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.road-shadow{stroke:#52665d;opacity:.14}
+.road{stroke:#faf9f2}
+.road-detail{stroke:#d9e8df;opacity:.72;stroke-dasharray:5 4}
+.road-shadow.local{stroke-width:3.9}.road-casing.local{stroke:#a7b5ad;stroke-width:3.0}.road.local{stroke-width:1.65}
+.road-shadow.county_road{stroke-width:4.8}.road-casing.county_road{stroke:#7fae9b;stroke-width:3.8}.road.county_road{stroke-width:2.25}
+.road-shadow.provincial_road{stroke-width:6.0}.road-casing.provincial_road{stroke:#47ad8d;stroke-width:4.9}.road.provincial_road{stroke-width:3.15}
+.road-shadow.national_road{stroke-width:7.4}.road-casing.national_road{stroke:#20a482;stroke-width:6.2}.road.national_road{stroke-width:4.1}
+.road-shadow.expressway{stroke-width:9.7}.road-casing.expressway{stroke:#078e78;stroke-width:8.3}.road.expressway{stroke-width:5.7}
+.road-detail.expressway{stroke-width:.85}.road-detail.national_road{stroke-width:.65}
+.road-shadow.role-urban_ring{stroke-width:6.6}.road-casing.role-urban_ring{stroke:#17997e;stroke-width:5.4}.road.role-urban_ring{stroke-width:3.5}
+.road-shadow.role-connector{stroke-width:5.0}.road-casing.role-connector{stroke:#51ad91;stroke-width:4.0}.road.role-connector{stroke-width:2.4}
+.road-shadow.role-ramp{stroke-width:3.8}.road-casing.role-ramp{stroke:#55aa91;stroke-width:3.0}.road.role-ramp{stroke-width:1.65}
+.road-shadow.role-local_access{stroke-width:3.4}.road-casing.role-local_access{stroke:#98aaa0;stroke-width:2.7}.road.role-local_access{stroke-width:1.45}
+.junctionPatch{fill:#faf9f2;stroke:none;vector-effect:non-scaling-stroke}
+.junctionHalo{display:none}
+#mapSvg[data-detail="0"] .road-shadow.expressway{stroke-width:7.2;opacity:.10}
+#mapSvg[data-detail="0"] .road-casing.expressway{stroke-width:6.0}
+#mapSvg[data-detail="0"] .road.expressway{stroke-width:3.8}
+#mapSvg[data-detail="0"] .roadShield{display:none}
+#mapSvg[data-detail="1"] .road-shadow.expressway{stroke-width:8.2}
+#mapSvg[data-detail="1"] .road-casing.expressway{stroke-width:6.9}
+#mapSvg[data-detail="1"] .road.expressway{stroke-width:4.5}
+#mapSvg[data-detail="1"] .road-shadow.national_road{stroke-width:6.3}
+#mapSvg[data-detail="1"] .road-casing.national_road{stroke-width:5.2}
+#mapSvg[data-detail="1"] .road.national_road{stroke-width:3.3}
+#mapSvg[data-detail="0"] .road-detail,#mapSvg[data-detail="1"] .road-detail,#mapSvg[data-detail="2"] .road-detail{display:none}
+.roadShield rect{rx:4;ry:4;stroke:#fdfcf7;stroke-width:1.2;vector-effect:non-scaling-stroke}.roadShield text{font-size:8px;font-weight:900;text-anchor:middle;fill:#fff;pointer-events:none}.roadShield.expressway rect{fill:#087f6e}.roadShield.national_road rect{fill:#d85c46}.roadShield.provincial_road rect{fill:#3d9376}.roadShield.county_road rect{fill:#6d877b}.roadShield.local rect{fill:#858d87}
 .stationHalo{fill:none;stroke:#d89c3d;stroke-width:2.2;opacity:.46;vector-effect:non-scaling-stroke}
 .station{fill:#f7f4e8;stroke:#202b32;stroke-width:1.8;vector-effect:non-scaling-stroke}.station.hub{fill:#f0b75c;stroke-width:2.5}.station.city{fill:#fbf6e9;stroke-width:2.1}.station.county{fill:#eef0e9;stroke-width:1.6}.station.town{fill:#e7ebe4;stroke-width:1.3}
 .station.locked{fill:#bcc3bd;stroke:#737e78;opacity:.88}.stationHalo.locked{stroke:#8e9892;opacity:.34}
@@ -137,10 +151,10 @@ function stitchCorridors(roads){const groups=new Map();roads.forEach(r=>{const k
 function shieldSvg(r,sx,sy){if(!r.showLabel||!r.roadCode||!r.points?.length)return"";const p=r.points[Math.floor(r.points.length/2)],x=sx(p.xM),y=sy(p.yM),w=Math.max(20,9+r.roadCode.length*5.2);return '<g class="roadShield '+esc(r.roadClass)+' priority'+(r.displayPriority||4)+'" transform="translate('+(x-w/2).toFixed(1)+' '+(y-8).toFixed(1)+')"><rect width="'+w.toFixed(1)+'" height="15"></rect><text x="'+(w/2).toFixed(1)+'" y="10.5">'+esc(r.roadCode)+'</text></g>'}
 function initialMapCamera(m){const hubs=state.stations.filter(s=>s.stationClass==="hub").slice(0,3);if(!hubs.length)return{x:0,y:0,w:m.cw,h:m.ch};const wx=hubs.reduce((v,s)=>v+s.xM,0)/hubs.length,wy=hubs.reduce((v,s)=>v+s.yM,0)/hubs.length,cx=(wx-m.b.minXM)/m.ww*m.cw,cy=m.ch-(wy-m.b.minYM)/m.wh*m.ch,w=m.cw*.34,h=w*(m.ch/m.cw);return{x:Math.max(0,Math.min(m.cw-w,cx-w*.50)),y:Math.max(0,Math.min(m.ch-h,cy-h*.52)),w,h}}
 function routeBadgeSvg(route,sx,sy){if(!route.pathPoints||route.pathPoints.length<2)return"";const p=route.pathPoints[Math.floor(route.pathPoints.length/2)],x=sx(p.xM),y=sy(p.yM),w=Math.max(24,10+String(route.code||"").length*6);return '<g class="routeBadge" transform="translate('+(x-w/2).toFixed(1)+' '+(y-9).toFixed(1)+')"><rect width="'+w+'" height="17"></rect><text x="'+(w/2).toFixed(1)+'" y="11.5">'+esc(route.code)+'</text></g>'}
-function renderMap(){const m=mapBase(),sx=x=>(x-m.b.minXM)/m.ww*m.cw,sy=y=>m.ch-(y-m.b.minYM)/m.wh*m.ch;if(!mapCamera)mapCamera=initialMapCamera(m);let h=terrainLayer(m),edges='',patches='',surfaces='',routeHalos='',routeLines='',labels='',routeLabels='',counts={expressway:0,national_road:0,provincial_road:0,county_road:0,local:0};state.roads.forEach(r=>counts[r.roadClass]=(counts[r.roadClass]||0)+1);const corridors=stitchCorridors(state.roads).sort((a,b)=>(b.displayPriority||4)-(a.displayPriority||4));corridors.forEach(r=>{const priority='priority'+(r.displayPriority||4),role='role-'+esc(r.roadRole||"mainline"),d=smoothPath(r.points,sx,sy);edges+='<path class="road-casing '+esc(r.roadClass)+' '+role+' '+priority+'" d="'+d+'"/>';surfaces+='<path class="road '+esc(r.roadClass)+' '+role+' '+priority+'" d="'+d+'"/>';labels+=shieldSvg(r,sx,sy)});
-(state.junctions||[]).forEach(j=>{const x=sx(j.xM),y=sy(j.yM),p=j.displayPriority||4,priority='priority'+p,rad=p===1?4.8:p===2?4.0:p===3?3.3:2.6;patches+='<circle class="junctionPatch '+priority+'" cx="'+x+'" cy="'+y+'" r="'+rad+'"/>';if(j.degree>=3&&p<=2)patches+='<circle class="junctionHalo '+priority+'" cx="'+x+'" cy="'+y+'" r="'+(rad+1.4)+'"/>'});
+function renderMap(){const m=mapBase(),sx=x=>(x-m.b.minXM)/m.ww*m.cw,sy=y=>m.ch-(y-m.b.minYM)/m.wh*m.ch;if(!mapCamera)mapCamera=initialMapCamera(m);let h=terrainLayer(m),shadows='',edges='',patches='',surfaces='',details='',routeHalos='',routeLines='',labels='',routeLabels='',counts={expressway:0,national_road:0,provincial_road:0,county_road:0,local:0};state.roads.forEach(r=>counts[r.roadClass]=(counts[r.roadClass]||0)+1);const corridors=stitchCorridors(state.roads).sort((a,b)=>(b.displayPriority||4)-(a.displayPriority||4));corridors.forEach(r=>{const priority='priority'+(r.displayPriority||4),role='role-'+esc(r.roadRole||"mainline"),roadClass=esc(r.roadClass),d=smoothPath(r.points,sx,sy);shadows+='<path class="road-shadow '+roadClass+' '+role+' '+priority+'" d="'+d+'"/>';edges+='<path class="road-casing '+roadClass+' '+role+' '+priority+'" d="'+d+'"/>';surfaces+='<path class="road '+roadClass+' '+role+' '+priority+'" d="'+d+'"/>';if(r.roadClass==="expressway"||r.roadClass==="national_road")details+='<path class="road-detail '+roadClass+' '+role+' '+priority+'" d="'+d+'"/>';labels+=shieldSvg(r,sx,sy)});
+(state.junctions||[]).forEach(j=>{const x=sx(j.xM),y=sy(j.yM),p=j.displayPriority||4,priority='priority'+p,rad=p===1?5.8:p===2?4.8:p===3?3.7:2.8;patches+='<circle class="junctionPatch '+priority+'" cx="'+x+'" cy="'+y+'" r="'+rad+'"/>'});
 (state.routes||[]).filter(r=>r.status==="active"&&r.pathPoints?.length>1).forEach(route=>{const d=smoothPath(route.pathPoints,sx,sy);routeHalos+='<path class="routeHalo" d="'+d+'"/>';routeLines+='<path class="routeLine" d="'+d+'"/>';routeLabels+=routeBadgeSvg(route,sx,sy)});
-h+=edges+patches+surfaces+routeHalos+routeLines+labels+routeLabels;
+h+=shadows+edges+patches+surfaces+details+routeHalos+routeLines+labels+routeLabels;
 state.stations.forEach(s=>{const x=sx(s.xM),y=sy(s.yM),cls=s.stationClass||"county",locked=!s.unlocked,rad=cls==="hub"?10.2:cls==="city"?7.4:cls==="county"?5.0:3.4;if(cls==="hub")h+='<circle class="stationHalo '+(locked?'locked':'')+'" cx="'+x+'" cy="'+y+'" r="'+(rad+4.2)+'"/>';h+='<circle class="station '+esc(cls)+' '+(locked?'locked':'')+'" cx="'+x+'" cy="'+y+'" r="'+rad+'"/>';if(locked)h+='<g class="stationLock" transform="translate('+x+' '+y+')"><path d="M-2.6 -1.4 V-3.0 A2.6 2.6 0 0 1 2.6 -3.0 V-1.4"/><rect x="-3.4" y="-1.5" width="6.8" height="5.5" rx="1.2"/></g>';h+='<text class="stationLabel '+esc(cls)+' '+(locked?'locked':'')+'" x="'+(x+rad+4)+'" y="'+(y-rad*.55)+'">'+esc(s.name.replace("客运中心",""))+'</text>'});
 (state.visibleVehicles||[]).forEach(v=>h+='<circle class="vehicle" cx="'+sx(v.xM)+'" cy="'+sy(v.yM)+'" r="6.2"/>');q("mapSvg").innerHTML=h;const unlocked=state.stations.filter(s=>s.unlocked).length;q("mapStats").textContent='已解锁 '+unlocked+'/'+state.stations.length+' · 声誉 '+state.company.reputationPermille+'/1000';applyMapCamera()}
 function applyMapCamera(){if(!mapCamera)return;const m=mapBase(),ratio=mapCamera.w/m.cw,detail=ratio<.22?3:ratio<.42?2:ratio<.70?1:0;q("mapSvg").setAttribute("viewBox",[mapCamera.x,mapCamera.y,mapCamera.w,mapCamera.h].join(" "));q("mapSvg").setAttribute("data-detail",String(detail))}
