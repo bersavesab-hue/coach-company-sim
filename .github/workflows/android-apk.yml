@@ -73,11 +73,11 @@ jobs:
       - name: Prepare APK artifact
         run: |
           mkdir -p artifacts
-          cp android-app/app/build/outputs/apk/debug/app-debug.apk artifacts/coach-company-sim-v0.18.6-interchange-sample.apk
+          cp android-app/app/build/outputs/apk/debug/app-debug.apk artifacts/coach-company-sim-v0.18.7-domestic-road-morphology.apk
 
       - uses: actions/upload-artifact@v4
         with:
-          name: coach-company-sim-v0.18.6-interchange-sample
-          path: artifacts/coach-company-sim-v0.18.6-interchange-sample.apk
+          name: coach-company-sim-v0.18.7-domestic-road-morphology
+          path: artifacts/coach-company-sim-v0.18.7-domestic-road-morphology.apk
           if-no-files-found: error
           retention-days: 14

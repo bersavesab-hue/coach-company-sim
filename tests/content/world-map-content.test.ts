@@ -23,15 +23,17 @@ test("formal world map content is valid and supports all five road classes", () 
   assert.deepEqual(counts, {
     expressway: 34,
     national_road: 40,
-    provincial_road: 67,
+    provincial_road: 77,
     county_road: 10,
-    local: 38
+    local: 39
   });
-  assert.equal(FORMAL_WORLD_MAP_CONTENT.roads.length, 189);
-  assert.equal(FORMAL_WORLD_MAP_CONTENT.nodes.length, 123);
+  assert.equal(FORMAL_WORLD_MAP_CONTENT.roads.length, 200);
+  assert.equal(FORMAL_WORLD_MAP_CONTENT.nodes.length, 130);
   assert.ok(
     FORMAL_WORLD_MAP_CONTENT.nodes.filter(
-      (node) => node.id.includes(".ring.")
+      (node) =>
+        node.id.includes(".ring.") ||
+        node.id.includes(".ring2.")
     ).length >= 32
   );
   assert.ok(
@@ -62,6 +64,60 @@ test("formal world map content is valid and supports all five road classes", () 
     ),
     false
   );
+  const startRingCounts = new Map<string, number>();
+  for (const road of FORMAL_WORLD_MAP_CONTENT.roads) {
+    if (["P820", "P821", "P822"].includes(road.roadCode ?? "")) {
+      startRingCounts.set(
+        road.roadCode!,
+        (startRingCounts.get(road.roadCode!) ?? 0) + 1
+      );
+    }
+  }
+  assert.deepEqual(
+    Object.fromEntries(startRingCounts),
+    { P820: 6, P821: 7, P822: 6 }
+  );
+  for (const oldPrefix of [
+    "location.junction.ring.heyuan.",
+    "location.junction.ring.yongan.",
+    "location.junction.ring.yunzhou."
+  ]) {
+    assert.equal(
+      FORMAL_WORLD_MAP_CONTENT.nodes.some(
+        (node) => node.id.startsWith(oldPrefix)
+      ),
+      false
+    );
+  }
+  const naturalCorridorIds = [
+    "road.r008",
+    "road.r009",
+    "road.r010",
+    "road.r014",
+    "road.r015",
+    "road.r021",
+    "road.r022",
+    "road.r027",
+    "road.r028",
+    "road.r029",
+    "road.r041",
+    "road.r042",
+    "road.r043",
+    "road.r064",
+    "road.r065",
+    "road.r069",
+    "road.r070"
+  ];
+  for (const roadId of naturalCorridorIds) {
+    const road = FORMAL_WORLD_MAP_CONTENT.roads.find(
+      (value) => value.id === roadId
+    );
+    assert.ok(road, `missing natural corridor ${roadId}`);
+    assert.ok(
+      road.polyline.length >= 4,
+      `${roadId} must use a multi-point natural corridor`
+    );
+  }
   for (const id of [
     "location.junction.j.h02.w",
     "location.junction.j.h02.e",

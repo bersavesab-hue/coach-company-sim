@@ -93,7 +93,7 @@ class PlayableClient {
       this.runtime.repositories.allServicePlans();
 
     return {
-      version: "0.18.6-interchange-sample",
+      version: "0.18.7-domestic-road-morphology",
       company,
       currentGameSecond:
         Number(this.currentGameSecond),
