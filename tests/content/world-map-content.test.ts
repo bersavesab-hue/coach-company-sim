@@ -18,4 +18,25 @@ test("formal world map builds the canonical runtime graph", () => {
   assert.equal(seed.world.allRoads().length, FORMAL_WORLD_MAP_CONTENT.roads.length);
   assert.equal(seed.stations.length, FORMAL_WORLD_MAP_CONTENT.stations.length);
   assert.ok(seed.passengerDemand.length > 0);
+
+  const start = seed.stations[0]!.worldNodeId;
+  const visited = new Set([String(start)]);
+  const queue = [start];
+  while (queue.length > 0) {
+    const current = queue.shift()!;
+    for (const edge of seed.world.outgoingFrom(current)) {
+      const next = edge.toNodeId;
+      if (!visited.has(String(next))) {
+        visited.add(String(next));
+        queue.push(next);
+      }
+    }
+  }
+  for (const station of seed.stations) {
+    assert.equal(
+      visited.has(String(station.worldNodeId)),
+      true,
+      `station ${station.id} is disconnected`
+    );
+  }
 });

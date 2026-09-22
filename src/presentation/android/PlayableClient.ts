@@ -64,25 +64,36 @@ class PlayableClient {
           this.currentGameSecond
       }
     );
-    const visibleVehicles = await this.query(
-      "map.visibleVehicles",
-      {
-        minXM: 0,
-        minYM: 0,
-        maxXM: 900_000,
-        maxYM: 600_000
-      }
-    );
-
     const world =
       this.runtime.repositories.world.get();
+    const activeRegions = world
+      .allRegions()
+      .filter((region) => region.active);
+    const mapBounds = activeRegions.reduce(
+      (bounds, region) => ({
+        minXM: Math.min(bounds.minXM, region.bounds.minXM),
+        minYM: Math.min(bounds.minYM, region.bounds.minYM),
+        maxXM: Math.max(bounds.maxXM, region.bounds.maxXM),
+        maxYM: Math.max(bounds.maxYM, region.bounds.maxYM)
+      }),
+      {
+        minXM: Number.POSITIVE_INFINITY,
+        minYM: Number.POSITIVE_INFINITY,
+        maxXM: Number.NEGATIVE_INFINITY,
+        maxYM: Number.NEGATIVE_INFINITY
+      }
+    );
+    const visibleVehicles = await this.query(
+      "map.visibleVehicles",
+      mapBounds
+    );
     const routes =
       this.runtime.repositories.allRoutes();
     const plans =
       this.runtime.repositories.allServicePlans();
 
     return {
-      version: "0.17.0-playable",
+      version: "0.18.0-map",
       company,
       currentGameSecond:
         Number(this.currentGameSecond),
@@ -93,6 +104,7 @@ class PlayableClient {
       market,
       dispatch,
       visibleVehicles,
+      mapBounds,
       stations: this.runtime.stations.map(
         (station) => {
           const node = world.getNode(
@@ -106,18 +118,14 @@ class PlayableClient {
           };
         }
       ),
-      roads: world.allRoads().map((road) => {
-        const from = world.getNode(road.fromNodeId);
-        const to = world.getNode(road.toNodeId);
-        return {
-          id: String(road.id),
-          fromX: from?.position.xM ?? 0,
-          fromY: from?.position.yM ?? 0,
-          toX: to?.position.xM ?? 0,
-          toY: to?.position.yM ?? 0,
-          roadClass: road.roadClass
-        };
-      }),
+      roads: world.allRoads().map((road) => ({
+        id: String(road.id),
+        roadClass: road.roadClass,
+        points: road.polyline.map((point) => ({
+          xM: point.xM,
+          yM: point.yM
+        }))
+      })),
       routes: routes.map((route) =>
         this.routeDto(route)
       ),
