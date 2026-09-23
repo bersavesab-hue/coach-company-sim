@@ -94,7 +94,7 @@ class PlayableClient {
       this.runtime.repositories.allServicePlans();
 
     return {
-      version: "0.19.6-map-runtime-fix",
+      version: "0.19.7-reference-road-network",
       company,
       currentGameSecond:
         Number(this.currentGameSecond),

@@ -90,6 +90,62 @@ test("formal world map content is valid and supports all five road classes", () 
     H13: 4,
     H21: 4
   });
+
+  const expresswayRoads =
+    FORMAL_WORLD_MAP_CONTENT.roads.filter(
+      (road) => road.roadClass === "expressway"
+    );
+  for (const road of expresswayRoads) {
+    assert.ok(
+      road.polyline.length >= 7,
+      `${road.id} must keep the reference-road multi-point geometry`
+    );
+    const from =
+      FORMAL_WORLD_MAP_CONTENT.nodes.find(
+        (node) => node.id === road.fromNodeId
+      )!;
+    const to =
+      FORMAL_WORLD_MAP_CONTENT.nodes.find(
+        (node) => node.id === road.toNodeId
+      )!;
+    assert.ok(from);
+    assert.ok(to);
+    assert.ok(
+      Math.min(
+        Math.abs(
+          to.position.xM - from.position.xM
+        ),
+        Math.abs(
+          to.position.yM - from.position.yM
+        )
+      ) >= 5000,
+      `${road.id} regressed to an axis-aligned grid segment`
+    );
+  }
+
+  const referenceExpresswayNodes = {
+    "location.junction.b": [260000, 990000],
+    "location.junction.i": [350000, 645000],
+    "location.junction.p": [390000, 370000],
+    "location.junction.c": [500000, 930000],
+    "location.junction.r": [960000, 360000],
+    "location.junction.f": [1470000, 815000],
+    "location.junction.m": [1450000, 590000],
+    "location.junction.u": [1730000, 175000]
+  } as const;
+  for (const [id, position] of Object.entries(
+    referenceExpresswayNodes
+  )) {
+    const node =
+      FORMAL_WORLD_MAP_CONTENT.nodes.find(
+        (value) => value.id === id
+      );
+    assert.ok(node, `missing reference expressway node ${id}`);
+    assert.deepEqual(
+      [node.position.xM, node.position.yM],
+      position
+    );
+  }
   for (const removedCode of ["H12", "H14", "H22"]) {
     assert.equal(
       FORMAL_WORLD_MAP_CONTENT.roads.some(

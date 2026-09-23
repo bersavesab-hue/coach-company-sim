@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.19.7-stage17-reference-road-network
+
+### Removed
+- 删除 0.19.6 中仍显得规则、方块化的绿色高速几何。
+- 删除旧高速节点排列形成的近似横平竖直视觉。
+- 不保留任何旧高速副本、legacy expressway 或第二套导航路网。
+
+### Added
+- 按确认的参考图重新绘制全部 34 个正式高速 RoadSegment。
+- H01 / H02 / H03 重做为三条自然起伏的横向主走廊。
+- H11 重做为西部纵向/弧形联络。
+- H21 重做为中央斜向联络。
+- H13 重做为东部沿海弧形联络。
+- 所有高速段统一升级为至少 7 个控制点的自然曲线。
+- 与新高速互通相连的 17 条省道 connector / local ramp 同步重接新节点。
+- 新增参考高速节点与非方格几何测试，防止后续回退成轴对齐路网。
+
+### Changed
+- 高速互通节点重新定位，以匹配参考图的自然路网密度和弯曲关系。
+- 高速 RoadSegment ID、roadCode、道路等级、寻路入口保持正式兼容。
+- Android / package 版本升级至 0.19.7。
+- GAME_VERSION 更新为 0.19.7-stage17-reference-road-network。
+
+### Validation
+- expressway 数量必须保持 34。
+- 高速代码集合保持 H01 / H02 / H03 / H11 / H13 / H21。
+- 每条高速必须至少 7 个 polyline 控制点。
+- 高速起终节点不得出现小于 5km 的轴向差值，避免恢复方格路网。
+- 所有客运站必须继续保持全图连通。
+- Core Check 与 Android APK 构建必须同时通过。
+
+
 ## 0.19.6-stage17-map-runtime-fix
 
 ### Fixed
