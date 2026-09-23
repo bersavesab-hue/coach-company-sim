@@ -259,3 +259,13 @@ RoadNetworkStyleValidator` 会在 Core Check 和 APK 构建前阻止道路编号
 - 默认值为 0 / 0 / 1 / 1，表示底图完整覆盖 1100 × 825 viewBox。
 - 后续山脉、河流、海岸与路网需要微调时，只允许调整 calibration，不修改道路世界坐标来迁就背景。
 - 1100 × 825 viewBox 与 2896 × 2172 底图保持严格 4:3 比例。
+
+
+## 地图运行时容错
+
+- Android WebView 不再运行时 fetch map-view.v1.json；APK 构建阶段将同一正式配置 JSON 直接注入 index.html。
+- map-view.v1.json 仍保留在 APK 中作为调试/检查资源，但不是运行时依赖。
+- base-terrain.webp 不再从 APK 生成目录删除，作为瓦片加载失败时的唯一兜底。
+- terrainTiles 正常加载后隐藏 fallback；任一瓦片加载失败时恢复 fallback，禁止出现透明/空白地图块。
+- 构建必须逐张确认 17 个瓦片文件存在，同时确认 fallback 整图存在。
+- 模板必须保留 __MAP_VIEW_CONFIG_JSON__ 构建占位符；正式 APK 中该占位符必须被完全替换。

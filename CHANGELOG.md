@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.19.6-stage17-map-runtime-fix
+
+### Fixed
+- 修复地图 LOD 版在部分 Android WebView 中可能因本地 JSON fetch 行为差异导致地图配置加载异常的问题。
+- 修复 APK 生成后删除 base-terrain.webp，导致瓦片加载异常时没有任何底图兜底的问题。
+- 修复“构建成功但运行时地图可能空白”的验证缺口。
+
+### Changed
+- map-view.v1.json 改为构建时直接注入 index.html，运行时不再发起 fetch。
+- base-terrain.webp 正式保留在 APK，作为瓦片加载失败 fallback。
+- terrain tile 加载成功后隐藏 fallback；瓦片加载失败时自动恢复 fallback。
+- APK 构建新增逐张 17 瓦片存在性检查和整图 fallback 存在性检查。
+- Android / package 版本升级至 0.19.6。
+- GAME_VERSION 更新为 0.19.6-stage17-map-runtime-fix。
+
+### Validation
+- 新增 APK 地图运行时专项测试，禁止恢复本地 JSON fetch。
+- 模板必须包含构建注入占位符、fallback 底图和瓦片加载/失败处理。
+- Core Check 与 Android APK 构建必须同时通过。
+
+
 ## 0.19.5-stage17-map-lod-tiles
 
 ### Removed

@@ -88,6 +88,46 @@ fs.copyFileSync(
   )
 );
 
+const generatedIndexPath = path.join(
+  outputDir,
+  "index.html"
+);
+const indexTemplate = fs.readFileSync(
+  generatedIndexPath,
+  "utf8"
+);
+if (
+  !indexTemplate.includes(
+    "__MAP_VIEW_CONFIG_JSON__"
+  )
+) {
+  throw new Error(
+    "Map view config placeholder is missing from APK template."
+  );
+}
+const generatedIndex =
+  indexTemplate.replace(
+    "__MAP_VIEW_CONFIG_JSON__",
+    JSON.stringify(mapViewConfig)
+  );
+if (
+  generatedIndex.includes(
+    "__MAP_VIEW_CONFIG_JSON__"
+  ) ||
+  generatedIndex.includes(
+    'fetch("map-view.v1.json"'
+  )
+) {
+  throw new Error(
+    "APK index still contains runtime map-config loading."
+  );
+}
+fs.writeFileSync(
+  generatedIndexPath,
+  generatedIndex,
+  "utf8"
+);
+
 const apkAssetSourceDir = path.resolve(
   "presentation/apk/assets"
 );
@@ -229,13 +269,35 @@ if (
   );
 }
 
-fs.rmSync(
-  path.join(
-    outputDir,
-    "assets/map/base-terrain.webp"
-  ),
-  { force: true }
-);
+if (
+  !fs.existsSync(
+    path.join(
+      outputDir,
+      "assets/map/base-terrain.webp"
+    )
+  )
+) {
+  throw new Error(
+    "Terrain fallback image is missing from generated APK assets."
+  );
+}
+
+for (const config of mapViewConfig.terrain.levels) {
+  for (let row = 0; row < config.rows; row += 1) {
+    for (let col = 0; col < config.cols; col += 1) {
+      const tilePath = path.join(
+        terrainPyramidDir,
+        `z${config.level}`,
+        `${col}-${row}.webp`
+      );
+      if (!fs.existsSync(tilePath)) {
+        throw new Error(
+          `Terrain tile missing: z${config.level}/${col}-${row}.webp`
+        );
+      }
+    }
+  }
+}
 
 await build({
   entryPoints: [

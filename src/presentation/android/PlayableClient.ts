@@ -94,7 +94,7 @@ class PlayableClient {
       this.runtime.repositories.allServicePlans();
 
     return {
-      version: "0.19.5-map-lod-tiles",
+      version: "0.19.6-map-runtime-fix",
       company,
       currentGameSecond:
         Number(this.currentGameSecond),
