@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
+import vm from "node:vm";
 import test from "node:test";
 
 const template = fs.readFileSync(
@@ -48,6 +49,28 @@ test(
         'onclick="openPage(\'routes\')">＋ 新建线路'
       ),
       false
+    );
+  }
+);
+
+
+test(
+  "map route planner inline script parses",
+  () => {
+    const scripts = [
+      ...template.matchAll(
+        /<script>([\s\S]*?)<\/script>/g
+      )
+    ];
+    assert.ok(scripts.length > 0);
+    const inline =
+      scripts[scripts.length - 1]![1]!
+        .replace(
+          "__MAP_VIEW_CONFIG_JSON__",
+          "{}"
+        );
+    assert.doesNotThrow(
+      () => new vm.Script(inline)
     );
   }
 );

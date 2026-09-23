@@ -31,6 +31,7 @@
 - previewRoute() 与 createRoute() 生成的 pathPoints 必须完全一致。
 - 新建线路主入口必须调用 startMapRoutePlanning()。
 - Core Check 与 Android APK 构建必须同时通过。
+- 修正版本收口时 PlayableClient 预览实现未进入最终提交的问题，并新增地图页 inline script 语法解析测试。
 
 
 ## 0.19.7-stage17-reference-road-network

@@ -19,6 +19,7 @@ import {
 import type { CommandType } from "../../contracts/commands/CommandTypes.js";
 import type { CommandEnvelope } from "../../contracts/commands/CommandEnvelope.js";
 import type { PassengerRoute } from "../../domain/route/PassengerRoute.js";
+import { buildOfficialRoutePath } from "../../application/services/RoutePathService.js";
 import type { ServicePlan } from "../../domain/schedule/ServicePlan.js";
 import { isMapStationUnlocked } from "../../content/map/MapStationUnlockPolicy.js";
 import {
@@ -32,7 +33,21 @@ interface UiActionResult {
   readonly message: string;
 }
 
-class PlayableClient {
+export interface UiRoutePreviewResult {
+  readonly ok: boolean;
+  readonly message: string;
+  readonly pathPoints: readonly {
+    readonly xM: number;
+    readonly yM: number;
+  }[];
+  readonly distanceM: number;
+  readonly estimatedSeconds: number;
+  readonly roadClassBreakdownM: Readonly<
+    Record<string, number>
+  >;
+}
+
+export class PlayableClient {
   private readonly runtime = createPlayableGame();
   private currentGameSecond =
     this.runtime.startGameSecond;
@@ -256,6 +271,112 @@ class PlayableClient {
       ),
       "议价请求已提交。"
     );
+  }
+
+  async previewRoute(input: {
+    readonly originStationId: string;
+    readonly destinationStationId: string;
+  }): Promise<UiRoutePreviewResult> {
+    const reputationPermille = Number(
+      this.runtime.company.reputationPermille
+    );
+    for (const stationId of [
+      input.originStationId,
+      input.destinationStationId
+    ]) {
+      const mapStation =
+        this.runtime.mapContent.stations.find(
+          (station) => station.id === stationId
+        );
+      if (
+        mapStation &&
+        !isMapStationUnlocked(
+          mapStation,
+          reputationPermille
+        )
+      ) {
+        return {
+          ok: false,
+          message:
+            `${mapStation.name} 尚未解锁，需要声誉 ${mapStation.unlockReputationPermille}/1000。`,
+          pathPoints: [],
+          distanceM: 0,
+          estimatedSeconds: 0,
+          roadClassBreakdownM: {}
+        };
+      }
+    }
+
+    if (
+      input.originStationId ===
+      input.destinationStationId
+    ) {
+      return {
+        ok: false,
+        message: "始发站和终点站不能相同。",
+        pathPoints: [],
+        distanceM: 0,
+        estimatedSeconds: 0,
+        roadClassBreakdownM: {}
+      };
+    }
+
+    const built = buildOfficialRoutePath(
+      [
+        ids.station(input.originStationId),
+        ids.station(input.destinationStationId)
+      ],
+      "fastest_time",
+      this.runtime.repositories.stations,
+      this.runtime.repositories.world
+    );
+    if (!built.ok) {
+      return {
+        ok: false,
+        message: built.error.message,
+        pathPoints: [],
+        distanceM: 0,
+        estimatedSeconds: 0,
+        roadClassBreakdownM: {}
+      };
+    }
+
+    const world =
+      this.runtime.repositories.world.get();
+    const roadClassBreakdownM:
+      Record<string, number> = {};
+    let distanceM = 0;
+    let estimatedSeconds = 0;
+
+    for (const leg of built.value.legs) {
+      const road = world.getRoad(
+        leg.roadSegmentId
+      );
+      if (!road) continue;
+
+      distanceM += Number(road.lengthM);
+      estimatedSeconds +=
+        Number(road.lengthM) /
+        Number(road.speedLimitMps);
+      roadClassBreakdownM[road.roadClass] =
+        (roadClassBreakdownM[
+          road.roadClass
+        ] ?? 0) +
+        Number(road.lengthM);
+    }
+
+    return {
+      ok: true,
+      message: "线路预览已生成。",
+      pathPoints:
+        this.pathPointsFromLegs(
+          built.value.legs
+        ),
+      distanceM: Math.round(distanceM),
+      estimatedSeconds:
+        Math.round(estimatedSeconds),
+      roadClassBreakdownM
+    };
   }
 
   async createRoute(input: {
@@ -600,10 +721,12 @@ class PlayableClient {
     };
   }
 
-  private routeDto(route: PassengerRoute) {
+  private pathPointsFromLegs(
+    legs: PassengerRoute["pathLegs"]
+  ) {
     const world =
       this.runtime.repositories.world.get();
-    const pathPoints = route.pathLegs.flatMap(
+    return legs.flatMap(
       (leg, legIndex) => {
         const road = world.getRoad(
           leg.roadSegmentId
@@ -620,12 +743,18 @@ class PlayableClient {
         }));
       }
     );
+  }
+
+  private routeDto(route: PassengerRoute) {
     return {
       id: String(route.id),
       code: route.code,
       status: route.status,
       routeType: route.type,
-      pathPoints,
+      pathPoints:
+        this.pathPointsFromLegs(
+          route.pathLegs
+        ),
       stations: route.stopPoints.map(
         (stop) => ({
           id: String(stop.stationId),
