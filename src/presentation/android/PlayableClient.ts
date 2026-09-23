@@ -109,7 +109,7 @@ export class PlayableClient {
       this.runtime.repositories.allServicePlans();
 
     return {
-      version: "0.20.3-terrain-fit",
+      version: "0.20.4-map-readability",
       company,
       currentGameSecond:
         Number(this.currentGameSecond),

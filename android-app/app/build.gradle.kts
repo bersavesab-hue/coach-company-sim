@@ -10,8 +10,8 @@ android {
         applicationId = "com.coachcompany.sim"
         minSdk = 26
         targetSdk = 35
-        versionCode = 2003
-        versionName = "0.20.3"
+        versionCode = 2004
+        versionName = "0.20.4"
     }
 
     buildTypes {
