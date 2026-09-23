@@ -191,7 +191,7 @@ test("formal world map content is valid and supports all five road classes", () 
     "location.junction.o": [285000, 440000],
     "location.junction.r": [920000, 440000],
     "location.junction.g": [1450000, 760000],
-    "location.junction.u": [1435000, 370000]
+    "location.junction.u": [1380000, 420000]
   } as const;
   for (const [id, position] of Object.entries(
     referenceExpresswayNodes
