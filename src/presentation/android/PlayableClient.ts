@@ -109,7 +109,7 @@ export class PlayableClient {
       this.runtime.repositories.allServicePlans();
 
     return {
-      version: "0.20.1-highway-reset",
+      version: "0.20.2-organic-map",
       company,
       currentGameSecond:
         Number(this.currentGameSecond),

@@ -186,12 +186,12 @@ test("formal world map content is valid and supports all five road classes", () 
   const referenceExpresswayNodes = {
     "location.junction.a": [180000, 910000],
     "location.junction.c": [620000, 930000],
-    "location.junction.h": [260000, 700000],
+    "location.junction.h": [365000, 720000],
     "location.junction.k": [900000, 640000],
-    "location.junction.o": [250000, 410000],
+    "location.junction.o": [285000, 440000],
     "location.junction.r": [920000, 440000],
-    "location.junction.g": [1510000, 780000],
-    "location.junction.u": [1460000, 335000]
+    "location.junction.g": [1450000, 760000],
+    "location.junction.u": [1435000, 370000]
   } as const;
   for (const [id, position] of Object.entries(
     referenceExpresswayNodes
@@ -273,6 +273,43 @@ test("formal world map content is valid and supports all five road classes", () 
   assert.deepEqual(
     Object.fromEntries(startRingCounts),
     { P820: 6, P821: 7, P822: 6 }
+  );
+
+  const stationNodes = FORMAL_WORLD_MAP_CONTENT.stations.map(
+    (station) =>
+      FORMAL_WORLD_MAP_CONTENT.nodes.find(
+        (node) => node.id === station.worldNodeId
+      )!
+  );
+  for (let left = 0; left < stationNodes.length; left += 1) {
+    for (
+      let right = left + 1;
+      right < stationNodes.length;
+      right += 1
+    ) {
+      const a = stationNodes[left]!;
+      const b = stationNodes[right]!;
+      assert.ok(
+        Math.hypot(
+          a.position.xM - b.position.xM,
+          a.position.yM - b.position.yM
+        ) >= 50_000,
+        `${a.id} and ${b.id} are visually overcrowded`
+      );
+    }
+  }
+  assert.ok(
+    new Set(
+      stationNodes.map((node) => node.position.yM)
+    ).size >= 38,
+    "station rows regressed to a rigid horizontal grid"
+  );
+  assert.equal(
+    FORMAL_WORLD_MAP_CONTENT.roads.every(
+      (road) => road.polyline.length >= 5
+    ),
+    true,
+    "every formal road needs enough control points for organic geometry"
   );
   for (const oldPrefix of [
     "location.junction.ring.heyuan.",
