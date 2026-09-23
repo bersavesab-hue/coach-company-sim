@@ -291,3 +291,16 @@ RoadNetworkStyleValidator` 会在 Core Check 和 APK 构建前阻止道路编号
 - 纵向/斜向联络必须错位接入，不允许形成矩形网格。
 - 新高速互通节点位置变更时，与之相连的省道 connector 和 local ramp 必须同步重接，禁止保留旧接口。
 - 高速几何变化不得通过修改城市世界坐标来迁就；城市、国省县乡路网仍是独立正式数据。
+
+
+## 地图线路规划交互 V1
+
+- “新建线路”主入口固定在地图页，不再以线路页下拉框作为主交互。
+- 点击站点必须读取正式 stations/unlock 状态；未解锁站点只能查看解锁条件，不能加入线路。
+- 玩家在地图上分别设置始发站和终点站。
+- 两个站点选择完成后，必须调用 PlayableClient.previewRoute()。
+- previewRoute() 必须复用 buildOfficialRoutePath(..., "fastest_time", ...)；禁止 UI 自己连直线或维护第二套寻路逻辑。
+- 预览路径以黄色虚线显示，正式已开通线路继续使用暖色实线。
+- 预览返回距离、预计纯道路行驶时间及各道路等级里程。
+- 创建确认后调用正式 route.create + route.activate；预览与创建后的 pathPoints 必须完全一致。
+- 多点线路以后扩展时仍沿用 orderedStationIds / RoutePathService，不增加 UI 独立 path 数据。

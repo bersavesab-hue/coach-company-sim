@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.20.0-stage18-map-route-planner
+
+### Removed
+- 地图页“新建线路”不再直接跳转线路页的下拉框表单。
+- 地图线路预览禁止使用装饰直线或 UI 自己计算的临时路径。
+
+### Added
+- PlayableClient 新增 previewRoute() 正式预览接口。
+- previewRoute() 复用 buildOfficialRoutePath + fastest_time，与 route.create 使用同一正式寻路逻辑。
+- 预览返回真实 pathPoints、总里程、预计道路行驶时间和道路等级里程拆分。
+- 地图站点新增可点击热区。
+- 点击站点新增站点卡片：显示站点等级、解锁状态和所需声誉。
+- 地图新增线路规划模式，可设置始发站和终点站。
+- 始发站使用蓝色选择环，终点站使用橙色选择环。
+- 两站选择完成后自动执行正式道路寻路预览。
+- 地图新增黄色虚线线路预览层，覆盖真实 RoadSegment 几何。
+- 线路规划面板显示总里程、预计行驶时间和高速里程。
+- 可在地图内直接输入线路编号并“创建并开通”。
+- 新增预览/创建路径一致性集成测试。
+- 新增地图线路规划 UI 入口测试，防止主入口退回旧表单。
+
+### Changed
+- PlayableClient 类正式导出，便于集成测试直接验证地图 UI API。
+- Android / package 版本升级至 0.20.0。
+- GAME_VERSION 更新为 0.20.0-stage18-map-route-planner。
+
+### Validation
+- 未解锁站点的 previewRoute() 必须失败。
+- previewRoute() 与 createRoute() 生成的 pathPoints 必须完全一致。
+- 新建线路主入口必须调用 startMapRoutePlanning()。
+- Core Check 与 Android APK 构建必须同时通过。
+
+
 ## 0.19.7-stage17-reference-road-network
 
 ### Removed
