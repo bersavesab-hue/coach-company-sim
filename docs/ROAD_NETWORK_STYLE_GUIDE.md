@@ -304,3 +304,33 @@ RoadNetworkStyleValidator` 会在 Core Check 和 APK 构建前阻止道路编号
 - 预览返回距离、预计纯道路行驶时间及各道路等级里程。
 - 创建确认后调用正式 route.create + route.activate；预览与创建后的 pathPoints 必须完全一致。
 - 多点线路以后扩展时仍沿用 orderedStationIds / RoutePathService，不增加 UI 独立 path 数据。
+
+
+## 高速整套重画 V2（0.20.1）
+
+本版废止 0.19.x / 0.20.0 的高速几何。正式高速 RoadSegment ID 继续复用，仅用于存档/引用兼容；旧 polyline、旧互通位置和旧中央 ramp 结构全部失效。
+
+### 新骨架
+- H01：北部弧形主走廊，不与中部/南部走廊等距平行。
+- H02：中部核心客运走廊。
+- H03：南部内陆主走廊，保持在海岸内侧安全区。
+- H11：西部联络，连接 H01 / H02 / H03 的西端。
+- H13：东部沿海内侧联络，连接 H01 / H02 / H03 的东端。
+- H21：中央斜向联络，直接穿过正式 H02 互通节点，不再使用旧苜蓿叶 ramp 环。
+
+### 强制拓扑
+- 所有 expressway 节点的高速度数必须 >= 2。
+- 不允许任何内部高速死路或装饰性悬空段。
+- 所有高速段端点 x/y 变化都必须 >= 12km，防止回退到严格水平/垂直网格。
+- 所有 expressway polyline 必须保持至少 7 个控制点。
+- 旧 road.r184–road.r189 ramp 永久删除。
+- 旧 location.junction.j.loop.nw / loop.se / h21.s 永久删除。
+
+### 陆地安全
+- 正式客运站和 expressway 全部约束在保守陆地安全范围：
+  - x = 70–1520km；
+  - y = 250–1120km；
+  - x >= 1400km 时 y >= 330km；
+  - x >= 1300km 时 y >= 280km。
+- 该范围用于防止东南海面/南部海面出现城市或高速；背景地形仍仅为 decorative_only。
+- 城市位置调整时，与其相连的国道、省道、县乡道必须同步重新生成 polyline，禁止道路端点留在旧海上位置。

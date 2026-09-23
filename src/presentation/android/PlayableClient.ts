@@ -109,7 +109,7 @@ export class PlayableClient {
       this.runtime.repositories.allServicePlans();
 
     return {
-      version: "0.20.0-map-route-planner",
+      version: "0.20.1-highway-reset",
       company,
       currentGameSecond:
         Number(this.currentGameSecond),

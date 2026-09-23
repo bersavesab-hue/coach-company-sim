@@ -1,5 +1,41 @@
 # Changelog
 
+## 0.20.1-stage18-highway-reset
+
+### Removed
+- 删除上一版全部高速 polyline 几何，不做局部修补。
+- 删除旧中央 H02/H21 苜蓿叶式 6 条 ramp：road.r184–road.r189。
+- 删除旧中央互通废弃节点 location.junction.j.loop.nw / loop.se / h21.s。
+- 删除高速端部悬空、贴海和矩形格网式连接逻辑。
+
+### Added
+- 全部 34 个正式 expressway RoadSegment 重新绘制。
+- 新高速骨架固定为 H01/H02/H03 三条非平行横向主走廊 + H11/H13 两条联络 + H21 中央斜向联络。
+- H11/H13 分别把三条横向主走廊两端闭合成完整网络，消除高速死路。
+- H21 直接接入 H01/H02/H03 正式节点，不再依赖旧 ramp 环。
+- 17 个东部/南部高风险客运站位置重新校准到陆地安全区。
+- 东部/南部相关普通道路、城市环线和接入节点同步重算几何。
+- 新增高速节点度数检查：所有 expressway 节点 degree >= 2。
+- 新增保守陆地安全检查：客运站与高速 polyline 禁止进入海面风险区。
+- 新增高速端点轴向差检查，禁止严格横平竖直回退。
+- 新增旧 ramp / loop 节点永久禁止项。
+
+### Changed
+- 正式道路总量由 200 调整为 194；节点由 136 调整为 133。
+- 五级道路规模为：高速 34、国道 40、省道 77、县道 10、乡道 33。
+- 高速 RoadSegment ID 继续复用，避免破坏正式路线引用；几何、互通位置与连接拓扑均为新实现。
+- Android / package 版本升级至 0.20.1。
+- GAME_VERSION 更新为 0.20.1-stage18-highway-reset。
+
+### Validation
+- 34 段高速必须全部保留至少 7 个控制点。
+- 任何 expressway 节点不得出现 degree 1。
+- 所有站点必须保持全图连通。
+- 所有站点与高速点必须通过陆地安全检查。
+- road.r184–road.r189 和旧 loop 节点不得重新出现。
+- Core Check 与 Android APK 构建必须同时通过。
+
+
 ## 0.20.0-stage18-map-route-planner
 
 ### Removed

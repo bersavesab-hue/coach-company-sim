@@ -26,10 +26,10 @@ test("formal world map content is valid and supports all five road classes", () 
     national_road: 40,
     provincial_road: 77,
     county_road: 10,
-    local: 39
+    local: 33
   });
-  assert.equal(FORMAL_WORLD_MAP_CONTENT.roads.length, 200);
-  assert.equal(FORMAL_WORLD_MAP_CONTENT.nodes.length, 136);
+  assert.equal(FORMAL_WORLD_MAP_CONTENT.roads.length, 194);
+  assert.equal(FORMAL_WORLD_MAP_CONTENT.nodes.length, 133);
   assert.equal(
     FORMAL_WORLD_MAP_CONTENT.stations.every(
       (station) =>
@@ -118,20 +118,80 @@ test("formal world map content is valid and supports all five road classes", () 
         Math.abs(
           to.position.yM - from.position.yM
         )
-      ) >= 5000,
+      ) >= 12000,
       `${road.id} regressed to an axis-aligned grid segment`
     );
   }
 
+  const expresswayDegree = new Map<string, number>();
+  for (const road of expresswayRoads) {
+    expresswayDegree.set(
+      road.fromNodeId,
+      (expresswayDegree.get(road.fromNodeId) ?? 0) + 1
+    );
+    expresswayDegree.set(
+      road.toNodeId,
+      (expresswayDegree.get(road.toNodeId) ?? 0) + 1
+    );
+  }
+  for (const [nodeId, degree] of expresswayDegree) {
+    assert.ok(
+      degree >= 2,
+      `${nodeId} is an expressway dead end`
+    );
+  }
+
+  const landSafe = (xM: number, yM: number) => {
+    if (
+      xM < 70000 ||
+      xM > 1520000 ||
+      yM < 250000 ||
+      yM > 1120000
+    ) {
+      return false;
+    }
+    if (xM >= 1400000 && yM < 330000) {
+      return false;
+    }
+    if (xM >= 1300000 && yM < 280000) {
+      return false;
+    }
+    return true;
+  };
+
+  for (const station of FORMAL_WORLD_MAP_CONTENT.stations) {
+    const node = FORMAL_WORLD_MAP_CONTENT.nodes.find(
+      (value) => value.id === station.worldNodeId
+    );
+    assert.ok(node);
+    assert.equal(
+      landSafe(
+        node.position.xM,
+        node.position.yM
+      ),
+      true,
+      `${station.id} is outside the conservative land-safe area`
+    );
+  }
+  for (const road of expresswayRoads) {
+    for (const point of road.polyline) {
+      assert.equal(
+        landSafe(point.xM, point.yM),
+        true,
+        `${road.id} leaves the conservative land-safe area`
+      );
+    }
+  }
+
   const referenceExpresswayNodes = {
-    "location.junction.b": [260000, 990000],
-    "location.junction.i": [350000, 645000],
-    "location.junction.p": [390000, 370000],
-    "location.junction.c": [500000, 930000],
-    "location.junction.r": [960000, 360000],
-    "location.junction.f": [1470000, 815000],
-    "location.junction.m": [1450000, 590000],
-    "location.junction.u": [1730000, 175000]
+    "location.junction.a": [180000, 910000],
+    "location.junction.c": [620000, 930000],
+    "location.junction.h": [260000, 700000],
+    "location.junction.k": [900000, 640000],
+    "location.junction.o": [250000, 410000],
+    "location.junction.r": [920000, 440000],
+    "location.junction.g": [1510000, 780000],
+    "location.junction.u": [1460000, 335000]
   } as const;
   for (const [id, position] of Object.entries(
     referenceExpresswayNodes
@@ -161,8 +221,35 @@ test("formal world map content is valid and supports all five road classes", () 
     FORMAL_WORLD_MAP_CONTENT.roads.filter(
       (road) => road.roadRole === "ramp"
     ).length,
-    6
+    0
   );
+  for (const obsoleteRoadId of [
+    "road.r184",
+    "road.r185",
+    "road.r186",
+    "road.r187",
+    "road.r188",
+    "road.r189"
+  ]) {
+    assert.equal(
+      FORMAL_WORLD_MAP_CONTENT.roads.some(
+        (road) => road.id === obsoleteRoadId
+      ),
+      false
+    );
+  }
+  for (const obsoleteNodeId of [
+    "location.junction.j.loop.nw",
+    "location.junction.j.loop.se",
+    "location.junction.j.h21.s"
+  ]) {
+    assert.equal(
+      FORMAL_WORLD_MAP_CONTENT.nodes.some(
+        (node) => node.id === obsoleteNodeId
+      ),
+      false
+    );
+  }
   assert.ok(
     FORMAL_WORLD_MAP_CONTENT.roads.filter(
       (road) => road.roadRole === "urban_ring"
@@ -231,8 +318,7 @@ test("formal world map content is valid and supports all five road classes", () 
   for (const id of [
     "location.junction.j.h02.w",
     "location.junction.j.h02.e",
-    "location.junction.j.h21.n",
-    "location.junction.j.h21.s"
+    "location.junction.j.h21.n"
   ]) {
     assert.equal(
       FORMAL_WORLD_MAP_CONTENT.nodes.some(

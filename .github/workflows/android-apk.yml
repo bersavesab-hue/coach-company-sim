@@ -73,11 +73,11 @@ jobs:
       - name: Prepare APK artifact
         run: |
           mkdir -p artifacts
-          cp android-app/app/build/outputs/apk/debug/app-debug.apk artifacts/coach-company-sim-v0.20.0-map-route-planner.apk
+          cp android-app/app/build/outputs/apk/debug/app-debug.apk artifacts/coach-company-sim-v0.20.1-highway-reset.apk
 
       - uses: actions/upload-artifact@v4
         with:
-          name: coach-company-sim-v0.20.0-map-route-planner
-          path: artifacts/coach-company-sim-v0.20.0-map-route-planner.apk
+          name: coach-company-sim-v0.20.1-highway-reset
+          path: artifacts/coach-company-sim-v0.20.1-highway-reset.apk
           if-no-files-found: error
           retention-days: 14
