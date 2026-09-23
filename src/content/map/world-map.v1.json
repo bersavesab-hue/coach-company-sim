@@ -1205,8 +1205,8 @@
       "type": "junction",
       "name": "河源北高速主线",
       "position": {
-        "xM": 590000,
-        "yM": 800000
+        "xM": 600000,
+        "yM": 770000
       },
       "active": true
     },
@@ -2695,7 +2695,7 @@
       "regionId": "region.central",
       "fromNodeId": "location.junction.c",
       "toNodeId": "location.junction.j.h21.n",
-      "lengthM": 159062,
+      "lengthM": 189810,
       "speedLimitMps": 31,
       "roadClass": "expressway",
       "direction": "both",
@@ -2705,28 +2705,28 @@
           "yM": 930000
         },
         {
-          "xM": 512304,
-          "yM": 909672
+          "xM": 513528,
+          "yM": 905080
         },
         {
-          "xM": 531494,
-          "yM": 888342
+          "xM": 535208,
+          "yM": 878580
         },
         {
-          "xM": 549937,
-          "yM": 866495
+          "xM": 555968,
+          "yM": 851505
         },
         {
-          "xM": 565243,
-          "yM": 840553
+          "xM": 572760,
+          "yM": 819725
         },
         {
-          "xM": 576805,
-          "yM": 815865
+          "xM": 585160,
+          "yM": 789650
         },
         {
-          "xM": 590000,
-          "yM": 800000
+          "xM": 600000,
+          "yM": 770000
         }
       ],
       "active": true,
@@ -8170,34 +8170,34 @@
       "regionId": "region.central",
       "fromNodeId": "location.junction.j.h21.n",
       "toNodeId": "location.junction.j.h21.s",
-      "lengthM": 151288,
+      "lengthM": 119561,
       "speedLimitMps": 31,
       "roadClass": "expressway",
       "direction": "both",
       "polyline": [
         {
-          "xM": 590000,
-          "yM": 800000
+          "xM": 600000,
+          "yM": 770000
         },
         {
-          "xM": 599216,
-          "yM": 779380
+          "xM": 605738,
+          "yM": 753086
         },
         {
-          "xM": 611692,
-          "yM": 755192
+          "xM": 616368,
+          "yM": 734321
         },
         {
-          "xM": 618855,
-          "yM": 728916
+          "xM": 626366,
+          "yM": 715297
         },
         {
-          "xM": 624958,
-          "yM": 700609
+          "xM": 633398,
+          "yM": 693776
         },
         {
-          "xM": 635918,
-          "yM": 677441
+          "xM": 637885,
+          "yM": 673783
         },
         {
           "xM": 645000,
@@ -8248,7 +8248,7 @@
       "regionId": "region.central",
       "fromNodeId": "location.junction.j.loop.nw",
       "toNodeId": "location.junction.j.h21.n",
-      "lengthM": 48478,
+      "lengthM": 17833,
       "speedLimitMps": 14,
       "roadClass": "local",
       "direction": "both",
@@ -8258,16 +8258,16 @@
           "yM": 753000
         },
         {
-          "xM": 590790,
-          "yM": 767620
+          "xM": 596112,
+          "yM": 758715
         },
         {
-          "xM": 593401,
-          "yM": 785149
+          "xM": 599187,
+          "yM": 764450
         },
         {
-          "xM": 590000,
-          "yM": 800000
+          "xM": 600000,
+          "yM": 770000
         }
       ],
       "active": true,
@@ -8281,22 +8281,22 @@
       "regionId": "region.central",
       "fromNodeId": "location.junction.j.h21.n",
       "toNodeId": "location.junction.j.h02.e",
-      "lengthM": 110670,
+      "lengthM": 78815,
       "speedLimitMps": 14,
       "roadClass": "local",
       "direction": "both",
       "polyline": [
         {
-          "xM": 590000,
-          "yM": 800000
+          "xM": 600000,
+          "yM": 770000
         },
         {
-          "xM": 602900,
-          "yM": 767000
+          "xM": 613300,
+          "yM": 748550
         },
         {
-          "xM": 633635,
-          "yM": 740690
+          "xM": 635080,
+          "yM": 730100
         },
         {
           "xM": 650000,
@@ -8678,7 +8678,7 @@
       "regionId": "region.central",
       "fromNodeId": "location.junction.ring2.heyuan.nw",
       "toNodeId": "location.junction.j.h21.n",
-      "lengthM": 115048,
+      "lengthM": 99715,
       "speedLimitMps": 22,
       "roadClass": "provincial_road",
       "direction": "both",
@@ -8688,16 +8688,16 @@
           "yM": 712000
         },
         {
-          "xM": 536240,
-          "yM": 745060
+          "xM": 542990,
+          "yM": 734160
         },
         {
-          "xM": 570372,
-          "yM": 769635
+          "xM": 575444,
+          "yM": 750000
         },
         {
-          "xM": 590000,
-          "yM": 800000
+          "xM": 600000,
+          "yM": 770000
         }
       ],
       "active": true,
