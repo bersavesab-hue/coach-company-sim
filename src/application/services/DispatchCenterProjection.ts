@@ -284,6 +284,13 @@ export class DispatchCenterProjection {
       operationStatus: action.status,
       vehicleId: trip.vehicleId,
       driverId: trip.driverId,
+      onboardPassengerCount:
+        trip.onboardPassengerGroups.reduce(
+          (total, group) => total + group.count,
+          0
+        ),
+      vehicleSeatCapacity:
+        vehicle?.seatCapacity ?? null,
       delaySeconds: Number(trip.delaySeconds),
       recoveryStationId: trip.recoveryStationId,
       activeIncident: vehicle?.activeIncident?.kind ?? null,

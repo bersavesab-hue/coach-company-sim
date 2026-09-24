@@ -1003,6 +1003,8 @@ test("dispatch center read model exposes committed trips, fleet, drivers and liv
       readonly routeCode: string;
       readonly boardingStartGameSecond: number;
       readonly tripStatus: string;
+      readonly onboardPassengerCount: number;
+      readonly vehicleSeatCapacity: number | null;
     }[];
     readonly vehicles: readonly {
       readonly vehicleId: VehicleId;
@@ -1028,6 +1030,11 @@ test("dispatch center read model exposes committed trips, fleet, drivers and liv
     880
   );
   assert.equal(snapshot.trips[0]?.tripStatus, "planned");
+  assert.equal(snapshot.trips[0]?.onboardPassengerCount, 0);
+  assert.equal(
+    snapshot.trips[0]?.vehicleSeatCapacity,
+    f.repositories.vehicles.getById(f.vehicleId)?.seatCapacity
+  );
   assert.equal(snapshot.vehicles[0]?.vehicleId, f.vehicleId);
   assert.equal(
     snapshot.vehicles[0]?.nextOperationKind,

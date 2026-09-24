@@ -109,7 +109,7 @@ export class PlayableClient {
       this.runtime.repositories.allServicePlans();
 
     return {
-      version: "0.20.5-service-planning",
+      version: "0.20.6-dispatch-center",
       company,
       currentGameSecond:
         Number(this.currentGameSecond),

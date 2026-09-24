@@ -47,6 +47,8 @@ export interface DispatchCenterTripDto {
   readonly operationStatus: ScheduledOperationStatus | null;
   readonly vehicleId: VehicleId | null;
   readonly driverId: StaffId | null;
+  readonly onboardPassengerCount: number;
+  readonly vehicleSeatCapacity: number | null;
   readonly delaySeconds: number;
   readonly recoveryStationId: StationId | null;
   readonly activeIncident: VehicleIncidentKind | null;
