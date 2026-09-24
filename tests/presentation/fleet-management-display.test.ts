@@ -33,6 +33,9 @@ test("new vehicle purchase uses the formal configurator", () => {
 
 test("new and used vehicle purchases remain separate flows", () => {
   assert.equal(template.includes('x.listingKind==="new"'), true);
-  assert.equal(template.includes(">购买二手车</button>"), true);
-  assert.equal(template.includes(">车辆检测</button>"), true);
+  assert.equal(template.includes(">查看车况</button>"), true);
+  assert.equal(template.includes(">基础检测</button>"), true);
+  assert.equal(template.includes(">深度检测</button>"), true);
+  assert.equal(template.includes('id="usedOfferInput"'), true);
+  assert.equal(template.includes('prompt("报价'), false);
 });

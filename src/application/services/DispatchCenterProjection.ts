@@ -280,6 +280,12 @@ export class DispatchCenterProjection {
           ? null
           : Number(trip.actualArrivalGameSecond),
       scheduledEndGameSecond: Number(action.endsAtGameSecond),
+      distanceM: Number(action.distanceM),
+      scheduledDurationSeconds: Math.max(
+        0,
+        Number(action.endsAtGameSecond) -
+          Number(trip.plannedDepartureGameSecond)
+      ),
       tripStatus: trip.status,
       operationStatus: action.status,
       vehicleId: trip.vehicleId,

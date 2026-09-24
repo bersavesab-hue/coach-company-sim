@@ -52,6 +52,7 @@ export class PlayableClient {
   private readonly runtime = createPlayableGame();
   private currentGameSecond =
     this.runtime.startGameSecond;
+  private realtimeRemainderMilliGameSeconds = 0;
   private commandSequence = 1;
 
   async snapshot() {
@@ -110,7 +111,7 @@ export class PlayableClient {
       this.runtime.repositories.allServicePlans();
 
     return {
-      version: "0.20.7-fleet-management",
+      version: "0.20.8-automatic-operations",
       company,
       currentGameSecond:
         Number(this.currentGameSecond),
@@ -280,7 +281,8 @@ export class PlayableClient {
   }
 
   async inspectUsed(
-    listingId: string
+    listingId: string,
+    level: "basic" | "full"
   ): Promise<UiActionResult> {
     return this.actionResult(
       this.dispatch(
@@ -289,10 +291,22 @@ export class PlayableClient {
           companyId: PLAYABLE_COMPANY_ID,
           listingId:
             ids.vehicleListing(listingId),
-          level: "full"
+          level
         }
       ),
-      "车辆检测完成。"
+      level === "full"
+        ? "深度检测完成，事故痕迹与披露差异已核验。"
+        : "基础检测完成，里程与主要车况已核验。"
+    );
+  }
+
+  async usedVehicleInspections(listingId: string) {
+    return this.query(
+      "vehicleMarket.inspections",
+      {
+        companyId: PLAYABLE_COMPANY_ID,
+        listingId: ids.vehicleListing(listingId)
+      }
     );
   }
 
@@ -602,13 +616,33 @@ export class PlayableClient {
     );
   }
 
-  async advanceMinutes(
-    minutes: number
+  async advanceRealtime(
+    elapsedRealMilliseconds: number,
+    gameSecondsPerRealSecond: number
   ): Promise<UiActionResult> {
-    const delta = Math.max(
-      1,
-      Math.floor(minutes)
-    ) * 60;
+    if (
+      !Number.isFinite(elapsedRealMilliseconds) ||
+      elapsedRealMilliseconds < 0 ||
+      elapsedRealMilliseconds > 10_000 ||
+      ![0, 60, 180, 600].includes(gameSecondsPerRealSecond)
+    ) {
+      return { ok: false, message: "自动时间参数无效。" };
+    }
+    if (gameSecondsPerRealSecond === 0) {
+      this.realtimeRemainderMilliGameSeconds = 0;
+      return { ok: true, message: "时间已暂停。" };
+    }
+
+    const accumulated =
+      this.realtimeRemainderMilliGameSeconds +
+      Math.floor(
+        elapsedRealMilliseconds * gameSecondsPerRealSecond
+      );
+    const delta = Math.floor(accumulated / 1000);
+    this.realtimeRemainderMilliGameSeconds = accumulated % 1000;
+    if (delta <= 0) {
+      return { ok: true, message: "自动时间同步完成。" };
+    }
     const target = units.gameSecond(
       Number(this.currentGameSecond) + delta
     );
@@ -623,7 +657,7 @@ export class PlayableClient {
       ok: report.issues.length === 0,
       message:
         report.issues.length === 0
-          ? `时间已推进 ${minutes} 分钟。`
+          ? "自动时间已推进。"
           : `时间已推进，但出现 ${report.issues.length} 个运营问题。`
     };
   }
@@ -806,11 +840,23 @@ export class PlayableClient {
   }
 
   private routeDto(route: PassengerRoute) {
+    const world = this.runtime.repositories.world.get();
+    let distanceM = 0;
+    let estimatedSeconds = 0;
+    for (const leg of route.pathLegs) {
+      const road = world.getRoad(leg.roadSegmentId);
+      if (!road) continue;
+      distanceM += Number(road.lengthM);
+      estimatedSeconds +=
+        Number(road.lengthM) / Number(road.speedLimitMps);
+    }
     return {
       id: String(route.id),
       code: route.code,
       status: route.status,
       routeType: route.type,
+      distanceM: Math.round(distanceM),
+      estimatedSeconds: Math.round(estimatedSeconds),
       pathPoints:
         this.pathPointsFromLegs(
           route.pathLegs

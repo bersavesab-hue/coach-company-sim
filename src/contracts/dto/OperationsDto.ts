@@ -44,6 +44,8 @@ export interface DispatchCenterTripDto {
   readonly actualDepartureGameSecond: number | null;
   readonly actualArrivalGameSecond: number | null;
   readonly scheduledEndGameSecond: number | null;
+  readonly distanceM: number;
+  readonly scheduledDurationSeconds: number;
   readonly tripStatus: TripStatus;
   readonly operationStatus: ScheduledOperationStatus | null;
   readonly vehicleId: VehicleId | null;
