@@ -342,17 +342,71 @@ export class DispatchCenterProjection {
     );
     if (!model) return null;
 
+    const identity =
+      this.repositories.vehicleMarket.getModelIdentity(vehicle.modelId);
+    const series = identity
+      ? this.repositories.vehicleMarket.getSeries(identity.seriesId)
+      : undefined;
+    const brand = series
+      ? this.repositories.vehicleMarket.getBrand(series.brandId)
+      : undefined;
+    const configuration = vehicle.configurationId === null
+      ? undefined
+      : this.repositories.vehicleMarket.getConfiguration(
+          vehicle.configurationId
+        );
+    const variant = configuration
+      ? this.repositories.vehicleMarket.getVariant(
+          configuration.variantId
+        )
+      : undefined;
+    const selectedOptionNames = configuration
+      ? configuration.selectedOptionCodes.map(
+          (code) =>
+            this.repositories.vehicleMarket.getOption(code)?.name ?? code
+        )
+      : [];
+
     const next = nextActionFor(
       actions,
       currentGameSecond,
       (action) => action.vehicleId === vehicle.id,
       (action) => this.actionExecutionStart(action)
     );
+    const activeTrip = vehicle.activeTripId === null
+      ? undefined
+      : this.repositories.trips.getById(vehicle.activeTripId);
+    const activeRoute = activeTrip
+      ? this.repositories.routes.getById(activeTrip.routeId)
+      : undefined;
+    const activeDriver = activeTrip?.driverId
+      ? this.repositories.staff.getDriverById(activeTrip.driverId)
+      : undefined;
+    const nextTrip = next?.tripId
+      ? this.repositories.trips.getById(next.tripId)
+      : undefined;
+    const nextRoute = nextTrip
+      ? this.repositories.routes.getById(nextTrip.routeId)
+      : undefined;
+    const nextDriver = next?.driverId
+      ? this.repositories.staff.getDriverById(next.driverId)
+      : undefined;
 
     return {
       vehicleId: vehicle.id,
       modelId: vehicle.modelId,
       serviceClass: model.serviceClass,
+      brandName: brand?.name ?? "自有品牌",
+      seriesName: series?.name ?? "客运系列",
+      modelName: identity?.displayName ?? "客运车辆",
+      modelYear:
+        variant?.modelYear ?? identity?.productionStartYear ?? 0,
+      energyKind: model.energyKind,
+      configurationName: configuration?.customName ?? null,
+      selectedOptionNames,
+      seatCapacity: vehicle.seatCapacity,
+      luggageCapacityL: configuration?.luggageCapacityL ?? null,
+      comfortPermille: configuration?.comfortPermille ?? null,
       status: vehicle.status,
       currentStationId: vehicle.currentStationId,
       currentStationName:
@@ -395,21 +449,34 @@ export class DispatchCenterProjection {
       tireConditionPermille: Number(
         vehicle.tireConditionPermille
       ),
+      bodyConditionPermille: Number(
+        vehicle.bodyConditionPermille
+      ),
       insuranceValid:
         Number(vehicle.insuranceValidUntilGameSecond) >=
         Number(currentGameSecond),
+      insuranceValidUntilGameSecond: Number(
+        vehicle.insuranceValidUntilGameSecond
+      ),
       inspectionValid:
         Number(vehicle.inspectionValidUntilGameSecond) >=
         Number(currentGameSecond),
+      inspectionValidUntilGameSecond: Number(
+        vehicle.inspectionValidUntilGameSecond
+      ),
       activeIncident: vehicle.activeIncident?.kind ?? null,
       activeTripId: vehicle.activeTripId,
       activeFleetTaskId: vehicle.activeFleetTaskId,
+      currentRouteCode: activeRoute?.code ?? null,
+      currentDriverName: activeDriver?.name ?? null,
       nextOperationSequence: next?.sequence ?? null,
       nextOperationKind: next?.kind ?? null,
       nextOperationGameSecond:
         next === null
           ? null
-          : this.actionExecutionStart(next)
+          : this.actionExecutionStart(next),
+      nextRouteCode: nextRoute?.code ?? null,
+      nextDriverName: nextDriver?.name ?? null
     };
   }
 

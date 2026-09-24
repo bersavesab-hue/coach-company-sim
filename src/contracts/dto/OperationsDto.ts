@@ -18,6 +18,7 @@ import type { PlannedOperationKind } from "../../domain/operations/DayOperations
 import type { TripStatus } from "../../domain/trip/TripStatus.js";
 import type { VehicleStatus } from "../../domain/vehicle/VehicleStatus.js";
 import type { VehicleIncidentKind } from "../../domain/vehicle/VehicleIncident.js";
+import type { EnergyKind } from "../../domain/vehicle/EnergyKind.js";
 import type { DriverStatus } from "../../domain/staff/Driver.js";
 
 export interface DispatchCenterScheduleDto {
@@ -77,6 +78,16 @@ export interface DispatchCenterVehicleDto {
   readonly vehicleId: VehicleId;
   readonly modelId: VehicleModelId;
   readonly serviceClass: string;
+  readonly brandName: string;
+  readonly seriesName: string;
+  readonly modelName: string;
+  readonly modelYear: number;
+  readonly energyKind: EnergyKind;
+  readonly configurationName: string | null;
+  readonly selectedOptionNames: readonly string[];
+  readonly seatCapacity: number;
+  readonly luggageCapacityL: number | null;
+  readonly comfortPermille: number | null;
   readonly status: VehicleStatus;
   readonly currentStationId: StationId | null;
   readonly currentStationName: string | null;
@@ -89,14 +100,21 @@ export interface DispatchCenterVehicleDto {
   readonly powertrainConditionPermille: number;
   readonly brakeConditionPermille: number;
   readonly tireConditionPermille: number;
+  readonly bodyConditionPermille: number;
   readonly insuranceValid: boolean;
+  readonly insuranceValidUntilGameSecond: number;
   readonly inspectionValid: boolean;
+  readonly inspectionValidUntilGameSecond: number;
   readonly activeIncident: VehicleIncidentKind | null;
   readonly activeTripId: TripId | null;
   readonly activeFleetTaskId: FleetTaskId | null;
+  readonly currentRouteCode: string | null;
+  readonly currentDriverName: string | null;
   readonly nextOperationSequence: number | null;
   readonly nextOperationKind: PlannedOperationKind | null;
   readonly nextOperationGameSecond: number | null;
+  readonly nextRouteCode: string | null;
+  readonly nextDriverName: string | null;
 }
 
 export interface DispatchCenterDriverDto {

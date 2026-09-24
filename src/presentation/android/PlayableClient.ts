@@ -19,6 +19,7 @@ import {
 import type { CommandType } from "../../contracts/commands/CommandTypes.js";
 import type { CommandEnvelope } from "../../contracts/commands/CommandEnvelope.js";
 import type { PassengerRoute } from "../../domain/route/PassengerRoute.js";
+import type { VehicleConfiguration } from "../../domain/vehicle-market/VehicleConfiguration.js";
 import { buildOfficialRoutePath } from "../../application/services/RoutePathService.js";
 import type { ServicePlan } from "../../domain/schedule/ServicePlan.js";
 import { isMapStationUnlocked } from "../../content/map/MapStationUnlockPolicy.js";
@@ -109,7 +110,7 @@ export class PlayableClient {
       this.runtime.repositories.allServicePlans();
 
     return {
-      version: "0.20.6-dispatch-center",
+      version: "0.20.7-fleet-management",
       company,
       currentGameSecond:
         Number(this.currentGameSecond),
@@ -232,6 +233,49 @@ export class PlayableClient {
     return this.actionResult(
       result,
       "车辆已购入，先补能再安排班次。"
+    );
+  }
+
+  async vehicleConfigurator(variantId: string) {
+    return this.query(
+      "vehicleMarket.configurator",
+      { variantId: ids.vehicleVariant(variantId) }
+    );
+  }
+
+  async buyConfiguredVehicle(input: {
+    readonly listingId: string;
+    readonly variantId: string;
+    readonly selectedOptionCodes: readonly string[];
+    readonly configurationName: string | null;
+  }): Promise<UiActionResult> {
+    const configured = this.dispatch(
+      "vehicleMarket.createConfiguration",
+      {
+        variantId: ids.vehicleVariant(input.variantId),
+        customName: input.configurationName,
+        selectedOptionCodes: input.selectedOptionCodes,
+        exteriorColorCode: null,
+        liveryCode: null
+      }
+    );
+    if (!configured.ok) {
+      return this.actionResult(configured, "");
+    }
+    const configuration = configured.value as VehicleConfiguration;
+
+    const purchased = this.dispatch(
+      "vehicleMarket.purchaseListing",
+      {
+        companyId: PLAYABLE_COMPANY_ID,
+        listingId: ids.vehicleListing(input.listingId),
+        configurationId: configuration.id,
+        depotStationId: this.runtime.company.homeStationId
+      }
+    );
+    return this.actionResult(
+      purchased,
+      "选装车辆已购入，配置与运营数据已加入车队。"
     );
   }
 

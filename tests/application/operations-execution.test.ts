@@ -1008,8 +1008,16 @@ test("dispatch center read model exposes committed trips, fleet, drivers and liv
     }[];
     readonly vehicles: readonly {
       readonly vehicleId: VehicleId;
+      readonly modelName: string;
+      readonly energyKind: string;
+      readonly seatCapacity: number;
+      readonly bodyConditionPermille: number;
+      readonly insuranceValidUntilGameSecond: number;
+      readonly inspectionValidUntilGameSecond: number;
       readonly nextOperationKind: string | null;
       readonly nextOperationGameSecond: number | null;
+      readonly nextRouteCode: string | null;
+      readonly nextDriverName: string | null;
     }[];
     readonly drivers: readonly {
       readonly driverId: StaffId;
@@ -1036,6 +1044,19 @@ test("dispatch center read model exposes committed trips, fleet, drivers and liv
     f.repositories.vehicles.getById(f.vehicleId)?.seatCapacity
   );
   assert.equal(snapshot.vehicles[0]?.vehicleId, f.vehicleId);
+  assert.equal(snapshot.vehicles[0]?.modelName, "客运车辆");
+  assert.equal(snapshot.vehicles[0]?.energyKind, "diesel_ml");
+  assert.equal(
+    snapshot.vehicles[0]?.seatCapacity,
+    f.repositories.vehicles.getById(f.vehicleId)?.seatCapacity
+  );
+  assert.equal(snapshot.vehicles[0]?.bodyConditionPermille, 1000);
+  assert.ok(
+    (snapshot.vehicles[0]?.insuranceValidUntilGameSecond ?? 0) > 0
+  );
+  assert.ok(
+    (snapshot.vehicles[0]?.inspectionValidUntilGameSecond ?? 0) > 0
+  );
   assert.equal(
     snapshot.vehicles[0]?.nextOperationKind,
     "passenger_trip"
@@ -1044,6 +1065,8 @@ test("dispatch center read model exposes committed trips, fleet, drivers and liv
     snapshot.vehicles[0]?.nextOperationGameSecond,
     880
   );
+  assert.equal(snapshot.vehicles[0]?.nextRouteCode, "A-B");
+  assert.equal(snapshot.vehicles[0]?.nextDriverName, "测试司机");
   assert.equal(snapshot.drivers[0]?.driverId, f.driverId);
   assert.equal(
     snapshot.drivers[0]?.nextOperationKind,
