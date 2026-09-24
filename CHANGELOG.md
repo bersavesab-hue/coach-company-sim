@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.20.5-stage19-service-planning
+
+### Removed
+- 删除线路页通过三次系统 `prompt` 输入车型、首末班和发车间隔的临时交互。
+
+### Added
+- 新增移动端正式班次计划面板，提供车型、首班、末班、间隔与三种常用排班预设。
+- 新增每日班次数量实时预估、对应车型库存提示与零库存缺口预警。
+- 线路卡片直接显示每个有效计划的车型、运营时段、间隔和每日班数。
+- 新增计划取消入口，直接调用正式 `servicePlan.cancel` 命令，不在 UI 中修改计划状态。
+
+### Changed
+- 同一线路可从正式面板继续新增不同车型或不同时间窗的班次计划。
+- Android / package 版本升级至 0.20.5，GAME_VERSION 更新为 0.20.5-stage19-service-planning。
+
+### Validation
+- 新增班次计划面板专项测试，锁定无系统弹窗、计划详情、取消入口和车辆供给预警。
+
 ## 0.20.4-stage18-map-readability
 
 ### Removed

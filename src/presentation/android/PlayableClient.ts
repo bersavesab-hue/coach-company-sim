@@ -109,7 +109,7 @@ export class PlayableClient {
       this.runtime.repositories.allServicePlans();
 
     return {
-      version: "0.20.4-map-readability",
+      version: "0.20.5-service-planning",
       company,
       currentGameSecond:
         Number(this.currentGameSecond),
@@ -507,6 +507,22 @@ export class PlayableClient {
     return this.actionResult(
       result,
       "班次计划已建立。"
+    );
+  }
+
+  async cancelServicePlan(
+    servicePlanId: string
+  ): Promise<UiActionResult> {
+    const result = this.dispatch(
+      "servicePlan.cancel",
+      {
+        servicePlanId:
+          ids.servicePlan(servicePlanId)
+      }
+    );
+    return this.actionResult(
+      result,
+      "班次计划已取消。"
     );
   }
 
