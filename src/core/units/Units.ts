@@ -15,6 +15,7 @@ export type DistanceM = Unit<"DistanceM">;
 export type GameSecond = Unit<"GameSecond">;
 export type SpeedMps = Unit<"SpeedMps">;
 export type Permille = Unit<"Permille">;
+export type MultiplierPermille = Unit<"MultiplierPermille">;
 
 export const units = {
   moneyCents(value: number): MoneyCents {
@@ -40,5 +41,10 @@ export const units = {
   permille(value: number): Permille {
     requirePermille(value, "Permille");
     return value as Permille;
+  },
+
+  multiplierPermille(value: number): MultiplierPermille {
+    requireNonNegativeInteger(value, "MultiplierPermille");
+    return value as MultiplierPermille;
   }
 } as const;

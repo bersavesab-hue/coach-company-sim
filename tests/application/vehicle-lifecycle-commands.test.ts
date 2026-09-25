@@ -276,7 +276,8 @@ function fixture() {
     repositories,
     ids: allocator,
     passengerDemandPolicy: {
-      frequencyMultiplierPermille: () => units.permille(1000)
+      frequencyMultiplierPermille: () =>
+        units.multiplierPermille(1000)
     },
     economicPolicy: {
       energyPriceMilliCentsPerUnit: () => 1000,

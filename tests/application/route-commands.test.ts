@@ -205,7 +205,8 @@ function buildFixture(companyLicenses = [ids.license("license.000001")]) {
     repositories,
     ids: allocator,
     passengerDemandPolicy: {
-      frequencyMultiplierPermille: () => units.permille(1000)
+      frequencyMultiplierPermille: () =>
+        units.multiplierPermille(1000)
     },
     economicPolicy: zeroEconomicPolicy,
     vehicleMarketPolicy: zeroVehicleMarketPolicy,

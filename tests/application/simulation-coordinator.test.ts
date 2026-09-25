@@ -301,7 +301,8 @@ function fixture() {
     repositories,
     events,
     {
-      frequencyMultiplierPermille: () => units.permille(1000)
+      frequencyMultiplierPermille: () =>
+        units.multiplierPermille(1000)
     },
     finance,
     fleetOperations,

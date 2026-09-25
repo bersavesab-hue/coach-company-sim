@@ -6,6 +6,7 @@ import type {
   DistanceM,
   GameSecond,
   MoneyCents,
+  MultiplierPermille,
   Permille
 } from "../../core/units/Units.js";
 import type { VehicleDealerKind } from "../../domain/vehicle-market/VehicleDealer.js";
@@ -25,9 +26,11 @@ export interface VehicleMarketPolicy {
     regionId: RegionId | null,
     modelId: VehicleModelId,
     gameSecond: GameSecond
-  ): Permille;
+  ): MultiplierPermille;
   dealerBuyPermille(kind: VehicleDealerKind): Permille;
-  suggestedAskPermille(kind: VehicleDealerKind): Permille;
+  suggestedAskPermille(
+    kind: VehicleDealerKind
+  ): MultiplierPermille;
   negotiationFloorPermille(kind: VehicleDealerKind): Permille;
   listingFeeCents(kind: VehicleDealerKind): MoneyCents;
   inspectionCostCents(level: VehicleInspectionLevel): MoneyCents;

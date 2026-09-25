@@ -7,19 +7,19 @@ import { generatePassengerDemand } from "../../src/simulation/passenger/DemandGe
 test("demand generation preserves integer remainder across batches", () => {
   const first = generatePassengerDemand(
     10,
-    units.permille(500),
+    units.multiplierPermille(500),
     1800,
     0
   );
   const second = generatePassengerDemand(
     10,
-    units.permille(500),
+    units.multiplierPermille(500),
     1800,
     first.remainderUnits
   );
   const single = generatePassengerDemand(
     10,
-    units.permille(500),
+    units.multiplierPermille(500),
     3600,
     0
   );
@@ -30,4 +30,12 @@ test("demand generation preserves integer remainder across batches", () => {
   );
   assert.equal(second.remainderUnits, single.remainderUnits);
   assert.equal(single.generatedPassengers, 5);
+});
+
+test("demand multiplier can exceed one while bounded permille cannot", () => {
+  assert.equal(Number(units.multiplierPermille(1300)), 1300);
+  assert.throws(
+    () => units.permille(1300),
+    /Permille must be <= 1000/
+  );
 });

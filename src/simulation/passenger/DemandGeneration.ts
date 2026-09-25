@@ -1,4 +1,4 @@
-import type { Permille } from "../../core/units/Units.js";
+import type { MultiplierPermille } from "../../core/units/Units.js";
 
 const DEMAND_DENOMINATOR = 3_600_000;
 
@@ -9,7 +9,7 @@ export interface DemandGenerationResult {
 
 export function generatePassengerDemand(
   basePassengersPerHour: number,
-  frequencyMultiplierPermille: Permille,
+  frequencyMultiplierPermille: MultiplierPermille,
   elapsedSeconds: number,
   previousRemainderUnits: number
 ): DemandGenerationResult {

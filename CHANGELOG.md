@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.20.9-stage20-auto-time-hotfix
+
+### Fixed
+- 修复建立密集班次后自动时间首轮推进时报错 “Permille must be <= 1000” 并自动暂停的问题。
+- 将允许超过 1 倍的客流频率、市场需求和建议售价倍率从上限为 1000‰ 的车况/声誉比例中正式拆分，避免车辆市场后续出现同类越界。
+
+### Changed
+- 删除倍率字段复用普通 Permille 的旧类型接口，统一改用独立的 MultiplierPermille；车况、声誉与道路状态仍严格限制在 0–1000‰。
+- Android / package 版本升级至 0.20.9，GAME_VERSION 更新为 0.20.9-stage20-auto-time-hotfix。
+
+### Validation
+- 新增 1300‰ 发车频率倍率边界测试，并保留普通 Permille 超过 1000‰ 必须拒绝的约束。
+- 自动时钟集成测试新增 06:00–22:00、每 60 分钟一班的密集计划复现，验证时间可连续推进且不再报错。
+
 ## 0.20.8-stage20-automatic-operations
 
 ### Removed

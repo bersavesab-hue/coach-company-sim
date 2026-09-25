@@ -179,7 +179,7 @@ function createDrivers(
 
 const passengerDemandPolicy: PassengerDemandPolicy = {
   frequencyMultiplierPermille: (departuresPerDay) =>
-    units.permille(
+    units.multiplierPermille(
       Math.min(1300, 700 + departuresPerDay * 45)
     )
 };
@@ -267,13 +267,14 @@ const vehicleMarketPolicy: VehicleMarketPolicy = {
     ),
   accidentValuePermille: (count) =>
     units.permille(Math.max(550, 1000 - count * 100)),
-  regionalDemandPermille: () => units.permille(1000),
+  regionalDemandPermille: () =>
+    units.multiplierPermille(1000),
   dealerBuyPermille: (kind) =>
     units.permille(
       kind === "used_vehicle_dealer" ? 760 : 720
     ),
   suggestedAskPermille: (kind) =>
-    units.permille(
+    units.multiplierPermille(
       kind === "manufacturer_dealer" ? 1000 : 1040
     ),
   negotiationFloorPermille: () => units.permille(920),

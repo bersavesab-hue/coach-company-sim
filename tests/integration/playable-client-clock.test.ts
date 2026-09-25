@@ -6,6 +6,28 @@ import { PlayableClient } from "../../src/presentation/android/PlayableClient.js
 test("playable client automatic clock advances canonical simulation time", async () => {
   const client = new PlayableClient();
   const before = await client.snapshot();
+  const unlocked = before.stations.filter(
+    (station) => station.unlocked
+  );
+  const created = await client.createRoute({
+    code: "CLOCK",
+    originStationId: unlocked[0]!.id,
+    destinationStationId: unlocked[1]!.id
+  });
+  assert.equal(created.ok, true);
+  const withRoute = await client.snapshot();
+  const route = withRoute.routes.find(
+    (value) => value.code === "CLOCK"
+  );
+  assert.ok(route);
+  const planned = await client.createServicePlan({
+    routeId: route.id,
+    vehicleClass: "county_midibus",
+    startHour: 6,
+    endHour: 22,
+    intervalMinutes: 60
+  });
+  assert.equal(planned.ok, true);
 
   const first = await client.advanceRealtime(500, 60);
   const second = await client.advanceRealtime(500, 60);

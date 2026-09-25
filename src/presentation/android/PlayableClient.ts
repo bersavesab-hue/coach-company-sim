@@ -111,7 +111,7 @@ export class PlayableClient {
       this.runtime.repositories.allServicePlans();
 
     return {
-      version: "0.20.8-automatic-operations",
+      version: "0.20.9-auto-time-hotfix",
       company,
       currentGameSecond:
         Number(this.currentGameSecond),

@@ -227,9 +227,11 @@ export const zeroVehicleMarketPolicy: VehicleMarketPolicy = {
   mileageValuePermille: () => units.permille(1000),
   conditionValuePermille: () => units.permille(1000),
   accidentValuePermille: () => units.permille(1000),
-  regionalDemandPermille: () => units.permille(1000),
+  regionalDemandPermille: () =>
+    units.multiplierPermille(1000),
   dealerBuyPermille: () => units.permille(700),
-  suggestedAskPermille: () => units.permille(1000),
+  suggestedAskPermille: () =>
+    units.multiplierPermille(1000),
   negotiationFloorPermille: () => units.permille(900),
   listingFeeCents: () => units.moneyCents(0),
   inspectionCostCents: () => units.moneyCents(0),

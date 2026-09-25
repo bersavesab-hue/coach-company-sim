@@ -1,5 +1,7 @@
-import type { Permille } from "../../core/units/Units.js";
+import type { MultiplierPermille } from "../../core/units/Units.js";
 
 export interface PassengerDemandPolicy {
-  frequencyMultiplierPermille(departuresPerDay: number): Permille;
+  frequencyMultiplierPermille(
+    departuresPerDay: number
+  ): MultiplierPermille;
 }
