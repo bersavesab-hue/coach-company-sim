@@ -27,8 +27,8 @@ test("passenger runtime persists generated and abandoned daily OD flow", () => {
 
 test("trip boarding metrics use passenger distance rather than snapshot occupancy", () => {
   const regionId = ids.region("region.test");
-  const nodeA = ids.worldNode("node.a");
-  const nodeB = ids.worldNode("node.b");
+  const nodeA = ids.worldNode("location.a");
+  const nodeB = ids.worldNode("location.b");
   const stationA = ids.station("station.a");
   const stationB = ids.station("station.b");
   const roadId = ids.roadSegment("road.ab");
