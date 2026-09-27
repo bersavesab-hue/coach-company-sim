@@ -6,7 +6,7 @@ import { parsePlayableSave } from "../../src/save/playable/PlayableSave.js";
 
 test("playable save restores canonical runtime state and allocator continuity", async () => {
   const client = new PlayableClient();
-  const initial = await client.snapshot();
+  const initial = await client.snapshot() as any;
   const unlocked = initial.stations.filter((station) => station.unlocked);
 
   const firstRoute = await client.createRoute({
@@ -24,13 +24,13 @@ test("playable save restores canonical runtime state and allocator continuity", 
   assert.equal(purchase.ok, true);
 
   await client.advanceRealtime(1000, 60);
-  const beforeSave = await client.snapshot();
+  const beforeSave = await client.snapshot() as any;
   const encoded = JSON.stringify(client.exportSave());
   const parsed = parsePlayableSave(encoded);
   assert.ok(parsed);
 
   const restored = new PlayableClient(parsed);
-  const afterRestore = await restored.snapshot();
+  const afterRestore = await restored.snapshot() as any;
 
   assert.equal(
     afterRestore.currentGameSecond,
@@ -59,7 +59,7 @@ test("playable save restores canonical runtime state and allocator continuity", 
   });
   assert.equal(secondRoute.ok, true);
 
-  const afterSecondRoute = await restored.snapshot();
+  const afterSecondRoute = await restored.snapshot() as any;
   const ids = afterSecondRoute.routes
     .filter((route) => route.code === "SAVE1" || route.code === "SAVE2")
     .map((route) => route.id);
