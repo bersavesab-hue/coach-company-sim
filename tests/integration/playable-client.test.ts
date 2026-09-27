@@ -90,15 +90,14 @@ test("playable client completes buy-route-schedule-operate-finance loop", async 
     {
       companyId: PLAYABLE_COMPANY_ID,
       code: "K01",
-      routeType: "intercity",
+      routeType: "county",
       orderedStationIds: [
         runtime.stations[0]!.id,
         runtime.stations[1]!.id
       ],
       routingPreference: "fastest_time",
       farePolicyId:
-        PLAYABLE_FARE_POLICY_ID,
-      requiredLicenseIds: []
+        PLAYABLE_FARE_POLICY_ID
     }
   );
   assert.equal(routeCreated.ok, true);

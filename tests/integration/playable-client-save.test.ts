@@ -54,8 +54,8 @@ test("playable save restores canonical runtime state and allocator continuity", 
 
   const secondRoute = await restored.createRoute({
     code: "SAVE2",
-    originStationId: unlocked[0]!.id,
-    destinationStationId: unlocked[2]!.id
+    originStationId: unlocked[1]!.id,
+    destinationStationId: unlocked[0]!.id
   });
   assert.equal(secondRoute.ok, true);
 

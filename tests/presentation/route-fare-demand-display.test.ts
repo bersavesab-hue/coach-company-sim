@@ -26,7 +26,7 @@ test("route management uses map-only creation and exposes fare controls", () => 
     true
   );
   assert.equal(
-    template.includes("全网候车"),
+    template.includes("已开放城市"),
     true
   );
 });
