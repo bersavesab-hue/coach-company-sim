@@ -23,8 +23,11 @@ test("route cards expose schedule details and lifecycle actions", () => {
   assert.equal(template.includes('call("cancelServicePlan"'), true);
 });
 
-test("schedule panel reports owned vehicle supply before creation", () => {
+test("schedule panel forecasts demand profit and required fleet before creation", () => {
   assert.equal(template.includes("function ownedVehicleClassCounts"), true);
-  assert.equal(template.includes("提交排班时会显示车辆缺口"), true);
-  assert.equal(template.includes("Math.floor((end-start)*60/interval)+1"), true);
+  assert.equal(template.includes("previewServicePlanForecast"), true);
+  assert.equal(template.includes("预计需车"), true);
+  assert.equal(template.includes("预计乘客"), true);
+  assert.equal(template.includes("贡献利润"), true);
+  assert.equal(template.includes("成本依据"), true);
 });

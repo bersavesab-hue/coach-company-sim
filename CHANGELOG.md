@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.24.0-stage24-operating-forecast
+
+### Added
+- 新增 RouteForecastService，统一复用 PassengerDemandPolicy、FareCalculator、正式道路、车辆模型、Finance 参数和 RouteBusiness 历史生成经营预测。
+- 线路保留最近 7 个游戏日的实际经营趋势，线路卡显示每日上座率与贡献利润。
+- 调价按钮改为先预测再确认：显示预计客流变化、上座率、日票款、贡献利润和风险提示。
+- 班次计划弹窗改为实时异步预测：显示已有+新增总班次、预计乘客、上座率、票款、变动成本、贡献利润、单班利润和预计需车数。
+- 新增 RouteForecastDto，明确预测的成本依据为 route_history / owned_fleet / catalog_model / unavailable。
+- VehicleModelRepository 新增兼容型 findByServiceClass；正式内存仓库实现车型级查询，用于没有自有车辆时的目录车型预测。
+
+### Forecast Model
+- 客流预测直接使用正式 OD basePassengersPerHour、班次频率倍率、票价倍率和 24 小时时段倍率，不单独维护 UI 客流公式。
+- 运力使用乘客公里 / 座位公里估算上座率，并把当前候车积压纳入可服务需求。
+- 预计需车数使用真实车型行驶时间、往返循环和 15 分钟周转假设计算。
+- 调价预测可优先使用上一运营日真实单班成本。
+- 新增班次/换车型预测不套用旧车型历史成本，重新依据所选自有车型或正式车型目录计算能源、通行费、磨损折旧、司机行驶补贴与站务成本。
+- 预测会提示车辆不足、上座率过高、上座率过低和贡献利润为负等风险。
+
+### UI
+- 删除旧班次面板仅显示“每日班数 + 车型库存”的简单估算。
+- 经营预测在实际提交班次或执行调价前展示，不替玩家自动做经营决策。
+
+### Compatibility
+- SAVE_VERSION 保持 1；本阶段只增加派生预测和历史读取，不新增必须迁移的存档事实。
+- CONTENT_VERSION 保持 11。
+
 ## 0.23.0-stage23-route-business
 
 ### Added

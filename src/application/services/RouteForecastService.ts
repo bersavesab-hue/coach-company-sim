@@ -213,7 +213,8 @@ export class RouteForecastService {
       projectedBoardedPassengers,
       basis,
       drivingSeconds,
-      routeDistanceM
+      routeDistanceM,
+      forcedProposedDepartures !== undefined
     );
     const projectedContributionProfitCents =
       projectedNetPassengerRevenueCents -
@@ -482,7 +483,8 @@ export class RouteForecastService {
     projectedPassengers: number,
     basis: VehicleBasis,
     drivingSeconds: number,
-    routeDistanceM: number
+    routeDistanceM: number,
+    allowHistoricalCost: boolean
   ): {
     readonly costCents: number;
     readonly costBasis: RouteForecastCostBasis;
@@ -496,6 +498,7 @@ export class RouteForecastService {
       Math.max(1, gameDay - 1)
     );
     if (
+      allowHistoricalCost &&
       history &&
       history.tripsDeparted > 0 &&
       history.accountingVariableCostCents +
