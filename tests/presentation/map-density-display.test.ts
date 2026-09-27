@@ -22,7 +22,8 @@ test("map labels hide collisions and follow zoom detail", () => {
   assert.equal(template.includes("function stationLabelVisible"), true);
   assert.equal(template.includes("labelVisible:!!chosen"), true);
   assert.equal(template.includes("function currentMapDetail"), true);
-  assert.equal(template.includes("if(detailChanged)renderMap()"), true);
+  assert.equal(template.includes("function mapStaticSignatureFor"), true);
+  assert.equal(template.includes("mapStaticSignature=signature"), true);
 });
 
 test("map exposes route focus and layer controls", () => {
@@ -31,4 +32,19 @@ test("map exposes route focus and layer controls", () => {
   assert.equal(template.includes("function showRouteOnMap"), true);
   assert.equal(template.includes("function cycleMapRouteLayer"), true);
   assert.equal(template.includes(">地图查看</button>"), true);
+});
+
+test("map separates static geography from dynamic vehicles", () => {
+  assert.equal(template.includes('id="mapStaticLayer"'), true);
+  assert.equal(template.includes('id="mapDynamicLayer"'), true);
+  assert.equal(template.includes('q("mapDynamicLayer").innerHTML=dynamic'), true);
+  assert.equal(template.includes('q("mapStaticLayer").innerHTML='), true);
+  assert.equal(template.includes('q("mapSvg").innerHTML=h'), false);
+});
+
+test("road shields share collision reservations with city and route labels", () => {
+  assert.equal(template.includes("shieldSvg(r,sx,sy,occupied,detail)"), true);
+  assert.equal(template.includes("function roadShieldVisible"), true);
+  assert.equal(template.includes("function stationPointVisible"), true);
+  assert.equal(template.includes("return\"\""), true);
 });

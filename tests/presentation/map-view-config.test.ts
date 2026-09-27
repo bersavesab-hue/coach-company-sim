@@ -72,7 +72,11 @@ test(
     );
     assert.equal(
       config.camera.minRatio,
-      0.25
+      0.18
+    );
+    assert.equal(
+      config.camera.defaultRatio,
+      0.52
     );
 
     const levels =

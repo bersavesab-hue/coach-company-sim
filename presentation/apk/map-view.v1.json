@@ -5,8 +5,8 @@
     "height": 825
   },
   "camera": {
-    "defaultRatio": 0.34,
-    "minRatio": 0.25
+    "defaultRatio": 0.52,
+    "minRatio": 0.18
   },
   "lod": [
     {
