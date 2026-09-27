@@ -70,3 +70,35 @@ test("UI designer inline script parses", () => {
     .replace("__MAP_VIEW_CONFIG_JSON__", "{}");
   assert.doesNotThrow(() => new vm.Script(inline));
 });
+
+test("designer supports style image and safe custom component editing", () => {
+  for (const token of [
+    "function uiAdjustFont",
+    "function uiAdjustOpacity",
+    "function uiAdjustRadius",
+    "function uiApplyColor",
+    "function uiChooseBackground",
+    "function uiCompressImage",
+    "function uiAddText",
+    "function uiAddImage",
+    "function uiAddDataCard",
+    "function uiRemoveCustomSelected",
+    "function uiExportCleanup"
+  ]) {
+    assert.equal(template.includes(token), true);
+  }
+  assert.equal(template.includes("const UI_BINDINGS={"), true);
+  assert.equal(template.includes("eval("), false);
+  assert.equal(template.includes("data-ui-custom"), true);
+});
+
+test("designer image input accepts only images", () => {
+  assert.equal(
+    template.includes('id="uiImageInput"'),
+    true
+  );
+  assert.equal(
+    template.includes('accept="image/*"'),
+    true
+  );
+});

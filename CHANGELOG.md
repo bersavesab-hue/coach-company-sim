@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.30.0-stage30-ui-designer-assets
+
+### UI Designer Styling
+- 选中组件新增字号、透明度、圆角、文字颜色和背景颜色调整。
+- 支持给任意可编辑组件选择本地图片作为背景，并可单独清除背景图。
+- 图片在浏览器端最大边 720px 压缩，并限制布局内单图数据规模，避免手机 localStorage 被原图塞满。
+- 背景图片只属于 UI_LAYOUT_KEY，不写入正式游戏 Save。
+
+### Custom Components
+- 当前页面可新增自由文字、自定义图片和只读数据卡。
+- 自定义组件使用 custom.* 稳定 ID，并进入 uiLayout.custom；地图页自建组件自动成为可拖动浮层。
+- 自定义组件支持和内置组件相同的宽度、缩放、字号、颜色、透明度、圆角、隐藏与位置配置。
+- 自建组件允许确认后物理移除；内置组件仍只能软删除，防止误删正式入口。
+
+### Safe Data Binding
+- 数据卡使用固定白名单绑定，不支持 eval、表达式或任意对象路径。
+- 当前白名单：现金、声誉、公司等级、已开放城市、全网候车、今日班次、运营车辆、客运收入、会计利润、游戏时间。
+- 数据绑定仅调用 snapshot 的只读值，不调用 CommandBus，不提供资金/车辆/线路/乘客写入口。
+
+### Android Image Picker
+- MainActivity 新增 WebChromeClient 文件选择桥，HTML image/* 文件输入可调用 Android 系统图片选择器。
+- onActivityResult 仅把系统选择的 Uri 返回 WebView，不申请外部存储扫描权限。
+- WebView content access 仅用于用户主动选择的本地内容。
+
+### Cleanup Workflow
+- 新增“复制清理清单”：输出被软删除的内置 UI ID 以及自建组件概要。
+- 清理清单本身不执行源码删除；正式清理阶段仍遵守删除旧入口/旧接口后再接替代实现的仓库纪律。
+
+### Compatibility
+- SAVE_VERSION 保持 1；设计器配置仍与经营存档完全分离。
+- CONTENT_VERSION 保持 13。
+
 ## 0.29.0-stage29-ui-designer
 
 ### In-game UI Designer

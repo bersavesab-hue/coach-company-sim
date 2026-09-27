@@ -131,6 +131,9 @@ body.ui-design-mode [data-ui-free]{touch-action:none}
 body.ui-design-mode .uiDesignerLauncher{display:none!important}
 body.ui-design-mode nav{pointer-events:none;opacity:.72}
 .uiDesignHint{font-size:8px;color:#81949f;margin-top:5px;line-height:1.4}
+.uiDesignerBind{display:grid;grid-template-columns:1fr auto;gap:5px;margin-top:6px}.uiDesignerBind select{padding:6px 8px;font-size:9px;border-radius:8px}.uiDesignerBind button{border:1px solid #40515c;border-radius:8px;background:#253541;color:#e1e9ed;padding:6px 8px;font-size:9px;font-weight:850}
+.uiDesignerColor{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.uiCustomComponent{margin:8px 0;background:#121b23;border:1px solid #33434e;border-radius:13px;padding:11px;min-height:42px}.uiCustomText{font-size:14px;line-height:1.45}.uiCustomData b{display:block;font-size:20px}.uiCustomData span{display:block;font-size:10px;color:#8fa2b1;margin-top:3px}.uiCustomImage{padding:0;overflow:hidden}.uiCustomImage img{display:block;width:100%;max-height:320px;object-fit:cover}.mapwrap>.uiCustomComponent{position:absolute;left:18px;top:150px;z-index:9;width:min(230px,65vw);margin:0}
 @media(min-width:700px){.grid{grid-template-columns:repeat(4,1fr)}.form{grid-template-columns:repeat(4,1fr)}main{padding-left:14px;padding-right:14px}#map.page.active{margin-left:-14px;margin-right:-14px}.planForm{grid-template-columns:1.4fr repeat(3,1fr)}.planField.wide{grid-column:auto}.planEstimate,.planSubmit{grid-column:1/-1}}
 </style>
 </head>
@@ -247,19 +250,51 @@ body.ui-design-mode nav{pointer-events:none;opacity:.72}
     <button onclick="uiSetWidth('')">自动宽</button>
     <button onclick="uiScaleSelected(-.05)">缩小</button>
     <button onclick="uiScaleSelected(.05)">放大</button>
+    <button onclick="uiAdjustFont(-1)">字号−</button>
+    <button onclick="uiAdjustFont(1)">字号＋</button>
+    <button onclick="uiAdjustOpacity(-.1)">透明−</button>
+    <button onclick="uiAdjustOpacity(.1)">透明＋</button>
+    <button onclick="uiAdjustRadius(-2)">圆角−</button>
+    <button onclick="uiAdjustRadius(2)">圆角＋</button>
+    <button onclick="uiOpenColor('text')">文字色</button>
+    <button onclick="uiOpenColor('background')">背景色</button>
+    <button onclick="uiChooseBackground()">背景图片</button>
+    <button onclick="uiClearBackgroundImage()">清除图片</button>
+    <button class="primary" onclick="uiAddText()">＋文字</button>
+    <button class="primary" onclick="uiAddImage()">＋图片</button>
     <button id="uiDeleteButton" class="danger" onclick="uiToggleHiddenSelected()">删除/恢复</button>
     <button onclick="uiResetSelected()">重置组件</button>
+    <button onclick="uiRemoveCustomSelected()">移除自建</button>
     <button onclick="uiExportLayout()">复制配置</button>
+    <button onclick="uiExportCleanup()">复制清理清单</button>
     <button onclick="uiImportLayout()">导入配置</button>
     <button onclick="uiResetAll()">全部重置</button>
   </div>
-  <div class="uiDesignHint">地图上的状态卡、图层按钮、缩放按钮、时间条、新建线路按钮可直接拖动。删除为可恢复隐藏，不会删除底层经营代码。</div>
+  <div class="uiDesignerBind">
+    <select id="uiBindingSelect">
+      <option value="cash">现金</option>
+      <option value="reputation">公司声誉</option>
+      <option value="companyLevel">公司等级</option>
+      <option value="unlockedCities">已开放城市</option>
+      <option value="waitingPassengers">全网候车</option>
+      <option value="todayTrips">今日班次</option>
+      <option value="runningVehicles">运营车辆</option>
+      <option value="passengerRevenue">客运收入</option>
+      <option value="accountingProfit">会计利润</option>
+      <option value="currentTime">游戏时间</option>
+    </select>
+    <button onclick="uiAddDataCard()">＋数据卡</button>
+  </div>
+  <input class="uiDesignerColor" id="uiTextColorInput" type="color" onchange="uiApplyColor('text',this.value)">
+  <input class="uiDesignerColor" id="uiBackgroundColorInput" type="color" onchange="uiApplyColor('background',this.value)">
+  <input id="uiImageInput" data-ui-designer type="file" accept="image/*" hidden onchange="uiHandleImageFile(this.files&&this.files[0])">
+  <div class="uiDesignHint">图片从手机本地选择并压缩保存。新增数据卡只读现有经营数据，不能修改资金、车辆、线路或乘客状态。</div>
 </div>
 <div class="notice" id="notice"></div>
 <footer data-time-controls data-ui-edit="global.timeFooter" data-ui-label="底部时间控制"><button data-speed="0" onclick="setTimeSpeed(0)">暂停</button><button data-speed="60" onclick="setTimeSpeed(60)">1×</button><button data-speed="180" onclick="setTimeSpeed(180)">3×</button><button data-speed="600" onclick="setTimeSpeed(600)">10×</button></footer>
 <script src="game.js"></script>
 <script>
-let uiDesignMode=false,uiDesignSelectedId=null,uiDesignDrag=null,uiDesignPreviousSpeed=60,uiLayout={elements:{},groups:{}};
+let uiDesignMode=false,uiDesignSelectedId=null,uiDesignDrag=null,uiDesignImageMode=null,uiDesignPreviousSpeed=60,uiLayout={elements:{},groups:{},custom:[]};
 const UI_LAYOUT_KEY="coach-company-sim.ui-layout.v1";
 let state=null,marketFilter="all",dispatchFilter="all",planRouteId=null,planForecastSeq=0,selectedVehicleId=null,configuratorState=null,usedVehicleState=null,timeSpeed=60,autoClockBusy=false,lastAutoClockAt=performance.now(),mapCamera=null,mapDrag=null,mapRenderedDetail=null,mapStaticSignature="",mapViewportKey="",terrainTileKey="",terrainFallbackVisible=true,mapRouteLayerVisible=true,mapLabelsVisible=true,mapFocusedRouteId=null,mapTrackedTripId=null,mapZoneFilter=null,currentPageId="map",pageHistory=[],mapRouteDraft={originStationId:null,destinationStationId:null,preview:null},routePreviewSequence=0,mapViewConfig=__MAP_VIEW_CONFIG_JSON__;
 const q=id=>document.getElementById(id),esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -279,7 +314,8 @@ function normalizeUiLayout(value){
   const source=value&&typeof value==="object"?value:{};
   return{
     elements:source.elements&&typeof source.elements==="object"?source.elements:{},
-    groups:source.groups&&typeof source.groups==="object"?source.groups:{}
+    groups:source.groups&&typeof source.groups==="object"?source.groups:{},
+    custom:Array.isArray(source.custom)?source.custom.filter(item=>item&&typeof item==="object"&&typeof item.id==="string"):[]
   }
 }
 function loadUiLayout(){
@@ -294,13 +330,215 @@ function saveUiLayout(){
 function uiElement(id){return[...document.querySelectorAll("[data-ui-edit]")].find(el=>el.dataset.uiEdit===id)||null}
 function uiGroupElement(group){return[...document.querySelectorAll("[data-ui-layout-group]")].find(el=>el.dataset.uiLayoutGroup===group)||null}
 function uiElementState(id){return uiLayout.elements[id]||(uiLayout.elements[id]={})}
+const UI_BINDINGS={
+  cash:{label:"现金",read:()=>money(state?.finance?.cashBalanceCents||0)},
+  reputation:{label:"公司声誉",read:()=>String(state?.company?.reputationPermille||0)+"/1000"},
+  companyLevel:{label:"公司等级",read:()=>"Lv."+String(state?.progression?.level||1)},
+  unlockedCities:{label:"已开放城市",read:()=>String(state?.progression?.unlockedCityCount||0)+"/"+String(state?.progression?.totalCityCount||0)},
+  waitingPassengers:{label:"全网候车",read:()=>String(state?.passengerSummary?.totalWaiting||0)},
+  todayTrips:{label:"今日班次",read:()=>String(state?.dispatch?.summary?.passengerTripsTotal||0)},
+  runningVehicles:{label:"运营车辆",read:()=>String(state?.dispatch?.summary?.fleetRunning||0)},
+  passengerRevenue:{label:"客运收入",read:()=>money(state?.finance?.passengerRevenueCents||0)},
+  accountingProfit:{label:"会计利润",read:()=>money(state?.finance?.accountingProfitCents||0)},
+  currentTime:{label:"游戏时间",read:()=>time(state?.currentGameSecond||0)}
+};
+function uiCurrentTargetPage(){
+  return document.querySelector(".page.active")?.id||currentPageId||"home"
+}
+function uiCustomHost(page){
+  return page==="map"?q("mapWrap"):q(page)
+}
+function uiRenderCustomContent(el,item){
+  if(item.type==="text"){
+    el.className="uiCustomComponent uiCustomText";
+    el.textContent=item.text||"自定义文字";
+    return
+  }
+  if(item.type==="data"){
+    const binding=UI_BINDINGS[item.binding]||UI_BINDINGS.cash;
+    el.className="uiCustomComponent uiCustomData";
+    el.innerHTML="<b>"+esc(binding.read())+"</b><span>"+esc(item.label||binding.label)+"</span>";
+    return
+  }
+  if(item.type==="image"){
+    el.className="uiCustomComponent uiCustomImage";
+    el.innerHTML=item.imageData?'<img alt="自定义图片" src="'+esc(item.imageData)+'">':'<div class="empty">未选择图片</div>'
+  }
+}
+function ensureUiCustomComponents(){
+  const wanted=new Set((uiLayout.custom||[]).map(item=>item.id));
+  document.querySelectorAll("[data-ui-custom]").forEach(el=>{
+    if(!wanted.has(el.dataset.uiEdit))el.remove()
+  });
+  for(const item of uiLayout.custom||[]){
+    let el=uiElement(item.id);
+    const host=uiCustomHost(item.page||"home");
+    if(!host)continue;
+    if(!el){
+      el=document.createElement("div");
+      el.dataset.uiEdit=item.id;
+      el.dataset.uiLabel=item.label||"自建组件";
+      el.dataset.uiCustom="1";
+      if((item.page||"home")==="map")el.setAttribute("data-ui-free","");
+      host.appendChild(el)
+    }else if(el.parentElement!==host){
+      host.appendChild(el)
+    }
+    uiRenderCustomContent(el,item)
+  }
+}
+function uiCreateCustom(type,extra={}){
+  const page=uiCurrentTargetPage(),id="custom."+Date.now().toString(36)+"."+Math.random().toString(36).slice(2,6);
+  const item={id,type,page,label:type==="text"?"自定义文字":type==="data"?"自定义数据卡":"自定义图片",...extra};
+  uiLayout.custom.push(item);
+  if(page!=="map"){
+    const group=uiGroupElement(page);
+    if(group){
+      uiLayout.groups[page]=[...(uiLayout.groups[page]||[]),id]
+    }
+  }
+  uiDesignSelectedId=id;
+  uiPersistAndApply();
+  return item
+}
+function uiAddText(){
+  const textValue=prompt("输入文字","自定义文字");
+  if(textValue===null)return;
+  uiCreateCustom("text",{text:textValue,label:textValue.slice(0,18)||"自定义文字"})
+}
+function uiAddDataCard(){
+  const key=q("uiBindingSelect")?.value||"cash",binding=UI_BINDINGS[key];
+  if(!binding)return;
+  uiCreateCustom("data",{binding:key,label:binding.label})
+}
+function uiAddImage(){
+  uiDesignImageMode="new";
+  q("uiImageInput").value="";
+  q("uiImageInput").click()
+}
+function uiChooseBackground(){
+  if(!uiDesignSelectedId){toast("先选择一个组件",true);return}
+  uiDesignImageMode="background";
+  q("uiImageInput").value="";
+  q("uiImageInput").click()
+}
+function uiCompressImage(file){
+  return new Promise((resolve,reject)=>{
+    if(!file||!String(file.type||"").startsWith("image/")){reject(new Error("请选择图片文件"));return}
+    const reader=new FileReader();
+    reader.onerror=()=>reject(new Error("图片读取失败"));
+    reader.onload=()=>{
+      const image=new Image();
+      image.onerror=()=>reject(new Error("图片无法解析"));
+      image.onload=()=>{
+        const max=720,scale=Math.min(1,max/Math.max(image.width,image.height)),w=Math.max(1,Math.round(image.width*scale)),h=Math.max(1,Math.round(image.height*scale)),canvas=document.createElement("canvas");
+        canvas.width=w;canvas.height=h;
+        const ctx=canvas.getContext("2d");
+        ctx.drawImage(image,0,0,w,h);
+        let data=canvas.toDataURL("image/webp",.72);
+        if(data.length>700000)data=canvas.toDataURL("image/jpeg",.62);
+        if(data.length>700000){reject(new Error("图片压缩后仍过大，请换尺寸更小的图片"));return}
+        resolve(data)
+      };
+      image.src=String(reader.result)
+    };
+    reader.readAsDataURL(file)
+  })
+}
+async function uiHandleImageFile(file){
+  if(!file)return;
+  try{
+    const data=await uiCompressImage(file);
+    if(uiDesignImageMode==="background"&&uiDesignSelectedId){
+      uiElementState(uiDesignSelectedId).backgroundImage=data;
+      uiPersistAndApply()
+    }else if(uiDesignImageMode==="new"){
+      uiCreateCustom("image",{imageData:data,label:"自定义图片"})
+    }
+    toast("图片已应用")
+  }catch(error){toast(String(error),true)}
+  finally{uiDesignImageMode=null;q("uiImageInput").value=""}
+}
+function uiSelectedStyle(){
+  return uiDesignSelectedId?uiElementState(uiDesignSelectedId):null
+}
+function uiAdjustFont(delta){
+  const style=uiSelectedStyle(),el=uiDesignSelectedId?uiElement(uiDesignSelectedId):null;
+  if(!style||!el)return;
+  const current=Number(style.fontSize||parseFloat(getComputedStyle(el).fontSize)||14);
+  style.fontSize=Math.max(7,Math.min(42,Math.round(current+delta)));
+  uiPersistAndApply()
+}
+function uiAdjustOpacity(delta){
+  const style=uiSelectedStyle();
+  if(!style)return;
+  style.opacity=Math.max(.2,Math.min(1,Math.round(((style.opacity??1)+delta)*10)/10));
+  uiPersistAndApply()
+}
+function uiAdjustRadius(delta){
+  const style=uiSelectedStyle(),el=uiDesignSelectedId?uiElement(uiDesignSelectedId):null;
+  if(!style||!el)return;
+  const current=Number(style.radius??parseFloat(getComputedStyle(el).borderRadius)||0);
+  style.radius=Math.max(0,Math.min(40,Math.round(current+delta)));
+  uiPersistAndApply()
+}
+function uiOpenColor(kind){
+  if(!uiDesignSelectedId){toast("先选择一个组件",true);return}
+  q(kind==="text"?"uiTextColorInput":"uiBackgroundColorInput").click()
+}
+function uiApplyColor(kind,value){
+  if(!uiDesignSelectedId)return;
+  const style=uiElementState(uiDesignSelectedId);
+  if(kind==="text")style.color=value;else style.backgroundColor=value;
+  uiPersistAndApply()
+}
+function uiClearBackgroundImage(){
+  const style=uiSelectedStyle();
+  if(!style)return;
+  delete style.backgroundImage;
+  uiPersistAndApply()
+}
+function uiRemoveCustomSelected(){
+  if(!uiDesignSelectedId)return;
+  const index=(uiLayout.custom||[]).findIndex(item=>item.id===uiDesignSelectedId);
+  if(index<0){toast("内置组件只能隐藏，不能在设计器中物理删除",true);return}
+  if(!confirm("永久移除这个自建组件？"))return;
+  const id=uiDesignSelectedId;
+  uiLayout.custom.splice(index,1);
+  delete uiLayout.elements[id];
+  for(const group of Object.keys(uiLayout.groups||{})){
+    uiLayout.groups[group]=(uiLayout.groups[group]||[]).filter(value=>value!==id)
+  }
+  uiDesignSelectedId=null;
+  uiPersistAndApply()
+}
+function uiExportCleanup(){
+  const hiddenBuiltin=Object.entries(uiLayout.elements||{}).filter(([id,value])=>value?.hidden&&!String(id).startsWith("custom.")).map(([id])=>id);
+  const report={
+    version:1,
+    hiddenBuiltinIds:hiddenBuiltin,
+    customComponents:(uiLayout.custom||[]).map(item=>({id:item.id,type:item.type,page:item.page,binding:item.binding||null,label:item.label||null})),
+    note:"hiddenBuiltinIds 可交给代码清理阶段逐项删除旧 UI；本清单不直接删除底层逻辑。"
+  };
+  const value=JSON.stringify(report,null,2);
+  if(navigator.clipboard?.writeText)navigator.clipboard.writeText(value).then(()=>toast("清理清单已复制")).catch(()=>prompt("复制清理清单",value));else prompt("复制清理清单",value)
+}
 function applyUiLayout(){
+  ensureUiCustomComponents();
   for(const el of document.querySelectorAll("[data-ui-edit]")){
     const id=el.dataset.uiEdit,state=uiLayout.elements[id]||{};
     el.classList.toggle("ui-soft-hidden",!!state.hidden);
     el.hidden=!!state.hidden&&!uiDesignMode;
     el.style.width=state.width||"";
     el.style.zoom=state.scale&&state.scale!==1?String(state.scale):"";
+    el.style.fontSize=state.fontSize?state.fontSize+"px":"";
+    el.style.color=state.color||"";
+    el.style.backgroundColor=state.backgroundColor||"";
+    el.style.opacity=state.opacity??"";
+    el.style.borderRadius=state.radius!==undefined?state.radius+"px":"";
+    el.style.backgroundImage=state.backgroundImage?'linear-gradient(rgba(8,15,20,.28),rgba(8,15,20,.28)),url("'+state.backgroundImage+'")':"";
+    el.style.backgroundSize=state.backgroundImage?"cover":"";
+    el.style.backgroundPosition=state.backgroundImage?"center":"";
     if(el.hasAttribute("data-ui-free")){
       el.style.translate=((state.x||0)+"px "+(state.y||0)+"px")
     }else{
@@ -346,7 +584,7 @@ function selectUiElement(el){
 }
 function updateUiDesignerPanel(){
   const label=q("uiDesignerSelected"),selected=uiDesignSelectedId?uiElement(uiDesignSelectedId):null;
-  if(label)label.textContent=selected?(selected.dataset.uiLabel||uiDesignSelectedId)+(selected.hasAttribute("data-ui-free")?" · 可拖动":""):"点击虚线框选择组件";
+  if(label)label.textContent=selected?(selected.dataset.uiLabel||uiDesignSelectedId)+(selected.hasAttribute("data-ui-free")?" · 可拖动":"")+(selected.hasAttribute("data-ui-custom")?" · 自建":""):"点击虚线框选择组件";
   const movable=!!selected&&!selected.hasAttribute("data-ui-free")&&!!selected.parentElement?.dataset?.uiLayoutGroup;
   if(q("uiMoveUp"))q("uiMoveUp").disabled=!movable;
   if(q("uiMoveDown"))q("uiMoveDown").disabled=!movable;
