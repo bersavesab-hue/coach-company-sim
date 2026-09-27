@@ -232,6 +232,61 @@ export class PlayableClient {
                 Number(company.reputationPermille)
               )
             : true;
+          const popularDestinations =
+            this.runtime.repositories.passengerDemand
+              .all()
+              .filter(
+                (profile) =>
+                  profile.originStationId === station.id
+              )
+              .filter((profile) => {
+                const destination =
+                  this.runtime.mapContent.stations.find(
+                    (value) =>
+                      value.id ===
+                      String(profile.destinationStationId)
+                  );
+                return (
+                  destination !== undefined &&
+                  isMapStationUnlocked(
+                    destination,
+                    reputationPermille
+                  )
+                );
+              })
+              .map((profile) => ({
+                profile,
+                score:
+                  profile.basePassengersPerHour *
+                  effectiveProfileDemandPermille(
+                    profile,
+                    gameDay
+                  )
+              }))
+              .sort(
+                (left, right) =>
+                  right.score - left.score
+              )
+              .slice(0, 3)
+              .map(({ profile }) => ({
+                stationId:
+                  String(profile.destinationStationId),
+                name:
+                  this.runtime.repositories.stations
+                    .getById(
+                      profile.destinationStationId
+                    )?.name ??
+                  String(profile.destinationStationId),
+                demandPatternLabel:
+                  passengerDemandPatternLabel(
+                    profile.demandPattern ?? "general"
+                  ),
+                demandIndexPermille:
+                  effectiveProfileDemandPermille(
+                    profile,
+                    gameDay
+                  )
+              }));
           return {
             id: String(station.id),
             name: station.name,
