@@ -9,7 +9,9 @@ const template = fs.readFileSync(
 );
 
 test("map aggregates route density instead of painting every route", () => {
+  assert.equal(template.includes("function screenRoutePoints"), true);
   assert.equal(template.includes("function aggregateRouteNetwork"), true);
+  assert.equal(template.includes("function smoothScreenPath"), true);
   assert.equal(template.includes('class="routeNetworkLine load'), true);
   assert.equal(template.includes("Math.min(4,segment.count)"), true);
   assert.equal(
