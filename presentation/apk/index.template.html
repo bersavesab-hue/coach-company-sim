@@ -478,7 +478,7 @@ function uiAdjustOpacity(delta){
 function uiAdjustRadius(delta){
   const style=uiSelectedStyle(),el=uiDesignSelectedId?uiElement(uiDesignSelectedId):null;
   if(!style||!el)return;
-  const current=Number(style.radius??parseFloat(getComputedStyle(el).borderRadius)||0);
+  const current=Number(style.radius ?? (parseFloat(getComputedStyle(el).borderRadius) || 0));
   style.radius=Math.max(0,Math.min(40,Math.round(current+delta)));
   uiPersistAndApply()
 }
