@@ -209,4 +209,20 @@ test("playable client completes buy-route-schedule-operate-finance loop", async 
     Number(runtime.company.reputationPermille) > 180,
     true
   );
+
+  const business =
+    runtime.app.routeBusiness.snapshot(route.id, 1);
+  assert.ok(business);
+  assert.equal(
+    (business?.passengersBoarded ?? 0) > 0,
+    true
+  );
+  assert.equal(
+    (business?.grossTicketSalesCents ?? 0) > 0,
+    true
+  );
+  assert.equal(
+    (business?.loadFactorPermille ?? 0) > 0,
+    true
+  );
 });

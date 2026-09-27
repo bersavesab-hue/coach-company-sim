@@ -998,6 +998,11 @@ export class PlayableClient {
             fareMultiplierPermille
           )
         ),
+      business:
+        this.runtime.app.routeBusiness.snapshot(
+          route.id,
+          gameDayAt(this.currentGameSecond)
+        ),
       pathPoints:
         this.pathPointsFromLegs(
           route.pathLegs

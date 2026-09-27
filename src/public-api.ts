@@ -11,6 +11,7 @@ export * from "./contracts/dto/FinanceDto.js";
 export * from "./contracts/dto/VehicleDto.js";
 export * from "./contracts/dto/VehicleMarketDto.js";
 export * from "./contracts/dto/OperationsDto.js";
+export * from "./contracts/dto/RouteBusinessDto.js";
 
 export * from "./core/units/Units.js";
 export * from "./core/time/GameClock.js";
@@ -94,6 +95,7 @@ export * from "./simulation/movement/TripWorldPosition.js";
 export * from "./simulation/passenger/PassengerDemandPolicy.js";
 export * from "./simulation/passenger/DemandGeneration.js";
 export * from "./simulation/passenger/PassengerFlow.js";
+export * from "./simulation/passenger/PassengerTripMetrics.js";
 
 export * from "./application/CommandBus.js";
 export * from "./application/QueryBus.js";
@@ -132,6 +134,7 @@ export * from "./application/services/DispatchCenterProjection.js";
 export * from "./application/services/DayOperationsPlanner.js";
 export * from "./application/services/FleetTaskTiming.js";
 export * from "./application/services/RoutePathService.js";
+export * from "./application/services/RouteBusinessProjection.js";
 export * from "./application/services/TripTiming.js";
 export * from "./application/services/VehicleMarketProjection.js";
 export * from "./application/operations/FleetOperationsCoordinator.js";

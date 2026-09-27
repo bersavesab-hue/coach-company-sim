@@ -26,6 +26,7 @@ import { OperationsExecutionCoordinator } from "../application/operations/Operat
 import { OperationsScheduleService } from "../application/operations/OperationsScheduleService.js";
 import { DayOperationsPlanner } from "../application/services/DayOperationsPlanner.js";
 import { DispatchCenterProjection } from "../application/services/DispatchCenterProjection.js";
+import { RouteBusinessProjection } from "../application/services/RouteBusinessProjection.js";
 import { VehicleMarketProjection } from "../application/services/VehicleMarketProjection.js";
 import { VehicleContentAccessService } from "../application/services/VehicleContentAccessService.js";
 import { VehicleMarketTradingService } from "../application/services/VehicleMarketTradingService.js";
@@ -63,6 +64,7 @@ export interface ApplicationRuntime {
   readonly fleetOperations: FleetOperationsCoordinator;
   readonly operationsPlanner: DayOperationsPlanner;
   readonly dispatchCenter: DispatchCenterProjection;
+  readonly routeBusiness: RouteBusinessProjection;
   readonly vehicleMarket: VehicleMarketProjection;
   readonly vehicleContentAccess: VehicleContentAccessService;
   readonly vehicleMarketValuation: VehicleMarketValuationService;
@@ -231,6 +233,9 @@ export function createApplication(
     operationsPlanner,
     dependencies.operationsPolicy
   );
+  const routeBusiness = new RouteBusinessProjection(
+    dependencies.repositories
+  );
 
   registerOperationsQueries(
     queries,
@@ -264,6 +269,7 @@ export function createApplication(
     fleetOperations,
     operationsPlanner,
     dispatchCenter,
+    routeBusiness,
     vehicleMarket,
     vehicleContentAccess,
     vehicleMarketValuation,
