@@ -1,7 +1,6 @@
 import type {
   CompanyId,
   FarePolicyId,
-  LicenseId,
   RouteId,
   StationId
 } from "../../../contracts/ids/EntityIds.js";
@@ -15,7 +14,6 @@ export interface CreateRoutePayload {
   readonly orderedStationIds: readonly StationId[];
   readonly routingPreference: RoutingPreference;
   readonly farePolicyId: FarePolicyId;
-  readonly requiredLicenseIds: readonly LicenseId[];
 }
 
 export interface UpdateRouteStopsPayload {

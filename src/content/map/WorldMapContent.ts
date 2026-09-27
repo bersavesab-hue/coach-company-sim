@@ -4,6 +4,20 @@ import type { WorldNodeType } from "../../domain/world/WorldNode.js";
 
 export const WORLD_MAP_SCHEMA_VERSION = 1 as const;
 export type StationClass = "town" | "county" | "city" | "hub";
+export type OperatingZone =
+  | "northwest"
+  | "north"
+  | "northeast"
+  | "southwest"
+  | "central_south"
+  | "southeast";
+export type CityRole =
+  | "local"
+  | "regional"
+  | "business"
+  | "tourism"
+  | "hub"
+  | "gateway";
 export type RoadRole =
   | "mainline"
   | "urban_ring"
@@ -33,7 +47,11 @@ export interface WorldMapRoadContent {
 export interface WorldMapStationContent {
   readonly id: string; readonly name: string; readonly worldNodeId: string;
   readonly stationClass: StationClass; readonly active: boolean;
+  readonly operatingZone: OperatingZone;
+  readonly cityRole: CityRole;
+  readonly unlockCompanyLevel: 1 | 2 | 3 | 4 | 5 | 6;
   readonly unlockReputationPermille: number;
+  readonly passengerDemandPermille: number;
 }
 export interface WorldMapBackgroundContent { readonly mode: "decorative_only"; readonly assetPath: string | null; }
 export interface WorldMapContentV1 {

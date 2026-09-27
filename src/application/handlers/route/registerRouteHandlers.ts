@@ -105,8 +105,7 @@ function handleCreateRoute(
     stopPoints: builtPath.value.stopPoints,
     pathLegs: builtPath.value.legs,
     routingPreference: payload.routingPreference,
-    farePolicyId: payload.farePolicyId,
-    requiredLicenseIds: payload.requiredLicenseIds
+    farePolicyId: payload.farePolicyId
   });
   if (!created.ok) return created;
 

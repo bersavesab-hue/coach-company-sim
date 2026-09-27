@@ -10261,7 +10261,11 @@
       "worldNodeId": "location.heyuan",
       "stationClass": "hub",
       "active": true,
-      "unlockReputationPermille": 0
+      "unlockReputationPermille": 0,
+      "operatingZone": "central_south",
+      "cityRole": "hub",
+      "unlockCompanyLevel": 1,
+      "passengerDemandPermille": 1350
     },
     {
       "id": "station.002",
@@ -10269,7 +10273,11 @@
       "worldNodeId": "location.yongan",
       "stationClass": "hub",
       "active": true,
-      "unlockReputationPermille": 0
+      "unlockReputationPermille": 80,
+      "operatingZone": "central_south",
+      "cityRole": "hub",
+      "unlockCompanyLevel": 1,
+      "passengerDemandPermille": 1350
     },
     {
       "id": "station.003",
@@ -10277,7 +10285,11 @@
       "worldNodeId": "location.yunzhou",
       "stationClass": "hub",
       "active": true,
-      "unlockReputationPermille": 0
+      "unlockReputationPermille": 220,
+      "operatingZone": "central_south",
+      "cityRole": "hub",
+      "unlockCompanyLevel": 2,
+      "passengerDemandPermille": 1350
     },
     {
       "id": "station.004",
@@ -10285,7 +10297,11 @@
       "worldNodeId": "location.cangyuan",
       "stationClass": "county",
       "active": true,
-      "unlockReputationPermille": 400
+      "unlockReputationPermille": 500,
+      "operatingZone": "northwest",
+      "cityRole": "regional",
+      "unlockCompanyLevel": 4,
+      "passengerDemandPermille": 900
     },
     {
       "id": "station.005",
@@ -10293,7 +10309,11 @@
       "worldNodeId": "location.beichen",
       "stationClass": "city",
       "active": true,
-      "unlockReputationPermille": 280
+      "unlockReputationPermille": 350,
+      "operatingZone": "northwest",
+      "cityRole": "regional",
+      "unlockCompanyLevel": 3,
+      "passengerDemandPermille": 1050
     },
     {
       "id": "station.006",
@@ -10301,7 +10321,11 @@
       "worldNodeId": "location.yaochuan",
       "stationClass": "town",
       "active": true,
-      "unlockReputationPermille": 240
+      "unlockReputationPermille": 240,
+      "operatingZone": "northwest",
+      "cityRole": "tourism",
+      "unlockCompanyLevel": 2,
+      "passengerDemandPermille": 860
     },
     {
       "id": "station.007",
@@ -10309,7 +10333,11 @@
       "worldNodeId": "location.yunling",
       "stationClass": "city",
       "active": true,
-      "unlockReputationPermille": 180
+      "unlockReputationPermille": 100,
+      "operatingZone": "northwest",
+      "cityRole": "regional",
+      "unlockCompanyLevel": 1,
+      "passengerDemandPermille": 1050
     },
     {
       "id": "station.008",
@@ -10317,7 +10345,11 @@
       "worldNodeId": "location.mingsha",
       "stationClass": "town",
       "active": true,
-      "unlockReputationPermille": 240
+      "unlockReputationPermille": 370,
+      "operatingZone": "southwest",
+      "cityRole": "tourism",
+      "unlockCompanyLevel": 3,
+      "passengerDemandPermille": 860
     },
     {
       "id": "station.009",
@@ -10325,7 +10357,11 @@
       "worldNodeId": "location.xingxia",
       "stationClass": "county",
       "active": true,
-      "unlockReputationPermille": 160
+      "unlockReputationPermille": 120,
+      "operatingZone": "southwest",
+      "cityRole": "regional",
+      "unlockCompanyLevel": 1,
+      "passengerDemandPermille": 900
     },
     {
       "id": "station.010",
@@ -10333,7 +10369,11 @@
       "worldNodeId": "location.lingchuan",
       "stationClass": "city",
       "active": true,
-      "unlockReputationPermille": 180
+      "unlockReputationPermille": 260,
+      "operatingZone": "north",
+      "cityRole": "business",
+      "unlockCompanyLevel": 2,
+      "passengerDemandPermille": 1130
     },
     {
       "id": "station.011",
@@ -10341,7 +10381,11 @@
       "worldNodeId": "location.chengzhou",
       "stationClass": "hub",
       "active": true,
-      "unlockReputationPermille": 300
+      "unlockReputationPermille": 390,
+      "operatingZone": "north",
+      "cityRole": "hub",
+      "unlockCompanyLevel": 3,
+      "passengerDemandPermille": 1350
     },
     {
       "id": "station.012",
@@ -10349,7 +10393,11 @@
       "worldNodeId": "location.lanquan",
       "stationClass": "county",
       "active": true,
-      "unlockReputationPermille": 400
+      "unlockReputationPermille": 520,
+      "operatingZone": "north",
+      "cityRole": "regional",
+      "unlockCompanyLevel": 4,
+      "passengerDemandPermille": 900
     },
     {
       "id": "station.013",
@@ -10357,7 +10405,11 @@
       "worldNodeId": "location.xuanhe",
       "stationClass": "city",
       "active": true,
-      "unlockReputationPermille": 120
+      "unlockReputationPermille": 140,
+      "operatingZone": "north",
+      "cityRole": "business",
+      "unlockCompanyLevel": 1,
+      "passengerDemandPermille": 1130
     },
     {
       "id": "station.014",
@@ -10365,7 +10417,11 @@
       "worldNodeId": "location.anyue",
       "stationClass": "city",
       "active": true,
-      "unlockReputationPermille": 180
+      "unlockReputationPermille": 280,
+      "operatingZone": "north",
+      "cityRole": "business",
+      "unlockCompanyLevel": 2,
+      "passengerDemandPermille": 1130
     },
     {
       "id": "station.015",
@@ -10373,7 +10429,11 @@
       "worldNodeId": "location.jinghai",
       "stationClass": "hub",
       "active": true,
-      "unlockReputationPermille": 300
+      "unlockReputationPermille": 410,
+      "operatingZone": "north",
+      "cityRole": "hub",
+      "unlockCompanyLevel": 3,
+      "passengerDemandPermille": 1350
     },
     {
       "id": "station.016",
@@ -10381,7 +10441,11 @@
       "worldNodeId": "location.xueyuan",
       "stationClass": "city",
       "active": true,
-      "unlockReputationPermille": 580
+      "unlockReputationPermille": 680,
+      "operatingZone": "northeast",
+      "cityRole": "tourism",
+      "unlockCompanyLevel": 5,
+      "passengerDemandPermille": 1110
     },
     {
       "id": "station.017",
@@ -10389,7 +10453,11 @@
       "worldNodeId": "location.donglan",
       "stationClass": "city",
       "active": true,
-      "unlockReputationPermille": 740
+      "unlockReputationPermille": 850,
+      "operatingZone": "northeast",
+      "cityRole": "gateway",
+      "unlockCompanyLevel": 6,
+      "passengerDemandPermille": 1170
     },
     {
       "id": "station.018",
@@ -10397,7 +10465,11 @@
       "worldNodeId": "location.jinghai_n",
       "stationClass": "county",
       "active": true,
-      "unlockReputationPermille": 720
+      "unlockReputationPermille": 870,
+      "operatingZone": "northeast",
+      "cityRole": "gateway",
+      "unlockCompanyLevel": 6,
+      "passengerDemandPermille": 1020
     },
     {
       "id": "station.019",
@@ -10405,7 +10477,11 @@
       "worldNodeId": "location.songling",
       "stationClass": "city",
       "active": true,
-      "unlockReputationPermille": 420
+      "unlockReputationPermille": 540,
+      "operatingZone": "northeast",
+      "cityRole": "business",
+      "unlockCompanyLevel": 4,
+      "passengerDemandPermille": 1130
     },
     {
       "id": "station.020",
@@ -10413,7 +10489,11 @@
       "worldNodeId": "location.shuanghe",
       "stationClass": "city",
       "active": true,
-      "unlockReputationPermille": 580
+      "unlockReputationPermille": 700,
+      "operatingZone": "northeast",
+      "cityRole": "regional",
+      "unlockCompanyLevel": 5,
+      "passengerDemandPermille": 1050
     },
     {
       "id": "station.021",
@@ -10421,7 +10501,11 @@
       "worldNodeId": "location.hailing",
       "stationClass": "county",
       "active": true,
-      "unlockReputationPermille": 720
+      "unlockReputationPermille": 890,
+      "operatingZone": "southeast",
+      "cityRole": "gateway",
+      "unlockCompanyLevel": 6,
+      "passengerDemandPermille": 1020
     },
     {
       "id": "station.022",
@@ -10429,7 +10513,11 @@
       "worldNodeId": "location.xilan",
       "stationClass": "county",
       "active": true,
-      "unlockReputationPermille": 260
+      "unlockReputationPermille": 300,
+      "operatingZone": "southwest",
+      "cityRole": "regional",
+      "unlockCompanyLevel": 2,
+      "passengerDemandPermille": 900
     },
     {
       "id": "station.023",
@@ -10437,7 +10525,11 @@
       "worldNodeId": "location.linyue",
       "stationClass": "city",
       "active": true,
-      "unlockReputationPermille": 180
+      "unlockReputationPermille": 150,
+      "operatingZone": "southwest",
+      "cityRole": "regional",
+      "unlockCompanyLevel": 1,
+      "passengerDemandPermille": 1050
     },
     {
       "id": "station.024",
@@ -10445,7 +10537,11 @@
       "worldNodeId": "location.qingya",
       "stationClass": "town",
       "active": true,
-      "unlockReputationPermille": 240
+      "unlockReputationPermille": 320,
+      "operatingZone": "southwest",
+      "cityRole": "tourism",
+      "unlockCompanyLevel": 2,
+      "passengerDemandPermille": 860
     },
     {
       "id": "station.025",
@@ -10453,7 +10549,11 @@
       "worldNodeId": "location.yunchuan",
       "stationClass": "county",
       "active": true,
-      "unlockReputationPermille": 160
+      "unlockReputationPermille": 160,
+      "operatingZone": "southwest",
+      "cityRole": "regional",
+      "unlockCompanyLevel": 1,
+      "passengerDemandPermille": 900
     },
     {
       "id": "station.026",
@@ -10461,7 +10561,11 @@
       "worldNodeId": "location.nanhe",
       "stationClass": "city",
       "active": true,
-      "unlockReputationPermille": 120
+      "unlockReputationPermille": 180,
+      "operatingZone": "central_south",
+      "cityRole": "business",
+      "unlockCompanyLevel": 1,
+      "passengerDemandPermille": 1130
     },
     {
       "id": "station.027",
@@ -10469,7 +10573,11 @@
       "worldNodeId": "location.chengyue",
       "stationClass": "city",
       "active": true,
-      "unlockReputationPermille": 180
+      "unlockReputationPermille": 330,
+      "operatingZone": "central_south",
+      "cityRole": "business",
+      "unlockCompanyLevel": 2,
+      "passengerDemandPermille": 1130
     },
     {
       "id": "station.028",
@@ -10477,7 +10585,11 @@
       "worldNodeId": "location.cangyue",
       "stationClass": "city",
       "active": true,
-      "unlockReputationPermille": 280
+      "unlockReputationPermille": 340,
+      "operatingZone": "central_south",
+      "cityRole": "regional",
+      "unlockCompanyLevel": 2,
+      "passengerDemandPermille": 1050
     },
     {
       "id": "station.029",
@@ -10485,7 +10597,11 @@
       "worldNodeId": "location.jinlan",
       "stationClass": "hub",
       "active": true,
-      "unlockReputationPermille": 300
+      "unlockReputationPermille": 430,
+      "operatingZone": "central_south",
+      "cityRole": "hub",
+      "unlockCompanyLevel": 3,
+      "passengerDemandPermille": 1350
     },
     {
       "id": "station.030",
@@ -10493,7 +10609,11 @@
       "worldNodeId": "location.linjiang",
       "stationClass": "hub",
       "active": true,
-      "unlockReputationPermille": 440
+      "unlockReputationPermille": 560,
+      "operatingZone": "southeast",
+      "cityRole": "hub",
+      "unlockCompanyLevel": 4,
+      "passengerDemandPermille": 1350
     },
     {
       "id": "station.031",
@@ -10501,7 +10621,11 @@
       "worldNodeId": "location.qingyuan",
       "stationClass": "city",
       "active": true,
-      "unlockReputationPermille": 420
+      "unlockReputationPermille": 590,
+      "operatingZone": "southeast",
+      "cityRole": "business",
+      "unlockCompanyLevel": 4,
+      "passengerDemandPermille": 1130
     },
     {
       "id": "station.032",
@@ -10509,7 +10633,11 @@
       "worldNodeId": "location.donggang",
       "stationClass": "hub",
       "active": true,
-      "unlockReputationPermille": 760
+      "unlockReputationPermille": 910,
+      "operatingZone": "southeast",
+      "cityRole": "gateway",
+      "unlockCompanyLevel": 6,
+      "passengerDemandPermille": 1370
     },
     {
       "id": "station.033",
@@ -10517,7 +10645,11 @@
       "worldNodeId": "location.ningwan",
       "stationClass": "city",
       "active": true,
-      "unlockReputationPermille": 740
+      "unlockReputationPermille": 930,
+      "operatingZone": "southeast",
+      "cityRole": "gateway",
+      "unlockCompanyLevel": 6,
+      "passengerDemandPermille": 1170
     },
     {
       "id": "station.034",
@@ -10525,7 +10657,11 @@
       "worldNodeId": "location.haichuan",
       "stationClass": "city",
       "active": true,
-      "unlockReputationPermille": 580
+      "unlockReputationPermille": 720,
+      "operatingZone": "southeast",
+      "cityRole": "gateway",
+      "unlockCompanyLevel": 5,
+      "passengerDemandPermille": 1170
     },
     {
       "id": "station.035",
@@ -10533,7 +10669,11 @@
       "worldNodeId": "location.ruizhou",
       "stationClass": "city",
       "active": true,
-      "unlockReputationPermille": 740
+      "unlockReputationPermille": 950,
+      "operatingZone": "southeast",
+      "cityRole": "gateway",
+      "unlockCompanyLevel": 6,
+      "passengerDemandPermille": 1170
     },
     {
       "id": "station.036",
@@ -10541,7 +10681,11 @@
       "worldNodeId": "location.qingpu",
       "stationClass": "county",
       "active": true,
-      "unlockReputationPermille": 720
+      "unlockReputationPermille": 970,
+      "operatingZone": "southeast",
+      "cityRole": "gateway",
+      "unlockCompanyLevel": 6,
+      "passengerDemandPermille": 1020
     },
     {
       "id": "station.037",
@@ -10549,7 +10693,11 @@
       "worldNodeId": "location.wangyuan",
       "stationClass": "town",
       "active": true,
-      "unlockReputationPermille": 380
+      "unlockReputationPermille": 450,
+      "operatingZone": "southwest",
+      "cityRole": "tourism",
+      "unlockCompanyLevel": 3,
+      "passengerDemandPermille": 860
     },
     {
       "id": "station.038",
@@ -10557,7 +10705,11 @@
       "worldNodeId": "location.xingchuan",
       "stationClass": "county",
       "active": true,
-      "unlockReputationPermille": 400
+      "unlockReputationPermille": 470,
+      "operatingZone": "central_south",
+      "cityRole": "regional",
+      "unlockCompanyLevel": 3,
+      "passengerDemandPermille": 900
     },
     {
       "id": "station.039",
@@ -10565,7 +10717,11 @@
       "worldNodeId": "location.qingyan",
       "stationClass": "county",
       "active": true,
-      "unlockReputationPermille": 400
+      "unlockReputationPermille": 490,
+      "operatingZone": "central_south",
+      "cityRole": "regional",
+      "unlockCompanyLevel": 3,
+      "passengerDemandPermille": 900
     },
     {
       "id": "station.040",
@@ -10573,7 +10729,11 @@
       "worldNodeId": "location.lanshan",
       "stationClass": "city",
       "active": true,
-      "unlockReputationPermille": 420
+      "unlockReputationPermille": 620,
+      "operatingZone": "northwest",
+      "cityRole": "business",
+      "unlockCompanyLevel": 4,
+      "passengerDemandPermille": 1130
     },
     {
       "id": "station.041",
@@ -10581,7 +10741,11 @@
       "worldNodeId": "location.nanlan",
       "stationClass": "city",
       "active": true,
-      "unlockReputationPermille": 420
+      "unlockReputationPermille": 650,
+      "operatingZone": "southeast",
+      "cityRole": "business",
+      "unlockCompanyLevel": 4,
+      "passengerDemandPermille": 1130
     },
     {
       "id": "station.042",
@@ -10589,7 +10753,11 @@
       "worldNodeId": "location.chuanning",
       "stationClass": "county",
       "active": true,
-      "unlockReputationPermille": 560
+      "unlockReputationPermille": 670,
+      "operatingZone": "southeast",
+      "cityRole": "business",
+      "unlockCompanyLevel": 4,
+      "passengerDemandPermille": 980
     },
     {
       "id": "station.043",
@@ -10597,7 +10765,11 @@
       "worldNodeId": "location.lingchuan_s",
       "stationClass": "city",
       "active": true,
-      "unlockReputationPermille": 580
+      "unlockReputationPermille": 740,
+      "operatingZone": "southeast",
+      "cityRole": "tourism",
+      "unlockCompanyLevel": 5,
+      "passengerDemandPermille": 1110
     },
     {
       "id": "station.044",
@@ -10605,7 +10777,11 @@
       "worldNodeId": "location.chengjiang",
       "stationClass": "city",
       "active": true,
-      "unlockReputationPermille": 740
+      "unlockReputationPermille": 760,
+      "operatingZone": "southeast",
+      "cityRole": "tourism",
+      "unlockCompanyLevel": 5,
+      "passengerDemandPermille": 1110
     },
     {
       "id": "station.045",
@@ -10613,7 +10789,11 @@
       "worldNodeId": "location.ronghai",
       "stationClass": "city",
       "active": true,
-      "unlockReputationPermille": 740
+      "unlockReputationPermille": 790,
+      "operatingZone": "southeast",
+      "cityRole": "gateway",
+      "unlockCompanyLevel": 5,
+      "passengerDemandPermille": 1170
     },
     {
       "id": "station.046",
@@ -10621,7 +10801,11 @@
       "worldNodeId": "location.haining",
       "stationClass": "county",
       "active": true,
-      "unlockReputationPermille": 720
+      "unlockReputationPermille": 820,
+      "operatingZone": "southeast",
+      "cityRole": "gateway",
+      "unlockCompanyLevel": 5,
+      "passengerDemandPermille": 1020
     },
     {
       "id": "station.047",
@@ -10629,7 +10813,11 @@
       "worldNodeId": "location.yungang",
       "stationClass": "county",
       "active": true,
-      "unlockReputationPermille": 720
+      "unlockReputationPermille": 990,
+      "operatingZone": "north",
+      "cityRole": "gateway",
+      "unlockCompanyLevel": 6,
+      "passengerDemandPermille": 1020
     },
     {
       "id": "station.048",
@@ -10637,7 +10825,11 @@
       "worldNodeId": "location.nangang",
       "stationClass": "town",
       "active": true,
-      "unlockReputationPermille": 700
+      "unlockReputationPermille": 840,
+      "operatingZone": "southwest",
+      "cityRole": "tourism",
+      "unlockCompanyLevel": 5,
+      "passengerDemandPermille": 860
     }
   ]
 }

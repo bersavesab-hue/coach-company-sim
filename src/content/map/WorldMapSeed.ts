@@ -72,6 +72,12 @@ export function createPlayableWorldSeed(content: WorldMapContentV1 = FORMAL_WORL
       );
       const distanceFactor =
         passengerDistanceDemandPermille(straightDistanceM);
+      const cityDemandFactor = Math.floor(
+        (
+          origin.passengerDemandPermille +
+          destination.passengerDemandPermille
+        ) / 2
+      );
 
       passengerDemand.push({
         originStationId: ids.station(origin.id),
@@ -79,7 +85,11 @@ export function createPlayableWorldSeed(content: WorldMapContentV1 = FORMAL_WORL
         basePassengersPerHour: Math.max(
           1,
           Math.floor(
-            (classDemand * distanceFactor) / 1000
+            (
+              classDemand *
+              distanceFactor *
+              cityDemandFactor
+            ) / 1_000_000
           )
         )
       });

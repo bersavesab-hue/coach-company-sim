@@ -1,13 +1,41 @@
+import { companyLevelForReputation } from "../company/CompanyGrowthRules.js";
 import type { WorldMapStationContent } from "./WorldMapContent.js";
+
+export interface MapStationUnlockEvaluation {
+  readonly unlocked: boolean;
+  readonly companyLevel: number;
+  readonly requiredCompanyLevel: number;
+  readonly reputationPermille: number;
+  readonly requiredReputationPermille: number;
+}
+
+export function evaluateMapStationUnlock(
+  station: WorldMapStationContent,
+  reputationPermille: number
+): MapStationUnlockEvaluation {
+  const companyLevel =
+    companyLevelForReputation(reputationPermille);
+  return {
+    unlocked:
+      station.active &&
+      companyLevel >= station.unlockCompanyLevel &&
+      reputationPermille >= station.unlockReputationPermille,
+    companyLevel,
+    requiredCompanyLevel: station.unlockCompanyLevel,
+    reputationPermille,
+    requiredReputationPermille:
+      station.unlockReputationPermille
+  };
+}
 
 export function isMapStationUnlocked(
   station: WorldMapStationContent,
   reputationPermille: number
 ): boolean {
-  return (
-    station.active &&
-    reputationPermille >= station.unlockReputationPermille
-  );
+  return evaluateMapStationUnlock(
+    station,
+    reputationPermille
+  ).unlocked;
 }
 
 export function unlockedMapStationIds(

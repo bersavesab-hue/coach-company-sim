@@ -1,12 +1,12 @@
 import type {
   FarePolicyId,
-  LicenseId,
   RouteId
 } from "../../contracts/ids/EntityIds.js";
 import { DomainError } from "../../core/errors/DomainError.js";
 import { err, ok, type Result } from "../../core/result/Result.js";
 import { units } from "../../core/units/Units.js";
 import type { Company } from "../company/Company.js";
+import { requiredLicenseIdsForRouteType } from "../company/CompanyLicenseRules.js";
 import type { PathLeg } from "../world/RoadPath.js";
 import type { RoutingPreference } from "../world/RoutingCost.js";
 import type { PassengerRoute } from "./PassengerRoute.js";
@@ -25,7 +25,6 @@ export interface CreatePassengerRouteInput {
   readonly pathLegs: readonly PathLeg[];
   readonly routingPreference: RoutingPreference;
   readonly farePolicyId: FarePolicyId;
-  readonly requiredLicenseIds: readonly LicenseId[];
 }
 
 export function createPassengerRoute(
@@ -62,7 +61,9 @@ export function createPassengerRoute(
     routingPreference: input.routingPreference,
     farePolicyId: input.farePolicyId,
     fareMultiplierPermille: units.multiplierPermille(1000),
-    requiredLicenseIds: [...input.requiredLicenseIds],
+    requiredLicenseIds: [
+      ...requiredLicenseIdsForRouteType(input.type)
+    ],
     status: "draft"
   });
 }
@@ -144,7 +145,11 @@ export function activateRoute(
   }
 
   const companyLicenses = new Set(company.licenseIds);
-  const missing = route.requiredLicenseIds.filter(
+  const required = new Set([
+    ...route.requiredLicenseIds,
+    ...requiredLicenseIdsForRouteType(route.type)
+  ]);
+  const missing = [...required].filter(
     (licenseId) => !companyLicenses.has(licenseId)
   );
 

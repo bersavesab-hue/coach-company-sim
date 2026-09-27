@@ -3,6 +3,13 @@ import { WORLD_MAP_SCHEMA_VERSION } from "./WorldMapContent.js";
 
 export interface WorldMapValidationResult { readonly valid: boolean; readonly issues: readonly string[]; }
 const ROAD_CLASSES = new Set(["local","county_road","provincial_road","national_road","expressway"]);
+const OPERATING_ZONES = new Set([
+  "northwest","north","northeast",
+  "southwest","central_south","southeast"
+]);
+const CITY_ROLES = new Set([
+  "local","regional","business","tourism","hub","gateway"
+]);
 const ROAD_ROLES = new Set([
   "mainline",
   "urban_ring",
@@ -56,6 +63,26 @@ export function validateWorldMapContent(content: WorldMapContentV1): WorldMapVal
   const stationNodeIds = new Set<string>();
   for (const station of content.stations) {
     if (!nodeIds.has(station.worldNodeId)) issues.push(`station ${station.id} references missing node ${station.worldNodeId}`);
+    if (!OPERATING_ZONES.has(station.operatingZone)) {
+      issues.push(`station ${station.id} has invalid operatingZone`);
+    }
+    if (!CITY_ROLES.has(station.cityRole)) {
+      issues.push(`station ${station.id} has invalid cityRole`);
+    }
+    if (
+      !Number.isSafeInteger(station.unlockCompanyLevel) ||
+      station.unlockCompanyLevel < 1 ||
+      station.unlockCompanyLevel > 6
+    ) {
+      issues.push(`station ${station.id} has invalid unlockCompanyLevel`);
+    }
+    if (
+      !Number.isSafeInteger(station.passengerDemandPermille) ||
+      station.passengerDemandPermille < 500 ||
+      station.passengerDemandPermille > 1600
+    ) {
+      issues.push(`station ${station.id} has invalid passengerDemandPermille`);
+    }
     if (
       !Number.isSafeInteger(station.unlockReputationPermille) ||
       station.unlockReputationPermille < 0 ||

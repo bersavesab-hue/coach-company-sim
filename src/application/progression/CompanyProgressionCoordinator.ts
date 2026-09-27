@@ -1,33 +1,65 @@
 import type { DomainEventEnvelope } from "../../contracts/events/DomainEventEnvelope.js";
+import {
+  COMPANY_LEVELS,
+  companyLevelDefinitionForReputation,
+  companyLicenseIdsForReputation
+} from "../../content/company/CompanyGrowthRules.js";
 import { units } from "../../core/units/Units.js";
+import type { Company } from "../../domain/company/Company.js";
 import type { DomainEventBus } from "../events/DomainEventBus.js";
 import type { RepositoryBundle } from "../repositories/RepositoryBundle.js";
 
 export interface CompanyProgressionSnapshot {
   readonly level: number;
+  readonly levelTitle: string;
   readonly reputationPermille: number;
+  readonly currentLicenseNames: readonly string[];
   readonly nextLevelReputationPermille: number | null;
+  readonly nextLevelTitle: string | null;
+  readonly nextLicenseName: string | null;
 }
-
-const LEVEL_THRESHOLDS = [0, 220, 350, 500, 680, 850] as const;
 
 export function companyProgressionForReputation(
   reputationPermille: number
 ): CompanyProgressionSnapshot {
   const reputation = Math.max(0, Math.min(1000, reputationPermille));
-  let level = 1;
-  for (let index = 0; index < LEVEL_THRESHOLDS.length; index += 1) {
-    if (reputation >= LEVEL_THRESHOLDS[index]!) {
-      level = index + 1;
-    }
-  }
+  const current =
+    companyLevelDefinitionForReputation(reputation);
+  const next =
+    COMPANY_LEVELS.find(
+      (value) => value.level === current.level + 1
+    ) ?? null;
 
   return {
-    level,
+    level: current.level,
+    levelTitle: current.title,
     reputationPermille: reputation,
+    currentLicenseNames:
+      COMPANY_LEVELS
+        .filter((value) => value.level <= current.level)
+        .map((value) => value.grantedLicenseName),
     nextLevelReputationPermille:
-      LEVEL_THRESHOLDS[level] ?? null
+      next?.minimumReputationPermille ?? null,
+    nextLevelTitle: next?.title ?? null,
+    nextLicenseName: next?.grantedLicenseName ?? null
   };
+}
+
+export function synchronizeCompanyLicenses(
+  company: Company
+): Company {
+  const expected =
+    companyLicenseIdsForReputation(
+      Number(company.reputationPermille)
+    );
+  const same =
+    expected.length === company.licenseIds.length &&
+    expected.every(
+      (id, index) => id === company.licenseIds[index]
+    );
+  return same
+    ? company
+    : { ...company, licenseIds: expected };
 }
 
 export class CompanyProgressionCoordinator {
@@ -89,9 +121,11 @@ export class CompanyProgressionCoordinator {
     );
     if (next === Number(company.reputationPermille)) return;
 
-    this.repositories.companies.save({
-      ...company,
-      reputationPermille: units.permille(next)
-    });
+    this.repositories.companies.save(
+      synchronizeCompanyLicenses({
+        ...company,
+        reputationPermille: units.permille(next)
+      })
+    );
   }
 }

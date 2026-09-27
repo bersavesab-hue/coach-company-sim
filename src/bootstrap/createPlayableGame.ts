@@ -25,6 +25,8 @@ import { FORMAL_WORLD_MAP_CONTENT } from "../content/map/FormalWorldMapContent.j
 import { InMemoryRepositoryBundle } from "../infrastructure/memory/InMemoryRepositoryBundle.js";
 import { SequentialRuntimeIdAllocator } from "../infrastructure/runtime/SequentialRuntimeIdAllocator.js";
 import type { PlayableSavePayloadV1 } from "../save/playable/PlayableSave.js";
+import { companyLicenseIdsForReputation } from "../content/company/CompanyGrowthRules.js";
+import { synchronizeCompanyLicenses } from "../application/progression/CompanyProgressionCoordinator.js";
 
 export const PLAYABLE_COMPANY_ID = ids.company(
   "company.player"
@@ -42,11 +44,8 @@ export function createPlayableGame(saved?: PlayableSavePayloadV1) {
     name: "星河客运",
     status: "active",
     reputationPermille: units.permille(180),
-    licenseIds: [
-      ids.license("license.county"),
-      ids.license("license.intercity"),
-      ids.license("license.tourism")
-    ],
+    licenseIds:
+      companyLicenseIdsForReputation(180),
     homeStationId: worldSeed.stations[0]!.id
   };
 
@@ -123,6 +122,16 @@ export function createPlayableGame(saved?: PlayableSavePayloadV1) {
       ? { persistentState: saved.repositories }
       : {})
   });
+
+  const loadedCompany =
+    repositories.companies.getById(
+      PLAYABLE_COMPANY_ID
+    );
+  if (loadedCompany) {
+    repositories.companies.save(
+      synchronizeCompanyLicenses(loadedCompany)
+    );
+  }
 
   const app = createApplication({
     repositories,
