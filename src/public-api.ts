@@ -12,6 +12,7 @@ export * from "./contracts/dto/VehicleDto.js";
 export * from "./contracts/dto/VehicleMarketDto.js";
 export * from "./contracts/dto/OperationsDto.js";
 export * from "./contracts/dto/RouteBusinessDto.js";
+export * from "./contracts/dto/RouteForecastDto.js";
 
 export * from "./core/units/Units.js";
 export * from "./core/time/GameClock.js";
@@ -135,6 +136,7 @@ export * from "./application/services/DayOperationsPlanner.js";
 export * from "./application/services/FleetTaskTiming.js";
 export * from "./application/services/RoutePathService.js";
 export * from "./application/services/RouteBusinessProjection.js";
+export * from "./application/services/RouteForecastService.js";
 export * from "./application/services/TripTiming.js";
 export * from "./application/services/VehicleMarketProjection.js";
 export * from "./application/operations/FleetOperationsCoordinator.js";

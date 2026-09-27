@@ -3,4 +3,5 @@ import type { VehicleModel } from "../../domain/vehicle/VehicleModel.js";
 
 export interface VehicleModelRepository {
   getById(id: VehicleModelId): VehicleModel | undefined;
+  findByServiceClass?(serviceClass: string): readonly VehicleModel[];
 }

@@ -256,7 +256,11 @@ export class InMemoryRepositoryBundle implements RepositoryBundle {
   };
 
   readonly vehicleModels = {
-    getById: (id: VehicleModelId) => this.vehicleModelsById.get(id)
+    getById: (id: VehicleModelId) => this.vehicleModelsById.get(id),
+    findByServiceClass: (serviceClass: string) =>
+      [...this.vehicleModelsById.values()].filter(
+        (value) => value.serviceClass === serviceClass && value.active
+      )
   };
 
   readonly vehicleRuntime = {

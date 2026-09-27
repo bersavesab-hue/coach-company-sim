@@ -559,6 +559,56 @@ export class PlayableClient {
     );
   }
 
+  async previewServicePlanForecast(input: {
+    readonly routeId: string;
+    readonly vehicleClass: string;
+    readonly startHour: number;
+    readonly endHour: number;
+    readonly intervalMinutes: number;
+  }) {
+    const route =
+      this.runtime.repositories.routes.getById(
+        ids.route(input.routeId)
+      );
+    if (!route) return null;
+
+    return this.runtime.app.routeForecast.forecast({
+      routeId: route.id,
+      gameDay: gameDayAt(this.currentGameSecond),
+      vehicleClass: input.vehicleClass,
+      startSecondOfDay:
+        Math.max(0, Math.min(23, input.startHour)) *
+        3600,
+      endSecondOfDay:
+        Math.max(
+          input.startHour + 1,
+          Math.min(24, input.endHour)
+        ) * 3600,
+      intervalSeconds:
+        Math.max(15, input.intervalMinutes) * 60,
+      fareMultiplierPermille:
+        Number(route.fareMultiplierPermille ?? 1000),
+      includeExistingPlans: true
+    });
+  }
+
+  async previewFareForecast(
+    routeId: string,
+    fareMultiplierPermille: number
+  ) {
+    return this.runtime.app.routeForecast.forecastFare(
+      ids.route(routeId),
+      gameDayAt(this.currentGameSecond),
+      Math.max(
+        600,
+        Math.min(
+          1600,
+          Math.round(fareMultiplierPermille)
+        )
+      )
+    );
+  }
+
   async createServicePlan(input: {
     readonly routeId: string;
     readonly vehicleClass: string;
@@ -1003,6 +1053,12 @@ export class PlayableClient {
           route.id,
           gameDayAt(this.currentGameSecond)
         ),
+      businessHistory:
+        this.runtime.app.routeForecast.history(
+          route.id,
+          gameDayAt(this.currentGameSecond),
+          7
+        ).points,
       pathPoints:
         this.pathPointsFromLegs(
           route.pathLegs

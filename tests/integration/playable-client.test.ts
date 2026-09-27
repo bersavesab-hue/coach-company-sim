@@ -225,4 +225,32 @@ test("playable client completes buy-route-schedule-operate-finance loop", async 
     (business?.loadFactorPermille ?? 0) > 0,
     true
   );
+
+  const forecast =
+    runtime.app.routeForecast.forecastFare(
+      route.id,
+      1,
+      1100
+    );
+  assert.ok(forecast);
+  assert.equal(
+    (forecast?.departuresPerDay ?? 0) > 0,
+    true
+  );
+  assert.equal(
+    (forecast?.projectedGrossTicketSalesCents ?? 0) > 0,
+    true
+  );
+  assert.equal(
+    (forecast?.requiredVehicles ?? 0) > 0,
+    true
+  );
+
+  const history =
+    runtime.app.routeForecast.history(route.id, 1, 7);
+  assert.equal(history.points.length, 1);
+  assert.equal(
+    history.points[0]?.passengersBoarded,
+    business?.passengersBoarded
+  );
 });
