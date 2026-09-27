@@ -74,3 +74,10 @@ test(
     );
   }
 );
+
+test("native back handler consumes overlays planning filters and page history", () => {
+  assert.equal(template.includes("function handleNativeBack"), true);
+  assert.equal(template.includes('window.handleNativeBack=handleNativeBack'), true);
+  assert.equal(template.includes('document.body.classList.contains("route-planning")'), true);
+  assert.equal(template.includes("pageHistory.pop()"), true);
+});

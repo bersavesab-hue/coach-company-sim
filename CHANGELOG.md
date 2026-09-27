@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.28.0-stage28-map-filters-navigation
+
+### Map Route Governance
+- 地图新增“范围”按钮，按当前实际运营线路涉及的经营区循环筛选，不显示没有线路的空经营区。
+- 区域筛选直接作用于正式 Route DTO，不复制线路状态；一条线路只要包含该经营区站点就进入区域网络。
+- 单线路“地图查看”升级为真正单线路模式：聚合层只绘制目标线路，车辆层也只显示该线路正在运行的车辆。
+- 经营区筛选时车辆动态层只显示筛选线路对应车辆，减少后期图标拥挤。
+- 地图状态栏显示“显示线路 X/Y”，明确当前筛选结果和总运营线路规模。
+- 活跃可见线路达到 24 条时进入 dense-network；全国低 LOD 隐藏仅被一条线路使用的 load1 支路，弱化 load2，优先显示复用主干走廊。
+- 放大后仍恢复支路细节，不因为后期线路多永久丢失线路信息。
+
+### Navigation
+- 删除 Android 返回键仅依赖 WebView.canGoBack() 的旧行为。
+- 新增唯一 handleNativeBack 页面协议：优先关闭班次弹层、车辆详情、购车配置、二手车详情。
+- 其次退出地图建线、关闭城市详情、清除单线路聚焦、清除经营区筛选。
+- 游戏页面新增轻量 pageHistory；从调度/财务/线路等页面返回时回到实际上一页。
+- 页面历史耗尽后先回地图；只有地图根页面无可消费状态时才交给 Android/WebView 退出。
+- Android MainActivity 使用 evaluateJavascript 请求 Web 层消费返回键，不直接伪造浏览器历史。
+
+### Compatibility
+- SAVE_VERSION 保持 1；地图筛选、页面历史和弹层状态均为表现层瞬时状态。
+- CONTENT_VERSION 保持 13。
+
 ## 0.27.0-stage27-portrait-map
 
 ### Portrait Camera

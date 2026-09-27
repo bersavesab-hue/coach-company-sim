@@ -50,3 +50,17 @@ test("road shields share collision reservations with city and route labels", () 
   assert.equal(template.includes("function stationPointVisible"), true);
   assert.equal(template.includes("return\"\""), true);
 });
+
+test("map supports operating-zone and single-route filtering", () => {
+  assert.equal(template.includes('id="mapZoneFilterBtn"'), true);
+  assert.equal(template.includes("function availableMapRouteZones"), true);
+  assert.equal(template.includes("function visibleMapRoutes"), true);
+  assert.equal(template.includes("function cycleMapZoneFilter"), true);
+  assert.equal(template.includes("mapZoneFilter=null;mapRouteLayerVisible=true"), true);
+});
+
+test("dense networks suppress low-value single-route segments at wide zoom", () => {
+  assert.equal(template.includes("dense-network"), true);
+  assert.equal(template.includes("activeRoutes.length>=24"), true);
+  assert.equal(template.includes(".routeNetworkLine.load1{display:none}"), true);
+});

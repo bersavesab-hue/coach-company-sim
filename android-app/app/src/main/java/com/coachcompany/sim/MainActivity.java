@@ -27,6 +27,25 @@ public final class MainActivity extends Activity {
 
     @Override
     public void onBackPressed() {
+        if (webView == null) {
+            super.onBackPressed();
+            return;
+        }
+
+        webView.evaluateJavascript(
+            "window.handleNativeBack ? String(window.handleNativeBack()) : 'false'",
+            value -> {
+                String handled = value == null
+                    ? "false"
+                    : value.replace("\"", "");
+                if (!"true".equals(handled)) {
+                    finishBackNavigation();
+                }
+            }
+        );
+    }
+
+    private void finishBackNavigation() {
         if (webView != null && webView.canGoBack()) {
             webView.goBack();
             return;
