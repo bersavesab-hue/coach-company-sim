@@ -245,7 +245,11 @@ export class SimulationCoordinator {
           route,
           stopIndex,
           vehicle.seatCapacity,
-          this.repositories.passengerRuntime.get()
+          this.repositories.passengerRuntime.get(),
+          this.operationsPolicy
+            .stationBoardingCapacityPerDeparture?.(
+              stop.stationId
+            ) ?? Number.MAX_SAFE_INTEGER
         );
         processedTrip = recordPassengerBoardingMetrics(
           flow.trip,

@@ -20,6 +20,10 @@ export interface OperationsPolicy {
 
   passengerBoardingLeadSeconds(routeId: RouteId): number;
 
+  stationBoardingCapacityPerDeparture?(
+    stationId: StationId
+  ): number;
+
   minimumDriverRestSeconds(driverId: StaffId): number;
   maximumContinuousDrivingSeconds(driverId: StaffId): number;
   maximumDutySeconds(driverId: StaffId): number;

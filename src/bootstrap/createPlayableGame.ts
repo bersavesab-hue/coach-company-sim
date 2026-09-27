@@ -91,11 +91,18 @@ export function createPlayableGame(saved?: PlayableSavePayloadV1) {
       employerBurdenPermille: units.permille(160)
     }));
 
+  const homeStationContent =
+    FORMAL_WORLD_MAP_CONTENT.stations.find(
+      (station) =>
+        station.id === String(worldSeed.stations[0]!.id)
+    );
   const stationProfiles: StationFinancialProfile[] = [
     {
       stationId: worldSeed.stations[0]!.id,
       companyId: PLAYABLE_COMPANY_ID,
-      dailyLeaseCents: units.moneyCents(25_000)
+      dailyLeaseCents: units.moneyCents(
+        homeStationContent?.dailyLeaseCents ?? 25_000
+      )
     }
   ];
 
@@ -232,15 +239,35 @@ const economicPolicy: EconomicPolicy = {
     units.moneyCents(
       Math.floor(Number(gross) * 0.03)
     ),
-  stationDepartureFeeCents: () =>
-    units.moneyCents(1_200),
-  stationArrivalFeeCents: () =>
-    units.moneyCents(800),
-  stationPassengerServiceFeeCents: (_station, count) =>
-    units.moneyCents(count * 20),
+  stationDepartureFeeCents: (stationId) =>
+    units.moneyCents(
+      stationContent(stationId)?.departureFeeCents ??
+        1_200
+    ),
+  stationArrivalFeeCents: (stationId) =>
+    units.moneyCents(
+      stationContent(stationId)?.arrivalFeeCents ??
+        800
+    ),
+  stationPassengerServiceFeeCents: (stationId, count) =>
+    units.moneyCents(
+      count *
+        (
+          stationContent(stationId)
+            ?.passengerServiceFeeCents ?? 20
+        )
+    ),
   companyDailyRegulatoryFeeCents: () =>
     units.moneyCents(5_000)
 };
+
+function stationContent(
+  stationId: Station["id"]
+) {
+  return FORMAL_WORLD_MAP_CONTENT.stations.find(
+    (station) => station.id === String(stationId)
+  );
+}
 
 const vehicleLifecyclePolicy: VehicleLifecyclePolicy = {
   quoteInitialOwnershipTerms: () => ({
@@ -321,6 +348,9 @@ const operationsPolicy: OperationsPolicy = {
   vehicleTurnaroundSeconds: () => 15 * 60,
   driverTurnaroundSeconds: () => 15 * 60,
   passengerBoardingLeadSeconds: () => 15 * 60,
+  stationBoardingCapacityPerDeparture: (stationId) =>
+    stationContent(stationId)
+      ?.boardingCapacityPerDeparture ?? 80,
   minimumDriverRestSeconds: () => 8 * 3600,
   maximumContinuousDrivingSeconds: () => 4 * 3600,
   maximumDutySeconds: () => 12 * 3600,

@@ -84,6 +84,36 @@ export function validateWorldMapContent(content: WorldMapContentV1): WorldMapVal
       issues.push(`station ${station.id} has invalid passengerDemandPermille`);
     }
     if (
+      !Number.isSafeInteger(station.stationTier) ||
+      station.stationTier < 1 ||
+      station.stationTier > 4
+    ) {
+      issues.push(`station ${station.id} has invalid stationTier`);
+    }
+    if (
+      !Number.isSafeInteger(station.boardingCapacityPerDeparture) ||
+      station.boardingCapacityPerDeparture <= 0
+    ) {
+      issues.push(`station ${station.id} has invalid boardingCapacityPerDeparture`);
+    }
+    for (const [field, value] of [
+      ["departureFeeCents", station.departureFeeCents],
+      ["arrivalFeeCents", station.arrivalFeeCents],
+      ["passengerServiceFeeCents", station.passengerServiceFeeCents],
+      ["dailyLeaseCents", station.dailyLeaseCents]
+    ] as const) {
+      if (!Number.isSafeInteger(value) || value < 0) {
+        issues.push(`station ${station.id} has invalid ${field}`);
+      }
+    }
+    if (
+      !Number.isSafeInteger(station.transferValuePermille) ||
+      station.transferValuePermille < 500 ||
+      station.transferValuePermille > 1600
+    ) {
+      issues.push(`station ${station.id} has invalid transferValuePermille`);
+    }
+    if (
       !Number.isSafeInteger(station.unlockReputationPermille) ||
       station.unlockReputationPermille < 0 ||
       station.unlockReputationPermille > 1000

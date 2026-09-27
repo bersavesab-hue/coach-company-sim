@@ -510,7 +510,10 @@ function handleStartBoarding(
     context.value.route,
     0,
     resources.value.vehicle.seatCapacity,
-    dependencies.repositories.passengerRuntime.get()
+    dependencies.repositories.passengerRuntime.get(),
+    dependencies.operationsPolicy
+      .stationBoardingCapacityPerDeparture?.(origin) ??
+      Number.MAX_SAFE_INTEGER
   );
 
   const tripWithMetrics = recordPassengerBoardingMetrics(

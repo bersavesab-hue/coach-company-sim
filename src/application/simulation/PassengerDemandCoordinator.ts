@@ -7,6 +7,7 @@ import { generateDepartureSlots } from "../../domain/schedule/ScheduleExpander.j
 import { SECONDS_PER_DAY } from "../../core/time/GameTime.js";
 import { generatePassengerDemand } from "../../simulation/passenger/DemandGeneration.js";
 import type { PassengerDemandPolicy } from "../../simulation/passenger/PassengerDemandPolicy.js";
+import { effectiveProfileDemandPermille } from "../../content/passenger/PassengerDemandPattern.js";
 import type { DomainEventBus } from "../events/DomainEventBus.js";
 import { createSimulationDomainEvent } from "../events/createSimulationDomainEvent.js";
 import type { RepositoryBundle } from "../repositories/RepositoryBundle.js";
@@ -77,14 +78,17 @@ export class PassengerDemandCoordinator {
           this.policy.timeOfDayMultiplierPermille?.(
             secondOfDay
           ) ?? units.multiplierPermille(1000);
+        const profileDemand =
+          effectiveProfileDemandPermille(
+            profile,
+            gameDay
+          );
         const combined = units.multiplierPermille(
-          Math.floor(
-            (
-              Number(frequency) *
-              Number(fare) *
-              Number(timeOfDay)
-            ) /
-              1_000_000
+          combinePermille(
+            Number(frequency),
+            Number(fare),
+            Number(timeOfDay),
+            profileDemand
           )
         );
 
@@ -261,6 +265,14 @@ export class PassengerDemandCoordinator {
       );
     }
   }
+}
+
+function combinePermille(...values: readonly number[]): number {
+  return values.reduce(
+    (result, value) =>
+      Math.floor(result * value / 1000),
+    1000
+  );
 }
 
 function routeServesOd(

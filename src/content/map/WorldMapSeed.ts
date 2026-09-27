@@ -9,6 +9,10 @@ import type { PassengerDemandProfile } from "../../domain/passenger/PassengerDem
 import { FORMAL_WORLD_MAP_CONTENT } from "./FormalWorldMapContent.js";
 import { assertValidWorldMapContent } from "./WorldMapContentValidator.js";
 import type { StationClass, WorldMapContentV1 } from "./WorldMapContent.js";
+import {
+  passengerDemandPatternForRoles,
+  strategicOdDemandPermille
+} from "../passenger/PassengerDemandPattern.js";
 
 export interface WorldMapSeed {
   readonly world: WorldGraph;
@@ -79,6 +83,8 @@ export function createPlayableWorldSeed(content: WorldMapContentV1 = FORMAL_WORL
         ) / 2
       );
 
+      const sameOperatingZone =
+        origin.operatingZone === destination.operatingZone;
       passengerDemand.push({
         originStationId: ids.station(origin.id),
         destinationStationId: ids.station(destination.id),
@@ -91,7 +97,21 @@ export function createPlayableWorldSeed(content: WorldMapContentV1 = FORMAL_WORL
               cityDemandFactor
             ) / 1_000_000
           )
-        )
+        ),
+        demandPattern:
+          passengerDemandPatternForRoles(
+            origin.cityRole,
+            destination.cityRole,
+            sameOperatingZone
+          ),
+        strategicDemandPermille:
+          strategicOdDemandPermille(
+            origin.cityRole,
+            destination.cityRole,
+            sameOperatingZone,
+            origin.transferValuePermille,
+            destination.transferValuePermille
+          )
       });
     }
   }

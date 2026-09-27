@@ -25,7 +25,8 @@ export function serveRouteStop(
   route: PassengerRoute,
   stopIndex: number,
   seatCapacity: number,
-  runtime: PassengerRuntimeState
+  runtime: PassengerRuntimeState,
+  stationBoardingCapacity: number = Number.MAX_SAFE_INTEGER
 ): PassengerStopFlowResult {
   if (!Number.isSafeInteger(seatCapacity) || seatCapacity <= 0) {
     throw new Error("seatCapacity must be a positive safe integer");
@@ -56,6 +57,10 @@ export function serveRouteStop(
   let availableSeats =
     seatCapacity -
     [...groupMap.values()].reduce((sum, count) => sum + count, 0);
+  let availableStationBoarding = Math.max(
+    0,
+    Math.floor(stationBoardingCapacity)
+  );
 
   const boardedGroups: OnboardPassengerGroup[] = [];
   let boardedCount = 0;
@@ -64,7 +69,11 @@ export function serveRouteStop(
   for (let index = stopIndex + 1; index < route.stopPoints.length; index += 1) {
     const destination = route.stopPoints[index]!.stationId;
     const waiting = runtime.waitingCount(stop.stationId, destination);
-    const boarding = Math.min(waiting, Math.max(0, availableSeats));
+    const boarding = Math.min(
+      waiting,
+      Math.max(0, availableSeats),
+      availableStationBoarding
+    );
 
     if (boarding > 0) {
       runtime.takeWaiting(stop.stationId, destination, boarding);
@@ -78,6 +87,7 @@ export function serveRouteStop(
       });
       boardedCount += boarding;
       availableSeats -= boarding;
+      availableStationBoarding -= boarding;
     }
 
     leftWaitingCount += runtime.waitingCount(

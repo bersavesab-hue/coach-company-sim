@@ -10265,7 +10265,14 @@
       "operatingZone": "central_south",
       "cityRole": "hub",
       "unlockCompanyLevel": 1,
-      "passengerDemandPermille": 1350
+      "passengerDemandPermille": 1350,
+      "stationTier": 4,
+      "boardingCapacityPerDeparture": 80,
+      "departureFeeCents": 1600,
+      "arrivalFeeCents": 1000,
+      "passengerServiceFeeCents": 25,
+      "dailyLeaseCents": 65000,
+      "transferValuePermille": 1250
     },
     {
       "id": "station.002",
@@ -10277,7 +10284,14 @@
       "operatingZone": "central_south",
       "cityRole": "hub",
       "unlockCompanyLevel": 1,
-      "passengerDemandPermille": 1350
+      "passengerDemandPermille": 1350,
+      "stationTier": 4,
+      "boardingCapacityPerDeparture": 80,
+      "departureFeeCents": 1600,
+      "arrivalFeeCents": 1000,
+      "passengerServiceFeeCents": 25,
+      "dailyLeaseCents": 65000,
+      "transferValuePermille": 1250
     },
     {
       "id": "station.003",
@@ -10289,7 +10303,14 @@
       "operatingZone": "central_south",
       "cityRole": "hub",
       "unlockCompanyLevel": 2,
-      "passengerDemandPermille": 1350
+      "passengerDemandPermille": 1350,
+      "stationTier": 4,
+      "boardingCapacityPerDeparture": 80,
+      "departureFeeCents": 1600,
+      "arrivalFeeCents": 1000,
+      "passengerServiceFeeCents": 25,
+      "dailyLeaseCents": 65000,
+      "transferValuePermille": 1250
     },
     {
       "id": "station.004",
@@ -10301,7 +10322,14 @@
       "operatingZone": "northwest",
       "cityRole": "regional",
       "unlockCompanyLevel": 4,
-      "passengerDemandPermille": 900
+      "passengerDemandPermille": 900,
+      "stationTier": 2,
+      "boardingCapacityPerDeparture": 40,
+      "departureFeeCents": 600,
+      "arrivalFeeCents": 400,
+      "passengerServiceFeeCents": 12,
+      "dailyLeaseCents": 25000,
+      "transferValuePermille": 950
     },
     {
       "id": "station.005",
@@ -10313,7 +10341,14 @@
       "operatingZone": "northwest",
       "cityRole": "regional",
       "unlockCompanyLevel": 3,
-      "passengerDemandPermille": 1050
+      "passengerDemandPermille": 1050,
+      "stationTier": 3,
+      "boardingCapacityPerDeparture": 56,
+      "departureFeeCents": 1000,
+      "arrivalFeeCents": 700,
+      "passengerServiceFeeCents": 18,
+      "dailyLeaseCents": 40000,
+      "transferValuePermille": 1100
     },
     {
       "id": "station.006",
@@ -10325,7 +10360,14 @@
       "operatingZone": "northwest",
       "cityRole": "tourism",
       "unlockCompanyLevel": 2,
-      "passengerDemandPermille": 860
+      "passengerDemandPermille": 860,
+      "stationTier": 1,
+      "boardingCapacityPerDeparture": 24,
+      "departureFeeCents": 300,
+      "arrivalFeeCents": 200,
+      "passengerServiceFeeCents": 8,
+      "dailyLeaseCents": 15000,
+      "transferValuePermille": 850
     },
     {
       "id": "station.007",
@@ -10337,7 +10379,14 @@
       "operatingZone": "northwest",
       "cityRole": "regional",
       "unlockCompanyLevel": 1,
-      "passengerDemandPermille": 1050
+      "passengerDemandPermille": 1050,
+      "stationTier": 3,
+      "boardingCapacityPerDeparture": 56,
+      "departureFeeCents": 1000,
+      "arrivalFeeCents": 700,
+      "passengerServiceFeeCents": 18,
+      "dailyLeaseCents": 40000,
+      "transferValuePermille": 1100
     },
     {
       "id": "station.008",
@@ -10349,7 +10398,14 @@
       "operatingZone": "southwest",
       "cityRole": "tourism",
       "unlockCompanyLevel": 3,
-      "passengerDemandPermille": 860
+      "passengerDemandPermille": 860,
+      "stationTier": 1,
+      "boardingCapacityPerDeparture": 24,
+      "departureFeeCents": 300,
+      "arrivalFeeCents": 200,
+      "passengerServiceFeeCents": 8,
+      "dailyLeaseCents": 15000,
+      "transferValuePermille": 850
     },
     {
       "id": "station.009",
@@ -10361,7 +10417,14 @@
       "operatingZone": "southwest",
       "cityRole": "regional",
       "unlockCompanyLevel": 1,
-      "passengerDemandPermille": 900
+      "passengerDemandPermille": 900,
+      "stationTier": 2,
+      "boardingCapacityPerDeparture": 40,
+      "departureFeeCents": 600,
+      "arrivalFeeCents": 400,
+      "passengerServiceFeeCents": 12,
+      "dailyLeaseCents": 25000,
+      "transferValuePermille": 950
     },
     {
       "id": "station.010",
@@ -10373,7 +10436,14 @@
       "operatingZone": "north",
       "cityRole": "business",
       "unlockCompanyLevel": 2,
-      "passengerDemandPermille": 1130
+      "passengerDemandPermille": 1130,
+      "stationTier": 3,
+      "boardingCapacityPerDeparture": 56,
+      "departureFeeCents": 1000,
+      "arrivalFeeCents": 700,
+      "passengerServiceFeeCents": 18,
+      "dailyLeaseCents": 40000,
+      "transferValuePermille": 1100
     },
     {
       "id": "station.011",
@@ -10385,7 +10455,14 @@
       "operatingZone": "north",
       "cityRole": "hub",
       "unlockCompanyLevel": 3,
-      "passengerDemandPermille": 1350
+      "passengerDemandPermille": 1350,
+      "stationTier": 4,
+      "boardingCapacityPerDeparture": 80,
+      "departureFeeCents": 1600,
+      "arrivalFeeCents": 1000,
+      "passengerServiceFeeCents": 25,
+      "dailyLeaseCents": 65000,
+      "transferValuePermille": 1250
     },
     {
       "id": "station.012",
@@ -10397,7 +10474,14 @@
       "operatingZone": "north",
       "cityRole": "regional",
       "unlockCompanyLevel": 4,
-      "passengerDemandPermille": 900
+      "passengerDemandPermille": 900,
+      "stationTier": 2,
+      "boardingCapacityPerDeparture": 40,
+      "departureFeeCents": 600,
+      "arrivalFeeCents": 400,
+      "passengerServiceFeeCents": 12,
+      "dailyLeaseCents": 25000,
+      "transferValuePermille": 950
     },
     {
       "id": "station.013",
@@ -10409,7 +10493,14 @@
       "operatingZone": "north",
       "cityRole": "business",
       "unlockCompanyLevel": 1,
-      "passengerDemandPermille": 1130
+      "passengerDemandPermille": 1130,
+      "stationTier": 3,
+      "boardingCapacityPerDeparture": 56,
+      "departureFeeCents": 1000,
+      "arrivalFeeCents": 700,
+      "passengerServiceFeeCents": 18,
+      "dailyLeaseCents": 40000,
+      "transferValuePermille": 1100
     },
     {
       "id": "station.014",
@@ -10421,7 +10512,14 @@
       "operatingZone": "north",
       "cityRole": "business",
       "unlockCompanyLevel": 2,
-      "passengerDemandPermille": 1130
+      "passengerDemandPermille": 1130,
+      "stationTier": 3,
+      "boardingCapacityPerDeparture": 56,
+      "departureFeeCents": 1000,
+      "arrivalFeeCents": 700,
+      "passengerServiceFeeCents": 18,
+      "dailyLeaseCents": 40000,
+      "transferValuePermille": 1100
     },
     {
       "id": "station.015",
@@ -10433,7 +10531,14 @@
       "operatingZone": "north",
       "cityRole": "hub",
       "unlockCompanyLevel": 3,
-      "passengerDemandPermille": 1350
+      "passengerDemandPermille": 1350,
+      "stationTier": 4,
+      "boardingCapacityPerDeparture": 80,
+      "departureFeeCents": 1600,
+      "arrivalFeeCents": 1000,
+      "passengerServiceFeeCents": 25,
+      "dailyLeaseCents": 65000,
+      "transferValuePermille": 1250
     },
     {
       "id": "station.016",
@@ -10445,7 +10550,14 @@
       "operatingZone": "northeast",
       "cityRole": "tourism",
       "unlockCompanyLevel": 5,
-      "passengerDemandPermille": 1110
+      "passengerDemandPermille": 1110,
+      "stationTier": 3,
+      "boardingCapacityPerDeparture": 56,
+      "departureFeeCents": 1000,
+      "arrivalFeeCents": 700,
+      "passengerServiceFeeCents": 18,
+      "dailyLeaseCents": 40000,
+      "transferValuePermille": 1100
     },
     {
       "id": "station.017",
@@ -10457,7 +10569,14 @@
       "operatingZone": "northeast",
       "cityRole": "gateway",
       "unlockCompanyLevel": 6,
-      "passengerDemandPermille": 1170
+      "passengerDemandPermille": 1170,
+      "stationTier": 4,
+      "boardingCapacityPerDeparture": 80,
+      "departureFeeCents": 1600,
+      "arrivalFeeCents": 1000,
+      "passengerServiceFeeCents": 25,
+      "dailyLeaseCents": 65000,
+      "transferValuePermille": 1250
     },
     {
       "id": "station.018",
@@ -10469,7 +10588,14 @@
       "operatingZone": "northeast",
       "cityRole": "gateway",
       "unlockCompanyLevel": 6,
-      "passengerDemandPermille": 1020
+      "passengerDemandPermille": 1020,
+      "stationTier": 4,
+      "boardingCapacityPerDeparture": 80,
+      "departureFeeCents": 1600,
+      "arrivalFeeCents": 1000,
+      "passengerServiceFeeCents": 25,
+      "dailyLeaseCents": 65000,
+      "transferValuePermille": 1250
     },
     {
       "id": "station.019",
@@ -10481,7 +10607,14 @@
       "operatingZone": "northeast",
       "cityRole": "business",
       "unlockCompanyLevel": 4,
-      "passengerDemandPermille": 1130
+      "passengerDemandPermille": 1130,
+      "stationTier": 3,
+      "boardingCapacityPerDeparture": 56,
+      "departureFeeCents": 1000,
+      "arrivalFeeCents": 700,
+      "passengerServiceFeeCents": 18,
+      "dailyLeaseCents": 40000,
+      "transferValuePermille": 1100
     },
     {
       "id": "station.020",
@@ -10493,7 +10626,14 @@
       "operatingZone": "northeast",
       "cityRole": "regional",
       "unlockCompanyLevel": 5,
-      "passengerDemandPermille": 1050
+      "passengerDemandPermille": 1050,
+      "stationTier": 3,
+      "boardingCapacityPerDeparture": 56,
+      "departureFeeCents": 1000,
+      "arrivalFeeCents": 700,
+      "passengerServiceFeeCents": 18,
+      "dailyLeaseCents": 40000,
+      "transferValuePermille": 1100
     },
     {
       "id": "station.021",
@@ -10505,7 +10645,14 @@
       "operatingZone": "southeast",
       "cityRole": "gateway",
       "unlockCompanyLevel": 6,
-      "passengerDemandPermille": 1020
+      "passengerDemandPermille": 1020,
+      "stationTier": 4,
+      "boardingCapacityPerDeparture": 80,
+      "departureFeeCents": 1600,
+      "arrivalFeeCents": 1000,
+      "passengerServiceFeeCents": 25,
+      "dailyLeaseCents": 65000,
+      "transferValuePermille": 1250
     },
     {
       "id": "station.022",
@@ -10517,7 +10664,14 @@
       "operatingZone": "southwest",
       "cityRole": "regional",
       "unlockCompanyLevel": 2,
-      "passengerDemandPermille": 900
+      "passengerDemandPermille": 900,
+      "stationTier": 2,
+      "boardingCapacityPerDeparture": 40,
+      "departureFeeCents": 600,
+      "arrivalFeeCents": 400,
+      "passengerServiceFeeCents": 12,
+      "dailyLeaseCents": 25000,
+      "transferValuePermille": 950
     },
     {
       "id": "station.023",
@@ -10529,7 +10683,14 @@
       "operatingZone": "southwest",
       "cityRole": "regional",
       "unlockCompanyLevel": 1,
-      "passengerDemandPermille": 1050
+      "passengerDemandPermille": 1050,
+      "stationTier": 3,
+      "boardingCapacityPerDeparture": 56,
+      "departureFeeCents": 1000,
+      "arrivalFeeCents": 700,
+      "passengerServiceFeeCents": 18,
+      "dailyLeaseCents": 40000,
+      "transferValuePermille": 1100
     },
     {
       "id": "station.024",
@@ -10541,7 +10702,14 @@
       "operatingZone": "southwest",
       "cityRole": "tourism",
       "unlockCompanyLevel": 2,
-      "passengerDemandPermille": 860
+      "passengerDemandPermille": 860,
+      "stationTier": 1,
+      "boardingCapacityPerDeparture": 24,
+      "departureFeeCents": 300,
+      "arrivalFeeCents": 200,
+      "passengerServiceFeeCents": 8,
+      "dailyLeaseCents": 15000,
+      "transferValuePermille": 850
     },
     {
       "id": "station.025",
@@ -10553,7 +10721,14 @@
       "operatingZone": "southwest",
       "cityRole": "regional",
       "unlockCompanyLevel": 1,
-      "passengerDemandPermille": 900
+      "passengerDemandPermille": 900,
+      "stationTier": 2,
+      "boardingCapacityPerDeparture": 40,
+      "departureFeeCents": 600,
+      "arrivalFeeCents": 400,
+      "passengerServiceFeeCents": 12,
+      "dailyLeaseCents": 25000,
+      "transferValuePermille": 950
     },
     {
       "id": "station.026",
@@ -10565,7 +10740,14 @@
       "operatingZone": "central_south",
       "cityRole": "business",
       "unlockCompanyLevel": 1,
-      "passengerDemandPermille": 1130
+      "passengerDemandPermille": 1130,
+      "stationTier": 3,
+      "boardingCapacityPerDeparture": 56,
+      "departureFeeCents": 1000,
+      "arrivalFeeCents": 700,
+      "passengerServiceFeeCents": 18,
+      "dailyLeaseCents": 40000,
+      "transferValuePermille": 1100
     },
     {
       "id": "station.027",
@@ -10577,7 +10759,14 @@
       "operatingZone": "central_south",
       "cityRole": "business",
       "unlockCompanyLevel": 2,
-      "passengerDemandPermille": 1130
+      "passengerDemandPermille": 1130,
+      "stationTier": 3,
+      "boardingCapacityPerDeparture": 56,
+      "departureFeeCents": 1000,
+      "arrivalFeeCents": 700,
+      "passengerServiceFeeCents": 18,
+      "dailyLeaseCents": 40000,
+      "transferValuePermille": 1100
     },
     {
       "id": "station.028",
@@ -10589,7 +10778,14 @@
       "operatingZone": "central_south",
       "cityRole": "regional",
       "unlockCompanyLevel": 2,
-      "passengerDemandPermille": 1050
+      "passengerDemandPermille": 1050,
+      "stationTier": 3,
+      "boardingCapacityPerDeparture": 56,
+      "departureFeeCents": 1000,
+      "arrivalFeeCents": 700,
+      "passengerServiceFeeCents": 18,
+      "dailyLeaseCents": 40000,
+      "transferValuePermille": 1100
     },
     {
       "id": "station.029",
@@ -10601,7 +10797,14 @@
       "operatingZone": "central_south",
       "cityRole": "hub",
       "unlockCompanyLevel": 3,
-      "passengerDemandPermille": 1350
+      "passengerDemandPermille": 1350,
+      "stationTier": 4,
+      "boardingCapacityPerDeparture": 80,
+      "departureFeeCents": 1600,
+      "arrivalFeeCents": 1000,
+      "passengerServiceFeeCents": 25,
+      "dailyLeaseCents": 65000,
+      "transferValuePermille": 1250
     },
     {
       "id": "station.030",
@@ -10613,7 +10816,14 @@
       "operatingZone": "southeast",
       "cityRole": "hub",
       "unlockCompanyLevel": 4,
-      "passengerDemandPermille": 1350
+      "passengerDemandPermille": 1350,
+      "stationTier": 4,
+      "boardingCapacityPerDeparture": 80,
+      "departureFeeCents": 1600,
+      "arrivalFeeCents": 1000,
+      "passengerServiceFeeCents": 25,
+      "dailyLeaseCents": 65000,
+      "transferValuePermille": 1250
     },
     {
       "id": "station.031",
@@ -10625,7 +10835,14 @@
       "operatingZone": "southeast",
       "cityRole": "business",
       "unlockCompanyLevel": 4,
-      "passengerDemandPermille": 1130
+      "passengerDemandPermille": 1130,
+      "stationTier": 3,
+      "boardingCapacityPerDeparture": 56,
+      "departureFeeCents": 1000,
+      "arrivalFeeCents": 700,
+      "passengerServiceFeeCents": 18,
+      "dailyLeaseCents": 40000,
+      "transferValuePermille": 1100
     },
     {
       "id": "station.032",
@@ -10637,7 +10854,14 @@
       "operatingZone": "southeast",
       "cityRole": "gateway",
       "unlockCompanyLevel": 6,
-      "passengerDemandPermille": 1370
+      "passengerDemandPermille": 1370,
+      "stationTier": 4,
+      "boardingCapacityPerDeparture": 80,
+      "departureFeeCents": 1600,
+      "arrivalFeeCents": 1000,
+      "passengerServiceFeeCents": 25,
+      "dailyLeaseCents": 65000,
+      "transferValuePermille": 1250
     },
     {
       "id": "station.033",
@@ -10649,7 +10873,14 @@
       "operatingZone": "southeast",
       "cityRole": "gateway",
       "unlockCompanyLevel": 6,
-      "passengerDemandPermille": 1170
+      "passengerDemandPermille": 1170,
+      "stationTier": 4,
+      "boardingCapacityPerDeparture": 80,
+      "departureFeeCents": 1600,
+      "arrivalFeeCents": 1000,
+      "passengerServiceFeeCents": 25,
+      "dailyLeaseCents": 65000,
+      "transferValuePermille": 1250
     },
     {
       "id": "station.034",
@@ -10661,7 +10892,14 @@
       "operatingZone": "southeast",
       "cityRole": "gateway",
       "unlockCompanyLevel": 5,
-      "passengerDemandPermille": 1170
+      "passengerDemandPermille": 1170,
+      "stationTier": 4,
+      "boardingCapacityPerDeparture": 80,
+      "departureFeeCents": 1600,
+      "arrivalFeeCents": 1000,
+      "passengerServiceFeeCents": 25,
+      "dailyLeaseCents": 65000,
+      "transferValuePermille": 1250
     },
     {
       "id": "station.035",
@@ -10673,7 +10911,14 @@
       "operatingZone": "southeast",
       "cityRole": "gateway",
       "unlockCompanyLevel": 6,
-      "passengerDemandPermille": 1170
+      "passengerDemandPermille": 1170,
+      "stationTier": 4,
+      "boardingCapacityPerDeparture": 80,
+      "departureFeeCents": 1600,
+      "arrivalFeeCents": 1000,
+      "passengerServiceFeeCents": 25,
+      "dailyLeaseCents": 65000,
+      "transferValuePermille": 1250
     },
     {
       "id": "station.036",
@@ -10685,7 +10930,14 @@
       "operatingZone": "southeast",
       "cityRole": "gateway",
       "unlockCompanyLevel": 6,
-      "passengerDemandPermille": 1020
+      "passengerDemandPermille": 1020,
+      "stationTier": 4,
+      "boardingCapacityPerDeparture": 80,
+      "departureFeeCents": 1600,
+      "arrivalFeeCents": 1000,
+      "passengerServiceFeeCents": 25,
+      "dailyLeaseCents": 65000,
+      "transferValuePermille": 1250
     },
     {
       "id": "station.037",
@@ -10697,7 +10949,14 @@
       "operatingZone": "southwest",
       "cityRole": "tourism",
       "unlockCompanyLevel": 3,
-      "passengerDemandPermille": 860
+      "passengerDemandPermille": 860,
+      "stationTier": 1,
+      "boardingCapacityPerDeparture": 24,
+      "departureFeeCents": 300,
+      "arrivalFeeCents": 200,
+      "passengerServiceFeeCents": 8,
+      "dailyLeaseCents": 15000,
+      "transferValuePermille": 850
     },
     {
       "id": "station.038",
@@ -10709,7 +10968,14 @@
       "operatingZone": "central_south",
       "cityRole": "regional",
       "unlockCompanyLevel": 3,
-      "passengerDemandPermille": 900
+      "passengerDemandPermille": 900,
+      "stationTier": 2,
+      "boardingCapacityPerDeparture": 40,
+      "departureFeeCents": 600,
+      "arrivalFeeCents": 400,
+      "passengerServiceFeeCents": 12,
+      "dailyLeaseCents": 25000,
+      "transferValuePermille": 950
     },
     {
       "id": "station.039",
@@ -10721,7 +10987,14 @@
       "operatingZone": "central_south",
       "cityRole": "regional",
       "unlockCompanyLevel": 3,
-      "passengerDemandPermille": 900
+      "passengerDemandPermille": 900,
+      "stationTier": 2,
+      "boardingCapacityPerDeparture": 40,
+      "departureFeeCents": 600,
+      "arrivalFeeCents": 400,
+      "passengerServiceFeeCents": 12,
+      "dailyLeaseCents": 25000,
+      "transferValuePermille": 950
     },
     {
       "id": "station.040",
@@ -10733,7 +11006,14 @@
       "operatingZone": "northwest",
       "cityRole": "business",
       "unlockCompanyLevel": 4,
-      "passengerDemandPermille": 1130
+      "passengerDemandPermille": 1130,
+      "stationTier": 3,
+      "boardingCapacityPerDeparture": 56,
+      "departureFeeCents": 1000,
+      "arrivalFeeCents": 700,
+      "passengerServiceFeeCents": 18,
+      "dailyLeaseCents": 40000,
+      "transferValuePermille": 1100
     },
     {
       "id": "station.041",
@@ -10745,7 +11025,14 @@
       "operatingZone": "southeast",
       "cityRole": "business",
       "unlockCompanyLevel": 4,
-      "passengerDemandPermille": 1130
+      "passengerDemandPermille": 1130,
+      "stationTier": 3,
+      "boardingCapacityPerDeparture": 56,
+      "departureFeeCents": 1000,
+      "arrivalFeeCents": 700,
+      "passengerServiceFeeCents": 18,
+      "dailyLeaseCents": 40000,
+      "transferValuePermille": 1100
     },
     {
       "id": "station.042",
@@ -10757,7 +11044,14 @@
       "operatingZone": "southeast",
       "cityRole": "business",
       "unlockCompanyLevel": 4,
-      "passengerDemandPermille": 980
+      "passengerDemandPermille": 980,
+      "stationTier": 2,
+      "boardingCapacityPerDeparture": 40,
+      "departureFeeCents": 600,
+      "arrivalFeeCents": 400,
+      "passengerServiceFeeCents": 12,
+      "dailyLeaseCents": 25000,
+      "transferValuePermille": 950
     },
     {
       "id": "station.043",
@@ -10769,7 +11063,14 @@
       "operatingZone": "southeast",
       "cityRole": "tourism",
       "unlockCompanyLevel": 5,
-      "passengerDemandPermille": 1110
+      "passengerDemandPermille": 1110,
+      "stationTier": 3,
+      "boardingCapacityPerDeparture": 56,
+      "departureFeeCents": 1000,
+      "arrivalFeeCents": 700,
+      "passengerServiceFeeCents": 18,
+      "dailyLeaseCents": 40000,
+      "transferValuePermille": 1100
     },
     {
       "id": "station.044",
@@ -10781,7 +11082,14 @@
       "operatingZone": "southeast",
       "cityRole": "tourism",
       "unlockCompanyLevel": 5,
-      "passengerDemandPermille": 1110
+      "passengerDemandPermille": 1110,
+      "stationTier": 3,
+      "boardingCapacityPerDeparture": 56,
+      "departureFeeCents": 1000,
+      "arrivalFeeCents": 700,
+      "passengerServiceFeeCents": 18,
+      "dailyLeaseCents": 40000,
+      "transferValuePermille": 1100
     },
     {
       "id": "station.045",
@@ -10793,7 +11101,14 @@
       "operatingZone": "southeast",
       "cityRole": "gateway",
       "unlockCompanyLevel": 5,
-      "passengerDemandPermille": 1170
+      "passengerDemandPermille": 1170,
+      "stationTier": 4,
+      "boardingCapacityPerDeparture": 80,
+      "departureFeeCents": 1600,
+      "arrivalFeeCents": 1000,
+      "passengerServiceFeeCents": 25,
+      "dailyLeaseCents": 65000,
+      "transferValuePermille": 1250
     },
     {
       "id": "station.046",
@@ -10805,7 +11120,14 @@
       "operatingZone": "southeast",
       "cityRole": "gateway",
       "unlockCompanyLevel": 5,
-      "passengerDemandPermille": 1020
+      "passengerDemandPermille": 1020,
+      "stationTier": 4,
+      "boardingCapacityPerDeparture": 80,
+      "departureFeeCents": 1600,
+      "arrivalFeeCents": 1000,
+      "passengerServiceFeeCents": 25,
+      "dailyLeaseCents": 65000,
+      "transferValuePermille": 1250
     },
     {
       "id": "station.047",
@@ -10817,7 +11139,14 @@
       "operatingZone": "north",
       "cityRole": "gateway",
       "unlockCompanyLevel": 6,
-      "passengerDemandPermille": 1020
+      "passengerDemandPermille": 1020,
+      "stationTier": 4,
+      "boardingCapacityPerDeparture": 80,
+      "departureFeeCents": 1600,
+      "arrivalFeeCents": 1000,
+      "passengerServiceFeeCents": 25,
+      "dailyLeaseCents": 65000,
+      "transferValuePermille": 1250
     },
     {
       "id": "station.048",
@@ -10829,7 +11158,14 @@
       "operatingZone": "southwest",
       "cityRole": "tourism",
       "unlockCompanyLevel": 5,
-      "passengerDemandPermille": 860
+      "passengerDemandPermille": 860,
+      "stationTier": 1,
+      "boardingCapacityPerDeparture": 24,
+      "departureFeeCents": 300,
+      "arrivalFeeCents": 200,
+      "passengerServiceFeeCents": 8,
+      "dailyLeaseCents": 15000,
+      "transferValuePermille": 850
     }
   ]
 }

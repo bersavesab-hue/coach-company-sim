@@ -52,6 +52,13 @@ export interface WorldMapStationContent {
   readonly unlockCompanyLevel: 1 | 2 | 3 | 4 | 5 | 6;
   readonly unlockReputationPermille: number;
   readonly passengerDemandPermille: number;
+  readonly stationTier: 1 | 2 | 3 | 4;
+  readonly boardingCapacityPerDeparture: number;
+  readonly departureFeeCents: number;
+  readonly arrivalFeeCents: number;
+  readonly passengerServiceFeeCents: number;
+  readonly dailyLeaseCents: number;
+  readonly transferValuePermille: number;
 }
 export interface WorldMapBackgroundContent { readonly mode: "decorative_only"; readonly assetPath: string | null; }
 export interface WorldMapContentV1 {

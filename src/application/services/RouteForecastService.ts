@@ -10,6 +10,7 @@ import type {
   RouteForecastCostBasis
 } from "../../contracts/dto/RouteForecastDto.js";
 import { units } from "../../core/units/Units.js";
+import { effectiveProfileDemandPermille } from "../../content/passenger/PassengerDemandPattern.js";
 import { calculateFareQuote } from "../../domain/finance/FareCalculator.js";
 import type { PassengerRoute } from "../../domain/route/PassengerRoute.js";
 import { generateDepartureSlots } from "../../domain/schedule/ScheduleExpander.js";
@@ -147,7 +148,8 @@ export class RouteForecastService {
     const demand = this.estimateDemand(
       route,
       departures,
-      input.fareMultiplierPermille
+      input.fareMultiplierPermille,
+      input.gameDay
     );
     const capacityDistanceM =
       departures *
@@ -345,7 +347,8 @@ export class RouteForecastService {
   private estimateDemand(
     route: PassengerRoute,
     departuresPerDay: number,
-    fareMultiplierPermille: number
+    fareMultiplierPermille: number,
+    gameDay: number
   ): DemandEstimate {
     if (departuresPerDay <= 0) {
       return {
@@ -416,12 +419,15 @@ export class RouteForecastService {
               hour * 3600
             ) ?? units.multiplierPermille(1000);
         const combined =
-          (
-            Number(frequencyMultiplier) *
-            Number(fareMultiplier) *
-            Number(time)
-          ) /
-          1_000_000;
+          combinePermille(
+            Number(frequencyMultiplier),
+            Number(fareMultiplier),
+            Number(time),
+            effectiveProfileDemandPermille(
+              profile,
+              gameDay
+            )
+          );
         expected +=
           profile.basePassengersPerHour *
           combined /
@@ -731,6 +737,14 @@ export class RouteForecastService {
     }
     return total;
   }
+}
+
+function combinePermille(...values: readonly number[]): number {
+  return values.reduce(
+    (result, value) =>
+      Math.floor(result * value / 1000),
+    1000
+  );
 }
 
 function countIntervalDepartures(
