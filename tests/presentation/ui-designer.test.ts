@@ -106,3 +106,49 @@ test("designer image input accepts only images", () => {
     true
   );
 });
+
+test("designer supports image composition controls", () => {
+  for (const token of [
+    "function uiCycleImageFit",
+    "function uiAdjustImageZoom",
+    "function uiMoveImage",
+    "imageFit",
+    "imageZoom",
+    "imageX",
+    "imageY",
+    "objectPosition",
+    "transformOrigin"
+  ]) {
+    assert.equal(template.includes(token), true);
+  }
+});
+
+test("designer duplicates only custom components", () => {
+  assert.equal(
+    template.includes("function uiDuplicateCustomSelected"),
+    true
+  );
+  assert.equal(
+    template.includes("只有自建文字、图片和数据卡可以复制"),
+    true
+  );
+  assert.equal(
+    template.includes('id="uiDuplicateButton"'),
+    true
+  );
+});
+
+test("designer supports grid snapping nudge and alignment guides", () => {
+  for (const token of [
+    "function uiCycleSnap",
+    "function uiSnapDragPosition",
+    "function uiNudgeSelected",
+    "function uiAlignSelected",
+    'id="uiDesignerGrid"',
+    'id="uiGuideV"',
+    'id="uiGuideH"'
+  ]) {
+    assert.equal(template.includes(token), true);
+  }
+  assert.equal(template.includes("[0,4,8,16]"), true);
+});

@@ -133,6 +133,10 @@ body.ui-design-mode nav{pointer-events:none;opacity:.72}
 .uiDesignHint{font-size:8px;color:#81949f;margin-top:5px;line-height:1.4}
 .uiDesignerBind{display:grid;grid-template-columns:1fr auto;gap:5px;margin-top:6px}.uiDesignerBind select{padding:6px 8px;font-size:9px;border-radius:8px}.uiDesignerBind button{border:1px solid #40515c;border-radius:8px;background:#253541;color:#e1e9ed;padding:6px 8px;font-size:9px;font-weight:850}
 .uiDesignerColor{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.uiDesignerGrid{display:none;position:fixed;inset:0;z-index:86;pointer-events:none;background-image:linear-gradient(rgba(112,168,196,.10) 1px,transparent 1px),linear-gradient(90deg,rgba(112,168,196,.10) 1px,transparent 1px);background-size:8px 8px}
+.uiDesignerGuide{display:none;position:fixed;z-index:92;pointer-events:none;background:#55d2ff;box-shadow:0 0 0 1px rgba(8,25,34,.5),0 0 9px rgba(85,210,255,.7)}
+.uiDesignerGuide.vertical{top:0;bottom:0;width:1px}.uiDesignerGuide.horizontal{left:0;right:0;height:1px}
+.uiImageStatus{font-size:8px;color:#9db0ba;margin-top:5px}
 .uiCustomComponent{margin:8px 0;background:#121b23;border:1px solid #33434e;border-radius:13px;padding:11px;min-height:42px}.uiCustomText{font-size:14px;line-height:1.45}.uiCustomData b{display:block;font-size:20px}.uiCustomData span{display:block;font-size:10px;color:#8fa2b1;margin-top:3px}.uiCustomImage{padding:0;overflow:hidden}.uiCustomImage img{display:block;width:100%;max-height:320px;object-fit:cover}.mapwrap>.uiCustomComponent{position:absolute;left:18px;top:150px;z-index:9;width:min(230px,65vw);margin:0}
 @media(min-width:700px){.grid{grid-template-columns:repeat(4,1fr)}.form{grid-template-columns:repeat(4,1fr)}main{padding-left:14px;padding-right:14px}#map.page.active{margin-left:-14px;margin-right:-14px}.planForm{grid-template-columns:1.4fr repeat(3,1fr)}.planField.wide{grid-column:auto}.planEstimate,.planSubmit{grid-column:1/-1}}
 </style>
@@ -260,8 +264,27 @@ body.ui-design-mode nav{pointer-events:none;opacity:.72}
     <button onclick="uiOpenColor('background')">背景色</button>
     <button onclick="uiChooseBackground()">背景图片</button>
     <button onclick="uiClearBackgroundImage()">清除图片</button>
+    <button onclick="uiCycleImageFit()">图片适配</button>
+    <button onclick="uiAdjustImageZoom(-.1)">图片−</button>
+    <button onclick="uiAdjustImageZoom(.1)">图片＋</button>
+    <button onclick="uiMoveImage(-5,0)">图←</button>
+    <button onclick="uiMoveImage(5,0)">图→</button>
+    <button onclick="uiMoveImage(0,-5)">图↑</button>
+    <button onclick="uiMoveImage(0,5)">图↓</button>
     <button class="primary" onclick="uiAddText()">＋文字</button>
     <button class="primary" onclick="uiAddImage()">＋图片</button>
+    <button id="uiDuplicateButton" onclick="uiDuplicateCustomSelected()">复制自建</button>
+    <button id="uiSnapButton" onclick="uiCycleSnap()">网格：8px</button>
+    <button onclick="uiNudgeSelected(-1,0)">←1</button>
+    <button onclick="uiNudgeSelected(1,0)">→1</button>
+    <button onclick="uiNudgeSelected(0,-1)">↑1</button>
+    <button onclick="uiNudgeSelected(0,1)">↓1</button>
+    <button onclick="uiAlignSelected('left')">左对齐</button>
+    <button onclick="uiAlignSelected('centerX')">水平居中</button>
+    <button onclick="uiAlignSelected('right')">右对齐</button>
+    <button onclick="uiAlignSelected('top')">顶对齐</button>
+    <button onclick="uiAlignSelected('centerY')">垂直居中</button>
+    <button onclick="uiAlignSelected('bottom')">底对齐</button>
     <button id="uiDeleteButton" class="danger" onclick="uiToggleHiddenSelected()">删除/恢复</button>
     <button onclick="uiResetSelected()">重置组件</button>
     <button onclick="uiRemoveCustomSelected()">移除自建</button>
@@ -288,13 +311,17 @@ body.ui-design-mode nav{pointer-events:none;opacity:.72}
   <input class="uiDesignerColor" id="uiTextColorInput" type="color" onchange="uiApplyColor('text',this.value)">
   <input class="uiDesignerColor" id="uiBackgroundColorInput" type="color" onchange="uiApplyColor('background',this.value)">
   <input id="uiImageInput" data-ui-designer type="file" accept="image/*" hidden onchange="uiHandleImageFile(this.files&&this.files[0])">
-  <div class="uiDesignHint">图片从手机本地选择并压缩保存。新增数据卡只读现有经营数据，不能修改资金、车辆、线路或乘客状态。</div>
+  <div class="uiImageStatus" id="uiImageStatus">图片：未选择</div>
+  <div class="uiDesignHint">拖动时会吸附到网格、容器中心和其他组件边缘；蓝色辅助线只在设计模式显示。内置功能组件不可复制，避免生成第二套入口。</div>
 </div>
+<div class="uiDesignerGrid" id="uiDesignerGrid" data-ui-designer></div>
+<div class="uiDesignerGuide vertical" id="uiGuideV" data-ui-designer></div>
+<div class="uiDesignerGuide horizontal" id="uiGuideH" data-ui-designer></div>
 <div class="notice" id="notice"></div>
 <footer data-time-controls data-ui-edit="global.timeFooter" data-ui-label="底部时间控制"><button data-speed="0" onclick="setTimeSpeed(0)">暂停</button><button data-speed="60" onclick="setTimeSpeed(60)">1×</button><button data-speed="180" onclick="setTimeSpeed(180)">3×</button><button data-speed="600" onclick="setTimeSpeed(600)">10×</button></footer>
 <script src="game.js"></script>
 <script>
-let uiDesignMode=false,uiDesignSelectedId=null,uiDesignDrag=null,uiDesignImageMode=null,uiDesignPreviousSpeed=60,uiLayout={elements:{},groups:{},custom:[]};
+let uiDesignMode=false,uiDesignSelectedId=null,uiDesignDrag=null,uiDesignImageMode=null,uiDesignPreviousSpeed=60,uiLayout={elements:{},groups:{},custom:[],settings:{snap:8,guides:true}};
 const UI_LAYOUT_KEY="coach-company-sim.ui-layout.v1";
 let state=null,marketFilter="all",dispatchFilter="all",planRouteId=null,planForecastSeq=0,selectedVehicleId=null,configuratorState=null,usedVehicleState=null,timeSpeed=60,autoClockBusy=false,lastAutoClockAt=performance.now(),mapCamera=null,mapDrag=null,mapRenderedDetail=null,mapStaticSignature="",mapViewportKey="",terrainTileKey="",terrainFallbackVisible=true,mapRouteLayerVisible=true,mapLabelsVisible=true,mapFocusedRouteId=null,mapTrackedTripId=null,mapZoneFilter=null,currentPageId="map",pageHistory=[],mapRouteDraft={originStationId:null,destinationStationId:null,preview:null},routePreviewSequence=0,mapViewConfig=__MAP_VIEW_CONFIG_JSON__;
 const q=id=>document.getElementById(id),esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -315,7 +342,11 @@ function normalizeUiLayout(value){
   return{
     elements:source.elements&&typeof source.elements==="object"?source.elements:{},
     groups:source.groups&&typeof source.groups==="object"?source.groups:{},
-    custom:Array.isArray(source.custom)?source.custom.filter(item=>item&&typeof item==="object"&&typeof item.id==="string"):[]
+    custom:Array.isArray(source.custom)?source.custom.filter(item=>item&&typeof item==="object"&&typeof item.id==="string"):[],
+    settings:{
+      snap:[0,4,8,16].includes(Number(source.settings?.snap))?Number(source.settings.snap):8,
+      guides:source.settings?.guides!==false
+    }
   }
 }
 function loadUiLayout(){
@@ -450,10 +481,13 @@ async function uiHandleImageFile(file){
   try{
     const data=await uiCompressImage(file);
     if(uiDesignImageMode==="background"&&uiDesignSelectedId){
-      uiElementState(uiDesignSelectedId).backgroundImage=data;
+      const style=uiElementState(uiDesignSelectedId);
+      style.backgroundImage=data;style.imageFit="cover";style.imageZoom=1;style.imageX=50;style.imageY=50;
       uiPersistAndApply()
     }else if(uiDesignImageMode==="new"){
-      uiCreateCustom("image",{imageData:data,label:"自定义图片"})
+      const item=uiCreateCustom("image",{imageData:data,label:"自定义图片"});
+      const style=uiElementState(item.id);style.imageFit="cover";style.imageZoom=1;style.imageX=50;style.imageY=50;
+      uiPersistAndApply()
     }
     toast("图片已应用")
   }catch(error){toast(String(error),true)}
@@ -461,6 +495,127 @@ async function uiHandleImageFile(file){
 }
 function uiSelectedStyle(){
   return uiDesignSelectedId?uiElementState(uiDesignSelectedId):null
+}
+function uiSelectedCustom(){
+  return (uiLayout.custom||[]).find(item=>item.id===uiDesignSelectedId)||null
+}
+function uiSelectedHasImage(){
+  const style=uiSelectedStyle(),custom=uiSelectedCustom();
+  return !!style?.backgroundImage||custom?.type==="image"
+}
+function uiImageStyleState(){
+  const style=uiSelectedStyle();
+  if(!style)return null;
+  if(style.imageX===undefined)style.imageX=50;
+  if(style.imageY===undefined)style.imageY=50;
+  if(style.imageZoom===undefined)style.imageZoom=1;
+  if(!style.imageFit)style.imageFit="cover";
+  return style
+}
+function uiCycleImageFit(){
+  if(!uiSelectedHasImage()){toast("当前组件没有图片",true);return}
+  const style=uiImageStyleState(),modes=["cover","contain","fill"],index=modes.indexOf(style.imageFit);
+  style.imageFit=modes[(index+1)%modes.length];
+  uiPersistAndApply()
+}
+function uiAdjustImageZoom(delta){
+  if(!uiSelectedHasImage()){toast("当前组件没有图片",true);return}
+  const style=uiImageStyleState();
+  style.imageZoom=Math.max(.5,Math.min(3,Math.round((style.imageZoom+delta)*10)/10));
+  uiPersistAndApply()
+}
+function uiMoveImage(dx,dy){
+  if(!uiSelectedHasImage()){toast("当前组件没有图片",true);return}
+  const style=uiImageStyleState();
+  style.imageX=Math.max(0,Math.min(100,style.imageX+dx));
+  style.imageY=Math.max(0,Math.min(100,style.imageY+dy));
+  uiPersistAndApply()
+}
+function uiDuplicateCustomSelected(){
+  const source=uiSelectedCustom();
+  if(!source){toast("只有自建文字、图片和数据卡可以复制",true);return}
+  const id="custom."+Date.now().toString(36)+"."+Math.random().toString(36).slice(2,6);
+  const clone={...source,id,label:(source.label||"自建组件")+" 副本"};
+  uiLayout.custom.push(clone);
+  const sourceStyle=uiLayout.elements[source.id]||{},cloneStyle={...sourceStyle};
+  cloneStyle.x=Number(sourceStyle.x||0)+12;
+  cloneStyle.y=Number(sourceStyle.y||0)+12;
+  uiLayout.elements[id]=cloneStyle;
+  if(source.page!=="map"){
+    const order=uiLayout.groups[source.page]||[];
+    const at=order.indexOf(source.id);
+    uiLayout.groups[source.page]=at>=0?[...order.slice(0,at+1),id,...order.slice(at+1)]:[...order,id]
+  }
+  uiDesignSelectedId=id;
+  uiPersistAndApply();
+  toast("自建组件已复制")
+}
+function uiSnapSize(){return Number(uiLayout.settings?.snap||0)}
+function uiCycleSnap(){
+  const values=[0,4,8,16],current=uiSnapSize(),index=values.indexOf(current);
+  uiLayout.settings=uiLayout.settings||{};
+  uiLayout.settings.snap=values[(index+1)%values.length];
+  uiPersistAndApply()
+}
+function uiHideGuides(){
+  const v=q("uiGuideV"),h=q("uiGuideH");
+  if(v)v.style.display="none";
+  if(h)h.style.display="none"
+}
+function uiShowGuide(axis,value){
+  if(uiLayout.settings?.guides===false)return;
+  const el=q(axis==="v"?"uiGuideV":"uiGuideH");
+  if(!el)return;
+  el.style.display="block";
+  if(axis==="v")el.style.left=Math.round(value)+"px";else el.style.top=Math.round(value)+"px"
+}
+function uiNearestAlignment(value,targets,threshold=6){
+  let best=null;
+  for(const target of targets){
+    const distance=Math.abs(value-target);
+    if(distance<=threshold&&(!best||distance<best.distance))best={target,distance}
+  }
+  return best
+}
+function uiSnapDragPosition(editable,stateValue,rawX,rawY,drag){
+  let x=rawX,y=rawY;
+  const snap=uiSnapSize();
+  if(snap>0){x=Math.round(x/snap)*snap;y=Math.round(y/snap)*snap}
+  uiHideGuides();
+  if(uiLayout.settings?.guides===false||!drag?.startRect||!drag?.hostRect)return{x,y};
+  const dx=x-drag.baseX,dy=y-drag.baseY,start=drag.startRect,host=drag.hostRect;
+  const projected={left:start.left+dx,right:start.right+dx,top:start.top+dy,bottom:start.bottom+dy,width:start.width,height:start.height};
+  projected.centerX=projected.left+projected.width/2;projected.centerY=projected.top+projected.height/2;
+  const xTargets=[host.left,host.left+host.width/2,host.right],yTargets=[host.top,host.top+host.height/2,host.bottom];
+  const siblings=[...editable.parentElement.querySelectorAll("[data-ui-edit]")].filter(el=>el!==editable&&!el.hidden);
+  siblings.forEach(el=>{const r=el.getBoundingClientRect();xTargets.push(r.left,r.left+r.width/2,r.right);yTargets.push(r.top,r.top+r.height/2,r.bottom)});
+  const xChecks=[[projected.left,0],[projected.centerX,projected.width/2],[projected.right,projected.width]];
+  const yChecks=[[projected.top,0],[projected.centerY,projected.height/2],[projected.bottom,projected.height]];
+  let xBest=null,yBest=null;
+  for(const [value,offset] of xChecks){const match=uiNearestAlignment(value,xTargets);if(match&&(!xBest||match.distance<xBest.distance))xBest={...match,offset}}
+  for(const [value,offset] of yChecks){const match=uiNearestAlignment(value,yTargets);if(match&&(!yBest||match.distance<yBest.distance))yBest={...match,offset}}
+  if(xBest){x+=xBest.target-(start.left+dx+xBest.offset);uiShowGuide("v",xBest.target)}
+  if(yBest){y+=yBest.target-(start.top+dy+yBest.offset);uiShowGuide("h",yBest.target)}
+  return{x:Math.round(x),y:Math.round(y)}
+}
+function uiNudgeSelected(dx,dy){
+  const el=uiDesignSelectedId?uiElement(uiDesignSelectedId):null;
+  if(!el?.hasAttribute("data-ui-free")){toast("该组件不是自由拖动组件",true);return}
+  const style=uiElementState(uiDesignSelectedId);
+  style.x=Number(style.x||0)+dx;style.y=Number(style.y||0)+dy;
+  uiPersistAndApply()
+}
+function uiAlignSelected(mode){
+  const el=uiDesignSelectedId?uiElement(uiDesignSelectedId):null,parent=el?.parentElement;
+  if(!el?.hasAttribute("data-ui-free")||!parent){toast("该组件不支持自由对齐",true);return}
+  const style=uiElementState(uiDesignSelectedId),rect=el.getBoundingClientRect(),host=parent.getBoundingClientRect();
+  if(mode==="left")style.x=Number(style.x||0)+(host.left-rect.left);
+  if(mode==="right")style.x=Number(style.x||0)+(host.right-rect.right);
+  if(mode==="centerX")style.x=Number(style.x||0)+(host.left+host.width/2-(rect.left+rect.width/2));
+  if(mode==="top")style.y=Number(style.y||0)+(host.top-rect.top);
+  if(mode==="bottom")style.y=Number(style.y||0)+(host.bottom-rect.bottom);
+  if(mode==="centerY")style.y=Number(style.y||0)+(host.top+host.height/2-(rect.top+rect.height/2));
+  uiPersistAndApply()
 }
 function uiAdjustFont(delta){
   const style=uiSelectedStyle(),el=uiDesignSelectedId?uiElement(uiDesignSelectedId):null;
@@ -496,6 +651,7 @@ function uiClearBackgroundImage(){
   const style=uiSelectedStyle();
   if(!style)return;
   delete style.backgroundImage;
+  delete style.imageFit;delete style.imageZoom;delete style.imageX;delete style.imageY;
   uiPersistAndApply()
 }
 function uiRemoveCustomSelected(){
@@ -537,8 +693,22 @@ function applyUiLayout(){
     el.style.opacity=state.opacity??"";
     el.style.borderRadius=state.radius!==undefined?state.radius+"px":"";
     el.style.backgroundImage=state.backgroundImage?'linear-gradient(rgba(8,15,20,.28),rgba(8,15,20,.28)),url("'+state.backgroundImage+'")':"";
-    el.style.backgroundSize=state.backgroundImage?"cover":"";
-    el.style.backgroundPosition=state.backgroundImage?"center":"";
+    if(state.backgroundImage){
+      const fit=state.imageFit||"cover",zoom=Number(state.imageZoom||1),x=Number(state.imageX??50),y=Number(state.imageY??50);
+      el.style.backgroundSize=zoom!==1?(Math.round(zoom*100)+"% auto"):fit;
+      el.style.backgroundPosition=x+"% "+y+"%";
+      el.style.backgroundRepeat="no-repeat"
+    }else{
+      el.style.backgroundSize="";el.style.backgroundPosition="";el.style.backgroundRepeat=""
+    }
+    const customImage=el.querySelector?.(".uiCustomImage img")||((el.classList?.contains("uiCustomImage"))?el.querySelector("img"):null);
+    if(customImage){
+      const fit=state.imageFit||"cover",zoom=Number(state.imageZoom||1),x=Number(state.imageX??50),y=Number(state.imageY??50);
+      customImage.style.objectFit=fit==="fill"?"fill":fit;
+      customImage.style.objectPosition=x+"% "+y+"%";
+      customImage.style.transform="scale("+zoom+")";
+      customImage.style.transformOrigin=x+"% "+y+"%"
+    }
     if(el.hasAttribute("data-ui-free")){
       el.style.translate=((state.x||0)+"px "+(state.y||0)+"px")
     }else{
@@ -554,6 +724,8 @@ function applyUiLayout(){
       if(child)parent.appendChild(child)
     }
   }
+  const grid=q("uiDesignerGrid"),snap=uiSnapSize();
+  if(grid){grid.style.display=uiDesignMode&&snap>0?"block":"none";grid.style.backgroundSize=snap+"px "+snap+"px"}
   updateUiDesignerPanel()
 }
 function uiPersistAndApply(){saveUiLayout();applyUiLayout()}
@@ -572,6 +744,7 @@ function closeUiDesigner(){
   uiDesignMode=false;
   uiDesignSelectedId=null;
   uiDesignDrag=null;
+  uiHideGuides();
   document.body.classList.remove("ui-design-mode");
   applyUiLayout();
   if(uiDesignPreviousSpeed!==0)setTimeSpeed(uiDesignPreviousSpeed)
@@ -592,6 +765,12 @@ function updateUiDesignerPanel(){
     const hidden=selected?!!(uiLayout.elements[uiDesignSelectedId]?.hidden):false;
     q("uiDeleteButton").textContent=hidden?"恢复显示":"删除/隐藏";
     q("uiDeleteButton").disabled=!selected
+  }
+  if(q("uiDuplicateButton"))q("uiDuplicateButton").disabled=!uiSelectedCustom();
+  if(q("uiSnapButton"))q("uiSnapButton").textContent="网格："+(uiSnapSize()?uiSnapSize()+"px":"关");
+  if(q("uiImageStatus")){
+    const image=uiSelectedHasImage(),style=image?uiImageStyleState():null;
+    q("uiImageStatus").textContent=image?"图片："+style.imageFit+" · "+Math.round(style.imageZoom*100)+"% · 位置 "+style.imageX+"/"+style.imageY:"图片：当前组件无图片"
   }
 }
 function uiMoveSelected(direction){
@@ -667,19 +846,21 @@ document.addEventListener("pointerdown",event=>{
   event.preventDefault();
   event.stopImmediatePropagation();
   selectUiElement(editable);
-  const id=editable.dataset.uiEdit,state=uiElementState(id);
-  uiDesignDrag={id,startX:event.clientX,startY:event.clientY,baseX:Number(state.x||0),baseY:Number(state.y||0)}
+  const id=editable.dataset.uiEdit,state=uiElementState(id),startRect=editable.getBoundingClientRect(),hostRect=editable.parentElement?.getBoundingClientRect();
+  uiDesignDrag={id,startX:event.clientX,startY:event.clientY,baseX:Number(state.x||0),baseY:Number(state.y||0),startRect,hostRect}
 },true);
 document.addEventListener("pointermove",event=>{
   if(!uiDesignMode||!uiDesignDrag)return;
-  const state=uiElementState(uiDesignDrag.id);
-  state.x=Math.round(uiDesignDrag.baseX+event.clientX-uiDesignDrag.startX);
-  state.y=Math.round(uiDesignDrag.baseY+event.clientY-uiDesignDrag.startY);
+  const state=uiElementState(uiDesignDrag.id),editable=uiElement(uiDesignDrag.id);
+  const rawX=uiDesignDrag.baseX+event.clientX-uiDesignDrag.startX,rawY=uiDesignDrag.baseY+event.clientY-uiDesignDrag.startY;
+  const snapped=editable?uiSnapDragPosition(editable,state,rawX,rawY,uiDesignDrag):{x:rawX,y:rawY};
+  state.x=snapped.x;state.y=snapped.y;
   applyUiLayout()
 },true);
 document.addEventListener("pointerup",()=>{
   if(!uiDesignDrag)return;
   uiDesignDrag=null;
+  uiHideGuides();
   saveUiLayout()
 },true);
 function uiSafeKey(value){return String(value).trim().replace(/[^a-zA-Z0-9\u4e00-\u9fff_-]+/g,"-")}

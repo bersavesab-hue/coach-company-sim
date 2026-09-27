@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.31.0-stage31-ui-designer-precision
+
+### Image Composition
+- 所有设计器背景图与自定义图片新增 cover / contain / fill 三种适配方式。
+- 图片支持 50%–300% 缩放与 X/Y 0–100 构图位置调整，可在组件容器内完成基础裁切。
+- 自定义图片通过 object-fit / object-position / transform-origin 应用同一套构图参数。
+- 更换图片时自动初始化为 cover、100%、中心位置；清除背景时同步清除旧裁切参数。
+
+### Component Duplication
+- 自建文字、图片和只读数据卡支持复制，复制时继承样式、图片和数据绑定。
+- 复制后的自由组件自动偏移 12px，避免完全重叠。
+- 普通页面中的复制组件插入在原组件后方。
+- 内置功能组件明确禁止复制，避免重复“排班/购车/建线”等正式入口和事件绑定。
+
+### Grid & Alignment
+- uiLayout 新增 settings.snap，支持关闭或 4 / 8 / 16px 网格吸附，旧配置默认 8px。
+- 设计模式增加可视网格层。
+- 自由拖动时同时检测父容器左/中/右、顶/中/底和兄弟组件边缘/中心；6px 范围内自动吸附。
+- 吸附时显示蓝色水平/垂直辅助线，松手或退出设计模式立即隐藏。
+- 自由组件支持 1px 四向微调和父容器六向一键对齐。
+
+### Compatibility
+- UI_LAYOUT_KEY 继续使用 v1；新增 imageFit/imageZoom/imageX/imageY/settings 均为可选兼容字段。
+- SAVE_VERSION 保持 1，CONTENT_VERSION 保持 13；经营存档与正式游戏内容均未改变。
+
 ## 0.30.0-stage30-ui-designer-assets
 
 ### UI Designer Styling
