@@ -1,6 +1,7 @@
 import type { StationId } from "../../contracts/ids/EntityIds.js";
 import type { GameSecond } from "../../core/units/Units.js";
 import { units } from "../../core/units/Units.js";
+import { calculateFareQuote } from "../../domain/finance/FareCalculator.js";
 import type { PassengerDemandProfile } from "../../domain/passenger/PassengerDemandProfile.js";
 import { generateDepartureSlots } from "../../domain/schedule/ScheduleExpander.js";
 import { SECONDS_PER_DAY } from "../../core/time/GameTime.js";
@@ -9,6 +10,11 @@ import type { PassengerDemandPolicy } from "../../simulation/passenger/Passenger
 import type { DomainEventBus } from "../events/DomainEventBus.js";
 import { createSimulationDomainEvent } from "../events/createSimulationDomainEvent.js";
 import type { RepositoryBundle } from "../repositories/RepositoryBundle.js";
+
+interface OdServiceSnapshot {
+  readonly departuresPerDay: number;
+  readonly bestFareRatioPermille: number;
+}
 
 export class PassengerDemandCoordinator {
   constructor(
@@ -26,8 +32,17 @@ export class PassengerDemandCoordinator {
 
     while (cursor < target) {
       const gameDay = Math.floor(cursor / SECONDS_PER_DAY) + 1;
+      const secondOfDay = cursor % SECONDS_PER_DAY;
       const nextDayStart = gameDay * SECONDS_PER_DAY;
-      const intervalEnd = Math.min(target, nextDayStart);
+      const nextHourBoundary =
+        cursor + (3600 - (secondOfDay % 3600 || 3600));
+      const intervalEnd = Math.min(
+        target,
+        nextDayStart,
+        nextHourBoundary > cursor
+          ? nextHourBoundary
+          : cursor + 3600
+      );
       const elapsedSeconds = intervalEnd - cursor;
 
       for (const profile of this.repositories.passengerDemand.all()) {
@@ -35,17 +50,43 @@ export class PassengerDemandCoordinator {
           continue;
         }
 
-        const departuresPerDay = this.countDeparturesForOd(
+        const service = this.serviceForOd(
           profile.originStationId,
           profile.destinationStationId,
           gameDay
         );
-        const multiplier =
-          this.policy.frequencyMultiplierPermille(departuresPerDay);
+        this.applyQueueAbandonment(
+          profile,
+          service.departuresPerDay,
+          elapsedSeconds
+        );
+
+        const frequency =
+          this.policy.frequencyMultiplierPermille(
+            service.departuresPerDay
+          );
+        const fare =
+          this.policy.fareMultiplierPermille?.(
+            service.bestFareRatioPermille
+          ) ?? units.multiplierPermille(1000);
+        const timeOfDay =
+          this.policy.timeOfDayMultiplierPermille?.(
+            secondOfDay
+          ) ?? units.multiplierPermille(1000);
+        const combined = units.multiplierPermille(
+          Math.floor(
+            (
+              Number(frequency) *
+              Number(fare) *
+              Number(timeOfDay)
+            ) /
+              1_000_000
+          )
+        );
 
         const generated = generatePassengerDemand(
           profile.basePassengersPerHour,
-          multiplier,
+          combined,
           elapsedSeconds,
           runtime.demandRemainder(
             profile.originStationId,
@@ -76,7 +117,11 @@ export class PassengerDemandCoordinator {
                 originStationId: profile.originStationId,
                 destinationStationId: profile.destinationStationId,
                 count: generated.generatedPassengers,
-                departuresPerDay
+                departuresPerDay: service.departuresPerDay,
+                fareRatioPermille:
+                  service.bestFareRatioPermille,
+                effectiveDemandMultiplierPermille:
+                  Number(combined)
               }
             )
           );
@@ -84,31 +129,120 @@ export class PassengerDemandCoordinator {
       }
 
       cursor = intervalEnd;
-      runtime.setLastDemandGeneratedGameSecond(units.gameSecond(cursor));
+      runtime.setLastDemandGeneratedGameSecond(
+        units.gameSecond(cursor)
+      );
     }
 
     this.repositories.passengerRuntime.replace(runtime);
   }
 
-  private countDeparturesForOd(
+  private serviceForOd(
     originStationId: StationId,
     destinationStationId: StationId,
     gameDay: number
-  ): number {
+  ): OdServiceSnapshot {
     let departures = 0;
+    let bestFareRatioPermille = 1000;
+    let hasPricedService = false;
 
     for (const route of this.repositories.routes.findActive()) {
-      if (!routeServesOd(route.stopPoints.map((stop) => stop.stationId), originStationId, destinationStationId)) {
+      if (
+        !routeServesOd(
+          route.stopPoints.map((stop) => stop.stationId),
+          originStationId,
+          destinationStationId
+        )
+      ) {
         continue;
       }
 
+      let routeDepartures = 0;
       for (const plan of this.repositories.servicePlans.findByRoute(route.id)) {
         const slots = generateDepartureSlots(plan, gameDay);
-        if (slots.ok) departures += slots.value.length;
+        if (slots.ok) {
+          routeDepartures += slots.value.length;
+        }
       }
+
+      if (routeDepartures <= 0) continue;
+      departures += routeDepartures;
+
+      const farePolicy =
+        this.repositories.finance.getFarePolicy(
+          route.farePolicyId
+        );
+      if (!farePolicy) continue;
+
+      const quote = calculateFareQuote(
+        route,
+        originStationId,
+        destinationStationId,
+        this.repositories.world.get(),
+        farePolicy
+      );
+      if (!quote.ok || Number(quote.value.referenceFareCents) <= 0) {
+        continue;
+      }
+
+      const ratio = Math.round(
+        (Number(quote.value.fareCents) * 1000) /
+          Number(quote.value.referenceFareCents)
+      );
+      bestFareRatioPermille = hasPricedService
+        ? Math.min(bestFareRatioPermille, ratio)
+        : ratio;
+      hasPricedService = true;
     }
 
-    return departures;
+    return {
+      departuresPerDay: departures,
+      bestFareRatioPermille:
+        hasPricedService ? bestFareRatioPermille : 1000
+    };
+  }
+
+  private applyQueueAbandonment(
+    profile: PassengerDemandProfile,
+    departuresPerDay: number,
+    elapsedSeconds: number
+  ): void {
+    const rate =
+      this.policy.queueAbandonmentPermillePerHour?.(
+        departuresPerDay
+      );
+    if (!rate || Number(rate) <= 0) return;
+
+    const runtime = this.repositories.passengerRuntime.get();
+    const waiting = runtime.waitingCount(
+      profile.originStationId,
+      profile.destinationStationId
+    );
+    if (waiting <= 0) return;
+
+    let leaving = Math.floor(
+      (
+        waiting *
+        Number(rate) *
+        elapsedSeconds
+      ) /
+        3_600_000
+    );
+    if (
+      departuresPerDay <= 0 &&
+      elapsedSeconds >= 3600 &&
+      leaving === 0
+    ) {
+      leaving = 1;
+    }
+
+    if (leaving > 0) {
+      runtime.takeWaiting(
+        profile.originStationId,
+        profile.destinationStationId,
+        leaving
+      );
+    }
   }
 }
 

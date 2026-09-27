@@ -9,7 +9,66 @@ import type {
   FareRoundingMode
 } from "./FarePolicy.js";
 
+export interface FareQuote {
+  readonly referenceFareCents: MoneyCents;
+  readonly fareCents: MoneyCents;
+  readonly fareMultiplierPermille: number;
+}
+
 export function calculateFareCents(
+  route: PassengerRoute,
+  originStationId: StationId,
+  destinationStationId: StationId,
+  graph: WorldGraph,
+  policy: FarePolicy
+): Result<MoneyCents, DomainError> {
+  const quoted = calculateFareQuote(
+    route,
+    originStationId,
+    destinationStationId,
+    graph,
+    policy
+  );
+  return quoted.ok ? ok(quoted.value.fareCents) : quoted;
+}
+
+export function calculateFareQuote(
+  route: PassengerRoute,
+  originStationId: StationId,
+  destinationStationId: StationId,
+  graph: WorldGraph,
+  policy: FarePolicy
+): Result<FareQuote, DomainError> {
+  const reference = calculateReferenceFareCents(
+    route,
+    originStationId,
+    destinationStationId,
+    graph,
+    policy
+  );
+  if (!reference.ok) return reference;
+
+  const multiplier = Number(
+    route.fareMultiplierPermille ?? 1000
+  );
+  const adjusted = roundToIncrement(
+    divideRounded(
+      Number(reference.value) * multiplier,
+      1000,
+      policy.roundingMode
+    ),
+    policy.roundingIncrementCents,
+    policy.roundingMode
+  );
+
+  return ok({
+    referenceFareCents: reference.value,
+    fareCents: units.moneyCents(Math.max(0, adjusted)),
+    fareMultiplierPermille: multiplier
+  });
+}
+
+function calculateReferenceFareCents(
   route: PassengerRoute,
   originStationId: StationId,
   destinationStationId: StationId,
@@ -119,7 +178,5 @@ function roundToIncrement(
     throw new Error("Fare rounding increment must be a positive integer");
   }
 
-  return (
-    divideRounded(value, increment, mode) * increment
-  );
+  return divideRounded(value, increment, mode) * increment;
 }

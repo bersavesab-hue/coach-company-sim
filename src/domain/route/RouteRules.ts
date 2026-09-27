@@ -5,12 +5,16 @@ import type {
 } from "../../contracts/ids/EntityIds.js";
 import { DomainError } from "../../core/errors/DomainError.js";
 import { err, ok, type Result } from "../../core/result/Result.js";
+import { units } from "../../core/units/Units.js";
 import type { Company } from "../company/Company.js";
 import type { PathLeg } from "../world/RoadPath.js";
 import type { RoutingPreference } from "../world/RoutingCost.js";
 import type { PassengerRoute } from "./PassengerRoute.js";
 import type { RouteStopPoint } from "./RouteStopPoint.js";
 import type { RouteType } from "./RouteType.js";
+
+export const MIN_ROUTE_FARE_MULTIPLIER_PERMILLE = 600;
+export const MAX_ROUTE_FARE_MULTIPLIER_PERMILLE = 1600;
 
 export interface CreatePassengerRouteInput {
   readonly id: RouteId;
@@ -57,6 +61,7 @@ export function createPassengerRoute(
     pathLegs: [...input.pathLegs],
     routingPreference: input.routingPreference,
     farePolicyId: input.farePolicyId,
+    fareMultiplierPermille: units.multiplierPermille(1000),
     requiredLicenseIds: [...input.requiredLicenseIds],
     status: "draft"
   });
@@ -86,6 +91,41 @@ export function updateRouteStops(
     stopPoints: stopPoints.map((stop) => ({ ...stop })),
     pathLegs: [...pathLegs],
     routingPreference
+  });
+}
+
+export function setRouteFareMultiplier(
+  route: PassengerRoute,
+  fareMultiplierPermille: number
+): Result<PassengerRoute, DomainError> {
+  if (
+    !Number.isSafeInteger(fareMultiplierPermille) ||
+    fareMultiplierPermille < MIN_ROUTE_FARE_MULTIPLIER_PERMILLE ||
+    fareMultiplierPermille > MAX_ROUTE_FARE_MULTIPLIER_PERMILLE
+  ) {
+    return err(
+      new DomainError(
+        "INVALID_ARGUMENT",
+        `Route fare multiplier must be between ${MIN_ROUTE_FARE_MULTIPLIER_PERMILLE} and ${MAX_ROUTE_FARE_MULTIPLIER_PERMILLE} permille`,
+        { routeId: route.id, fareMultiplierPermille }
+      )
+    );
+  }
+
+  if (route.status === "retired") {
+    return err(
+      new DomainError(
+        "ROUTE_INACTIVE",
+        "A retired route fare cannot be changed",
+        { routeId: route.id }
+      )
+    );
+  }
+
+  return ok({
+    ...route,
+    fareMultiplierPermille:
+      units.multiplierPermille(fareMultiplierPermille)
   });
 }
 

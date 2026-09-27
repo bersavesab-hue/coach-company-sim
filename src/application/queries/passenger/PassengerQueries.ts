@@ -6,3 +6,8 @@ export interface StationQueueQuery {
     readonly stationId: StationId;
   };
 }
+
+export interface PassengerNetworkSummaryQuery {
+  readonly type: "passenger.networkSummary";
+  readonly payload: Record<string, never>;
+}

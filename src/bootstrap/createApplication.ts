@@ -2,6 +2,7 @@ import { CommandBus } from "../application/CommandBus.js";
 import { QueryBus } from "../application/QueryBus.js";
 import { DomainEventBus } from "../application/events/DomainEventBus.js";
 import { FinanceCoordinator } from "../application/finance/FinanceCoordinator.js";
+import { CompanyProgressionCoordinator } from "../application/progression/CompanyProgressionCoordinator.js";
 import { registerFinanceQueries } from "../application/handlers/finance/registerFinanceQueries.js";
 import { registerOperationsQueries } from "../application/handlers/operations/registerOperationsQueries.js";
 import { registerOperationsHandlers } from "../application/handlers/operations/registerOperationsHandlers.js";
@@ -57,6 +58,7 @@ export interface ApplicationRuntime {
   readonly events: DomainEventBus;
   readonly repositories: RepositoryBundle;
   readonly finance: FinanceCoordinator;
+  readonly companyProgression: CompanyProgressionCoordinator;
   readonly vehicleLifecycle: VehicleLifecycleCoordinator;
   readonly fleetOperations: FleetOperationsCoordinator;
   readonly operationsPlanner: DayOperationsPlanner;
@@ -88,6 +90,11 @@ export function createApplication(
     dependencies.economicPolicy
   );
   finance.initialize();
+
+  const companyProgression = new CompanyProgressionCoordinator(
+    dependencies.repositories,
+    events
+  );
 
   const vehicleLifecycle = new VehicleLifecycleCoordinator(
     dependencies.repositories,
@@ -252,6 +259,7 @@ export function createApplication(
     events,
     repositories: dependencies.repositories,
     finance,
+    companyProgression,
     vehicleLifecycle,
     fleetOperations,
     operationsPlanner,

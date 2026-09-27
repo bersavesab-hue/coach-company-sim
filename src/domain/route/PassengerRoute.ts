@@ -4,6 +4,7 @@ import type {
   LicenseId,
   RouteId
 } from "../../contracts/ids/EntityIds.js";
+import type { MultiplierPermille } from "../../core/units/Units.js";
 import type { PathLeg } from "../world/RoadPath.js";
 import type { RoutingPreference } from "../world/RoutingCost.js";
 import type { RouteStopPoint } from "./RouteStopPoint.js";
@@ -20,6 +21,7 @@ export interface PassengerRoute {
   readonly pathLegs: readonly PathLeg[];
   readonly routingPreference: RoutingPreference;
   readonly farePolicyId: FarePolicyId;
+  readonly fareMultiplierPermille?: MultiplierPermille;
   readonly requiredLicenseIds: readonly LicenseId[];
   readonly status: RouteStatus;
 }

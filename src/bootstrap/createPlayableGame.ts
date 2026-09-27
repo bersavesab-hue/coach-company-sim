@@ -15,7 +15,7 @@ import type {
   VehicleEconomicProfile
 } from "../domain/finance/FinancialProfiles.js";
 import type { EconomicPolicy } from "../simulation/finance/EconomicPolicy.js";
-import type { PassengerDemandPolicy } from "../simulation/passenger/PassengerDemandPolicy.js";
+import { PLAYABLE_PASSENGER_DEMAND_POLICY } from "../content/passenger/PassengerDemandBalance.js";
 import type { VehicleLifecyclePolicy } from "../application/policies/VehicleLifecyclePolicy.js";
 import type { VehicleMarketPolicy } from "../application/policies/VehicleMarketPolicy.js";
 import type { OperationsPolicy } from "../application/policies/OperationsPolicy.js";
@@ -127,7 +127,8 @@ export function createPlayableGame(saved?: PlayableSavePayloadV1) {
   const app = createApplication({
     repositories,
     ids: idAllocator,
-    passengerDemandPolicy,
+    passengerDemandPolicy:
+      PLAYABLE_PASSENGER_DEMAND_POLICY,
     economicPolicy,
     vehicleLifecyclePolicy,
     vehicleMarketPolicy,
@@ -149,10 +150,13 @@ export function createPlayableGame(saved?: PlayableSavePayloadV1) {
   return {
     app,
     repositories,
-    company:
-      repositories.companies.getById(
-        PLAYABLE_COMPANY_ID
-      ) ?? company,
+    get company() {
+      return (
+        repositories.companies.getById(
+          PLAYABLE_COMPANY_ID
+        ) ?? company
+      );
+    },
     stations: worldSeed.stations,
     mapContent: FORMAL_WORLD_MAP_CONTENT,
     startGameSecond:
@@ -195,13 +199,6 @@ function createDrivers(
     })
   );
 }
-
-const passengerDemandPolicy: PassengerDemandPolicy = {
-  frequencyMultiplierPermille: (departuresPerDay) =>
-    units.multiplierPermille(
-      Math.min(1300, 700 + departuresPerDay * 45)
-    )
-};
 
 const economicPolicy: EconomicPolicy = {
   energyPriceMilliCentsPerUnit: (kind) => {

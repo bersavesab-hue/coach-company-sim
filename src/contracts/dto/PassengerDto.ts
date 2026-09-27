@@ -8,3 +8,9 @@ export interface StationQueueDto {
   }[];
   readonly totalWaiting: number;
 }
+
+export interface PassengerNetworkSummaryDto {
+  readonly totalWaiting: number;
+  readonly busiestStationId: StationId | null;
+  readonly busiestStationWaiting: number;
+}

@@ -19,10 +19,13 @@ import {
 import type { CommandType } from "../../contracts/commands/CommandTypes.js";
 import type { CommandEnvelope } from "../../contracts/commands/CommandEnvelope.js";
 import type { PassengerRoute } from "../../domain/route/PassengerRoute.js";
+import { calculateFareQuote } from "../../domain/finance/FareCalculator.js";
 import type { VehicleConfiguration } from "../../domain/vehicle-market/VehicleConfiguration.js";
 import { buildOfficialRoutePath } from "../../application/services/RoutePathService.js";
 import type { ServicePlan } from "../../domain/schedule/ServicePlan.js";
 import { isMapStationUnlocked } from "../../content/map/MapStationUnlockPolicy.js";
+import { fareDemandMultiplierForRatio } from "../../content/passenger/PassengerDemandBalance.js";
+import { companyProgressionForReputation } from "../../application/progression/CompanyProgressionCoordinator.js";
 import { GAME_VERSION } from "../../core/version/Versions.js";
 import {
   buildPlayableSaveEnvelope,
@@ -123,6 +126,10 @@ export class PlayableClient {
       "map.visibleVehicles",
       mapBounds
     );
+    const passengerSummary = await this.query(
+      "passenger.networkSummary",
+      {}
+    );
     const routes =
       this.runtime.repositories.allRoutes();
     const plans =
@@ -139,6 +146,11 @@ export class PlayableClient {
       finance,
       market,
       dispatch,
+      passengerSummary,
+      progression:
+        companyProgressionForReputation(
+          Number(company.reputationPermille)
+        ),
       visibleVehicles,
       mapBounds,
       stations: this.runtime.stations.map(
@@ -526,6 +538,24 @@ export class PlayableClient {
     return this.actionResult(
       activated,
       `线路 ${route.code} 已开通。`
+    );
+  }
+
+  async setRouteFare(
+    routeId: string,
+    fareMultiplierPermille: number
+  ): Promise<UiActionResult> {
+    const result = this.dispatch(
+      "route.setFare",
+      {
+        routeId: ids.route(routeId),
+        fareMultiplierPermille:
+          Math.round(fareMultiplierPermille)
+      }
+    );
+    return this.actionResult(
+      result,
+      "线路票价已更新，后续客流会按新票价重新计算。"
     );
   }
 
@@ -925,6 +955,27 @@ export class PlayableClient {
       estimatedSeconds +=
         Number(road.lengthM) / Number(road.speedLimitMps);
     }
+
+    const firstStop = route.stopPoints[0];
+    const lastStop = route.stopPoints.at(-1);
+    const farePolicy =
+      this.runtime.repositories.finance.getFarePolicy(
+        route.farePolicyId
+      );
+    const quote =
+      firstStop && lastStop && farePolicy
+        ? calculateFareQuote(
+            route,
+            firstStop.stationId,
+            lastStop.stationId,
+            world,
+            farePolicy
+          )
+        : null;
+    const fareMultiplierPermille = Number(
+      route.fareMultiplierPermille ?? 1000
+    );
+
     return {
       id: String(route.id),
       code: route.code,
@@ -932,6 +983,21 @@ export class PlayableClient {
       routeType: route.type,
       distanceM: Math.round(distanceM),
       estimatedSeconds: Math.round(estimatedSeconds),
+      fareMultiplierPermille,
+      referenceFareCents:
+        quote?.ok
+          ? Number(quote.value.referenceFareCents)
+          : 0,
+      fareCents:
+        quote?.ok
+          ? Number(quote.value.fareCents)
+          : 0,
+      fareDemandMultiplierPermille:
+        Number(
+          fareDemandMultiplierForRatio(
+            fareMultiplierPermille
+          )
+        ),
       pathPoints:
         this.pathPointsFromLegs(
           route.pathLegs

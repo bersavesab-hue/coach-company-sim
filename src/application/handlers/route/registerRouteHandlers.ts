@@ -7,6 +7,7 @@ import {
   activateRoute,
   createPassengerRoute,
   deactivateRoute,
+  setRouteFareMultiplier,
   updateRouteStops
 } from "../../../domain/route/RouteRules.js";
 import type { CommandBus } from "../../CommandBus.js";
@@ -14,6 +15,7 @@ import type {
   ActivateRoutePayload,
   CreateRoutePayload,
   DeactivateRoutePayload,
+  SetRouteFarePayload,
   UpdateRouteStopsPayload
 } from "../../commands/route/RouteCommands.js";
 import type { DomainEventBus } from "../../events/DomainEventBus.js";
@@ -37,6 +39,9 @@ export function registerRouteHandlers(
   );
   commands.register("route.updateStops", (command) =>
     handleUpdateRouteStops(command, dependencies)
+  );
+  commands.register("route.setFare", (command) =>
+    handleSetRouteFare(command, dependencies)
   );
   commands.register("route.activate", (command) =>
     handleActivateRoute(command, dependencies)
@@ -164,6 +169,47 @@ function handleUpdateRouteStops(
       {
         routeId: updated.value.id,
         stationIds: updated.value.stopPoints.map((stop) => stop.stationId)
+      }
+    )
+  );
+
+  return updated;
+}
+
+function handleSetRouteFare(
+  command: CommandEnvelope,
+  dependencies: RouteHandlerDependencies
+): Result<PassengerRoute, DomainError> {
+  const payload = command.payload as SetRouteFarePayload;
+  const routeResult = requireRoute(
+    payload.routeId,
+    dependencies.repositories
+  );
+  if (!routeResult.ok) return routeResult;
+
+  const actorCheck = requireActorCompany(
+    command,
+    routeResult.value.companyId
+  );
+  if (!actorCheck.ok) return actorCheck;
+
+  const updated = setRouteFareMultiplier(
+    routeResult.value,
+    payload.fareMultiplierPermille
+  );
+  if (!updated.ok) return updated;
+
+  dependencies.repositories.routes.save(updated.value);
+  dependencies.events.publish(
+    createDomainEvent(
+      command,
+      "route.fareChanged",
+      "route",
+      updated.value.id,
+      {
+        routeId: updated.value.id,
+        fareMultiplierPermille:
+          Number(updated.value.fareMultiplierPermille ?? 1000)
       }
     )
   );

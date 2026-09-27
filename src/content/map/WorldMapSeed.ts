@@ -41,15 +41,47 @@ export function createPlayableWorldSeed(content: WorldMapContentV1 = FORMAL_WORL
     id: ids.station(v.id), name: v.name, worldNodeId: ids.worldNode(v.worldNodeId),
     ownerCompanyId: null, status: "active"
   }));
+
+  const nodeById = new Map(
+    content.nodes.map((node) => [
+      node.id,
+      node.position
+    ])
+  );
   const passengerDemand: PassengerDemandProfile[] = [];
   for (const origin of content.stations) {
     if (!origin.active) continue;
     for (const destination of content.stations) {
       if (!destination.active || origin.id === destination.id) continue;
+
+      const originPoint = nodeById.get(origin.worldNodeId);
+      const destinationPoint = nodeById.get(destination.worldNodeId);
+      const straightDistanceM =
+        originPoint && destinationPoint
+          ? Math.hypot(
+              destinationPoint.xM - originPoint.xM,
+              destinationPoint.yM - originPoint.yM
+            )
+          : 100_000;
+      const classDemand = Math.floor(
+        (
+          stationDemandWeight(origin.stationClass) +
+          stationDemandWeight(destination.stationClass)
+        ) /
+          2
+      );
+      const distanceFactor =
+        passengerDistanceDemandPermille(straightDistanceM);
+
       passengerDemand.push({
         originStationId: ids.station(origin.id),
         destinationStationId: ids.station(destination.id),
-        basePassengersPerHour: Math.max(4, Math.floor((stationDemandWeight(origin.stationClass) + stationDemandWeight(destination.stationClass)) / 2))
+        basePassengersPerHour: Math.max(
+          1,
+          Math.floor(
+            (classDemand * distanceFactor) / 1000
+          )
+        )
       });
     }
   }
@@ -68,4 +100,14 @@ function stationDemandWeight(stationClass: StationClass): number {
     case "city": return 16;
     case "hub": return 22;
   }
+}
+
+function passengerDistanceDemandPermille(
+  straightDistanceM: number
+): number {
+  if (straightDistanceM < 50_000) return 1100;
+  if (straightDistanceM < 150_000) return 1000;
+  if (straightDistanceM < 300_000) return 850;
+  if (straightDistanceM < 600_000) return 650;
+  return 450;
 }

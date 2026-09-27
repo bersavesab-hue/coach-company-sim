@@ -24,6 +24,11 @@ export interface UpdateRouteStopsPayload {
   readonly routingPreference: RoutingPreference;
 }
 
+export interface SetRouteFarePayload {
+  readonly routeId: RouteId;
+  readonly fareMultiplierPermille: number;
+}
+
 export interface ActivateRoutePayload {
   readonly routeId: RouteId;
 }
