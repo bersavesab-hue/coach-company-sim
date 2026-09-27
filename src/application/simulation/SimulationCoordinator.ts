@@ -43,7 +43,7 @@ export interface SimulationAdvanceReport {
 
 export class SimulationCoordinator {
   private readonly passengerDemand: PassengerDemandCoordinator;
-  private currentGameSecond: GameSecond = units.gameSecond(0);
+  private currentGameSecond: GameSecond;
 
   constructor(
     private readonly repositories: RepositoryBundle,
@@ -54,8 +54,10 @@ export class SimulationCoordinator {
     private readonly operationsExecution: OperationsExecutionCoordinator,
     private readonly vehicleMarket: VehicleMarketCoordinator,
     private readonly operationsPolicy: OperationsPolicy,
-    readonly vehicleIndex: VehicleSpatialIndex
+    readonly vehicleIndex: VehicleSpatialIndex,
+    initialGameSecond?: GameSecond
   ) {
+    this.currentGameSecond = initialGameSecond ?? units.gameSecond(0);
     this.passengerDemand = new PassengerDemandCoordinator(
       repositories,
       events,

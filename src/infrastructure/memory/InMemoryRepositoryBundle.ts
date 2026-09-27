@@ -18,7 +18,7 @@ import type {
   VehicleVariantId
 } from "../../contracts/ids/EntityIds.js";
 import type { Company } from "../../domain/company/Company.js";
-import { FinanceRuntimeState } from "../../domain/finance/FinanceRuntimeState.js";
+import { FinanceRuntimeState, type FinanceRuntimeStateSnapshot } from "../../domain/finance/FinanceRuntimeState.js";
 import type { FarePolicy } from "../../domain/finance/FarePolicy.js";
 import type {
   CompanyFinancialProfile,
@@ -32,13 +32,13 @@ import type { ManagementCostEntry } from "../../domain/finance/ManagementCostEnt
 import type { CommittedOperationsSchedule } from "../../domain/operations/CommittedOperationsSchedule.js";
 import type { FleetTask } from "../../domain/operations/FleetTask.js";
 import type { PassengerDemandProfile } from "../../domain/passenger/PassengerDemandProfile.js";
-import { PassengerRuntimeState } from "../../domain/passenger/PassengerRuntimeState.js";
+import { PassengerRuntimeState, type PassengerRuntimeStateSnapshot } from "../../domain/passenger/PassengerRuntimeState.js";
 import type { PassengerRoute } from "../../domain/route/PassengerRoute.js";
 import type { ServicePlan } from "../../domain/schedule/ServicePlan.js";
 import type { Driver } from "../../domain/staff/Driver.js";
 import type { Station } from "../../domain/station/Station.js";
 import type { TripInstance } from "../../domain/trip/TripInstance.js";
-import { VehicleLifecycleRuntimeState } from "../../domain/vehicle/VehicleLifecycleRuntimeState.js";
+import { VehicleLifecycleRuntimeState, type VehicleLifecycleRuntimeStateSnapshot } from "../../domain/vehicle/VehicleLifecycleRuntimeState.js";
 import type { OwnedVehicle } from "../../domain/vehicle/OwnedVehicle.js";
 import type { VehicleModel } from "../../domain/vehicle/VehicleModel.js";
 import type { VehicleAuction } from "../../domain/vehicle-market/VehicleAuction.js";
@@ -52,8 +52,30 @@ import type { VehicleOptionDefinition } from "../../domain/vehicle-market/Vehicl
 import type { VehicleSeries } from "../../domain/vehicle-market/VehicleSeries.js";
 import type { VehicleVariant } from "../../domain/vehicle-market/VehicleVariant.js";
 import type { WorldGraph } from "../../domain/world/WorldGraph.js";
-import { WorldRuntimeState } from "../../domain/world/WorldRuntimeState.js";
+import { WorldRuntimeState, type WorldRuntimeStateSnapshot } from "../../domain/world/WorldRuntimeState.js";
 import type { RepositoryBundle } from "../../application/repositories/RepositoryBundle.js";
+
+export interface InMemoryRepositoryPersistentState {
+  readonly companies: readonly Company[];
+  readonly routes: readonly PassengerRoute[];
+  readonly servicePlans: readonly ServicePlan[];
+  readonly trips: readonly TripInstance[];
+  readonly vehicles: readonly OwnedVehicle[];
+  readonly drivers: readonly Driver[];
+  readonly fleetTasks: readonly FleetTask[];
+  readonly operationsSchedules: readonly CommittedOperationsSchedule[];
+  readonly configurations: readonly VehicleConfiguration[];
+  readonly listings: readonly VehicleListing[];
+  readonly inspectionReports: readonly VehicleInspectionReport[];
+  readonly auctions: readonly VehicleAuction[];
+  readonly vehicleAssetProfiles: readonly VehicleAssetProfile[];
+  readonly ledgerEntries: readonly LedgerEntry[];
+  readonly managementCosts: readonly ManagementCostEntry[];
+  readonly worldRuntime: WorldRuntimeStateSnapshot;
+  readonly passengerRuntime: PassengerRuntimeStateSnapshot;
+  readonly vehicleRuntime: VehicleLifecycleRuntimeStateSnapshot;
+  readonly financeRuntime: FinanceRuntimeStateSnapshot;
+}
 
 export interface InMemoryRepositorySeed {
   readonly world: WorldGraph;
@@ -84,6 +106,7 @@ export interface InMemoryRepositorySeed {
   readonly vehicleAssetProfiles?: readonly VehicleAssetProfile[];
   readonly driverCompensationProfiles: readonly DriverCompensationProfile[];
   readonly stationFinancialProfiles: readonly StationFinancialProfile[];
+  readonly persistentState?: InMemoryRepositoryPersistentState;
 }
 
 export class InMemoryRepositoryBundle implements RepositoryBundle {
@@ -160,6 +183,10 @@ export class InMemoryRepositoryBundle implements RepositoryBundle {
     for (const value of seed.vehicleEconomicProfiles) this.vehicleEconomicsById.set(value.vehicleModelId, value);
     for (const value of seed.vehicleAssetProfiles ?? []) this.vehicleAssetsById.set(value.vehicleId, value);
     for (const value of seed.driverCompensationProfiles) this.driverProfilesById.set(value.staffId, value);
+
+    if (seed.persistentState) {
+      this.restorePersistentState(seed.persistentState);
+    }
   }
 
   readonly companies = {
@@ -341,6 +368,92 @@ export class InMemoryRepositoryBundle implements RepositoryBundle {
       this.financeRuntimeValue = value;
     }
   };
+
+  exportPersistentState(): InMemoryRepositoryPersistentState {
+    return {
+      companies: [...this.companiesById.values()],
+      routes: [...this.routesById.values()],
+      servicePlans: [...this.servicePlansById.values()],
+      trips: [...this.tripsById.values()],
+      vehicles: [...this.vehiclesById.values()],
+      drivers: [...this.driversById.values()],
+      fleetTasks: [...this.fleetTasksById.values()],
+      operationsSchedules: [...this.schedulesByKey.values()],
+      configurations: [...this.configurationsById.values()],
+      listings: [...this.listingsById.values()],
+      inspectionReports: [...this.inspectionsById.values()],
+      auctions: [...this.auctionsById.values()],
+      vehicleAssetProfiles: [...this.vehicleAssetsById.values()],
+      ledgerEntries: [...this.ledger],
+      managementCosts: [...this.managementCosts],
+      worldRuntime: this.worldRuntimeValue.snapshot(),
+      passengerRuntime: this.passengerRuntimeValue.snapshot(),
+      vehicleRuntime: this.vehicleRuntimeValue.snapshot(),
+      financeRuntime: this.financeRuntimeValue.snapshot()
+    };
+  }
+
+  private restorePersistentState(
+    state: InMemoryRepositoryPersistentState
+  ): void {
+    this.companiesById.clear();
+    for (const value of state.companies) this.companiesById.set(value.id, value);
+
+    this.routesById.clear();
+    for (const value of state.routes) this.routesById.set(String(value.id), value);
+
+    this.servicePlansById.clear();
+    for (const value of state.servicePlans) this.servicePlansById.set(value.id, value);
+
+    this.tripsById.clear();
+    for (const value of state.trips) this.tripsById.set(value.id, value);
+
+    this.vehiclesById.clear();
+    for (const value of state.vehicles) this.vehiclesById.set(value.id, value);
+
+    this.driversById.clear();
+    for (const value of state.drivers) this.driversById.set(value.id, value);
+
+    this.fleetTasksById.clear();
+    for (const value of state.fleetTasks) this.fleetTasksById.set(value.id, value);
+
+    this.schedulesByKey.clear();
+    for (const value of state.operationsSchedules) {
+      this.schedulesByKey.set(scheduleKey(value.companyId, value.gameDay), value);
+    }
+
+    this.configurationsById.clear();
+    for (const value of state.configurations) this.configurationsById.set(value.id, value);
+
+    this.listingsById.clear();
+    for (const value of state.listings) this.listingsById.set(value.id, value);
+
+    this.inspectionsById.clear();
+    for (const value of state.inspectionReports) this.inspectionsById.set(value.id, value);
+
+    this.auctionsById.clear();
+    for (const value of state.auctions) this.auctionsById.set(value.id, value);
+
+    this.vehicleAssetsById.clear();
+    for (const value of state.vehicleAssetProfiles) this.vehicleAssetsById.set(value.vehicleId, value);
+
+    this.ledger.splice(0, this.ledger.length, ...state.ledgerEntries);
+    this.managementCosts.splice(
+      0,
+      this.managementCosts.length,
+      ...state.managementCosts
+    );
+
+    this.worldRuntimeValue = WorldRuntimeState.fromSnapshot(state.worldRuntime);
+    this.passengerRuntimeValue = PassengerRuntimeState.fromSnapshot(
+      state.passengerRuntime
+    );
+    this.vehicleRuntimeValue =
+      VehicleLifecycleRuntimeState.fromSnapshot(state.vehicleRuntime);
+    this.financeRuntimeValue = FinanceRuntimeState.fromSnapshot(
+      state.financeRuntime
+    );
+  }
 
   allStations(): readonly Station[] {
     return [...this.stationsById.values()];

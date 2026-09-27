@@ -3,9 +3,16 @@ import type {
   VehicleId
 } from "../../contracts/ids/EntityIds.js";
 
-interface EnergyInventoryBook {
+export interface EnergyInventoryBook {
   readonly units: number;
   readonly bookValueCents: number;
+}
+
+export interface FinanceRuntimeStateSnapshot {
+  readonly lastAccruedDay: readonly (readonly [CompanyId, number])[];
+  readonly fractionRemainders: readonly (readonly [string, number])[];
+  readonly energyInventory: readonly (readonly [VehicleId, EnergyInventoryBook])[];
+  readonly processedRuntimeSources: readonly string[];
 }
 
 export class FinanceRuntimeState {
@@ -13,6 +20,34 @@ export class FinanceRuntimeState {
   private readonly fractionRemainders = new Map<string, number>();
   private readonly energyInventory = new Map<VehicleId, EnergyInventoryBook>();
   private readonly processedRuntimeSources = new Set<string>();
+
+  static fromSnapshot(
+    snapshot: FinanceRuntimeStateSnapshot
+  ): FinanceRuntimeState {
+    const state = new FinanceRuntimeState();
+    for (const [companyId, day] of snapshot.lastAccruedDay) {
+      state.lastAccruedDay.set(companyId, day);
+    }
+    for (const [key, value] of snapshot.fractionRemainders) {
+      state.fractionRemainders.set(key, value);
+    }
+    for (const [vehicleId, book] of snapshot.energyInventory) {
+      state.energyInventory.set(vehicleId, book);
+    }
+    for (const sourceRef of snapshot.processedRuntimeSources) {
+      state.processedRuntimeSources.add(sourceRef);
+    }
+    return state;
+  }
+
+  snapshot(): FinanceRuntimeStateSnapshot {
+    return {
+      lastAccruedDay: [...this.lastAccruedDay.entries()],
+      fractionRemainders: [...this.fractionRemainders.entries()],
+      energyInventory: [...this.energyInventory.entries()],
+      processedRuntimeSources: [...this.processedRuntimeSources.values()]
+    };
+  }
 
   lastFixedCostAccruedDay(companyId: CompanyId): number {
     return this.lastAccruedDay.get(companyId) ?? 0;

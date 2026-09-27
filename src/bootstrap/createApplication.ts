@@ -37,6 +37,7 @@ import { SimulationCoordinator } from "../application/simulation/SimulationCoord
 import { VehicleSpatialIndex } from "../application/spatial/VehicleSpatialIndex.js";
 import { VehicleLifecycleCoordinator } from "../application/vehicle/VehicleLifecycleCoordinator.js";
 import type { EconomicPolicy } from "../simulation/finance/EconomicPolicy.js";
+import type { GameSecond } from "../core/units/Units.js";
 import type { PassengerDemandPolicy } from "../simulation/passenger/PassengerDemandPolicy.js";
 
 export interface ApplicationDependencies {
@@ -47,6 +48,7 @@ export interface ApplicationDependencies {
   readonly vehicleLifecyclePolicy: VehicleLifecyclePolicy;
   readonly vehicleMarketPolicy: VehicleMarketPolicy;
   readonly operationsPolicy: OperationsPolicy;
+  readonly simulationInitialGameSecond?: GameSecond;
 }
 
 export interface ApplicationRuntime {
@@ -239,7 +241,8 @@ export function createApplication(
     operationsExecution,
     vehicleMarketCoordinator,
     dependencies.operationsPolicy,
-    vehicleIndex
+    vehicleIndex,
+    dependencies.simulationInitialGameSecond
   );
   simulation.rebuildVehicleIndex();
 

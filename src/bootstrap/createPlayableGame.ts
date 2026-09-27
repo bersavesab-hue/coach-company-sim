@@ -24,6 +24,7 @@ import { createPlayableWorldSeed } from "../content/map/WorldMapSeed.js";
 import { FORMAL_WORLD_MAP_CONTENT } from "../content/map/FormalWorldMapContent.js";
 import { InMemoryRepositoryBundle } from "../infrastructure/memory/InMemoryRepositoryBundle.js";
 import { SequentialRuntimeIdAllocator } from "../infrastructure/runtime/SequentialRuntimeIdAllocator.js";
+import type { PlayableSavePayloadV1 } from "../save/playable/PlayableSave.js";
 
 export const PLAYABLE_COMPANY_ID = ids.company(
   "company.player"
@@ -33,8 +34,9 @@ export const PLAYABLE_FARE_POLICY_ID =
 export const PLAYABLE_START_GAME_SECOND =
   units.gameSecond(5 * 3600 + 30 * 60);
 
-export function createPlayableGame() {
+export function createPlayableGame(saved?: PlayableSavePayloadV1) {
   const worldSeed = createPlayableWorldSeed();
+  const idAllocator = new SequentialRuntimeIdAllocator(saved?.idAllocator);
   const company: Company = {
     id: PLAYABLE_COMPANY_ID,
     name: "星河客运",
@@ -116,30 +118,47 @@ export function createPlayableGame() {
     companyFinancialProfiles: [companyFinance],
     vehicleEconomicProfiles: vehicleEconomics,
     driverCompensationProfiles: driverProfiles,
-    stationFinancialProfiles: stationProfiles
+    stationFinancialProfiles: stationProfiles,
+    ...(saved
+      ? { persistentState: saved.repositories }
+      : {})
   });
 
   const app = createApplication({
     repositories,
-    ids: new SequentialRuntimeIdAllocator(),
+    ids: idAllocator,
     passengerDemandPolicy,
     economicPolicy,
     vehicleLifecyclePolicy,
     vehicleMarketPolicy,
-    operationsPolicy
+    operationsPolicy,
+    ...(saved
+      ? {
+          simulationInitialGameSecond:
+            saved.currentGameSecond
+        }
+      : {})
   });
 
-  app.simulation.advanceTo(
-    PLAYABLE_START_GAME_SECOND
-  );
+  if (!saved) {
+    app.simulation.advanceTo(
+      PLAYABLE_START_GAME_SECOND
+    );
+  }
 
   return {
     app,
     repositories,
-    company,
+    company:
+      repositories.companies.getById(
+        PLAYABLE_COMPANY_ID
+      ) ?? company,
     stations: worldSeed.stations,
     mapContent: FORMAL_WORLD_MAP_CONTENT,
-    startGameSecond: PLAYABLE_START_GAME_SECOND
+    startGameSecond:
+      saved?.currentGameSecond ??
+      PLAYABLE_START_GAME_SECOND,
+    idAllocator
   };
 }
 

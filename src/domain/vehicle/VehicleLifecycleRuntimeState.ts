@@ -1,7 +1,27 @@
 import type { VehicleId } from "../../contracts/ids/EntityIds.js";
 
+export interface VehicleLifecycleRuntimeStateSnapshot {
+  readonly fractionRemainders: readonly (readonly [string, number])[];
+}
+
 export class VehicleLifecycleRuntimeState {
   private readonly fractionRemainders = new Map<string, number>();
+
+  static fromSnapshot(
+    snapshot: VehicleLifecycleRuntimeStateSnapshot
+  ): VehicleLifecycleRuntimeState {
+    const state = new VehicleLifecycleRuntimeState();
+    for (const [key, value] of snapshot.fractionRemainders) {
+      state.fractionRemainders.set(key, value);
+    }
+    return state;
+  }
+
+  snapshot(): VehicleLifecycleRuntimeStateSnapshot {
+    return {
+      fractionRemainders: [...this.fractionRemainders.entries()]
+    };
+  }
 
   consumeFraction(
     vehicleId: VehicleId,

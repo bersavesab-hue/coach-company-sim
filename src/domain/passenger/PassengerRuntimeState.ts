@@ -7,6 +7,19 @@ export interface PassengerQueueGroup {
   readonly count: number;
 }
 
+export interface PassengerRuntimeStateSnapshot {
+  readonly lastGeneratedGameSecond: GameSecond;
+  readonly waiting: readonly {
+    readonly originStationId: StationId;
+    readonly destinationStationId: StationId;
+    readonly count: number;
+  }[];
+  readonly demandRemainders: readonly {
+    readonly key: string;
+    readonly value: number;
+  }[];
+}
+
 export class PassengerRuntimeState {
   private readonly waiting = new Map<StationId, Map<StationId, number>>();
   private readonly demandRemainders = new Map<string, number>();
@@ -14,6 +27,49 @@ export class PassengerRuntimeState {
 
   constructor(lastGeneratedGameSecond: GameSecond = units.gameSecond(0)) {
     this.lastGenerated = lastGeneratedGameSecond;
+  }
+
+  static fromSnapshot(
+    snapshot: PassengerRuntimeStateSnapshot
+  ): PassengerRuntimeState {
+    const state = new PassengerRuntimeState(
+      snapshot.lastGeneratedGameSecond
+    );
+    for (const item of snapshot.waiting) {
+      state.addWaiting(
+        item.originStationId,
+        item.destinationStationId,
+        item.count
+      );
+    }
+    for (const item of snapshot.demandRemainders) {
+      state.demandRemainders.set(item.key, item.value);
+    }
+    return state;
+  }
+
+  snapshot(): PassengerRuntimeStateSnapshot {
+    const waiting: Array<{
+      originStationId: StationId;
+      destinationStationId: StationId;
+      count: number;
+    }> = [];
+    for (const [originStationId, queue] of this.waiting.entries()) {
+      for (const [destinationStationId, count] of queue.entries()) {
+        waiting.push({
+          originStationId,
+          destinationStationId,
+          count
+        });
+      }
+    }
+    return {
+      lastGeneratedGameSecond: this.lastGenerated,
+      waiting,
+      demandRemainders: [...this.demandRemainders.entries()].map(
+        ([key, value]) => ({ key, value })
+      )
+    };
   }
 
   lastDemandGeneratedGameSecond(): GameSecond {

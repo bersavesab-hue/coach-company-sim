@@ -7,8 +7,26 @@ const DEFAULT_ROAD_STATE: RoadRuntimeState = {
   speedMultiplierPermille: units.permille(1000)
 };
 
+export interface WorldRuntimeStateSnapshot {
+  readonly roadStates: readonly (readonly [RoadSegmentId, RoadRuntimeState])[];
+}
+
 export class WorldRuntimeState {
   private readonly roadStates = new Map<RoadSegmentId, RoadRuntimeState>();
+
+  static fromSnapshot(snapshot: WorldRuntimeStateSnapshot): WorldRuntimeState {
+    const state = new WorldRuntimeState();
+    for (const [roadId, roadState] of snapshot.roadStates) {
+      state.roadStates.set(roadId, roadState);
+    }
+    return state;
+  }
+
+  snapshot(): WorldRuntimeStateSnapshot {
+    return {
+      roadStates: [...this.roadStates.entries()]
+    };
+  }
 
   getRoadState(roadId: RoadSegmentId): RoadRuntimeState {
     return this.roadStates.get(roadId) ?? DEFAULT_ROAD_STATE;

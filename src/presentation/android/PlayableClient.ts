@@ -23,6 +23,13 @@ import type { VehicleConfiguration } from "../../domain/vehicle-market/VehicleCo
 import { buildOfficialRoutePath } from "../../application/services/RoutePathService.js";
 import type { ServicePlan } from "../../domain/schedule/ServicePlan.js";
 import { isMapStationUnlocked } from "../../content/map/MapStationUnlockPolicy.js";
+import { GAME_VERSION } from "../../core/version/Versions.js";
+import {
+  buildPlayableSaveEnvelope,
+  parsePlayableSave,
+  type PlayableSaveEnvelope,
+  type PlayableSavePayloadV1
+} from "../../save/playable/PlayableSave.js";
 import {
   createPlayableGame,
   PLAYABLE_COMPANY_ID,
@@ -49,11 +56,22 @@ export interface UiRoutePreviewResult {
 }
 
 export class PlayableClient {
-  private readonly runtime = createPlayableGame();
-  private currentGameSecond =
-    this.runtime.startGameSecond;
-  private realtimeRemainderMilliGameSeconds = 0;
-  private commandSequence = 1;
+  private readonly runtime: ReturnType<typeof createPlayableGame>;
+  private currentGameSecond: GameSecond;
+  private realtimeRemainderMilliGameSeconds: number;
+  private commandSequence: number;
+  private readonly saveCreatedAtIso: string;
+  private lastLocalSaveAtMs = 0;
+
+  constructor(save: PlayableSaveEnvelope | null = null) {
+    this.runtime = createPlayableGame(save?.payload);
+    this.currentGameSecond = this.runtime.startGameSecond;
+    this.realtimeRemainderMilliGameSeconds =
+      save?.payload.realtimeRemainderMilliGameSeconds ?? 0;
+    this.commandSequence = save?.payload.commandSequence ?? 1;
+    this.saveCreatedAtIso =
+      save?.createdAtIso ?? new Date().toISOString();
+  }
 
   async snapshot() {
     const company = this.runtime.company;
@@ -111,7 +129,7 @@ export class PlayableClient {
       this.runtime.repositories.allServicePlans();
 
     return {
-      version: "0.20.9-auto-time-hotfix",
+      version: GAME_VERSION,
       company,
       currentGameSecond:
         Number(this.currentGameSecond),
@@ -630,6 +648,7 @@ export class PlayableClient {
     }
     if (gameSecondsPerRealSecond === 0) {
       this.realtimeRemainderMilliGameSeconds = 0;
+      this.persistLocalSave(true);
       return { ok: true, message: "时间已暂停。" };
     }
 
@@ -652,6 +671,7 @@ export class PlayableClient {
         () => "foreground"
       );
     this.currentGameSecond = target;
+    this.persistLocalSave(false);
 
     return {
       ok: report.issues.length === 0,
@@ -753,6 +773,56 @@ export class PlayableClient {
     );
   }
 
+  exportSave(): PlayableSaveEnvelope {
+    return buildPlayableSaveEnvelope(
+      this.savePayload(),
+      this.saveCreatedAtIso
+    );
+  }
+
+  persistNow(): UiActionResult {
+    const persisted = this.persistLocalSave(true);
+    return {
+      ok: persisted,
+      message: persisted
+        ? "游戏进度已保存。"
+        : "本地存档写入失败。"
+    };
+  }
+
+  private savePayload(): PlayableSavePayloadV1 {
+    return {
+      currentGameSecond: this.currentGameSecond,
+      realtimeRemainderMilliGameSeconds:
+        this.realtimeRemainderMilliGameSeconds,
+      commandSequence: this.commandSequence,
+      idAllocator: this.runtime.idAllocator.snapshot(),
+      repositories:
+        this.runtime.repositories.exportPersistentState()
+    };
+  }
+
+  private persistLocalSave(force: boolean): boolean {
+    const storage = localStorageOrNull();
+    if (!storage) return true;
+
+    const now = Date.now();
+    if (!force && now - this.lastLocalSaveAtMs < 5_000) {
+      return true;
+    }
+
+    try {
+      storage.setItem(
+        LOCAL_SAVE_KEY,
+        JSON.stringify(this.exportSave())
+      );
+      this.lastLocalSaveAtMs = now;
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   private dispatch(
     type: CommandType,
     payload: unknown
@@ -765,9 +835,14 @@ export class PlayableClient {
       actorCompanyId: PLAYABLE_COMPANY_ID,
       payload
     };
-    return this.runtime.app.commands.dispatch(
-      command
-    );
+    const result =
+      this.runtime.app.commands.dispatch(
+        command
+      );
+    if (result.ok) {
+      this.persistLocalSave(true);
+    }
+    return result;
   }
 
   private async query(
@@ -886,7 +961,36 @@ export class PlayableClient {
   }
 }
 
-const client = new PlayableClient();
+const LOCAL_SAVE_KEY = "coach-company-sim.save.v1";
+
+interface LocalStorageLike {
+  getItem(key: string): string | null;
+  setItem(key: string, value: string): void;
+}
+
+function localStorageOrNull(): LocalStorageLike | null {
+  return (
+    globalThis as unknown as {
+      localStorage?: LocalStorageLike;
+    }
+  ).localStorage ?? null;
+}
+
+function loadLocalPlayableSave(): PlayableSaveEnvelope | null {
+  const storage = localStorageOrNull();
+  if (!storage) return null;
+
+  try {
+    const raw = storage.getItem(LOCAL_SAVE_KEY);
+    return raw ? parsePlayableSave(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+const client = new PlayableClient(
+  loadLocalPlayableSave()
+);
 
 (globalThis as unknown as {
   CoachGame: PlayableClient;
