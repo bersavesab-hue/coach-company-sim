@@ -54,6 +54,13 @@ test("formal world map content is valid and supports all five road classes", () 
         assert.ok(station.passengerDemandPermille <= 1600);
         assert.ok(station.operatingZone);
         assert.ok(station.cityRole);
+        assert.ok(station.stationTier >= 1 && station.stationTier <= 4);
+        assert.ok(station.boardingCapacityPerDeparture > 0);
+        assert.ok(station.departureFeeCents >= 0);
+        assert.ok(station.arrivalFeeCents >= 0);
+        assert.ok(station.passengerServiceFeeCents >= 0);
+        assert.ok(station.dailyLeaseCents >= 0);
+        assert.ok(station.transferValuePermille >= 500);
         return result;
       },
       {}

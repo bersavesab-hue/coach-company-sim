@@ -34,8 +34,13 @@ import {
 } from "../../content/company/CompanyGrowthRules.js";
 import {
   cityRoleLabel,
-  operatingZoneLabel
+  operatingZoneLabel,
+  stationTierLabel
 } from "../../content/map/CityOperatingProfile.js";
+import {
+  effectiveProfileDemandPermille,
+  passengerDemandPatternLabel
+} from "../../content/passenger/PassengerDemandPattern.js";
 import { GAME_VERSION } from "../../core/version/Versions.js";
 import {
   buildPlayableSaveEnvelope,
@@ -251,6 +256,25 @@ export class PlayableClient {
             unlockReputationPermille,
             passengerDemandPermille:
               mapStation?.passengerDemandPermille ?? 1000,
+            stationTier:
+              mapStation?.stationTier ?? 2,
+            stationTierLabel:
+              mapStation
+                ? stationTierLabel(mapStation.stationTier)
+                : "县级客运站",
+            boardingCapacityPerDeparture:
+              mapStation?.boardingCapacityPerDeparture ?? 40,
+            departureFeeCents:
+              mapStation?.departureFeeCents ?? 600,
+            arrivalFeeCents:
+              mapStation?.arrivalFeeCents ?? 400,
+            passengerServiceFeeCents:
+              mapStation?.passengerServiceFeeCents ?? 12,
+            dailyLeaseCents:
+              mapStation?.dailyLeaseCents ?? 25_000,
+            transferValuePermille:
+              mapStation?.transferValuePermille ?? 950,
+            popularDestinations,
             unlocked,
             xM: node?.position.xM ?? 0,
             yM: node?.position.yM ?? 0

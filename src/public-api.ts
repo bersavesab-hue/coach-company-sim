@@ -95,6 +95,7 @@ export * from "./simulation/tiering/SimulationTier.js";
 export * from "./simulation/movement/TripMovement.js";
 export * from "./simulation/movement/TripWorldPosition.js";
 export * from "./simulation/passenger/PassengerDemandPolicy.js";
+export * from "./content/passenger/PassengerDemandPattern.js";
 export * from "./simulation/passenger/DemandGeneration.js";
 export * from "./simulation/passenger/PassengerFlow.js";
 export * from "./simulation/passenger/PassengerTripMetrics.js";

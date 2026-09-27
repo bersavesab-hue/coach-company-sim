@@ -234,7 +234,8 @@ export class RouteForecastService {
         ? this.estimateDemand(
             route,
             currentDepartures,
-            currentFareMultiplier
+            currentFareMultiplier,
+            input.gameDay
           ).generatedPassengers
         : 0;
     const demandChangePermille =

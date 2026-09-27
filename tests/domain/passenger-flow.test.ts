@@ -96,3 +96,22 @@ test("intermediate stop alights destination group before boarding more", () => {
   assert.equal(totalOnboardPassengers(result.trip), 5);
   assert.equal(runtime.waitingCount(b, c), 0);
 });
+
+test("boarding also respects station throughput capacity", () => {
+  const runtime = new PassengerRuntimeState();
+  runtime.addWaiting(a, b, 8);
+  runtime.addWaiting(a, c, 8);
+
+  const result = serveRouteStop(
+    trip(),
+    route,
+    0,
+    20,
+    runtime,
+    5
+  );
+
+  assert.equal(result.boardedCount, 5);
+  assert.equal(result.leftWaitingCount, 11);
+  assert.equal(totalOnboardPassengers(result.trip), 5);
+});

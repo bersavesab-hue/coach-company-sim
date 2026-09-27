@@ -28,3 +28,14 @@ export function cityRoleLabel(
     case "gateway": return "门户城市";
   }
 }
+
+export function stationTierLabel(
+  tier: 1 | 2 | 3 | 4
+): string {
+  switch (tier) {
+    case 1: return "乡镇客运站";
+    case 2: return "县级客运站";
+    case 3: return "城市客运站";
+    case 4: return "综合枢纽站";
+  }
+}

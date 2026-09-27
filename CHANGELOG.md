@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.26.0-stage26-city-operations
+
+### Station Operations
+- 48 个城市客运站新增 4 级站场体系。
+- 每站新增 stationTier、boardingCapacityPerDeparture、departureFeeCents、arrivalFeeCents、passengerServiceFeeCents、dailyLeaseCents、transferValuePermille。
+- 乡镇/县级/城市/综合枢纽站使用不同单班处理能力与站务成本。
+- PassengerFlow 新增站场吞吐上限；车辆剩余座位很多时也不能绕过小站处理能力无限上客。
+- OperationsPolicy 新增兼容型 stationBoardingCapacityPerDeparture，正式 APK 按地图站场内容提供容量。
+
+### Passenger Demand
+- PassengerDemandProfile 新增兼容字段 demandPattern 与 strategicDemandPermille。
+- 正式 OD 自动分类为日常出行、工作日商务、周末/旺季旅游、枢纽换乘。
+- 商务需求工作日更强、周末回落；旅游需求周末更强，并加入 28 日旺淡季周期。
+- strategicDemandPermille 根据同经营区、枢纽/门户、旅游连接、商务连接与两端换乘价值计算。
+- PassengerDemandCoordinator 与 RouteForecastService 共用 PassengerDemandPattern，不建立预测专用第二套客流算法。
+
+### Finance
+- EconomicPolicy 的发车站务费、到站站务费、旅客服务费改为读取正式城市站场配置。
+- 首页驻站租赁继续只对实际 StationFinancialProfile 计提，但开局驻站租金改为读取河源正式站场日租配置。
+- 线路经营预测继续通过同一 EconomicPolicy 读取城市差异化站务成本。
+
+### UI
+- 城市详情新增站场等级、单班处理能力、换乘价值、发车费、到站费、每客服务费与参考驻站日成本。
+- 城市详情显示当前已开放城市中的前三热门去向及其需求类型/需求指数。
+
+### Compatibility
+- SAVE_VERSION 保持 1：新增内容均属于静态城市/OD 内容或向后兼容 PassengerDemandProfile 字段。
+- CONTENT_VERSION 升至 13，因为站场经济参数与正式 OD 需求模式发生变化。
+
 ## 0.25.0-stage25-growth-cities
 
 ### Company Growth
