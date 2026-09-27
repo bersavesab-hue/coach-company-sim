@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.21.0-stage21-persistence
+
+### Removed
+- 删除“每次启动都只能从固定开局创建内存世界”的唯一运行方式；正式 APK 现在优先恢复兼容的 V1 存档。
+- 不使用只保存 UI 数字、时间或第二套 GameState 的临时存档方案。
+
+### Added
+- 新增 PlayableSave V1，复用既有 SaveEnvelope / SaveVersion，存档包含当前游戏秒、自动时钟余数、命令序列与运行时 ID 分配器。
+- InMemoryRepositoryBundle 新增正式持久化快照，覆盖公司、线路、班次、Trip、车辆、司机、FleetTask、运营日计划、车辆配置、动态车源、检测报告、拍卖、车辆资产、Ledger 与管理成本。
+- WorldRuntimeState、PassengerRuntimeState、VehicleLifecycleRuntimeState、FinanceRuntimeState 新增可恢复快照，避免读档后封路、客流余数、磨损余数、能源库存和固定成本重复计算。
+- SimulationCoordinator 支持从存档游戏秒直接恢复，不通过从 0 秒重新快进来伪造读档。
+- SequentialRuntimeIdAllocator 持久化下一 ID 计数，防止读档后新线路、车辆、Trip 覆盖已有实体。
+- PlayableClient 接入 WebView localStorage：正式命令成功后立即保存，自动时间推进采用节流保存；APK 进入后台或页面离开时强制保存。
+- 新增读档回归测试，覆盖线路、车辆、现金、游戏时间、动态市场与恢复后的 ID 连续性。
+
+### Architecture
+- 地图、UI 和 Android Activity 不拥有第二套存档状态；正式存档只序列化领域/应用运行事实和必要运行时累加器。
+- 静态世界地图与车辆内容不重复写入存档，启动时继续从当前正式 Content 重建。
+
 ## 0.20.9-stage20-auto-time-hotfix
 
 ### Fixed

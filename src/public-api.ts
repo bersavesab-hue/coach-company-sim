@@ -145,7 +145,7 @@ export * from "./application/vehicle/VehicleLifecycleCoordinator.js";
 
 export * from "./save/schema/SaveEnvelope.js";
 export * from "./save/schema/SaveVersion.js";
-export * from "./save/migrations/Migration.js";
+export * from "./save/migrations/Migration.js";\nexport * from "./save/playable/PlayableSave.js";
 export * from "./bootstrap/createApplication.js";
 
 export * from "./domain/vehicle-market/VehicleInspectionReport.js";
