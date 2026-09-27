@@ -43,15 +43,29 @@ test("formal world map content is valid and supports all five road classes", () 
     FORMAL_WORLD_MAP_CONTENT.stations.filter(
       (station) => isMapStationUnlocked(station, 180)
     ).length,
-    12
+    8
   );
+  const levelCounts =
+    FORMAL_WORLD_MAP_CONTENT.stations.reduce<Record<number, number>>(
+      (result, station) => {
+        result[station.unlockCompanyLevel] =
+          (result[station.unlockCompanyLevel] ?? 0) + 1;
+        assert.ok(station.passengerDemandPermille >= 500);
+        assert.ok(station.passengerDemandPermille <= 1600);
+        assert.ok(station.operatingZone);
+        assert.ok(station.cityRole);
+        return result;
+      },
+      {}
+    );
+  assert.deepEqual(levelCounts, {
+    1: 8, 2: 8, 3: 8, 4: 8, 5: 8, 6: 8
+  });
   assert.equal(
-    FORMAL_WORLD_MAP_CONTENT.stations
-      .slice(0, 3)
-      .every(
-        (station) => station.unlockReputationPermille === 0
-      ),
-    true
+    FORMAL_WORLD_MAP_CONTENT.stations.find(
+      (station) => station.id === "station.001"
+    )?.unlockReputationPermille,
+    0
   );
   assert.ok(
     FORMAL_WORLD_MAP_CONTENT.nodes.filter(

@@ -1,3 +1,3 @@
-export const GAME_VERSION = "0.24.0-stage24-operating-forecast";
+export const GAME_VERSION = "0.25.0-stage25-growth-cities";
 export const SAVE_VERSION = 1;
-export const CONTENT_VERSION = 11;
+export const CONTENT_VERSION = 12;

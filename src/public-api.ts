@@ -88,6 +88,7 @@ export * from "./domain/staff/Driver.js";
 export * from "./domain/staff/DriverAssignmentRules.js";
 export * from "./domain/company/CompanyStatus.js";
 export * from "./domain/company/Company.js";
+export * from "./domain/company/CompanyLicenseRules.js";
 
 export * from "./simulation/finance/EconomicPolicy.js";
 export * from "./simulation/tiering/SimulationTier.js";
@@ -184,7 +185,10 @@ export * from "./content/vehicle/VehicleStage15Validator.js";
 export * from "./application/services/VehicleMarketDemandService.js";
 export * from "./application/vehicle-market/VehicleVariantLifecycleRefresher.js";
 
+export * from "./content/company/CompanyGrowthRules.js";
 export * from "./content/map/WorldMapContent.js";
+export * from "./content/map/CityOperatingProfile.js";
+export * from "./content/map/MapStationUnlockPolicy.js";
 export * from "./content/map/WorldMapContentValidator.js";
 export * from "./content/map/FormalWorldMapContent.js";
 export * from "./content/map/WorldMapSeed.js";

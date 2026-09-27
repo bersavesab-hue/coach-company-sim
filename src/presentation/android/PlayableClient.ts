@@ -19,6 +19,7 @@ import {
 import type { CommandType } from "../../contracts/commands/CommandTypes.js";
 import type { CommandEnvelope } from "../../contracts/commands/CommandEnvelope.js";
 import type { PassengerRoute } from "../../domain/route/PassengerRoute.js";
+import type { RouteType } from "../../domain/route/RouteType.js";
 import { calculateFareQuote } from "../../domain/finance/FareCalculator.js";
 import type { VehicleConfiguration } from "../../domain/vehicle-market/VehicleConfiguration.js";
 import { buildOfficialRoutePath } from "../../application/services/RoutePathService.js";
@@ -26,6 +27,15 @@ import type { ServicePlan } from "../../domain/schedule/ServicePlan.js";
 import { isMapStationUnlocked } from "../../content/map/MapStationUnlockPolicy.js";
 import { fareDemandMultiplierForRatio } from "../../content/passenger/PassengerDemandBalance.js";
 import { companyProgressionForReputation } from "../../application/progression/CompanyProgressionCoordinator.js";
+import {
+  requiredLicenseForRouteType,
+  routeTypeLabel,
+  standardRouteTypeForDistanceM
+} from "../../content/company/CompanyGrowthRules.js";
+import {
+  cityRoleLabel,
+  operatingZoneLabel
+} from "../../content/map/CityOperatingProfile.js";
 import { GAME_VERSION } from "../../core/version/Versions.js";
 import {
   buildPlayableSaveEnvelope,
@@ -56,6 +66,10 @@ export interface UiRoutePreviewResult {
   readonly roadClassBreakdownM: Readonly<
     Record<string, number>
   >;
+  readonly routeType?: RouteType;
+  readonly routeTypeLabel?: string;
+  readonly requiredLicenseName?: string;
+  readonly canActivate?: boolean;
 }
 
 export class PlayableClient {
@@ -134,6 +148,37 @@ export class PlayableClient {
       this.runtime.repositories.allRoutes();
     const plans =
       this.runtime.repositories.allServicePlans();
+    const reputationPermille = Number(
+      company.reputationPermille
+    );
+    const progression =
+      companyProgressionForReputation(
+        reputationPermille
+      );
+    const unlockedCityCount =
+      this.runtime.mapContent.stations.filter(
+        (station) =>
+          isMapStationUnlocked(
+            station,
+            reputationPermille
+          )
+      ).length;
+    const nextCity =
+      [...this.runtime.mapContent.stations]
+        .filter(
+          (station) =>
+            !isMapStationUnlocked(
+              station,
+              reputationPermille
+            )
+        )
+        .sort(
+          (left, right) =>
+            left.unlockReputationPermille -
+              right.unlockReputationPermille ||
+            left.unlockCompanyLevel -
+              right.unlockCompanyLevel
+        )[0] ?? null;
 
     return {
       version: GAME_VERSION,
@@ -147,10 +192,22 @@ export class PlayableClient {
       market,
       dispatch,
       passengerSummary,
-      progression:
-        companyProgressionForReputation(
-          Number(company.reputationPermille)
-        ),
+      progression: {
+        ...progression,
+        unlockedCityCount,
+        totalCityCount:
+          this.runtime.mapContent.stations.length,
+        nextCity:
+          nextCity === null
+            ? null
+            : {
+                name: nextCity.name,
+                requiredCompanyLevel:
+                  nextCity.unlockCompanyLevel,
+                requiredReputationPermille:
+                  nextCity.unlockReputationPermille
+              }
+      },
       visibleVehicles,
       mapBounds,
       stations: this.runtime.stations.map(
@@ -175,7 +232,25 @@ export class PlayableClient {
             name: station.name,
             stationClass:
               mapStation?.stationClass ?? "county",
+            operatingZone:
+              mapStation?.operatingZone ?? "central_south",
+            operatingZoneLabel:
+              mapStation
+                ? operatingZoneLabel(
+                    mapStation.operatingZone
+                  )
+                : "中南经营区",
+            cityRole:
+              mapStation?.cityRole ?? "regional",
+            cityRoleLabel:
+              mapStation
+                ? cityRoleLabel(mapStation.cityRole)
+                : "区域中心",
+            unlockCompanyLevel:
+              mapStation?.unlockCompanyLevel ?? 1,
             unlockReputationPermille,
+            passengerDemandPermille:
+              mapStation?.passengerDemandPermille ?? 1000,
             unlocked,
             xM: node?.position.xM ?? 0,
             yM: node?.position.yM ?? 0
@@ -386,7 +461,7 @@ export class PlayableClient {
         return {
           ok: false,
           message:
-            `${mapStation.name} 尚未解锁，需要声誉 ${mapStation.unlockReputationPermille}/1000。`,
+            `${mapStation.name} 尚未解锁，需要公司 Lv.${mapStation.unlockCompanyLevel} 且声誉 ${mapStation.unlockReputationPermille}/1000。`,
           pathPoints: [],
           distanceM: 0,
           estimatedSeconds: 0,
@@ -453,9 +528,25 @@ export class PlayableClient {
         Number(road.lengthM);
     }
 
+    const routeType =
+      standardRouteTypeForDistanceM(distanceM);
+    const requiredLicense =
+      requiredLicenseForRouteType(routeType);
+    const canActivate =
+      this.runtime.company.licenseIds.includes(
+        requiredLicense.id
+      );
+
     return {
       ok: true,
-      message: "线路预览已生成。",
+      message: canActivate
+        ? "线路预览已生成。"
+        : `当前公司尚未取得${requiredLicense.name}。`,
+      routeType,
+      routeTypeLabel: routeTypeLabel(routeType),
+      requiredLicenseName:
+        requiredLicense.name,
+      canActivate,
       pathPoints:
         this.pathPointsFromLegs(
           built.value.legs
@@ -472,39 +563,23 @@ export class PlayableClient {
     readonly originStationId: string;
     readonly destinationStationId: string;
   }): Promise<UiActionResult> {
-    const reputationPermille = Number(
-      this.runtime.company.reputationPermille
-    );
-    for (const stationId of [
-      input.originStationId,
-      input.destinationStationId
-    ]) {
-      const mapStation =
-        this.runtime.mapContent.stations.find(
-          (station) => station.id === stationId
-        );
-      if (
-        mapStation &&
-        !isMapStationUnlocked(
-          mapStation,
-          reputationPermille
-        )
-      ) {
-        return {
-          ok: false,
-          message:
-            `${mapStation.name} 尚未解锁，需要声誉 ${mapStation.unlockReputationPermille}/1000。`
-        };
-      }
-    }
-
-    if (
-      input.originStationId ===
-      input.destinationStationId
-    ) {
+    const preview = await this.previewRoute({
+      originStationId: input.originStationId,
+      destinationStationId:
+        input.destinationStationId
+    });
+    if (!preview.ok || !preview.routeType) {
       return {
         ok: false,
-        message: "始发站和终点站不能相同。"
+        message:
+          preview.message || "线路无法创建。"
+      };
+    }
+    if (!preview.canActivate) {
+      return {
+        ok: false,
+        message:
+          `当前公司尚未取得${preview.requiredLicenseName ?? "所需线路许可"}。`
       };
     }
 
@@ -513,7 +588,7 @@ export class PlayableClient {
       {
         companyId: PLAYABLE_COMPANY_ID,
         code: input.code.trim(),
-        routeType: "intercity",
+        routeType: preview.routeType,
         orderedStationIds: [
           ids.station(input.originStationId),
           ids.station(
@@ -522,8 +597,7 @@ export class PlayableClient {
         ],
         routingPreference: "fastest_time",
         farePolicyId:
-          PLAYABLE_FARE_POLICY_ID,
-        requiredLicenseIds: []
+          PLAYABLE_FARE_POLICY_ID
       }
     );
     if (!created.ok) {
@@ -537,7 +611,7 @@ export class PlayableClient {
     );
     return this.actionResult(
       activated,
-      `线路 ${route.code} 已开通。`
+      `线路 ${route.code} 已开通 · ${routeTypeLabel(route.type)}。`
     );
   }
 
@@ -1031,6 +1105,7 @@ export class PlayableClient {
       code: route.code,
       status: route.status,
       routeType: route.type,
+      routeTypeLabel: routeTypeLabel(route.type),
       distanceM: Math.round(distanceM),
       estimatedSeconds: Math.round(estimatedSeconds),
       fareMultiplierPermille,
