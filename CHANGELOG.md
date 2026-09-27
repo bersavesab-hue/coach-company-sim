@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.23.0-stage23-route-business
+
+### Added
+- TripInstance 新增累计上客人数与乘客公里两个正式运营事实；新 Trip 从 0 初始化，旧 V1 存档缺字段时按兼容默认值读取。
+- 新增 PassengerTripMetrics，共用正式道路距离计算每一组上客乘客的乘客公里，起点上客和中途站上客均接入。
+- PassengerRuntimeState 新增按游戏日、OD 聚合的 generated / abandoned 统计，并保留 14 天滚动数据；快照字段可选，旧存档继续兼容。
+- 新增 RouteBusinessProjection，按线路/游戏日聚合班次、上客、乘客公里、座位公里、候车、生成需求、流失、收入和成本。
+- 线路平均上座率使用 passenger-km / seat-km，而不是只看某一瞬间车内人数。
+- 线路经营卡新增：今日乘客、平均上座率、相关候车、流失、票款、变动成本、贡献利润、单班利润。
+- 新增线路经营状态：未运营、客流偏弱、供需平衡、较繁忙、运力紧张。
+- TripRepository 正式内存实现支持 findByRoute；接口采用兼容扩展，避免破坏既有测试仓库和替代实现。
+
+### Finance
+- 线路票款来自真实 ticket_sale Ledger。
+- 线路变动成本包含能源、道路费、站务费、司机工资与雇主负担。
+- 贡献利润进一步扣除按 Trip 记录的维护磨损与经济折旧管理成本。
+- 单班利润按当日已发车班次计算，不把尚未发车的计划班次摊入。
+
+### Passenger
+- 今日候车直接读取正式 Station Queue。
+- 今日流失读取 PassengerRuntimeState 的实际 abandonment 记录，不使用 UI 推测值。
+- 多站线路按所有正向 OD 汇总；未来存在重叠线路时该指标表示“该线路覆盖 OD 的相关需求/候车”，不会伪装成独占客流。
+
+### Compatibility
+- SAVE_VERSION 仍为 1；新增 Trip 字段和 PassengerRuntimeState 日统计均为向后兼容字段。
+- CONTENT_VERSION 保持 11，本阶段主要增加运行统计和经营投影，不改变静态内容数据。
+
 ## 0.22.0-stage22-demand-pricing
 
 ### Removed

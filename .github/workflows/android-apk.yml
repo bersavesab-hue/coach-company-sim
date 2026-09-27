@@ -73,11 +73,11 @@ jobs:
       - name: Prepare APK artifact
         run: |
           mkdir -p artifacts
-          cp android-app/app/build/outputs/apk/debug/app-debug.apk artifacts/coach-company-sim-v0.22.0-demand-pricing.apk
+          cp android-app/app/build/outputs/apk/debug/app-debug.apk artifacts/coach-company-sim-v0.23.0-route-business.apk
 
       - uses: actions/upload-artifact@v4
         with:
-          name: coach-company-sim-v0.22.0-demand-pricing
-          path: artifacts/coach-company-sim-v0.22.0-demand-pricing.apk
+          name: coach-company-sim-v0.23.0-route-business
+          path: artifacts/coach-company-sim-v0.23.0-route-business.apk
           if-no-files-found: error
           retention-days: 14
