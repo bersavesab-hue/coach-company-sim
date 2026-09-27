@@ -53,6 +53,8 @@ export function prepareTrip(
       lastUpdatedGameSecond: input.createdAtGameSecond
     },
     onboardPassengerGroups: [],
+    boardedPassengerCountTotal: 0,
+    passengerDistanceMTotal: 0,
     recoveryStationId: null,
     delaySeconds: units.gameSecond(0)
   });

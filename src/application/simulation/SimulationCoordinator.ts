@@ -9,6 +9,7 @@ import { releaseVehicleFromTrip } from "../../domain/vehicle/VehicleAssignmentRu
 import { advanceRunningTrip } from "../../simulation/movement/TripMovement.js";
 import { resolveTripWorldPosition } from "../../simulation/movement/TripWorldPosition.js";
 import { serveRouteStop } from "../../simulation/passenger/PassengerFlow.js";
+import { recordPassengerBoardingMetrics } from "../../simulation/passenger/PassengerTripMetrics.js";
 import type { PassengerDemandPolicy } from "../../simulation/passenger/PassengerDemandPolicy.js";
 import {
   isSimulationTierDue,
@@ -246,7 +247,13 @@ export class SimulationCoordinator {
           vehicle.seatCapacity,
           this.repositories.passengerRuntime.get()
         );
-        processedTrip = flow.trip;
+        processedTrip = recordPassengerBoardingMetrics(
+          flow.trip,
+          route,
+          stop.stationId,
+          flow.boardedGroups,
+          this.repositories.world.get()
+        );
 
         this.events.publish(
           createSimulationDomainEvent(

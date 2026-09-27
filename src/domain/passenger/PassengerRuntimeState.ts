@@ -7,6 +7,11 @@ export interface PassengerQueueGroup {
   readonly count: number;
 }
 
+interface DailyOdFlowSnapshot {
+  readonly key: string;
+  readonly count: number;
+}
+
 export interface PassengerRuntimeStateSnapshot {
   readonly lastGeneratedGameSecond: GameSecond;
   readonly waiting: readonly {
@@ -18,11 +23,15 @@ export interface PassengerRuntimeStateSnapshot {
     readonly key: string;
     readonly value: number;
   }[];
+  readonly dailyGenerated?: readonly DailyOdFlowSnapshot[];
+  readonly dailyAbandoned?: readonly DailyOdFlowSnapshot[];
 }
 
 export class PassengerRuntimeState {
   private readonly waiting = new Map<StationId, Map<StationId, number>>();
   private readonly demandRemainders = new Map<string, number>();
+  private readonly dailyGenerated = new Map<string, number>();
+  private readonly dailyAbandoned = new Map<string, number>();
   private lastGenerated: GameSecond;
 
   constructor(lastGeneratedGameSecond: GameSecond = units.gameSecond(0)) {
@@ -44,6 +53,12 @@ export class PassengerRuntimeState {
     }
     for (const item of snapshot.demandRemainders) {
       state.demandRemainders.set(item.key, item.value);
+    }
+    for (const item of snapshot.dailyGenerated ?? []) {
+      state.dailyGenerated.set(item.key, item.count);
+    }
+    for (const item of snapshot.dailyAbandoned ?? []) {
+      state.dailyAbandoned.set(item.key, item.count);
     }
     return state;
   }
@@ -68,6 +83,12 @@ export class PassengerRuntimeState {
       waiting,
       demandRemainders: [...this.demandRemainders.entries()].map(
         ([key, value]) => ({ key, value })
+      ),
+      dailyGenerated: [...this.dailyGenerated.entries()].map(
+        ([key, count]) => ({ key, count })
+      ),
+      dailyAbandoned: [...this.dailyAbandoned.entries()].map(
+        ([key, count]) => ({ key, count })
       )
     };
   }
@@ -107,9 +128,7 @@ export class PassengerRuntimeState {
     destinationStationId: StationId,
     count: number
   ): void {
-    if (!Number.isSafeInteger(count) || count < 0) {
-      throw new Error("Passenger waiting count must be a non-negative integer");
-    }
+    validateCount(count, "Passenger waiting count");
     if (count === 0) return;
 
     let queue = this.waiting.get(originStationId);
@@ -129,9 +148,7 @@ export class PassengerRuntimeState {
     destinationStationId: StationId,
     maxCount: number
   ): number {
-    if (!Number.isSafeInteger(maxCount) || maxCount < 0) {
-      throw new Error("Passenger take count must be a non-negative integer");
-    }
+    validateCount(maxCount, "Passenger take count");
 
     const queue = this.waiting.get(originStationId);
     const current = queue?.get(destinationStationId) ?? 0;
@@ -166,13 +183,96 @@ export class PassengerRuntimeState {
     destinationStationId: StationId,
     value: number
   ): void {
-    if (!Number.isSafeInteger(value) || value < 0) {
-      throw new Error("Demand remainder must be a non-negative integer");
-    }
+    validateCount(value, "Demand remainder");
     this.demandRemainders.set(
       odKey(originStationId, destinationStationId),
       value
     );
+  }
+
+  recordGenerated(
+    gameDay: number,
+    originStationId: StationId,
+    destinationStationId: StationId,
+    count: number
+  ): void {
+    this.recordDailyFlow(
+      this.dailyGenerated,
+      gameDay,
+      originStationId,
+      destinationStationId,
+      count
+    );
+  }
+
+  recordAbandoned(
+    gameDay: number,
+    originStationId: StationId,
+    destinationStationId: StationId,
+    count: number
+  ): void {
+    this.recordDailyFlow(
+      this.dailyAbandoned,
+      gameDay,
+      originStationId,
+      destinationStationId,
+      count
+    );
+  }
+
+  generatedCount(
+    gameDay: number,
+    originStationId: StationId,
+    destinationStationId: StationId
+  ): number {
+    return this.dailyGenerated.get(
+      dailyOdKey(gameDay, originStationId, destinationStationId)
+    ) ?? 0;
+  }
+
+  abandonedCount(
+    gameDay: number,
+    originStationId: StationId,
+    destinationStationId: StationId
+  ): number {
+    return this.dailyAbandoned.get(
+      dailyOdKey(gameDay, originStationId, destinationStationId)
+    ) ?? 0;
+  }
+
+  pruneDailyFlowBeforeDay(minGameDay: number): void {
+    for (const map of [this.dailyGenerated, this.dailyAbandoned]) {
+      for (const key of map.keys()) {
+        const separator = key.indexOf(":");
+        const day = Number(key.slice(0, separator));
+        if (day < minGameDay) map.delete(key);
+      }
+    }
+  }
+
+  private recordDailyFlow(
+    map: Map<string, number>,
+    gameDay: number,
+    originStationId: StationId,
+    destinationStationId: StationId,
+    count: number
+  ): void {
+    validateCount(gameDay, "Game day");
+    validateCount(count, "Passenger flow count");
+    if (gameDay < 1 || count === 0) return;
+
+    const key = dailyOdKey(
+      gameDay,
+      originStationId,
+      destinationStationId
+    );
+    map.set(key, (map.get(key) ?? 0) + count);
+  }
+}
+
+function validateCount(value: number, label: string): void {
+  if (!Number.isSafeInteger(value) || value < 0) {
+    throw new Error(`${label} must be a non-negative safe integer`);
   }
 }
 
@@ -181,4 +281,12 @@ function odKey(
   destinationStationId: StationId
 ): string {
   return `${originStationId}->${destinationStationId}`;
+}
+
+function dailyOdKey(
+  gameDay: number,
+  originStationId: StationId,
+  destinationStationId: StationId
+): string {
+  return `${gameDay}:${odKey(originStationId, destinationStationId)}`;
 }

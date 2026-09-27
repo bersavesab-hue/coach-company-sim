@@ -2,6 +2,7 @@ import type {
   CompanyId,
   FarePolicyId,
   FleetTaskId,
+  RouteId,
   ServicePlanId,
   StaffId,
   StationId,
@@ -234,6 +235,8 @@ export class InMemoryRepositoryBundle implements RepositoryBundle {
           value.servicePlanId === servicePlanId &&
           Number(value.plannedDepartureGameSecond) === Number(departure)
       ),
+    findByRoute: (routeId: RouteId) =>
+      [...this.tripsById.values()].filter((value) => value.routeId === routeId),
     findByVehicle: (vehicleId: VehicleId) =>
       [...this.tripsById.values()].filter((value) => value.vehicleId === vehicleId),
     findByDriver: (driverId: StaffId) =>

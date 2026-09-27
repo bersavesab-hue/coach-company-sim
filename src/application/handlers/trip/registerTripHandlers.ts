@@ -39,6 +39,7 @@ import {
   validateVehicleQualification
 } from "../../../domain/vehicle/VehicleAssignmentRules.js";
 import { serveRouteStop } from "../../../simulation/passenger/PassengerFlow.js";
+import { recordPassengerBoardingMetrics } from "../../../simulation/passenger/PassengerTripMetrics.js";
 import type { CommandBus } from "../../CommandBus.js";
 import type {
   AssignTripDriverPayload,
@@ -512,17 +513,25 @@ function handleStartBoarding(
     dependencies.repositories.passengerRuntime.get()
   );
 
+  const tripWithMetrics = recordPassengerBoardingMetrics(
+    flow.trip,
+    context.value.route,
+    origin,
+    flow.boardedGroups,
+    dependencies.repositories.world.get()
+  );
+
   dependencies.repositories.vehicles.save(vehicleLock.value);
   dependencies.repositories.staff.saveDriver(driverLock.value);
-  dependencies.repositories.trips.save(flow.trip);
+  dependencies.repositories.trips.save(tripWithMetrics);
 
   dependencies.events.publish(
     createDomainEvent(
       command,
       "trip.boardingStarted",
       "trip",
-      flow.trip.id,
-      { tripId: flow.trip.id },
+      tripWithMetrics.id,
+      { tripId: tripWithMetrics.id },
       1
     )
   );
@@ -533,9 +542,9 @@ function handleStartBoarding(
         command,
         "passengers.boarded",
         "trip",
-        flow.trip.id,
+        tripWithMetrics.id,
         {
-          tripId: flow.trip.id,
+          tripId: tripWithMetrics.id,
           stationId: origin,
           count: flow.boardedCount,
           boardedGroups: flow.boardedGroups,
@@ -546,7 +555,7 @@ function handleStartBoarding(
     );
   }
 
-  return ok(flow.trip);
+  return ok(tripWithMetrics);
 }
 
 function handleDepart(

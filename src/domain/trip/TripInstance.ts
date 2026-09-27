@@ -23,6 +23,8 @@ export interface TripInstance {
   readonly actualArrivalGameSecond: GameSecond | null;
   readonly position: TripPosition;
   readonly onboardPassengerGroups: readonly OnboardPassengerGroup[];
+  readonly boardedPassengerCountTotal?: number;
+  readonly passengerDistanceMTotal?: number;
   readonly recoveryStationId: StationId | null;
   readonly delaySeconds: GameSecond;
 }

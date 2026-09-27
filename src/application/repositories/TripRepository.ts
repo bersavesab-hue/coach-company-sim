@@ -1,4 +1,5 @@
 import type {
+  RouteId,
   ServicePlanId,
   StaffId,
   TripId,
@@ -13,6 +14,7 @@ export interface TripRepository {
     servicePlanId: ServicePlanId,
     plannedDepartureGameSecond: GameSecond
   ): TripInstance | undefined;
+  findByRoute(routeId: RouteId): readonly TripInstance[];
   findByVehicle(vehicleId: VehicleId): readonly TripInstance[];
   findByDriver(driverId: StaffId): readonly TripInstance[];
   findRunning(): readonly TripInstance[];

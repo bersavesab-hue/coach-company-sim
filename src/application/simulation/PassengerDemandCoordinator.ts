@@ -44,6 +44,9 @@ export class PassengerDemandCoordinator {
           : cursor + 3600
       );
       const elapsedSeconds = intervalEnd - cursor;
+      runtime.pruneDailyFlowBeforeDay(
+        Math.max(1, gameDay - 14)
+      );
 
       for (const profile of this.repositories.passengerDemand.all()) {
         if (profile.originStationId === profile.destinationStationId) {
@@ -58,7 +61,8 @@ export class PassengerDemandCoordinator {
         this.applyQueueAbandonment(
           profile,
           service.departuresPerDay,
-          elapsedSeconds
+          elapsedSeconds,
+          gameDay
         );
 
         const frequency =
@@ -102,6 +106,12 @@ export class PassengerDemandCoordinator {
 
         if (generated.generatedPassengers > 0) {
           runtime.addWaiting(
+            profile.originStationId,
+            profile.destinationStationId,
+            generated.generatedPassengers
+          );
+          runtime.recordGenerated(
+            gameDay,
             profile.originStationId,
             profile.destinationStationId,
             generated.generatedPassengers
@@ -205,7 +215,8 @@ export class PassengerDemandCoordinator {
   private applyQueueAbandonment(
     profile: PassengerDemandProfile,
     departuresPerDay: number,
-    elapsedSeconds: number
+    elapsedSeconds: number,
+    gameDay: number
   ): void {
     const rate =
       this.policy.queueAbandonmentPermillePerHour?.(
@@ -237,10 +248,16 @@ export class PassengerDemandCoordinator {
     }
 
     if (leaving > 0) {
-      runtime.takeWaiting(
+      const abandoned = runtime.takeWaiting(
         profile.originStationId,
         profile.destinationStationId,
         leaving
+      );
+      runtime.recordAbandoned(
+        gameDay,
+        profile.originStationId,
+        profile.destinationStationId,
+        abandoned
       );
     }
   }
