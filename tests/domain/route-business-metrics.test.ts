@@ -77,7 +77,7 @@ test("trip boarding metrics use passenger distance rather than snapshot occupanc
       toNodeId: nodeB
     }],
     routingPreference: "fastest_time",
-    farePolicyId: ids.farePolicy("fare.test"),
+    farePolicyId: ids.farePolicy("fare_policy.test"),
     requiredLicenseIds: [],
     status: "active"
   };
