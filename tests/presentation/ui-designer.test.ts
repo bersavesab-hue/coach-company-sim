@@ -90,6 +90,10 @@ test("designer supports style image and safe custom component editing", () => {
   assert.equal(template.includes("const UI_BINDINGS={"), true);
   assert.equal(template.includes("eval("), false);
   assert.equal(template.includes("data-ui-custom"), true);
+  assert.equal(
+    template.includes("style.radius ?? (parseFloat"),
+    true
+  );
 });
 
 test("designer image input accepts only images", () => {
