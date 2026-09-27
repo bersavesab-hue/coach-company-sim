@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.22.0-stage22-demand-pricing
+
+### Removed
+- 删除“无班次仍按 70% 基础客流持续生成”的旧需求曲线；0 班次现在正式等于 0 新增乘客需求。
+- 删除线路页第二套下拉框建线入口；新线路只允许从地图规划，线路页回归经营管理职责。
+- 删除所有线路只能共用固定最终票价的表现限制；基础 FarePolicy 继续作为基准价规则，线路只保存独立定价倍率。
+
+### Added
+- PassengerRoute 新增兼容旧存档的 fareMultiplierPermille，正式允许单线路 60%–160% 定价。
+- 补齐已预留的 route.setFare Command 与 route.fareChanged Event，UI 不直接修改线路票价。
+- FareCalculator 新增 FareQuote，同时返回基准票价和实际票价；Finance Ledger 继续以实际售出票价入账。
+- 新增 PassengerDemandBalance：班次密度采用边际递减曲线，票价上涨压低需求、降价提升需求。
+- 客流加入分时需求：早高峰、晚高峰、平峰、深夜使用不同需求倍率。
+- WorldMapSeed 的 OD 基础需求加入距离衰减，近中程需求高于超长距离，不再只由站点等级决定。
+- 候车队列加入等待流失；无服务方向流失更快，低频线路也会因等待损失乘客。
+- 新增 passenger.networkSummary Query，经营主页显示全网候车规模。
+- 新增 CompanyProgressionCoordinator：准点/轻微延误完成班次提升声誉，运营中断降低声誉。
+- 公司等级由声誉派生并显示在经营主页；现有城市和车型解锁继续读取同一个公司声誉事实。
+- 线路页显示全程基准价、实际价、定价百分比和票价需求系数，可按 10% 调价或恢复基准。
+
+### Balance
+- 0 班次：0% 新需求。
+- 班次增加仍能提高需求，但采用平方根边际递减，防止无限刷班次堆客流。
+- 票价基准 100% 时需求系数 100%；高价逐步压低需求，低价有限提升需求。
+- 深夜需求显著低于白天，07–09 与 16–19 为主要高峰。
+- 准点完成班次 +2 声誉，20 分钟以内延误完成 +1，严重延误不增加；运营中断 -3。
+
+### Compatibility
+- SAVE_VERSION 保持 1：fareMultiplierPermille 为兼容字段，旧 V1 存档线路缺省按 1000‰ 基准票价恢复。
+- CONTENT_VERSION 升至 11，因为正式 OD 基础需求与客流平衡内容发生变化。
+
 ## 0.21.0-stage21-persistence
 
 ### Removed

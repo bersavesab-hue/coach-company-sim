@@ -205,4 +205,8 @@ test("playable client completes buy-route-schedule-operate-finance loop", async 
     financeDto.cashBalanceCents > 0,
     true
   );
+  assert.equal(
+    Number(runtime.company.reputationPermille) > 180,
+    true
+  );
 });
