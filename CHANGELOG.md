@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.29.0-stage29-ui-designer
+
+### In-game UI Designer
+- 新增游戏内 UI 设计模式，首页管理中心和全局 UI 小按钮均可进入。
+- 设计模式自动暂停游戏时间，退出后恢复进入设计模式前的时间速度。
+- 静态页面模块使用稳定 data-ui-edit ID；首页、线路、车市、调度、车队、财务主要模块可直接点选。
+- 首页/调度/车队/财务动态 metric 卡使用稳定 scope + label ID，刷新后仍能恢复用户布局。
+- 普通布局块支持上移/下移、50%/75%/100%/自动宽度、70%–140% 整体缩放。
+- “删除/隐藏”采用软删除：普通模式不渲染该组件，设计模式仍以半透明状态显示并可恢复。
+- 地图 HUD、图层筛选、缩放控制、图例、时间控制、新建线路按钮标记为 data-ui-free，可在手机触控下直接拖动。
+- UI 布局保存在独立 coach-company-sim.ui-layout.v1 localStorage 键，不进入正式游戏 SAVE_VERSION。
+- 支持复制 JSON 配置与导入 JSON 配置，便于手机排版后将配置交回仓库做正式源码整理。
+- 支持单组件重置与全部重置。
+
+### Safety
+- UI 设计器只修改表现层 DOM 顺序、宽度、缩放、偏移和可见性，不直接删除 Route/Vehicle/Finance/Passenger 等领域代码。
+- 底部主导航不开放软删除，避免用户把唯一页面入口永久藏掉。
+- Android 返回键在设计模式中优先退出设计器并保存布局，不直接离开应用。
+
+### Compatibility
+- SAVE_VERSION 保持 1；UI 布局拥有独立本地配置版本，不污染正式经营存档。
+- CONTENT_VERSION 保持 13。
+
 ## 0.28.0-stage28-map-filters-navigation
 
 ### Map Route Governance
