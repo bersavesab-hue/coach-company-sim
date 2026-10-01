@@ -15,3 +15,11 @@ export interface RecoverFleetPayload {
   readonly tripId: TripId;
   readonly recoveryStationId: StationId;
 }
+
+export interface OpenFleetBasePayload {
+  readonly stationId: StationId;
+}
+
+export interface AssignFleetBasePayload extends OpenFleetBasePayload {
+  readonly vehicleId: VehicleId;
+}

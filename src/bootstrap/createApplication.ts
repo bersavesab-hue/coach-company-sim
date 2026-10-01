@@ -7,6 +7,7 @@ import { registerFinanceQueries } from "../application/handlers/finance/register
 import { registerOperationsQueries } from "../application/handlers/operations/registerOperationsQueries.js";
 import { registerOperationsHandlers } from "../application/handlers/operations/registerOperationsHandlers.js";
 import { registerFleetHandlers } from "../application/handlers/fleet/registerFleetHandlers.js";
+import { registerFleetBaseHandlers } from "../application/handlers/fleet/registerFleetBaseHandlers.js";
 import { registerMapQueries } from "../application/handlers/map/registerMapQueries.js";
 import { registerPassengerQueries } from "../application/handlers/passenger/registerPassengerQueries.js";
 import { registerRouteHandlers } from "../application/handlers/route/registerRouteHandlers.js";
@@ -172,6 +173,7 @@ export function createApplication(
     events,
     operationsPolicy: dependencies.operationsPolicy
   });
+  registerFleetBaseHandlers(commands, queries, dependencies.repositories, events);
 
   registerRouteHandlers(commands, {
     repositories: dependencies.repositories,

@@ -11,7 +11,6 @@ import type { FarePolicy } from "../domain/finance/FarePolicy.js";
 import type {
   CompanyFinancialProfile,
   DriverCompensationProfile,
-  StationFinancialProfile,
   VehicleEconomicProfile
 } from "../domain/finance/FinancialProfiles.js";
 import type { EconomicPolicy } from "../simulation/finance/EconomicPolicy.js";
@@ -24,7 +23,8 @@ import { createPlayableWorldSeed } from "../content/map/WorldMapSeed.js";
 import { FORMAL_WORLD_MAP_CONTENT } from "../content/map/FormalWorldMapContent.js";
 import { InMemoryRepositoryBundle } from "../infrastructure/memory/InMemoryRepositoryBundle.js";
 import { SequentialRuntimeIdAllocator } from "../infrastructure/runtime/SequentialRuntimeIdAllocator.js";
-import type { PlayableSavePayloadV1 } from "../save/playable/PlayableSave.js";
+import type { PlayableSavePayload } from "../save/playable/PlayableSave.js";
+import { migrateFleetBases } from "../save/migrations/PlayableSaveMigration.js";
 import { companyLicenseIdsForReputation } from "../content/company/CompanyGrowthRules.js";
 import { synchronizeCompanyLicenses } from "../application/progression/CompanyProgressionCoordinator.js";
 
@@ -36,7 +36,7 @@ export const PLAYABLE_FARE_POLICY_ID =
 export const PLAYABLE_START_GAME_SECOND =
   units.gameSecond(5 * 3600 + 30 * 60);
 
-export function createPlayableGame(saved?: PlayableSavePayloadV1) {
+export function createPlayableGame(saved?: PlayableSavePayload) {
   const worldSeed = createPlayableWorldSeed();
   const idAllocator = new SequentialRuntimeIdAllocator(saved?.idAllocator);
   const company: Company = {
@@ -91,21 +91,6 @@ export function createPlayableGame(saved?: PlayableSavePayloadV1) {
       employerBurdenPermille: units.permille(160)
     }));
 
-  const homeStationContent =
-    FORMAL_WORLD_MAP_CONTENT.stations.find(
-      (station) =>
-        station.id === String(worldSeed.stations[0]!.id)
-    );
-  const stationProfiles: StationFinancialProfile[] = [
-    {
-      stationId: worldSeed.stations[0]!.id,
-      companyId: PLAYABLE_COMPANY_ID,
-      dailyLeaseCents: units.moneyCents(
-        homeStationContent?.dailyLeaseCents ?? 25_000
-      )
-    }
-  ];
-
   const repositories = new InMemoryRepositoryBundle({
     world: worldSeed.world,
     stations: worldSeed.stations,
@@ -124,7 +109,8 @@ export function createPlayableGame(saved?: PlayableSavePayloadV1) {
     companyFinancialProfiles: [companyFinance],
     vehicleEconomicProfiles: vehicleEconomics,
     driverCompensationProfiles: driverProfiles,
-    stationFinancialProfiles: stationProfiles,
+    stationFinancialProfiles: [],
+    fleetBases: migrateFleetBases([company], [], units.gameSecond(0)),
     ...(saved
       ? { persistentState: saved.repositories }
       : {})

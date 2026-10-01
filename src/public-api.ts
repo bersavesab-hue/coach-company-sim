@@ -52,6 +52,8 @@ export * from "./domain/passenger/PassengerDemandProfile.js";
 export * from "./domain/passenger/PassengerRuntimeState.js";
 export * from "./domain/passenger/OnboardPassengerGroup.js";
 export * from "./domain/station/Station.js";
+export * from "./domain/station/FleetBase.js";
+export * from "./application/repositories/FleetBaseRepository.js";
 export * from "./domain/route/RouteStopPoint.js";
 export * from "./domain/route/RouteType.js";
 export * from "./domain/route/PassengerRoute.js";

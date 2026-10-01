@@ -38,6 +38,7 @@ import type { PassengerRoute } from "../../domain/route/PassengerRoute.js";
 import type { ServicePlan } from "../../domain/schedule/ServicePlan.js";
 import type { Driver } from "../../domain/staff/Driver.js";
 import type { Station } from "../../domain/station/Station.js";
+import type { FleetBase } from "../../domain/station/FleetBase.js";
 import type { TripInstance } from "../../domain/trip/TripInstance.js";
 import { VehicleLifecycleRuntimeState, type VehicleLifecycleRuntimeStateSnapshot } from "../../domain/vehicle/VehicleLifecycleRuntimeState.js";
 import type { OwnedVehicle } from "../../domain/vehicle/OwnedVehicle.js";
@@ -57,6 +58,7 @@ import { WorldRuntimeState, type WorldRuntimeStateSnapshot } from "../../domain/
 import type { RepositoryBundle } from "../../application/repositories/RepositoryBundle.js";
 
 export interface InMemoryRepositoryPersistentState {
+  readonly fleetBases: readonly FleetBase[];
   readonly companies: readonly Company[];
   readonly routes: readonly PassengerRoute[];
   readonly servicePlans: readonly ServicePlan[];
@@ -79,6 +81,7 @@ export interface InMemoryRepositoryPersistentState {
 }
 
 export interface InMemoryRepositorySeed {
+  readonly fleetBases?: readonly FleetBase[];
   readonly world: WorldGraph;
   readonly stations: readonly Station[];
   readonly companies: readonly Company[];
@@ -118,6 +121,7 @@ export class InMemoryRepositoryBundle implements RepositoryBundle {
   private financeRuntimeValue = new FinanceRuntimeState();
 
   private readonly stationsById = new Map<StationId, Station>();
+  private readonly basesByKey = new Map<string, FleetBase>();
   private readonly companiesById = new Map<CompanyId, Company>();
   private readonly routesById = new Map<string, PassengerRoute>();
   private readonly servicePlansById = new Map<ServicePlanId, ServicePlan>();
@@ -157,6 +161,7 @@ export class InMemoryRepositoryBundle implements RepositoryBundle {
     this.stationFinancialValues = [...seed.stationFinancialProfiles];
 
     for (const value of seed.stations) this.stationsById.set(value.id, value);
+    for (const value of seed.fleetBases ?? []) this.fleetBases.save(value);
     for (const value of seed.companies) this.companiesById.set(value.id, value);
     for (const value of seed.routes ?? []) this.routesById.set(String(value.id), value);
     for (const value of seed.servicePlans ?? []) this.servicePlansById.set(value.id, value);
@@ -207,6 +212,12 @@ export class InMemoryRepositoryBundle implements RepositoryBundle {
 
   readonly stations = {
     getById: (id: StationId) => this.stationsById.get(id)
+  };
+
+  readonly fleetBases = {
+    get: (companyId: CompanyId, stationId: StationId) => this.basesByKey.get(`${companyId}:${stationId}`),
+    findByCompany: (companyId: CompanyId) => [...this.basesByKey.values()].filter(b => b.companyId === companyId),
+    save: (base: FleetBase) => { this.basesByKey.set(`${base.companyId}:${base.stationId}`, base); }
   };
 
   readonly routes = {
@@ -378,6 +389,7 @@ export class InMemoryRepositoryBundle implements RepositoryBundle {
 
   exportPersistentState(): InMemoryRepositoryPersistentState {
     return {
+      fleetBases: [...this.basesByKey.values()],
       companies: [...this.companiesById.values()],
       routes: [...this.routesById.values()],
       servicePlans: [...this.servicePlansById.values()],
@@ -403,6 +415,8 @@ export class InMemoryRepositoryBundle implements RepositoryBundle {
   private restorePersistentState(
     state: InMemoryRepositoryPersistentState
   ): void {
+    this.basesByKey.clear();
+    for (const value of state.fleetBases) this.fleetBases.save(value);
     this.companiesById.clear();
     for (const value of state.companies) this.companiesById.set(value.id, value);
 

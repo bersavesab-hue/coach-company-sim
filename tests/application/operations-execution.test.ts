@@ -1,3 +1,4 @@
+import { createTestFleetBaseRepository } from "../helpers/TestFleetBase.js";
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -251,6 +252,7 @@ function simpleFixture() {
     createTestOperationsScheduleRepository();
 
   const repositories: RepositoryBundle = {
+    fleetBases: createTestFleetBaseRepository(),
     companies: {
       getById: (id) => id === company.id ? company : undefined,
       save: () => undefined
@@ -756,6 +758,7 @@ function faultFixture() {
   const worldRuntime = new WorldRuntimeState();
 
   const repositories: RepositoryBundle = {
+    fleetBases: createTestFleetBaseRepository(),
     companies: {
       getById: (id) => id === companyId ? company : undefined,
       save: () => undefined

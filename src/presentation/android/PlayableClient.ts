@@ -46,7 +46,7 @@ import {
   buildPlayableSaveEnvelope,
   parsePlayableSave,
   type PlayableSaveEnvelope,
-  type PlayableSavePayloadV1
+  type PlayableSavePayload
 } from "../../save/playable/PlayableSave.js";
 import {
   createPlayableGame,
@@ -196,6 +196,7 @@ export class PlayableClient {
       finance,
       market,
       dispatch,
+      fleetBases: await this.query("fleet.bases", { companyId: company.id }),
       passengerSummary,
       progression: {
         ...progression,
@@ -401,8 +402,38 @@ export class PlayableClient {
     };
   }
 
+  async openFleetBase(stationId: string): Promise<UiActionResult> {
+    return this.actionResult(this.dispatch("fleet.openBase", { stationId: ids.station(stationId) }), "城市车队基地已开设。");
+  }
+
+  async upgradeFleetBase(stationId: string): Promise<UiActionResult> {
+    return this.actionResult(this.dispatch("fleet.upgradeBase", { stationId: ids.station(stationId) }), "基地已扩建，增加 12 个车位。");
+  }
+
+  async assignFleetBase(vehicleId: string, stationId: string): Promise<UiActionResult> {
+    const result = this.dispatch("fleet.assignBase", { vehicleId: ids.vehicle(vehicleId), stationId: ids.station(stationId) });
+    if (!result.ok) {
+      const messages: Partial<Record<typeof result.error.code, string>> = {
+        VEHICLE_ENERGY_INSUFFICIENT: "车辆能源不足，请先补能后再调往基地。",
+        DRIVER_REST_REQUIRED: "可用司机需要先休息，无法完成本次调车。",
+        DRIVER_DUTY_LIMIT: "本次调车会超过司机工时上限。",
+        FLEET_TASK_CONFLICT: "车辆或司机已有任务，无法调往基地。",
+        VEHICLE_UNSAFE: "车辆车况不足以完成调车，请先检修。",
+        VEHICLE_MAINTENANCE_DUE: "车辆需要先完成保养。",
+        PATH_NOT_FOUND: "当前道路无法到达目标基地。"
+      };
+      return { ok: false, message: messages[result.error.code] ?? result.error.message };
+    }
+    return this.actionResult(result, "驻点已更新；异地车辆将自动沿道路调往基地。");
+  }
+
+  async previewBaseTransfer(vehicleId: string, stationId: string) {
+    return this.query("fleet.baseTransfer", { companyId: PLAYABLE_COMPANY_ID, vehicleId: ids.vehicle(vehicleId), stationId: ids.station(stationId) });
+  }
+
   async buyVehicle(
-    listingId: string
+    listingId: string,
+    depotStationId: string | null = null
   ): Promise<UiActionResult> {
     const result = this.dispatch(
       "vehicleMarket.purchaseListing",
@@ -412,7 +443,7 @@ export class PlayableClient {
           ids.vehicleListing(listingId),
         configurationId: null,
         depotStationId:
-          this.runtime.company.homeStationId
+          depotStationId ? ids.station(depotStationId) : this.runtime.company.homeStationId
       }
     );
     return this.actionResult(
@@ -433,6 +464,7 @@ export class PlayableClient {
     readonly variantId: string;
     readonly selectedOptionCodes: readonly string[];
     readonly configurationName: string | null;
+    readonly depotStationId?: string;
   }): Promise<UiActionResult> {
     const configured = this.dispatch(
       "vehicleMarket.createConfiguration",
@@ -455,7 +487,7 @@ export class PlayableClient {
         companyId: PLAYABLE_COMPANY_ID,
         listingId: ids.vehicleListing(input.listingId),
         configurationId: configuration.id,
-        depotStationId: this.runtime.company.homeStationId
+        depotStationId: input.depotStationId ? ids.station(input.depotStationId) : this.runtime.company.homeStationId
       }
     );
     return this.actionResult(
@@ -1023,7 +1055,7 @@ export class PlayableClient {
     };
   }
 
-  private savePayload(): PlayableSavePayloadV1 {
+  private savePayload(): PlayableSavePayload {
     return {
       currentGameSecond: this.currentGameSecond,
       realtimeRemainderMilliGameSeconds:

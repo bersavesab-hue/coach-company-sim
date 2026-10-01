@@ -1,6 +1,7 @@
 import type { CompanyRepository } from "./CompanyRepository.js";
 import type { FinanceRepository } from "./FinanceRepository.js";
 import type { FleetTaskRepository } from "./FleetTaskRepository.js";
+import type { FleetBaseRepository } from "./FleetBaseRepository.js";
 import type { OperationsScheduleRepository } from "./OperationsScheduleRepository.js";
 import type { PassengerDemandRepository } from "./PassengerDemandRepository.js";
 import type { PassengerRuntimeRepository } from "./PassengerRuntimeRepository.js";
@@ -20,6 +21,7 @@ export interface RepositoryBundle {
   readonly companies: CompanyRepository;
   readonly finance: FinanceRepository;
   readonly fleetTasks: FleetTaskRepository;
+  readonly fleetBases: FleetBaseRepository;
   readonly operationsSchedules: OperationsScheduleRepository;
   readonly passengerDemand: PassengerDemandRepository;
   readonly passengerRuntime: PassengerRuntimeRepository;

@@ -1,6 +1,8 @@
 # 存档架构规范
 
-状态：**Save Contract v1**
+状态：**Playable Save Contract v2（Stage 32）**
+
+APK 的正式存档入口是 PlayableSave，payload.repositories.fleetBases 持久化公司/站点唯一的基地等级、每日租金和开设时间；车辆所属关系仍由 depotStationId 持有。V1 → V2 迁移按总部和存量车辆驻点建立基地，容量覆盖存量车队，不移动实际车辆、不收费、不回放租金；其他领域状态和时间保持原样。本地存储键 `coach-company-sim.save.v1` 保持不变，读档时逐版本迁移并在下次保存写出 V2。UI 布局仍独立存储，不属于经营存档。
 
 ## 1. 版本独立
 

@@ -77,6 +77,8 @@ export interface DispatchCenterSupportDto {
 }
 
 export interface DispatchCenterVehicleDto {
+  readonly depotStationId: StationId | null;
+  readonly depotStationName: string | null;
   readonly vehicleId: VehicleId;
   readonly modelId: VehicleModelId;
   readonly serviceClass: string;

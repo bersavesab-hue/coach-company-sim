@@ -415,6 +415,8 @@ export class DispatchCenterProjection {
       comfortPermille: configuration?.comfortPermille ?? null,
       status: vehicle.status,
       currentStationId: vehicle.currentStationId,
+      depotStationId: vehicle.depotStationId,
+      depotStationName: vehicle.depotStationId ? this.repositories.stations.getById(vehicle.depotStationId)?.name ?? null : null,
       currentStationName:
         vehicle.currentStationId === null
           ? null

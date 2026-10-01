@@ -169,6 +169,7 @@ Company Progression
 | World | 节点、道路静态拓扑、道路运行状态 | 事件修正 | 车辆、票价 |
 | SpatialIndex | 空间索引缓存 | World、Trip位置 | 业务事实 |
 | Station | 站场容量、站台、设施运行状态 | Passenger、Trip | 路网算法 |
+| FleetBase | 公司在城市的基地等级、租金、开设时间 | Station、Vehicle、Staff | 车辆位置、资金余额 |
 | Route | 线路站序、正式道路路径、票价规则引用 | World | 当前车辆位置 |
 | ServicePlan | 长期发车计划 | Route | 实际运行状态 |
 | Trip | 一次班次运行事实 | Route、Vehicle、Staff | 车型静态参数 |
@@ -477,6 +478,8 @@ Stage 15 已完成正式车辆内容库、动态新车/二手车供给、6 区�
 ---
 
 # 12. Station
+
+Stage 32 增加正式 FleetBase，唯一状态由 FleetBaseRepository 持有。公司/站点组合唯一，每级增加 12 个驻点车位，最多 10 级；车辆所属基地继续使用 OwnedVehicle.depotStationId，不增加第二份所属关系。fleet.openBase / fleet.upgradeBase / fleet.assignBase 是正式修改入口，产生 fleet.baseOpened / baseUpgraded / baseAssigned 事件；Finance 消费事件记开设/扩建费用并按游戏跨日结算租金。购车和调入共用容量检查，转移中的车辆已占目标车位。异地分配复用 fleet.reposition、FleetTask、WorldGraph、能耗/磨损/费用和司机工时检查，禁止瞬移；同城只变更所属关系。调度始终读取物理位置，基地登记不替代位置。SaveVersion 2 持久化基地，V1 按既有总部/车辆驻点迁移，保留超规模车队与经营数据。
 
 第一版 Station 先做经营必需能力：
 

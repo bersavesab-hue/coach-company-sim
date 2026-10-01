@@ -1,3 +1,4 @@
+import { createTestFleetBaseRepository } from "../helpers/TestFleetBase.js";
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -165,6 +166,7 @@ function fixture() {
   const passengerRuntime = new PassengerRuntimeState();
 
   const repositories: RepositoryBundle = {
+    fleetBases: createTestFleetBaseRepository(),
     companies: {
       getById: (id) => companies.get(id),
       save: (value) => companies.set(value.id, value)

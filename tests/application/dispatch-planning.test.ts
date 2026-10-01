@@ -1,3 +1,4 @@
+import { createTestFleetBaseRepository } from "../helpers/TestFleetBase.js";
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -171,6 +172,7 @@ function fixture() {
   ]);
 
   const repositories: RepositoryBundle = {
+    fleetBases: createTestFleetBaseRepository(),
     companies: {
       getById: () => undefined,
       save: () => undefined

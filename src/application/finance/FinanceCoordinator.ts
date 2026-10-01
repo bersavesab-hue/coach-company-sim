@@ -234,6 +234,17 @@ export class FinanceCoordinator {
           event.payload as VehicleMarketServiceChargedPayload
         );
         break;
+      case "fleet.baseOpened":
+      case "fleet.baseUpgraded": {
+        const payload = event.payload as { companyId: CompanyId; costCents: MoneyCents };
+        this.postLedger({
+          companyId: payload.companyId, gameSecond: event.gameSecond,
+          kind: "fleet_base_setup", sourceRef: `${event.eventId}:fleet_base_setup`,
+          sourceEventId: event.eventId, tripId: null, vehicleId: null,
+          memo: "Fleet base opening/expansion", postings: [debit("station_lease_expense", payload.costCents), credit("cash", payload.costCents)]
+        });
+        break;
+      }
       case "vehicle.sold":
       case "vehicle.retired":
         this.postVehicleDisposal(
@@ -922,7 +933,12 @@ export class FinanceCoordinator {
       this.accrueVehicleDay(vehicle, day, gameSecond);
     }
 
-    for (const station of this.repositories.finance.stationFinancialProfilesByCompany(companyId)) {
+    const bases = this.repositories.fleetBases.findByCompany(companyId);
+    const leases = [
+      ...this.repositories.finance.stationFinancialProfilesByCompany(companyId).filter(s => !bases.some(b => b.stationId === s.stationId)),
+      ...bases.filter(b => Number(b.openedAtGameSecond) < Number(gameSecond))
+    ];
+    for (const station of leases) {
       if (Number(station.dailyLeaseCents) <= 0) continue;
       this.postExpensePayable(
         companyId,

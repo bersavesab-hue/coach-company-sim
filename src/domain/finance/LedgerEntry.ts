@@ -32,6 +32,7 @@ export type FinanceEntryKind =
   | "insurance"
   | "vehicle_tax"
   | "station_lease"
+  | "fleet_base_setup"
   | "company_overhead"
   | "depreciation"
   | "liability_settlement";

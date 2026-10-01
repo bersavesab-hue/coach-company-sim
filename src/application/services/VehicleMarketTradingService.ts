@@ -21,6 +21,7 @@ import type { VehicleConfiguration } from "../../domain/vehicle-market/VehicleCo
 import type { VehicleInspectionReport } from "../../domain/vehicle-market/VehicleInspectionReport.js";
 import type { VehicleListing } from "../../domain/vehicle-market/VehicleListing.js";
 import type { VehicleNegotiationResult } from "../../domain/vehicle-market/VehicleNegotiation.js";
+import { requireFleetBaseSlot } from "./FleetBaseCapacity.js";
 import type {
   CreateVehicleConfigurationPayload,
   InspectVehicleListingPayload,
@@ -1548,6 +1549,9 @@ export class VehicleMarketTradingService {
         );
       }
     }
+
+    const baseSlot = requireFleetBaseSlot(this.dependencies.repositories, buyerCompanyId, depotStationId);
+    if (!baseSlot.ok) return baseSlot;
 
     const terms =
       this.dependencies.lifecyclePolicy.quoteInitialOwnershipTerms(
